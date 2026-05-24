@@ -96,7 +96,7 @@ export default function QuienesSomosPage() {
           ].map(({ titulo, texto }) => (
             <li
               key={titulo}
-              className="flex flex-col gap-1 rounded-lg border border-border bg-card px-5 py-4"
+              className="flex flex-col gap-1 rounded-lg border-l-4 border-primary bg-card px-5 py-4 shadow-sm"
             >
               <span className="font-medium text-primary">{titulo}</span>
               <span className="text-sm text-muted-foreground">{texto}</span>

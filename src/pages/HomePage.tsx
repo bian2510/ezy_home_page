@@ -100,18 +100,18 @@ function HeroCarousel() {
       aria-roledescription="carrusel"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
-      className="relative overflow-hidden rounded-lg border-l-4 border-primary bg-card px-4 py-10 text-center sm:px-8 sm:py-16"
+      className="relative overflow-hidden rounded-lg bg-gradient-to-br from-sidebar to-sidebar-accent px-4 py-10 text-center sm:px-8 sm:py-16"
     >
       <div
         key={current}
-        className="mx-auto flex max-w-prose flex-col items-center gap-4"
+        className="mx-auto flex max-w-prose animate-fade-slide flex-col items-center gap-4"
         aria-live="polite"
         aria-atomic="true"
       >
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-5xl">
+        <h1 className="text-3xl font-semibold tracking-tight text-sidebar-foreground sm:text-5xl">
           {slide?.heading}
         </h1>
-        <p className="text-base text-muted-foreground sm:text-lg">
+        <p className="text-base text-sidebar-foreground/70 sm:text-lg">
           {slide?.subheading}
         </p>
         <Link
@@ -137,7 +137,7 @@ function HeroCarousel() {
             className={`h-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               i === current
                 ? 'w-6 bg-primary'
-                : 'w-2 bg-border hover:bg-muted-foreground'
+                : 'w-2 bg-sidebar-foreground/30 hover:bg-sidebar-foreground/60'
             }`}
           />
         ))}
@@ -199,7 +199,7 @@ function CategoriesSection() {
           <li key={slug}>
             <Link
               to={`/catalogo?category=${slug}`}
-              className="flex min-h-32 items-center justify-center rounded-lg border border-border bg-card px-4 py-8 text-center text-lg font-medium text-foreground transition hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="flex min-h-32 items-center justify-center rounded-lg border border-border bg-card px-4 py-8 text-center text-lg font-medium text-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:shadow-md hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               {label}
             </Link>

@@ -62,7 +62,7 @@ export default function ComoComprarPage() {
         {PASOS.map(({ numero, titulo, descripcion, cta }) => (
           <li
             key={numero}
-            className="flex gap-4 rounded-lg border border-border bg-card px-5 py-5"
+            className="flex gap-4 rounded-lg border border-border bg-card px-5 py-5 shadow-sm"
           >
             <span
               aria-hidden="true"

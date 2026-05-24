@@ -43,6 +43,9 @@ const config: Config = {
         prose: '65ch',
         content: '1200px',
       },
+      animation: {
+        'fade-slide': 'fadeSlide 0.4s ease-out',
+      },
     },
   },
   plugins: [],

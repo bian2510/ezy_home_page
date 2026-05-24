@@ -50,7 +50,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <article
       className={cn(
         'group flex flex-col overflow-hidden rounded-lg border border-border bg-card text-foreground',
-        'transition hover:shadow-md',
+        'shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg',
       )}
     >
       <button
