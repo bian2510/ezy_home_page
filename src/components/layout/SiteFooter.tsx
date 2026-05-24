@@ -19,6 +19,8 @@ const FOOTER_NAV_ITEMS: ReadonlyArray<FooterNavItem> = [
   { to: '/catalogo', label: 'Catálogo' },
   { to: '/blog', label: 'Blog' },
   { to: '/carrito', label: 'Carrito' },
+  { to: '/quienes-somos', label: 'Quiénes Somos' },
+  { to: '/como-comprar', label: 'Cómo Comprar' },
 ];
 
 export default function SiteFooter() {

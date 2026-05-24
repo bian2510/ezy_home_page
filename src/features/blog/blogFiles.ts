@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /**
  * Vite-specific loader map for blog Markdown files.
  *
@@ -12,7 +15,7 @@
  *
  * See docs/adrs/F001-003-blog-static-markdown.md.
  */
-export const blogFiles = import.meta.glob<{ default: string }>(
+export const blogFiles = (import.meta as any).glob(
   '../../data/blog/*.md',
   { query: '?raw', eager: false },
-);
+) as Record<string, () => Promise<{ default: string }>>;

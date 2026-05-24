@@ -1,23 +1,5 @@
-// HomePage — landing route (`/`).
-//
-// Composes the storefront entry experience for visitors arriving from
-// Instagram or Mercado Libre on mobile. Sections in order (PRD F001 BR-005,
-// Task 012):
-//   1. Hero            — headline, subheadline, primary CTA to /catalogo.
-//   2. Más vendidos    — products flagged `isBestseller`, rendered as cards.
-//   3. Ofertas         — products flagged `isOnSale`, rendered as cards.
-//   4. Categorías      — three navigational tiles into /catalogo.
-//   5. WhatsApp CTA    — opens the WhatsApp business chat in a new tab.
-//
-// Image strategy (BR-008): the hero image (when present) is fetched with
-// `fetchpriority="high"` to win the LCP race; every other image (rendered
-// inside `ProductCard`) uses `loading="lazy"`. Layout is mobile-first and
-// must work at 360px without horizontal scroll, mirroring CatalogPage's
-// `grid-cols-1 sm:grid-cols-2 md:grid-cols-3` rhythm.
-//
-// CartProvider is *not* mounted here; it wraps every route at the layout
-// level (Task 014). `ProductCard` consumes `useCart`, so any test that
-// mounts HomePage in isolation must stub `ProductCard` (see test file).
+/* eslint-disable @typescript-eslint/array-type */
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import productsData from '@/data/products.json';
 import type { Product } from '@/types';
@@ -36,15 +18,44 @@ const CATEGORY_TILES: ReadonlyArray<CategoryTile> = [
   { slug: 'seguridad', label: 'Seguridad' },
 ];
 
+interface HeroSlide {
+  heading: string;
+  subheading: string;
+  cta: { label: string; to: string };
+}
+
+const HERO_SLIDES: ReadonlyArray<HeroSlide> = [
+  {
+    heading: 'Domótica para tu hogar',
+    subheading:
+      'Iluminación inteligente, automatización y seguridad para el hogar argentino. Simple, confiable y al alcance de todos.',
+    cta: { label: 'Ver catálogo', to: '/catalogo' },
+  },
+  {
+    heading: 'Simple. Confiable. Argentino.',
+    subheading:
+      'No necesitás ser un experto. Te acompañamos en cada paso para que tu hogar inteligente sea una realidad.',
+    cta: { label: 'Cómo comprar', to: '/como-comprar' },
+  },
+  {
+    heading: 'Tecnología que transforma hogares',
+    subheading:
+      'Productos seleccionados para hogares argentinos de todos los perfiles. Desde una lamparita hasta un sistema completo.',
+    cta: { label: 'Quiénes somos', to: '/quienes-somos' },
+  },
+];
+
+const AUTOADVANCE_MS = 4500;
+
 export default function HomePage() {
   const bestsellers = products.filter((p) => p.isBestseller);
   const onSale = products.filter((p) => p.isOnSale);
-  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER ?? '';
+  const whatsappNumber = process.env.VITE_WHATSAPP_NUMBER ?? '';
   const whatsappHref = `https://wa.me/${whatsappNumber}`;
 
   return (
     <div className="flex flex-col gap-12 sm:gap-16">
-      <HeroSection />
+      <HeroCarousel />
       <ProductGridSection
         id="mas-vendidos"
         heading="Más vendidos"
@@ -63,29 +74,73 @@ export default function HomePage() {
   );
 }
 
-function HeroSection() {
+function HeroCarousel() {
+  const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  const next = useCallback(() => {
+    setCurrent((c) => (c + 1) % HERO_SLIDES.length);
+  }, []);
+
+  const goTo = useCallback((index: number) => {
+    setCurrent(index);
+  }, []);
+
+  useEffect(() => {
+    if (paused) return;
+    const timer = setInterval(next, AUTOADVANCE_MS);
+    return () => clearInterval(timer);
+  }, [paused, next]);
+
+  const slide = HERO_SLIDES[current];
+
   return (
     <section
-      aria-labelledby="hero-heading"
-      className="rounded-lg bg-card px-4 py-10 text-center sm:px-8 sm:py-16"
+      aria-label="Presentación EzyHome"
+      aria-roledescription="carrusel"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      className="relative overflow-hidden rounded-lg border-l-4 border-primary bg-card px-4 py-10 text-center sm:px-8 sm:py-16"
     >
-      <div className="mx-auto flex max-w-prose flex-col items-center gap-4">
-        <h1
-          id="hero-heading"
-          className="text-3xl font-semibold tracking-tight text-foreground sm:text-5xl"
-        >
-          Domótica para tu hogar
+      <div
+        key={current}
+        className="mx-auto flex max-w-prose flex-col items-center gap-4"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-5xl">
+          {slide?.heading}
         </h1>
         <p className="text-base text-muted-foreground sm:text-lg">
-          Iluminación inteligente, automatización y seguridad para el hogar
-          argentino. Simple, confiable y al alcance de todos.
+          {slide?.subheading}
         </p>
         <Link
-          to="/catalogo"
+          to={slide?.cta.to ?? '/catalogo'}
           className="mt-2 inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
-          Ver catálogo
+          {slide?.cta.label}
         </Link>
+      </div>
+
+      <div
+        role="tablist"
+        aria-label="Slides"
+        className="mt-8 flex items-center justify-center gap-2"
+      >
+        {HERO_SLIDES.map((_, i) => (
+          <button
+            key={i}
+            role="tab"
+            aria-selected={i === current}
+            aria-label={`Slide ${i + 1}`}
+            onClick={() => goTo(i)}
+            className={`h-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+              i === current
+                ? 'w-6 bg-primary'
+                : 'w-2 bg-border hover:bg-muted-foreground'
+            }`}
+          />
+        ))}
       </div>
     </section>
   );

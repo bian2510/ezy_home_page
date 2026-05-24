@@ -1,16 +1,5 @@
-// SiteHeader — global navigation chrome (Task 014).
-//
-// Verified behaviours:
-//   - Logo links to `/`.
-//   - Primary nav exposes Catálogo, Blog, and Carrito links.
-//   - Cart badge mirrors `useCart().itemCount`, and is hidden at zero so
-//     visitors don't see a stale "0" indicator (DOMAIN.md › Design
-//     Implications: cada señal en el header debe ser informativa).
-//
-// All renders wrap the header in `MemoryRouter` + `CartProvider` to satisfy
-// `react-router-dom` and the `useCart` hook contract.
 import { beforeEach, describe, expect, it } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { useEffect, type ReactNode } from 'react';
 import SiteHeader from '@/components/layout/SiteHeader';
@@ -29,9 +18,6 @@ const sampleProduct: Product = {
   isOnSale: false,
 };
 
-// Test helper that lets a single test imperatively populate the cart from
-// inside the provider tree so the rendered SiteHeader observes the change.
-// Runs in an effect to avoid React's "setState in render" warning.
 function CartSeed({
   quantity,
   children,
@@ -44,7 +30,6 @@ function CartSeed({
     if (quantity > 0) {
       addItem(sampleProduct, quantity);
     }
-    // Seed runs exactly once per mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return <>{children}</>;
@@ -73,21 +58,15 @@ describe('SiteHeader', () => {
     expect(logo).toHaveAttribute('href', '/');
   });
 
-  it('should render primary nav links to /catalogo, /blog, and /carrito', () => {
+  it('should render primary nav links in desktop nav', () => {
     renderHeader();
 
     const nav = screen.getByRole('navigation', { name: /principal/i });
-    expect(
-      within(nav).getByRole('link', { name: /catálogo/i }),
-    ).toHaveAttribute('href', '/catalogo');
-    expect(within(nav).getByRole('link', { name: /blog/i })).toHaveAttribute(
-      'href',
-      '/blog',
-    );
-    expect(within(nav).getByRole('link', { name: /carrito/i })).toHaveAttribute(
-      'href',
-      '/carrito',
-    );
+    expect(within(nav).getByRole('link', { name: /catálogo/i })).toHaveAttribute('href', '/catalogo');
+    expect(within(nav).getByRole('link', { name: /blog/i })).toHaveAttribute('href', '/blog');
+    expect(within(nav).getByRole('link', { name: /quiénes somos/i })).toHaveAttribute('href', '/quienes-somos');
+    expect(within(nav).getByRole('link', { name: /cómo comprar/i })).toHaveAttribute('href', '/como-comprar');
+    expect(within(nav).getByRole('link', { name: /carrito/i })).toHaveAttribute('href', '/carrito');
   });
 
   it('should hide the cart badge when itemCount is zero', () => {
@@ -99,9 +78,30 @@ describe('SiteHeader', () => {
   it('should show the cart badge with itemCount when the cart has items', () => {
     renderHeader(3);
 
-    const badge = screen.getByTestId('cart-badge');
-    expect(badge).toBeInTheDocument();
-    expect(badge).toHaveTextContent('3');
+    // Two CartLink instances render (desktop + mobile toggle area); both show the badge.
+    const badges = screen.getAllByTestId('cart-badge');
+    expect(badges.length).toBeGreaterThan(0);
+    badges.forEach((badge) => expect(badge).toHaveTextContent('3'));
+  });
+
+  it('should open mobile menu when hamburger button is clicked', () => {
+    renderHeader();
+
+    expect(screen.queryByRole('navigation', { name: /menú móvil/i })).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: /abrir menú/i }));
+
+    expect(screen.getByRole('navigation', { name: /menú móvil/i })).toBeInTheDocument();
+  });
+
+  it('should close mobile menu when hamburger button is clicked again', () => {
+    renderHeader();
+
+    const btn = screen.getByRole('button', { name: /abrir menú/i });
+    fireEvent.click(btn);
+    expect(screen.getByRole('navigation', { name: /menú móvil/i })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /cerrar menú/i }));
+    expect(screen.queryByRole('navigation', { name: /menú móvil/i })).toBeNull();
   });
 });
-

@@ -20,6 +20,8 @@ import CartPage from '@/features/cart/CartPage';
 import CatalogPage from '@/features/catalog/CatalogPage';
 import BlogListPage from '@/features/blog/BlogListPage';
 import BlogPostPage from '@/features/blog/BlogPostPage';
+import QuienesSomosPage from '@/pages/QuienesSomosPage';
+import ComoComprarPage from '@/pages/ComoComprarPage';
 
 export default function App() {
   return (
@@ -31,6 +33,8 @@ export default function App() {
         <Route path="/carrito" element={<CartPage />} />
         <Route path="/blog" element={<BlogListPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="/quienes-somos" element={<QuienesSomosPage />} />
+        <Route path="/como-comprar" element={<ComoComprarPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

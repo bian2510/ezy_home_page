@@ -79,8 +79,8 @@ interface BlogPostArticleProps {
 // UTC-3 on a CI box configured to UTC). Split and build with the local-time
 // constructor to keep the displayed day stable across timezones.
 const formatBlogDate = (isoDate: string): string => {
-  const [year, month, day] = isoDate.split('-').map((part) => Number(part));
-  const date = new Date(year, month - 1, day);
+  const [year, month, day] = isoDate.split('-') as [string, string, string];
+  const date = new Date(Number(year), Number(month) - 1, Number(day));
   return new Intl.DateTimeFormat('es-AR', {
     day: 'numeric',
     month: 'long',
