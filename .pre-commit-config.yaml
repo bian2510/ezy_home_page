@@ -1,0 +1,22 @@
+# Cross-language file-hygiene + secret-scan layer.
+# JS/TS quality (eslint, prettier, tsc) is run by Husky + lint-staged so we
+# do not duplicate it here.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: '\.md$'
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=512']
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks

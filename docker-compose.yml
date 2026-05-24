@@ -1,0 +1,34 @@
+# EzyHome storefront — local + prod-like orchestration.
+# Brings up the dockerized SPA on http://localhost:3000.
+# Acceptance ref: F001 / Task 015.
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Build-time injection — VITE_* vars are inlined into the bundle.
+        VITE_WHATSAPP_NUMBER: ${VITE_WHATSAPP_NUMBER}
+    image: ezyhome-storefront:local
+    container_name: ezyhome-storefront
+    ports:
+      # Host:Container — open http://localhost:3000 in the browser.
+      - "3000:80"
+    environment:
+      # Passed through for parity / debugging; the value that actually ships in
+      # the bundle is the one supplied at build time via the ARG above.
+      - VITE_WHATSAPP_NUMBER=${VITE_WHATSAPP_NUMBER}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - ezyhome-network
+
+networks:
+  ezyhome-network:
+    driver: bridge

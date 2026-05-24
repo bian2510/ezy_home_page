@@ -1,0 +1,17 @@
+task_id: "009.002"
+title: "useBlogPost hook (import.meta.glob Markdown loader)"
+assigned_agent: frontend-developer
+status: completed
+parent_task: "009"
+requires_reading:
+  - docs/adrs/F001-003-blog-static-markdown.md
+  - src/types/index.ts
+  - src/data/blog/index.json
+files_in_scope:
+  - src/features/blog/useBlogPost.ts
+  - tests/blog/useBlogPost.test.ts
+acceptance_criteria:
+  - "useBlogPost(slug string) hook uses import.meta.glob targeting src/data/blog/*.md with query ?raw and eager false. Returns {content: string|null, meta: BlogMeta|null, notFound: boolean, loading: boolean}. Looks up slug in index.json; if not found returns notFound true immediately. If found dynamically imports the .md file and sets content to the raw string."
+  - "Vitest tests: known slug eventually resolves content and meta with notFound false; unknown slug returns notFound true synchronously."
+dependencies:
+  - "009.001"

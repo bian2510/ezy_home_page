@@ -1,0 +1,36 @@
+spec_phase:
+  classification: research-assisted
+  phase_2_75_metrics:
+    fill_ratio: 0.33
+    unfillable_gap_count: 0
+    gaps_filled_by_research: 3
+    gaps_filled_by_user: 3
+  architect_recommendation: chain_now
+  design_mandatory: false
+  spec_author_role: SME
+  journey_refs:
+  - J-001
+  completed_at: '2026-05-24T00:00:00Z'
+architect_phase:
+  classification: research-assisted
+  phase_2_75_metrics:
+    fill_ratio: 0.33
+    unfillable_gap_count: 0
+    gaps_filled_by_research: 2
+    gaps_filled_by_user: 4
+  architect_author_role: SME + Engineer + PM
+  adrs:
+  - docs/adrs/F001-001-cart-state-react-context.md
+  - docs/adrs/F001-002-tailwind-token-remapping.md
+  - docs/adrs/F001-003-blog-static-markdown.md
+  completed_at: '2026-05-24T00:00:00Z'
+build:
+  feature: ezyhome-storefront-page
+  spec_path: .etc_sdlc/features/active/F001-ezyhome-storefront-page/spec.md
+  current_step: 8
+  started_at: '2026-05-24T00:00:00Z'
+  mode: STANDARD
+  waves_completed: 4
+  total_waves: 6
+  stacked: true
+  completed_at: '2026-05-24T14:30:00Z'

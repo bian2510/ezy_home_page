@@ -1,0 +1,21 @@
+task_id: "007"
+title: "Catalog page + category filter (CatalogPage + CategoryFilter + useCatalog)"
+assigned_agent: frontend-developer
+status: completed
+requires_reading:
+  - .etc_sdlc/features/active/F001-ezyhome-storefront-page/spec.md
+  - src/types/index.ts
+files_in_scope:
+  - src/features/catalog/CatalogPage.tsx
+  - src/features/catalog/CategoryFilter.tsx
+  - src/features/catalog/useCatalog.ts
+  - tests/catalog/CatalogPage.test.tsx
+acceptance_criteria:
+  - "CatalogPage reads products.json and renders in responsive grid (1 col base 360px, 2 at sm, 3 at md). Passes each product to ProductCard."
+  - "CategoryFilter renders chip buttons per unique category plus Todos. Clicking chip filters grid to that category. Clicking Todos shows all. Active chip uses primary token styling."
+  - "useCatalog hook returns filtered array, selectedCategory (null means all), setCategory function, categories string array. Vitest: default shows all; filter works; null resets to all."
+dependencies:
+  - "001"
+  - "002"
+  - "003"
+  - "004"

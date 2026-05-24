@@ -1,0 +1,126 @@
+[
+  {
+    "id": "smart-bulb-rgbw-001",
+    "name": "Foco Inteligente RGBW WiFi 9W",
+    "description": "Foco LED inteligente con 16 millones de colores y luz blanca regulable (2700K-6500K). Se controla desde la app EzyHome o por voz con Alexa y Google Home, sin necesidad de hub adicional.",
+    "price": 18900,
+    "images": ["/images/smart-bulb-rgbw-001.jpg"],
+    "category": "iluminacion",
+    "isBestseller": true,
+    "isOnSale": false
+  },
+  {
+    "id": "tira-led-rgb-5m-002",
+    "name": "Tira LED Inteligente RGB 5 metros",
+    "description": "Tira LED de 5 metros con control WiFi, ideal para iluminación ambiental en livings, dormitorios o cocinas. Incluye fuente de alimentación, control remoto y soporta sincronización con música.",
+    "price": 22500,
+    "originalPrice": 28900,
+    "images": ["/images/tira-led-rgb-5m-002.jpg"],
+    "category": "iluminacion",
+    "isBestseller": false,
+    "isOnSale": true
+  },
+  {
+    "id": "switch-wifi-dimmer-003",
+    "name": "Switch WiFi Dimmer Táctil 1 Tecla",
+    "description": "Llave de luz táctil con regulación de intensidad y control WiFi. Reemplaza una llave tradicional sin obra y permite programar escenas, horarios y comandos por voz. Requiere neutro.",
+    "price": 24500,
+    "images": ["/images/switch-wifi-dimmer-003.jpg"],
+    "category": "iluminacion",
+    "isBestseller": false,
+    "isOnSale": false
+  },
+  {
+    "id": "enchufe-wifi-16a-004",
+    "name": "Enchufe Inteligente WiFi 16A con Medidor",
+    "description": "Enchufe inteligente con medidor de consumo eléctrico en tiempo real. Compatible con Alexa y Google Home, permite encender/apagar electrodomésticos remotamente y programar horarios desde el celular.",
+    "price": 14900,
+    "originalPrice": 19500,
+    "images": ["/images/enchufe-wifi-16a-004.jpg"],
+    "category": "automatizacion",
+    "isBestseller": true,
+    "isOnSale": true
+  },
+  {
+    "id": "sensor-apertura-puerta-005",
+    "name": "Sensor de Apertura de Puertas y Ventanas Zigbee",
+    "description": "Sensor magnético inalámbrico que detecta la apertura de puertas y ventanas. Envía notificaciones push instantáneas al celular y se integra con escenas de seguridad. Requiere hub Zigbee EzyHome.",
+    "price": 9500,
+    "images": ["/images/sensor-apertura-puerta-005.jpg"],
+    "category": "automatizacion",
+    "isBestseller": false,
+    "isOnSale": false
+  },
+  {
+    "id": "hub-zigbee-ezyhome-006",
+    "name": "Hub de Automatización Zigbee 3.0 EzyHome",
+    "description": "Hub central para conectar hasta 50 dispositivos Zigbee del hogar inteligente. Permite crear automatizaciones complejas entre sensores, luces y enchufes. Conexión por Ethernet y WiFi 2.4GHz.",
+    "price": 48900,
+    "images": ["/images/hub-zigbee-ezyhome-006.jpg"],
+    "category": "automatizacion",
+    "isBestseller": false,
+    "isOnSale": false
+  },
+  {
+    "id": "termostato-inteligente-007",
+    "name": "Termostato Inteligente WiFi para Caldera",
+    "description": "Termostato programable con pantalla táctil y control remoto desde el celular. Aprende los hábitos del hogar y optimiza el consumo de gas o electricidad. Compatible con calderas y splits inverter.",
+    "price": 56500,
+    "images": ["/images/termostato-inteligente-007.jpg"],
+    "category": "automatizacion",
+    "isBestseller": false,
+    "isOnSale": false
+  },
+  {
+    "id": "sensor-gas-glp-008",
+    "name": "Sensor de Gas GLP y Natural WiFi",
+    "description": "Detector inteligente de fugas de gas natural y GLP con alarma sonora de 85dB y notificación push al celular. Ideal para cocinas y ambientes con artefactos a gas. Instalación en pared, conexión 220V.",
+    "price": 16500,
+    "images": ["/images/sensor-gas-glp-008.jpg"],
+    "category": "seguridad",
+    "isBestseller": true,
+    "isOnSale": false
+  },
+  {
+    "id": "sensor-monoxido-co-009",
+    "name": "Detector de Monóxido de Carbono WiFi",
+    "description": "Detector de monóxido de carbono (CO) con sensor electroquímico de alta precisión y alarma de 85dB. Envía alertas al celular en tiempo real y registra niveles históricos en la app EzyHome.",
+    "price": 17900,
+    "originalPrice": 21500,
+    "images": ["/images/sensor-monoxido-co-009.jpg"],
+    "category": "seguridad",
+    "isBestseller": false,
+    "isOnSale": true
+  },
+  {
+    "id": "detector-humo-wifi-010",
+    "name": "Detector de Humo Fotoeléctrico WiFi",
+    "description": "Detector de humo fotoeléctrico con conexión WiFi y batería de litio de 10 años de duración. Notifica al celular ante cualquier evento y se interconecta con otros detectores EzyHome del hogar.",
+    "price": 13500,
+    "images": ["/images/detector-humo-wifi-010.jpg"],
+    "category": "seguridad",
+    "isBestseller": false,
+    "isOnSale": false
+  },
+  {
+    "id": "camara-wifi-indoor-011",
+    "name": "Cámara WiFi Interior 1080p con Visión Nocturna",
+    "description": "Cámara de seguridad interior Full HD con visión nocturna infrarroja, audio bidireccional y detección de movimiento por IA. Almacenamiento en microSD hasta 128GB o en la nube EzyHome.",
+    "price": 32900,
+    "originalPrice": 38900,
+    "images": ["/images/camara-wifi-indoor-011.jpg"],
+    "category": "seguridad",
+    "isBestseller": true,
+    "isOnSale": true
+  },
+  {
+    "id": "sensor-movimiento-pir-012",
+    "name": "Sensor de Movimiento PIR Zigbee",
+    "description": "Sensor de movimiento infrarrojo pasivo (PIR) inalámbrico con detección de hasta 7 metros. Activa luces, alarmas o cámaras automáticamente. Batería CR2450 con autonomía de 2 años. Requiere hub Zigbee.",
+    "price": 10900,
+    "images": ["/images/sensor-movimiento-pir-012.jpg"],
+    "category": "seguridad",
+    "isBestseller": false,
+    "isOnSale": false
+  }
+]

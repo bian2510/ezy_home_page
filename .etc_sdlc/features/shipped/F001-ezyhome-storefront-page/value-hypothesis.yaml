@@ -1,0 +1,34 @@
+schema_version: 1
+feature_id: F001
+spec_author_role: SME
+
+who: >
+  Adultos argentinos de 24 a 60 años que llegan a EzyHome desde Instagram o
+  Mercado Libre en mobile, buscando productos de domótica (iluminación inteligente,
+  automatización, detectores de gas/humo/monóxido). Incluye entusiastas de
+  tecnología y personas que buscan mayor seguridad en el hogar.
+
+current_cost: >
+  La tienda actual en Tienda Nube free no transmite profesionalismo ni confianza.
+  Los visitantes que llegan de Instagram o Mercado Libre perciben la tienda como
+  improvisada y cierran antes de explorar productos. Resultado: tasa de conversión
+  cercana a cero — prácticamente ningún visitante envía un pedido por WhatsApp.
+
+predicted:
+  metric: "Porcentaje de visitantes únicos que envían un pedido por WhatsApp"
+  direction: increase
+  threshold: 3
+  window_days: 30
+
+how_we_know: >
+  Contar los mensajes de WhatsApp entrantes con formato de pedido (generados por
+  el botón de checkout) dividido por las visitas únicas medidas con Google Analytics
+  o Plausible Analytics. Medición mensual a partir del primer mes post-lanzamiento.
+  Meta: ≥ 3% (por encima del promedio mobile e-commerce de 2.9%).
+
+status: pending
+
+validation:
+  measured_at: null
+  measured_value: null
+  evidence: null

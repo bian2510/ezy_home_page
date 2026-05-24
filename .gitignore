@@ -1,0 +1,68 @@
+# Node / pnpm
+node_modules
+.pnpm-store
+
+# Build output
+dist
+dist-ssr
+build
+*.local
+
+# Coverage
+coverage
+*.lcov
+.nyc_output
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor / IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Vite
+.vite
+
+# Cache
+.cache
+.eslintcache
+.parcel-cache
+.turbo
+
+# Husky / lint-staged
+.husky/_
+
+# Misc
+*.tsbuildinfo
+
+# Claude Code project data (memorias, settings locales)
+.claude/
+
+# Artefactos intermedios del pipeline ETC
+f001_tasks.json
+f001_subtasks.json
+
+# Telemetría operacional del harness ETC (logs, no código del proyecto)
+.etc_sdlc/efficiency/

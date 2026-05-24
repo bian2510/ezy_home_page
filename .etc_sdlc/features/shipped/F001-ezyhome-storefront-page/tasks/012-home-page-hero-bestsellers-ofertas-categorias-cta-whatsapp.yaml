@@ -1,0 +1,20 @@
+task_id: "012"
+title: "Home page (Hero + bestsellers + ofertas + categorias + CTA WhatsApp)"
+assigned_agent: frontend-developer
+status: completed
+requires_reading:
+  - .etc_sdlc/features/active/F001-ezyhome-storefront-page/spec.md
+  - src/data/products.json
+  - src/features/catalog/ProductCard.tsx
+files_in_scope:
+  - src/pages/HomePage.tsx
+  - tests/pages/HomePage.test.tsx
+acceptance_criteria:
+  - "HomePage renders: Hero (headline, subheadline, button linking to /catalogo); Mas vendidos (isBestseller products via ProductCard); Ofertas (isOnSale products via ProductCard); Categorias (3 cards linking to /catalogo for iluminacion, automatizacion, seguridad); WhatsApp CTA button using VITE_WHATSAPP_NUMBER."
+  - "Hero main image if present uses fetchpriority high. Other images use loading lazy. Works at 360px without horizontal scroll."
+  - "Vitest: hero CTA links to /catalogo; bestseller products render; 3 category cards present."
+dependencies:
+  - "001"
+  - "002"
+  - "003"
+  - "008"

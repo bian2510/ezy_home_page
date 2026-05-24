@@ -1,0 +1,16 @@
+task_id: "001"
+title: "Tailwind EzyHome palette + Fontsource fonts"
+assigned_agent: frontend-developer
+status: completed
+requires_reading:
+  - .etc_sdlc/features/active/F001-ezyhome-storefront-page/spec.md
+  - .etc_sdlc/features/active/F001-ezyhome-storefront-page/design.md
+  - docs/adrs/F001-002-tailwind-token-remapping.md
+files_in_scope:
+  - tailwind.config.ts
+  - src/main.tsx
+acceptance_criteria:
+  - "tailwind.config.ts defines all 16 EzyHome color tokens: background #f4f7f9, foreground #1e2433, card #ffffff, muted.DEFAULT #eef1f4, muted.foreground #6b7280, border #e2e8ef, primary.DEFAULT #4a9e96, primary.foreground #ffffff, sidebar.DEFAULT #242c3d, sidebar.foreground #e8ecf0, sidebar.accent #2e3a50, sidebar.border #333d54, success #4caf86, warning.DEFAULT #d4a017, warning.foreground #7a5a00, destructive #e53935. fontFamily.sans uses Inter, fontFamily.mono uses Geist Mono."
+  - "@fontsource/inter and @fontsource/geist-mono installed via pnpm add and imported in src/main.tsx. react-markdown and remark-gfm also installed."
+  - "Vitest passes after changes."
+dependencies: []

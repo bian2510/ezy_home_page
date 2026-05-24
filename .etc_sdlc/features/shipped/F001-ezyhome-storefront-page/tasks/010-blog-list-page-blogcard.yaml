@@ -1,0 +1,19 @@
+task_id: "010"
+title: "Blog list page + BlogCard"
+assigned_agent: frontend-developer
+status: completed
+requires_reading:
+  - src/types/index.ts
+  - src/data/blog/index.json
+files_in_scope:
+  - src/features/blog/BlogListPage.tsx
+  - src/features/blog/BlogCard.tsx
+  - tests/blog/BlogListPage.test.tsx
+acceptance_criteria:
+  - "BlogListPage at /blog reads index.json and renders BlogCard per article. Shows title and date formatted es-AR locale. Clicking card navigates to /blog/:slug."
+  - "BlogCard shows cover image with loading lazy when image is not null. When image is null renders card without any img element. No broken img, no layout shift."
+  - "Vitest: articles list renders titles; card with null image has no img element."
+dependencies:
+  - "001"
+  - "009.001"
+  - "009.002"

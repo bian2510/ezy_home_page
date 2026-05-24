@@ -1,0 +1,20 @@
+task_id: "013"
+title: "Product detail page + QuantitySelector"
+assigned_agent: frontend-developer
+status: completed
+requires_reading:
+  - .etc_sdlc/features/active/F001-ezyhome-storefront-page/spec.md
+  - src/data/products.json
+  - src/features/cart/useCart.ts
+files_in_scope:
+  - src/pages/ProductDetailPage.tsx
+  - src/components/ui/QuantitySelector.tsx
+  - tests/pages/ProductDetailPage.test.tsx
+acceptance_criteria:
+  - "ProductDetailPage at /productos/:id finds product by id in products.json. Renders: image gallery with thumbnails when images.length > 1 or placeholder when empty; name; full description; price ARS with originalPrice struck-through if isOnSale; QuantitySelector starting at 1; Agregar al carrito button calling addItem with selected quantity."
+  - "Invalid id renders 404 message with link to /catalogo."
+  - "QuantitySelector: current quantity shown, decrement disabled at 1, increment available. All buttons min-h-11. Vitest: renders product details; invalid id shows 404; quantity decrement disabled at 1."
+dependencies:
+  - "001"
+  - "002"
+  - "004"

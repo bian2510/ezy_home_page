@@ -1,0 +1,19 @@
+task_id: "004"
+title: "Cart state management (CartContext + CartProvider + useCart)"
+assigned_agent: frontend-developer
+status: completed
+requires_reading:
+  - .etc_sdlc/features/active/F001-ezyhome-storefront-page/design.md
+  - docs/adrs/F001-001-cart-state-react-context.md
+  - src/types/index.ts
+files_in_scope:
+  - src/features/cart/CartContext.tsx
+  - src/features/cart/CartProvider.tsx
+  - src/features/cart/useCart.ts
+  - tests/cart/CartContext.test.tsx
+acceptance_criteria:
+  - "CartContext provides: items CartItem[], addItem(product, quantity defaults 1), removeItem(productId), updateQuantity(productId, quantity) clamped min 1, clearCart(), total number sum of price times quantity, itemCount number sum of all quantities, storageAvailable boolean."
+  - "CartProvider initializes from localStorage key ezyhome_cart via JSON.parse in try-catch. Syncs on each state change via useEffect with JSON.stringify try-catch. If localStorage throws sets storageAvailable false."
+  - "Vitest: addItem works; duplicate productId increments quantity; removeItem removes; updateQuantity clamps to 1; total and itemCount correct; localStorage read on init; localStorage failure sets storageAvailable false."
+dependencies:
+  - "002"

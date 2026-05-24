@@ -1,0 +1,20 @@
+task_id: "009"
+title: "Blog data + useBlogPost hook"
+assigned_agent: frontend-developer
+status: decomposed
+requires_reading:
+  - .etc_sdlc/features/active/F001-ezyhome-storefront-page/design.md
+  - docs/adrs/F001-003-blog-static-markdown.md
+  - src/types/index.ts
+files_in_scope:
+  - src/data/blog/index.json
+  - src/data/blog/introduccion-a-la-domotica.md
+  - src/data/blog/iluminacion-inteligente-guia.md
+  - src/features/blog/useBlogPost.ts
+  - tests/blog/useBlogPost.test.ts
+acceptance_criteria:
+  - "src/data/blog/index.json is BlogMeta array with 2+ entries. Slugs match .md filenames without extension. Two sample articles in Spanish with minimum 3 paragraphs each covering home automation topics."
+  - "useBlogPost(slug) uses import.meta.glob on src/data/blog/*.md with query ?raw and eager false. Returns content string or null, meta BlogMeta or null, notFound boolean, loading boolean. Slug not in index.json returns notFound true."
+  - "Vitest: known slug returns content and meta with notFound false; unknown slug returns notFound true."
+dependencies:
+  - "002"

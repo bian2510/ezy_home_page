@@ -1,0 +1,67 @@
+# Keep the build context small and free of host-only / secret material.
+
+# Node / pnpm
+node_modules
+.pnpm-store
+
+# Build output (we rebuild inside the image)
+dist
+dist-ssr
+build
+
+# Coverage and test artifacts
+coverage
+*.lcov
+.nyc_output
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Env files — never bake host env into the image
+.env
+.env.*
+!.env.example
+
+# VCS
+.git
+.gitignore
+.gitattributes
+.gitmodules
+
+# Editor / IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Caches
+.cache
+.eslintcache
+.parcel-cache
+.turbo
+.vite
+*.tsbuildinfo
+
+# Project metadata not needed at build time
+.github
+.husky
+.etc_sdlc
+docs
+spec
+tests
+roles
+.meta
+.tdd-dirty
+
+# Docker artifacts themselves
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml

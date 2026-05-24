@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "introduccion-a-la-domotica",
+    "title": "Introducción a la Domótica: ¿Qué es y para qué sirve?",
+    "date": "2026-05-01",
+    "image": "/images/blog/intro-domotica.jpg",
+    "excerpt": "Descubrí qué es la domótica y cómo puede transformar tu hogar en un espacio más seguro, eficiente y cómodo."
+  },
+  {
+    "slug": "iluminacion-inteligente-guia",
+    "title": "Guía completa de iluminación inteligente para el hogar",
+    "date": "2026-05-15",
+    "image": "/images/blog/iluminacion-inteligente.jpg",
+    "excerpt": "Todo lo que necesitás saber para empezar con la iluminación inteligente: desde elegir las bombillas hasta automatizar encendido y apagado."
+  }
+]

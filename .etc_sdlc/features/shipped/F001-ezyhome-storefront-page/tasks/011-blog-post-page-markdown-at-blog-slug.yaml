@@ -1,0 +1,16 @@
+task_id: "011"
+title: "Blog post page (Markdown at /blog/:slug)"
+assigned_agent: frontend-developer
+status: completed
+requires_reading:
+  - src/features/blog/useBlogPost.ts
+files_in_scope:
+  - src/features/blog/BlogPostPage.tsx
+  - tests/blog/BlogPostPage.test.tsx
+acceptance_criteria:
+  - "BlogPostPage at /blog/:slug calls useBlogPost. When content loaded renders title and date above Markdown via ReactMarkdown with remarkGfm. rehypeRaw is NOT used."
+  - "notFound true renders 404 message with link back to /blog. loading true shows loading indicator."
+  - "Vitest: renders article title for known slug; renders 404 for unknown slug."
+dependencies:
+  - "001"
+  - "009.002"

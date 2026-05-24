@@ -1,0 +1,13 @@
+task_id: "003"
+title: "Static product data JSON"
+assigned_agent: frontend-developer
+status: completed
+requires_reading:
+  - .etc_sdlc/features/active/F001-ezyhome-storefront-page/spec.md
+  - src/types/index.ts
+files_in_scope:
+  - src/data/products.json
+acceptance_criteria:
+  - "src/data/products.json is a valid JSON array of at least 6 Product objects: 2+ in category iluminacion, 2+ in automatizacion, 2+ in seguridad. At least 1 has isBestseller true, at least 1 has isOnSale true with originalPrice defined. All images entries are non-empty path strings. JSON parses without errors."
+dependencies:
+  - "002"
