@@ -21,10 +21,10 @@ description: >
   context while retaining access to the full project orientation layer.
 
 tier_access:
-  tier_0: full        # DOMAIN.md, PROJECT.md always
-  tier_1: full        # all PRDs, plans, sources, standards visible
-  tier_2: scoped      # ADRs and invariants visible but filtered by active task
-  tier_3: none        # SEM escalates for Tier 3 regulated-domain needs
+  tier_0: full # DOMAIN.md, PROJECT.md always
+  tier_1: full # all PRDs, plans, sources, standards visible
+  tier_2: scoped # ADRs and invariants visible but filtered by active task
+  tier_3: none # SEM escalates for Tier 3 regulated-domain needs
 
 default_consumes:
   # --- Tier 0: orientation (always) ---
@@ -37,7 +37,7 @@ default_consumes:
   # to decompose and dispatch correctly.
   - docs/prds/**/*
   - docs/plans/**/*
-  - docs/sources/**/*        # EDIT ME: narrow if your source corpus is large
+  - docs/sources/**/* # EDIT ME: narrow if your source corpus is large
   - docs/standards/**/*
 
   # --- Tier 2: invariants and ADRs (project-wide view) ---
@@ -55,18 +55,18 @@ discovery:
   # crossing a bounded context line to validate a dispatch decision).
   allowed_requests:
     - kind: plan_reference
-      pattern: "docs/plans/*.md"
-      auto_grant: true       # SEM reads plans routinely; grant and log
+      pattern: 'docs/plans/*.md'
+      auto_grant: true # SEM reads plans routinely; grant and log
       requires: reference_id
 
     - kind: cross_context_source
-      pattern: "docs/sources/**/*"
+      pattern: 'docs/sources/**/*'
       auto_grant: false
       requires: justification
 
     - kind: build_retrospective
-      pattern: "docs/builds/**/*"
-      auto_grant: true       # retrospectives inform dispatch decisions
+      pattern: 'docs/builds/**/*'
+      auto_grant: true # retrospectives inform dispatch decisions
       requires: reference_id
 
   request_schema:
@@ -77,17 +77,17 @@ discovery:
 
 required_outputs:
   # SEM's deliverable is a dispatch plan, not code
-  - dispatch_plan: true           # concrete list of subagent invocations
-  - files_isolated: true          # no two parallel tasks touch the same file
-  - dependencies_respected: true  # task ordering matches the spec's dependency graph
+  - dispatch_plan: true # concrete list of subagent invocations
+  - files_isolated: true # no two parallel tasks touch the same file
+  - dependencies_respected: true # task ordering matches the spec's dependency graph
 
 escalation_triggers:
   - kind: architectural
-    when: "task exposes a new invariant, a new ADR, or a structural conflict"
+    when: 'task exposes a new invariant, a new ADR, or a structural conflict'
     to: architect
 
   - kind: human_approval_needed
-    when: "a decision requires product, business, or regulatory judgment"
+    when: 'a decision requires product, business, or regulatory judgment'
     to: human
 
   # EDIT ME: add project-specific escalation triggers here

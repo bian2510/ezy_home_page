@@ -53,8 +53,8 @@ export default function ComoComprarPage() {
           Cómo Comprar
         </h1>
         <p className="mt-3 text-base text-muted-foreground sm:text-lg">
-          En EzyHome comprás de forma asistida — te acompañamos en cada paso
-          para que llegues al producto correcto sin complicaciones.
+          En EzyHome comprás de forma asistida — te acompañamos en cada paso para que llegues al
+          producto correcto sin complicaciones.
         </p>
       </header>
 
@@ -90,12 +90,12 @@ export default function ComoComprarPage() {
         aria-labelledby="dudas-heading"
         className="rounded-lg bg-primary px-6 py-6 text-primary-foreground"
       >
-        <h2 id="dudas-heading" className="font-semibold text-lg">
+        <h2 id="dudas-heading" className="text-lg font-semibold">
           ¿Tenés dudas antes de comprar?
         </h2>
         <p className="mt-2 text-sm text-primary-foreground/90">
-          Escribinos por WhatsApp y te ayudamos a elegir el producto ideal para
-          tu hogar. Sin compromiso.
+          Escribinos por WhatsApp y te ayudamos a elegir el producto ideal para tu hogar. Sin
+          compromiso.
         </p>
       </section>
     </div>

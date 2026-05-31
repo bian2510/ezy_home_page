@@ -15,14 +15,11 @@ const products = productsData as Product[];
  * › Design Implications and PRD F001 BR-008.
  */
 export default function CatalogPage() {
-  const { filtered, selectedCategory, setCategory, categories } =
-    useCatalog(products);
+  const { filtered, selectedCategory, setCategory, categories } = useCatalog(products);
 
   return (
     <section className="mx-auto w-full max-w-content px-4 py-6">
-      <h1 className="mb-4 text-2xl font-semibold text-foreground sm:text-3xl">
-        Catálogo
-      </h1>
+      <h1 className="mb-4 text-2xl font-semibold text-foreground sm:text-3xl">Catálogo</h1>
 
       <div className="mb-6">
         <CategoryFilter

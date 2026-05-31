@@ -19,7 +19,9 @@ describe('ComoComprarPage', () => {
   it('should render all 6 purchase steps', () => {
     renderPage();
     expect(screen.getByRole('heading', { name: /navegá el catálogo/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /agregá productos al carrito/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /agregá productos al carrito/i }),
+    ).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /enviá tu pedido/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /recibís la confirmación/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /realizás el pago/i })).toBeInTheDocument();
@@ -35,7 +37,10 @@ describe('ComoComprarPage', () => {
 
   it('should render CTAs linking to /catalogo and /carrito', () => {
     renderPage();
-    expect(screen.getByRole('link', { name: /ir al catálogo/i })).toHaveAttribute('href', '/catalogo');
+    expect(screen.getByRole('link', { name: /ir al catálogo/i })).toHaveAttribute(
+      'href',
+      '/catalogo',
+    );
     expect(screen.getByRole('link', { name: /ver carrito/i })).toHaveAttribute('href', '/carrito');
   });
 });

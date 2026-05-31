@@ -160,9 +160,7 @@ describe('ProductCard', () => {
 
     renderWithProviders(<ProductCard product={product} />);
 
-    await user.click(
-      screen.getByRole('button', { name: /agregar al carrito/i }),
-    );
+    await user.click(screen.getByRole('button', { name: /agregar al carrito/i }));
 
     expect(addItemMock).toHaveBeenCalledTimes(1);
     expect(addItemMock).toHaveBeenCalledWith(product, 1);
@@ -174,9 +172,7 @@ describe('ProductCard', () => {
 
     renderWithProviders(<ProductCard product={product} />);
 
-    await user.click(
-      screen.getByRole('button', { name: /agregar al carrito/i }),
-    );
+    await user.click(screen.getByRole('button', { name: /agregar al carrito/i }));
 
     expect(navigateMock).not.toHaveBeenCalled();
   });

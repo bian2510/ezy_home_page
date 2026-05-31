@@ -103,11 +103,7 @@ function ProductDetail({ product }: ProductDetailProps) {
                         : 'border-border hover:border-muted-foreground'
                     }`}
                   >
-                    <img
-                      src={src}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
+                    <img src={src} alt="" className="h-full w-full object-cover" />
                   </button>
                 </li>
               ))}
@@ -116,9 +112,7 @@ function ProductDetail({ product }: ProductDetailProps) {
         </div>
 
         <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">
-            {product.name}
-          </h1>
+          <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">{product.name}</h1>
 
           <div className="flex items-baseline gap-3">
             {product.isOnSale && product.originalPrice !== undefined && (
@@ -134,11 +128,7 @@ function ProductDetail({ product }: ProductDetailProps) {
           <p className="text-base text-foreground/90">{product.description}</p>
 
           <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <QuantitySelector
-              value={quantity}
-              onChange={setQuantity}
-              min={MIN_QUANTITY}
-            />
+            <QuantitySelector value={quantity} onChange={setQuantity} min={MIN_QUANTITY} />
             <button
               type="button"
               onClick={handleAddToCart}

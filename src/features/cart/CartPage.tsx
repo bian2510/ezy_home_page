@@ -22,8 +22,7 @@ const WHATSAPP_PHONE_NUMBER =
     ?.VITE_WHATSAPP_NUMBER ?? '';
 
 export default function CartPage() {
-  const { items, updateQuantity, removeItem, total, storageAvailable } =
-    useCart();
+  const { items, updateQuantity, removeItem, total, storageAvailable } = useCart();
 
   const isEmpty = items.length === 0;
 
@@ -47,9 +46,7 @@ export default function CartPage() {
 
   return (
     <section className="mx-auto w-full max-w-content px-4 py-8 sm:py-12">
-      <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">
-        Mi Carrito
-      </h1>
+      <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">Mi Carrito</h1>
 
       {!storageAvailable && (
         <p
@@ -62,9 +59,7 @@ export default function CartPage() {
 
       {isEmpty ? (
         <div className="mt-8 flex flex-col items-center gap-4 rounded-md border border-border bg-card px-4 py-12 text-center">
-          <p className="text-base text-muted-foreground">
-            Tu carrito está vacío.
-          </p>
+          <p className="text-base text-muted-foreground">Tu carrito está vacío.</p>
           <Link
             to="/catalogo"
             className="text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -88,8 +83,7 @@ export default function CartPage() {
 
       <div className="mt-6 flex flex-col gap-4 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-lg font-semibold text-foreground">
-          Total:{' '}
-          <span className="font-mono">{formatPrice(total)}</span>
+          Total: <span className="font-mono">{formatPrice(total)}</span>
         </p>
         <button
           type="button"

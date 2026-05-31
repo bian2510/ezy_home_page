@@ -30,8 +30,8 @@ EzyHome v1 necesita un carrito de compras persistente entre páginas y sesiones.
 
 ## Alternativas rechazadas
 
-| Alternativa | Razón de rechazo |
-|---|---|
-| Zustand | Dependencia extra sin beneficio real a esta escala |
-| Redux Toolkit | Setup desproporcionado para un solo dominio de estado |
-| URL params | No persiste entre sesiones; impracticable para carrito |
+| Alternativa   | Razón de rechazo                                       |
+| ------------- | ------------------------------------------------------ |
+| Zustand       | Dependencia extra sin beneficio real a esta escala     |
+| Redux Toolkit | Setup desproporcionado para un solo dominio de estado  |
+| URL params    | No persiste entre sesiones; impracticable para carrito |

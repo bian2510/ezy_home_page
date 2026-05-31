@@ -15,9 +15,7 @@ const articles = blogIndex as BlogMeta[];
 export default function BlogListPage() {
   return (
     <section className="mx-auto w-full max-w-content px-4 py-6">
-      <h1 className="mb-4 text-2xl font-semibold text-foreground sm:text-3xl">
-        Blog
-      </h1>
+      <h1 className="mb-4 text-2xl font-semibold text-foreground sm:text-3xl">Blog</h1>
 
       {articles.length === 0 ? (
         <p className="text-muted-foreground" role="status">

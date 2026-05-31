@@ -19,9 +19,7 @@ const buildProduct = (overrides: Partial<Product> = {}): Product => ({
   ...overrides,
 });
 
-const wrapper = ({ children }: { children: ReactNode }) => (
-  <CartProvider>{children}</CartProvider>
-);
+const wrapper = ({ children }: { children: ReactNode }) => <CartProvider>{children}</CartProvider>;
 
 describe('CartContext', () => {
   beforeEach(() => {
@@ -172,8 +170,7 @@ describe('CartContext', () => {
   });
 
   it('should throw a descriptive error when useCart is used outside CartProvider', () => {
-    const renderOutsideProvider = () =>
-      renderHook(() => useCart());
+    const renderOutsideProvider = () => renderHook(() => useCart());
 
     expect(renderOutsideProvider).toThrow(/CartProvider/);
   });

@@ -35,9 +35,7 @@ describe('HomePage (integration)', () => {
     // Header chrome (SiteHeader): logo + primary nav.
     const header = screen.getByRole('banner');
     expect(header).toBeInTheDocument();
-    expect(
-      screen.getByRole('navigation', { name: /principal/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: /principal/i })).toBeInTheDocument();
 
     // Page-level H1 from HomePage.
     expect(
@@ -45,9 +43,10 @@ describe('HomePage (integration)', () => {
     ).toBeInTheDocument();
 
     // Primary CTA into the catalog.
-    expect(
-      screen.getByRole('link', { name: /ver catálogo/i }),
-    ).toHaveAttribute('href', '/catalogo');
+    expect(screen.getByRole('link', { name: /ver catálogo/i })).toHaveAttribute(
+      'href',
+      '/catalogo',
+    );
 
     // Footer chrome (SiteFooter).
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();

@@ -33,9 +33,7 @@ describe('useBlogPost', () => {
   });
 
   it('should expose the index.json meta for a known slug while content is still loading', async () => {
-    const { result } = renderHook(() =>
-      useBlogPost('introduccion-a-la-domotica'),
-    );
+    const { result } = renderHook(() => useBlogPost('introduccion-a-la-domotica'));
 
     expect(result.current.notFound).toBe(false);
     expect(result.current.meta).not.toBeNull();
@@ -52,9 +50,7 @@ describe('useBlogPost', () => {
   });
 
   it('should eventually resolve the raw markdown content for a known slug', async () => {
-    const { result } = renderHook(() =>
-      useBlogPost('introduccion-a-la-domotica'),
-    );
+    const { result } = renderHook(() => useBlogPost('introduccion-a-la-domotica'));
 
     expect(result.current.loading).toBe(true);
     expect(result.current.content).toBeNull();
@@ -63,9 +59,7 @@ describe('useBlogPost', () => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(result.current.content).toBe(
-      '# Introducción a la Domótica\n\nContenido.',
-    );
+    expect(result.current.content).toBe('# Introducción a la Domótica\n\nContenido.');
     expect(result.current.notFound).toBe(false);
     expect(result.current.meta?.slug).toBe('introduccion-a-la-domotica');
   });
@@ -76,17 +70,13 @@ describe('useBlogPost', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.content).toBe(
-        '# Introducción a la Domótica\n\nContenido.',
-      );
+      expect(result.current.content).toBe('# Introducción a la Domótica\n\nContenido.');
     });
 
     rerender({ slug: 'iluminacion-inteligente-guia' });
 
     await waitFor(() => {
-      expect(result.current.content).toBe(
-        '# Iluminación inteligente\n\nGuía.',
-      );
+      expect(result.current.content).toBe('# Iluminación inteligente\n\nGuía.');
     });
     expect(result.current.meta?.slug).toBe('iluminacion-inteligente-guia');
     expect(result.current.notFound).toBe(false);

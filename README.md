@@ -5,25 +5,27 @@ SPA served via Docker multi-stage build (nginx), deployable to any container hos
 
 ## Overview
 
-| Area              | Choice                                        |
-| ----------------- | --------------------------------------------- |
-| Framework         | React 18 + Vite 5                             |
-| Language          | TypeScript 5 (strict)                         |
-| Styling           | Tailwind CSS 3 (design tokens)                |
-| Routing           | react-router-dom 6                            |
-| Testing           | Vitest + Testing Library + jsdom              |
-| Linting           | ESLint 9 flat config + Prettier 3             |
-| Hooks             | Husky + lint-staged + commitlint              |
-| CI                | GitHub Actions                                |
-| Containerización  | Docker multi-stage + nginx:stable-alpine      |
+| Area             | Choice                                   |
+| ---------------- | ---------------------------------------- |
+| Framework        | React 18 + Vite 5                        |
+| Language         | TypeScript 5 (strict)                    |
+| Styling          | Tailwind CSS 3 (design tokens)           |
+| Routing          | react-router-dom 6                       |
+| Testing          | Vitest + Testing Library + jsdom         |
+| Linting          | ESLint 9 flat config + Prettier 3        |
+| Hooks            | Husky + lint-staged + commitlint         |
+| CI               | GitHub Actions                           |
+| Containerización | Docker multi-stage + nginx:stable-alpine |
 
 ## Prerequisites
 
 **Development (local)**
+
 - Node.js >= 18.18 (Node 20 LTS recommended)
 - pnpm 9 (`corepack enable && corepack prepare pnpm@9.2.0 --activate`)
 
 **Docker**
+
 - Docker >= 24
 - Docker Compose v2 (`docker compose` — plugin, not `docker-compose`)
 
@@ -37,21 +39,22 @@ pnpm prepare                  # installs Husky hooks
 
 ## Run (local dev)
 
-| Command                | Purpose                              |
-| ---------------------- | ------------------------------------ |
-| `pnpm dev`             | Start Vite dev server on :5173       |
-| `pnpm build`           | Type-check + production build        |
-| `pnpm preview`         | Serve the production bundle locally  |
-| `pnpm test`            | Run the Vitest suite once            |
-| `pnpm test:watch`      | Vitest in watch mode                 |
-| `pnpm test:coverage`   | Vitest with v8 coverage              |
-| `pnpm lint`            | ESLint over the whole project        |
-| `pnpm format`          | Prettier write                       |
-| `pnpm typecheck`       | tsc --noEmit                         |
+| Command              | Purpose                             |
+| -------------------- | ----------------------------------- |
+| `pnpm dev`           | Start Vite dev server on :5173      |
+| `pnpm build`         | Type-check + production build       |
+| `pnpm preview`       | Serve the production bundle locally |
+| `pnpm test`          | Run the Vitest suite once           |
+| `pnpm test:watch`    | Vitest in watch mode                |
+| `pnpm test:coverage` | Vitest with v8 coverage             |
+| `pnpm lint`          | ESLint over the whole project       |
+| `pnpm format`        | Prettier write                      |
+| `pnpm typecheck`     | tsc --noEmit                        |
 
 ## Docker
 
 The production image uses a two-stage build:
+
 1. **builder** — `node:20-alpine`, installs deps, runs `pnpm build`
 2. **runtime** — `nginx:stable-alpine`, serves the static bundle as a non-root user
 
@@ -73,10 +76,10 @@ The app is served on `http://localhost:3000`. nginx is configured with SPA fallb
 
 ### Cache headers
 
-| Asset type          | Cache-Control                                   |
-| ------------------- | ----------------------------------------------- |
-| Hashed JS/CSS       | `public, max-age=31536000, immutable`           |
-| `index.html`        | `no-cache, no-store, must-revalidate`           |
+| Asset type    | Cache-Control                         |
+| ------------- | ------------------------------------- |
+| Hashed JS/CSS | `public, max-age=31536000, immutable` |
+| `index.html`  | `no-cache, no-store, must-revalidate` |
 
 ## Project Layout
 

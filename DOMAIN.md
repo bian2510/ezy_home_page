@@ -155,5 +155,5 @@ WhatsApp y registra pedidos en su app interna).
 
 ---
 
-*This document is the source of truth for domain understanding. Any implementation
-decision that contradicts this document must be flagged and resolved before proceeding.*
+_This document is the source of truth for domain understanding. Any implementation
+decision that contradicts this document must be flagged and resolved before proceeding._

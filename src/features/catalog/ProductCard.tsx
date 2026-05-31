@@ -82,9 +82,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {(product.isOnSale || product.isBestseller) && (
             <div className="absolute left-2 top-2 flex flex-col gap-1">
               {product.isOnSale && <Badge variant="warning">Oferta</Badge>}
-              {product.isBestseller && (
-                <Badge variant="success">Más vendido</Badge>
-              )}
+              {product.isBestseller && <Badge variant="success">Más vendido</Badge>}
             </div>
           )}
         </div>
@@ -110,7 +108,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           type="button"
           onClick={handleAddToCart}
           className={cn(
-            'inline-flex w-full min-h-11 items-center justify-center rounded-md',
+            'inline-flex min-h-11 w-full items-center justify-center rounded-md',
             'bg-primary px-3 py-2 text-sm font-medium text-primary-foreground',
             'transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
           )}

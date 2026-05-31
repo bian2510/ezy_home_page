@@ -31,8 +31,7 @@ const dateFormatter = new Intl.DateTimeFormat('es-AR', {
   day: 'numeric',
 });
 
-const formatBlogDate = (isoDate: string): string =>
-  dateFormatter.format(new Date(isoDate));
+const formatBlogDate = (isoDate: string): string => dateFormatter.format(new Date(isoDate));
 
 export default function BlogCard({ article }: BlogCardProps) {
   const navigate = useNavigate();
@@ -69,13 +68,8 @@ export default function BlogCard({ article }: BlogCardProps) {
         </div>
 
         <div className="flex flex-1 flex-col gap-2 p-3">
-          <h3 className="text-sm font-medium text-foreground">
-            {article.title}
-          </h3>
-          <time
-            dateTime={article.date}
-            className="text-xs text-muted-foreground"
-          >
+          <h3 className="text-sm font-medium text-foreground">{article.title}</h3>
+          <time dateTime={article.date} className="text-xs text-muted-foreground">
             {formatBlogDate(article.date)}
           </time>
         </div>

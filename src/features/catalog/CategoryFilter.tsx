@@ -10,8 +10,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   seguridad: 'Seguridad',
 };
 
-const labelFor = (category: string): string =>
-  CATEGORY_LABELS[category] ?? category;
+const labelFor = (category: string): string => CATEGORY_LABELS[category] ?? category;
 
 interface CategoryFilterProps {
   categories: string[];
@@ -37,11 +36,7 @@ export default function CategoryFilter({
   const isAllActive = selectedCategory === null;
 
   return (
-    <div
-      role="group"
-      aria-label="Filtrar por categoría"
-      className="flex flex-wrap gap-2"
-    >
+    <div role="group" aria-label="Filtrar por categoría" className="flex flex-wrap gap-2">
       <button
         type="button"
         onClick={() => onSelectCategory(null)}

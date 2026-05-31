@@ -5,14 +5,7 @@
 // usuario." Items are hydrated from localStorage on first render and
 // re-serialised on every change. Storage failures are surfaced via
 // `storageAvailable` so the UI can warn the user.
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-  type ReactNode,
-} from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useState, type ReactNode } from 'react';
 import { CartContext, type CartContextValue } from './CartContext';
 import type { CartItem, Product } from '@/types';
 
@@ -25,11 +18,7 @@ type CartAction =
   | { type: 'UPDATE_QUANTITY'; productId: string; quantity: number }
   | { type: 'CLEAR_CART' };
 
-const addOrIncrement = (
-  items: CartItem[],
-  product: Product,
-  quantity: number,
-): CartItem[] => {
+const addOrIncrement = (items: CartItem[], product: Product, quantity: number): CartItem[] => {
   const existingIndex = items.findIndex((item) => item.product.id === product.id);
   if (existingIndex === -1) {
     return [...items, { product, quantity }];
@@ -91,8 +80,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   }, [items]);
 
   const addItem = useCallback(
-    (product: Product, quantity = 1) =>
-      dispatch({ type: 'ADD_ITEM', product, quantity }),
+    (product: Product, quantity = 1) => dispatch({ type: 'ADD_ITEM', product, quantity }),
     [],
   );
 
@@ -114,10 +102,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     [items],
   );
 
-  const itemCount = useMemo(
-    () => items.reduce((sum, item) => sum + item.quantity, 0),
-    [items],
-  );
+  const itemCount = useMemo(() => items.reduce((sum, item) => sum + item.quantity, 0), [items]);
 
   const value = useMemo<CartContextValue>(
     () => ({

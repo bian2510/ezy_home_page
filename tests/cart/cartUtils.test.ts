@@ -15,10 +15,7 @@ const buildProduct = (overrides: Partial<Product> = {}): Product => ({
   ...overrides,
 });
 
-const buildItem = (
-  productOverrides: Partial<Product> = {},
-  quantity = 1,
-): CartItem => ({
+const buildItem = (productOverrides: Partial<Product> = {}, quantity = 1): CartItem => ({
   product: buildProduct(productOverrides),
   quantity,
 });
@@ -43,9 +40,7 @@ describe('buildWhatsAppMessage', () => {
   });
 
   it('should encodeURIComponent the message when embedding in the URL', () => {
-    const items: CartItem[] = [
-      buildItem({ id: 'p-1', name: 'Smart Bulb RGBW', price: 15000 }, 2),
-    ];
+    const items: CartItem[] = [buildItem({ id: 'p-1', name: 'Smart Bulb RGBW', price: 15000 }, 2)];
 
     const url = buildWhatsAppMessage(items, PHONE_NUMBER);
     const textParam = url.split('?text=')[1] ?? '';
@@ -86,9 +81,7 @@ describe('buildWhatsAppMessage', () => {
   });
 
   it('should produce a valid message when called with a single item', () => {
-    const items: CartItem[] = [
-      buildItem({ id: 'p-1', name: 'Smart Bulb RGBW', price: 15000 }, 1),
-    ];
+    const items: CartItem[] = [buildItem({ id: 'p-1', name: 'Smart Bulb RGBW', price: 15000 }, 1)];
 
     const url = buildWhatsAppMessage(items, PHONE_NUMBER);
     const decoded = decodeURIComponent(url.split('?text=')[1] ?? '');

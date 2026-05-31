@@ -55,17 +55,13 @@ describe('BlogListPage', () => {
   it('should render the page heading "Blog" at level 1', () => {
     renderPage();
 
-    expect(
-      screen.getByRole('heading', { name: /^blog$/i, level: 1 }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^blog$/i, level: 1 })).toBeInTheDocument();
   });
 
   it('should render every article title from index.json', () => {
     renderPage();
 
-    expect(
-      screen.getByText('Artículo con imagen de portada'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Artículo con imagen de portada')).toBeInTheDocument();
     expect(screen.getByText('Artículo sin imagen')).toBeInTheDocument();
   });
 

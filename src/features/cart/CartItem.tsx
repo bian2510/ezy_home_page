@@ -19,12 +19,7 @@ interface CartItemProps {
   onRemove: (productId: string) => void;
 }
 
-export default function CartItem({
-  item,
-  onIncrement,
-  onDecrement,
-  onRemove,
-}: CartItemProps) {
+export default function CartItem({ item, onIncrement, onDecrement, onRemove }: CartItemProps) {
   const { product, quantity } = item;
   const lineSubtotal = product.price * quantity;
   const atMinimum = quantity <= MIN_QUANTITY;
@@ -33,9 +28,7 @@ export default function CartItem({
     <li className="flex flex-col gap-3 border-b border-border py-4 last:border-b-0 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex flex-1 flex-col gap-1">
         <p className="text-base font-medium text-foreground">{product.name}</p>
-        <p className="text-sm text-muted-foreground">
-          {formatPrice(product.price)} c/u
-        </p>
+        <p className="text-sm text-muted-foreground">{formatPrice(product.price)} c/u</p>
       </div>
 
       <div className="flex items-center gap-2">

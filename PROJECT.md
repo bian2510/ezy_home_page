@@ -3,6 +3,7 @@
 **What this is:** Tienda online de domótica con blog informativo — catálogo de productos, carrito persistente, checkout vía WhatsApp.
 
 **Read order for new agents:**
+
 1. `DOMAIN.md` — qué hace EzyHome y por qué (contexto de negocio, restricciones, implicaciones de diseño)
 2. This file — dónde encontrar las cosas en el repo
 3. The PRD for your task's bounded context (see `docs/prds/`)
@@ -18,19 +19,19 @@
 
 ## Where Things Live
 
-| What you need | Where to find it |
-|---|---|
-| Business domain and constraints | `DOMAIN.md` |
-| Customer journeys | `docs/mvp/journeys/` |
-| Per-bounded-context requirements | `docs/prds/` |
-| Architectural decisions | `docs/adrs/` |
-| Ground truth research | `docs/sources/` |
-| Implementation plans (dated) | `docs/plans/` |
-| Engineering standards | `docs/standards/` |
-| Operational runbooks | `docs/guides/` |
-| Feature specs (ETC harness) | `.etc_sdlc/features/` |
-| App source | `src/` |
-| Tests | `tests/` |
+| What you need                    | Where to find it      |
+| -------------------------------- | --------------------- |
+| Business domain and constraints  | `DOMAIN.md`           |
+| Customer journeys                | `docs/mvp/journeys/`  |
+| Per-bounded-context requirements | `docs/prds/`          |
+| Architectural decisions          | `docs/adrs/`          |
+| Ground truth research            | `docs/sources/`       |
+| Implementation plans (dated)     | `docs/plans/`         |
+| Engineering standards            | `docs/standards/`     |
+| Operational runbooks             | `docs/guides/`        |
+| Feature specs (ETC harness)      | `.etc_sdlc/features/` |
+| App source                       | `src/`                |
+| Tests                            | `tests/`              |
 
 **Anti-fabrication rule:** If an agent needs to make a factual claim about the
 business or the system, that claim must cite `DOMAIN.md` or a file in
@@ -51,7 +52,8 @@ business or the system, that claim must cite `DOMAIN.md` or a file in
 - **Email (futuro):** Resend — ya disponible en app existente del dueño
 
 **Key ADRs to read before touching architecture:**
-- *(ninguno registrado aún — se crean a medida que se toman decisiones arquitectónicas)*
+
+- _(ninguno registrado aún — se crean a medida que se toman decisiones arquitectónicas)_
 
 ---
 

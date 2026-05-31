@@ -5,6 +5,7 @@ EzyHome home-automation product line. Pure frontend; backend integration
 arrives later through a typed API client under `src/lib`.
 
 ## Key Components
+
 - `src/` — application source (entry point, routing, pages, features, UI)
 - `tests/` — Vitest unit and integration suites
 - `public/` — static assets copied verbatim into the bundle
@@ -20,6 +21,7 @@ arrives later through a typed API client under `src/lib`.
 - `README.md`, `CONTRIBUTING.md` — operator and contributor docs
 
 ## Dependencies
+
 - Runtime: `react`, `react-dom`, `react-router-dom`
 - Build/test: `vite`, `@vitejs/plugin-react`, `vitest`, `@vitest/coverage-v8`, `jsdom`, `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`
 - Styling: `tailwindcss`, `postcss`, `autoprefixer`, `prettier-plugin-tailwindcss`
@@ -28,6 +30,7 @@ arrives later through a typed API client under `src/lib`.
 - Tooling target: Node >= 18.18, pnpm 9.2.0
 
 ## Patterns
+
 - Vite SPA with React 18 StrictMode and `react-router-dom` BrowserRouter
 - Path alias `@/* -> src/*` enforced in `tsconfig.app.json` and Vite resolver
 - Feature-sliced layout under `src/features/<slice>` separated from shared `components`, `hooks`, `lib`
@@ -36,6 +39,7 @@ arrives later through a typed API client under `src/lib`.
 - Conventional Commits enforced repo-wide
 
 ## Constraints
+
 - Mobile-first; every component must work on >= 320px viewport before adding desktop styles
 - TypeScript `strict` plus `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` — no `any` escapes
 - No backend code in this repo; all data access goes through the future `src/lib/api` client

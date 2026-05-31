@@ -111,9 +111,7 @@ function HeroCarousel() {
         <h1 className="text-3xl font-semibold tracking-tight text-sidebar-foreground sm:text-5xl">
           {slide?.heading}
         </h1>
-        <p className="text-base text-sidebar-foreground/70 sm:text-lg">
-          {slide?.subheading}
-        </p>
+        <p className="text-base text-sidebar-foreground/70 sm:text-lg">{slide?.subheading}</p>
         <Link
           to={slide?.cta.to ?? '/catalogo'}
           className="mt-2 inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -162,10 +160,7 @@ function ProductGridSection({
   const headingId = `${id}-heading`;
   return (
     <section aria-labelledby={headingId} className="flex flex-col gap-4">
-      <h2
-        id={headingId}
-        className="text-2xl font-semibold text-foreground sm:text-3xl"
-      >
+      <h2 id={headingId} className="text-2xl font-semibold text-foreground sm:text-3xl">
         {heading}
       </h2>
       {items.length === 0 ? (
@@ -188,10 +183,7 @@ function ProductGridSection({
 function CategoriesSection() {
   return (
     <section aria-labelledby="categorias-heading" className="flex flex-col gap-4">
-      <h2
-        id="categorias-heading"
-        className="text-2xl font-semibold text-foreground sm:text-3xl"
-      >
+      <h2 id="categorias-heading" className="text-2xl font-semibold text-foreground sm:text-3xl">
         Categorías
       </h2>
       <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-3">
@@ -199,7 +191,7 @@ function CategoriesSection() {
           <li key={slug}>
             <Link
               to={`/catalogo?category=${slug}`}
-              className="flex min-h-32 items-center justify-center rounded-lg border border-border bg-card px-4 py-8 text-center text-lg font-medium text-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:shadow-md hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="flex min-h-32 items-center justify-center rounded-lg border border-border bg-card px-4 py-8 text-center text-lg font-medium text-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               {label}
             </Link>
@@ -221,15 +213,11 @@ function WhatsAppCtaSection({ href }: WhatsAppCtaSectionProps) {
       className="rounded-lg bg-primary px-4 py-10 text-center text-primary-foreground sm:px-8"
     >
       <div className="mx-auto flex max-w-prose flex-col items-center gap-4">
-        <h2
-          id="whatsapp-cta-heading"
-          className="text-2xl font-semibold sm:text-3xl"
-        >
+        <h2 id="whatsapp-cta-heading" className="text-2xl font-semibold sm:text-3xl">
           ¿Necesitás ayuda para elegir?
         </h2>
         <p className="text-base sm:text-lg">
-          Escribinos por WhatsApp y te ayudamos a armar el kit ideal para tu
-          hogar.
+          Escribinos por WhatsApp y te ayudamos a armar el kit ideal para tu hogar.
         </p>
         <a
           href={href}

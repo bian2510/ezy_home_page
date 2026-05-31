@@ -14,14 +14,14 @@ services:
     container_name: ezyhome-storefront
     ports:
       # Host:Container — open http://localhost:3000 in the browser.
-      - "3000:80"
+      - '3000:80'
     environment:
       # Passed through for parity / debugging; the value that actually ships in
       # the bundle is the one supplied at build time via the ARG above.
       - VITE_WHATSAPP_NUMBER=${VITE_WHATSAPP_NUMBER}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1/']
       interval: 30s
       timeout: 5s
       retries: 3

@@ -50,9 +50,7 @@ describe('CartPage', () => {
   it('should render the cart heading "Mi Carrito"', () => {
     renderCartPage();
 
-    expect(
-      screen.getByRole('heading', { name: /mi carrito/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /mi carrito/i })).toBeInTheDocument();
   });
 
   it('should render item names and quantities when the cart has items', () => {
@@ -64,7 +62,10 @@ describe('CartPage', () => {
     const { result } = renderHook(() => useCart(), { wrapper });
 
     act(() => {
-      result.current.addItem(buildProduct({ id: 'p-1', name: 'Foco Inteligente', price: 12500 }), 2);
+      result.current.addItem(
+        buildProduct({ id: 'p-1', name: 'Foco Inteligente', price: 12500 }),
+        2,
+      );
       result.current.addItem(buildProduct({ id: 'p-2', name: 'Sensor de Gas', price: 8500 }), 1);
     });
 
@@ -96,7 +97,10 @@ describe('CartPage', () => {
     const { result } = renderHook(() => useCart(), { wrapper });
 
     act(() => {
-      result.current.addItem(buildProduct({ id: 'p-1', name: 'Foco Inteligente', price: 12500 }), 3);
+      result.current.addItem(
+        buildProduct({ id: 'p-1', name: 'Foco Inteligente', price: 12500 }),
+        3,
+      );
     });
 
     render(

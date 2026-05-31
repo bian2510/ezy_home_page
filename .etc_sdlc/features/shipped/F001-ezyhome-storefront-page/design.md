@@ -40,15 +40,15 @@ Browser
 
 ### Routing (React Router DOM 6)
 
-| Ruta | Página | Módulo |
-|------|--------|--------|
-| `/` | HomePage | pages |
-| `/catalogo` | CatalogPage | catalog |
+| Ruta             | Página            | Módulo  |
+| ---------------- | ----------------- | ------- |
+| `/`              | HomePage          | pages   |
+| `/catalogo`      | CatalogPage       | catalog |
 | `/productos/:id` | ProductDetailPage | catalog |
-| `/carrito` | CartPage | cart |
-| `/blog` | BlogListPage | blog |
-| `/blog/:slug` | BlogPostPage | blog |
-| `*` | NotFoundPage | pages |
+| `/carrito`       | CartPage          | cart    |
+| `/blog`          | BlogListPage      | blog    |
+| `/blog/:slug`    | BlogPostPage      | blog    |
+| `*`              | NotFoundPage      | pages   |
 
 ### Reglas de capa
 
@@ -69,17 +69,17 @@ export interface Product {
   id: string;
   name: string;
   description: string;
-  price: number;           // ARS, entero (sin centavos en UI)
-  images: string[];        // paths relativos a public/; primer elemento = imagen principal
-  category: string;        // 'iluminacion' | 'automatizacion' | 'seguridad'
+  price: number; // ARS, entero (sin centavos en UI)
+  images: string[]; // paths relativos a public/; primer elemento = imagen principal
+  category: string; // 'iluminacion' | 'automatizacion' | 'seguridad'
   isBestseller: boolean;
   isOnSale: boolean;
-  originalPrice?: number;  // definido solo cuando isOnSale === true
+  originalPrice?: number; // definido solo cuando isOnSale === true
 }
 
 export interface CartItem {
   product: Product;
-  quantity: number;        // invariante: siempre >= 1
+  quantity: number; // invariante: siempre >= 1
 }
 
 export interface CartState {
@@ -89,8 +89,8 @@ export interface CartState {
 export interface BlogMeta {
   slug: string;
   title: string;
-  date: string;            // ISO 8601: "2026-05-24"
-  image: string | null;    // path relativo a public/ o null
+  date: string; // ISO 8601: "2026-05-24"
+  image: string | null; // path relativo a public/ o null
   excerpt?: string;
 }
 
@@ -99,9 +99,14 @@ export interface BlogMeta {
 ```
 
 **Formato de precio en UI:**
+
 ```typescript
 const formatPrice = (amount: number) =>
-  new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(amount);
+  new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    maximumFractionDigits: 0,
+  }).format(amount);
 // → "$15.000"
 ```
 
@@ -184,17 +189,18 @@ type CartAction =
 
 interface CartContextValue {
   items: CartItem[];
-  addItem: (product: Product, quantity?: number) => void;  // default: 1
+  addItem: (product: Product, quantity?: number) => void; // default: 1
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void; // clamp >= 1
   clearCart: () => void;
-  total: number;            // Σ (price * quantity)
-  itemCount: number;        // Σ quantities — para badge en header
+  total: number; // Σ (price * quantity)
+  itemCount: number; // Σ quantities — para badge en header
   storageAvailable: boolean; // false si localStorage bloqueado
 }
 ```
 
 **localStorage sync:**
+
 ```typescript
 // En CartProvider: init desde localStorage, sync en cada cambio
 const [state, dispatch] = useReducer(cartReducer, [], () => {
@@ -222,10 +228,10 @@ useEffect(() => {
 
 function useCatalog(products: Product[]): {
   filtered: Product[];
-  selectedCategory: string | null;  // null = "Todos"
+  selectedCategory: string | null; // null = "Todos"
   setCategory: (cat: string | null) => void;
-  categories: string[];             // lista única de categorías para los chips
-}
+  categories: string[]; // lista única de categorías para los chips
+};
 ```
 
 ### buildWhatsAppMessage
@@ -251,11 +257,11 @@ function buildWhatsAppMessage(items: CartItem[], phoneNumber: string): string;
 // src/features/blog/useBlogPost.ts
 
 function useBlogPost(slug: string): {
-  content: string | null;   // Markdown raw string
+  content: string | null; // Markdown raw string
   meta: BlogMeta | null;
   notFound: boolean;
   loading: boolean;
-}
+};
 // Carga via:
 // const modules = import.meta.glob('../../data/blog/*.md', { query: '?raw', eager: false })
 // Resuelve el módulo para el slug dado; si no existe → notFound: true
@@ -278,42 +284,42 @@ Ejemplo:
 
 ## 5. Technical Constraints y resolución
 
-| Constraint | Decisión |
-|---|---|
-| Mobile-first 360px+ | Tailwind: base = mobile. `sm:` (640px), `md:` (768px), `lg:` (1024px) solo para ampliar. Sin layout roto en 360px sin media query explícita. |
-| LCP < 2.5s en 4G | Hero image: `fetchpriority="high"`, sin `loading="lazy"`. Resto: `loading="lazy"`. Fontsource bundleado. Vite: assets con hash → `Cache-Control: immutable`. |
-| Tap targets ≥ 44px | `Button.tsx`: `min-h-11` (44px). Todos los interactivos componen desde Button o tienen clase `min-h-11 min-w-11`. |
-| localStorage puede fallar | try/catch en `setItem` + `getItem`. Si falla: carrito funciona en memoria, `storageAvailable = false`, toast/banner discreto. |
+| Constraint                   | Decisión                                                                                                                                                                 |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Mobile-first 360px+          | Tailwind: base = mobile. `sm:` (640px), `md:` (768px), `lg:` (1024px) solo para ampliar. Sin layout roto en 360px sin media query explícita.                             |
+| LCP < 2.5s en 4G             | Hero image: `fetchpriority="high"`, sin `loading="lazy"`. Resto: `loading="lazy"`. Fontsource bundleado. Vite: assets con hash → `Cache-Control: immutable`.             |
+| Tap targets ≥ 44px           | `Button.tsx`: `min-h-11` (44px). Todos los interactivos componen desde Button o tienen clase `min-h-11 min-w-11`.                                                        |
+| localStorage puede fallar    | try/catch en `setItem` + `getItem`. Si falla: carrito funciona en memoria, `storageAvailable = false`, toast/banner discreto.                                            |
 | `VITE_WHATSAPP_NUMBER` vacío | `buildWhatsAppMessage` lanza `Error` si undefined. `.env.example` incluido con instrucciones. Botón disabled si `import.meta.env.VITE_WHATSAPP_NUMBER` no está definido. |
-| Docker multi-stage | Stage 1: `node:20-alpine` + `pnpm build`. Stage 2: `nginx:stable-alpine` sirve `dist/`. Ver ADR F001-003. |
-| Tokens EzyHome | Reemplazar `tailwind.config.ts` completo. Actualizar `Button.tsx` y `SiteHeader.tsx`. Sin hex hardcodeado en componentes. Ver ADR F001-002. |
-| Sin hex en componentes | Regla: solo clases Tailwind con tokens definidos en `tailwind.config.ts`. ESLint puede verificar con `eslint-plugin-tailwindcss`. |
+| Docker multi-stage           | Stage 1: `node:20-alpine` + `pnpm build`. Stage 2: `nginx:stable-alpine` sirve `dist/`. Ver ADR F001-003.                                                                |
+| Tokens EzyHome               | Reemplazar `tailwind.config.ts` completo. Actualizar `Button.tsx` y `SiteHeader.tsx`. Sin hex hardcodeado en componentes. Ver ADR F001-002.                              |
+| Sin hex en componentes       | Regla: solo clases Tailwind con tokens definidos en `tailwind.config.ts`. ESLint puede verificar con `eslint-plugin-tailwindcss`.                                        |
 
 ---
 
 ## 6. Security Considerations
 
-| Riesgo | Mitigación |
-|---|---|
+| Riesgo                             | Mitigación                                                                                                                                                             |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | XSS en blog (Markdown renderizado) | `react-markdown` no ejecuta HTML inline por defecto (`rehypeRaw` NO incluido). El Markdown lo escribe únicamente el dueño — sin input de usuarios externos en el blog. |
-| Inyección en mensaje WhatsApp | `encodeURIComponent()` aplicado sobre el mensaje completo antes de construir la URL. |
-| `VITE_WHATSAPP_NUMBER` en bundle | Por diseño: es el número público de negocio. Sin secretos reales en vars `VITE_*`. |
-| Carrito en localStorage | Sin PII ni tokens de sesión. Solo `Product + quantity`. Riesgo bajo — aceptado. |
-| Imágenes externas en blog | Restricción documentada: `image` en `index.json` apunta solo a `/public/`. Sin URLs externas. |
-| Dependencias npm | `pnpm audit` en CI (`security.yml` ya configurado). |
+| Inyección en mensaje WhatsApp      | `encodeURIComponent()` aplicado sobre el mensaje completo antes de construir la URL.                                                                                   |
+| `VITE_WHATSAPP_NUMBER` en bundle   | Por diseño: es el número público de negocio. Sin secretos reales en vars `VITE_*`.                                                                                     |
+| Carrito en localStorage            | Sin PII ni tokens de sesión. Solo `Product + quantity`. Riesgo bajo — aceptado.                                                                                        |
+| Imágenes externas en blog          | Restricción documentada: `image` en `index.json` apunta solo a `/public/`. Sin URLs externas.                                                                          |
+| Dependencias npm                   | `pnpm audit` en CI (`security.yml` ya configurado).                                                                                                                    |
 
 ---
 
 ## 7. Trade-offs y decisiones rechazadas
 
-| Decisión | Elegida | Alternativa rechazada | Razón |
-|---|---|---|---|
-| Cart state | React Context + useReducer | Zustand | Sin dependencia extra; suficiente para v1 con un único dominio de estado global. Zustand agrega overhead de setup sin beneficio real a esta escala. |
-| Blog rendering | react-markdown + remark-gfm | MDX / CMS headless | MDX overkill para blog estático de un solo autor. CMS introduce backend en v1 cuando el dueño edita archivos directamente. |
-| Blog data loading | `import.meta.glob` + `?raw` | Fetch HTTP desde `/public/` | `import.meta.glob` es type-safe, tree-shakeable, Vite lo bundlea — sin request de red en runtime para archivos conocidos en build time. |
-| Tipografía | Fontsource (npm) | Google Fonts CDN | Fontsource se bundlea con Vite → sin request DNS externo en carga → mejor LCP. Sin dependencia de disponibilidad de Google. |
-| Checkout | WhatsApp wa.me URL | MercadoPago API v1 | v1 no requiere pasarela. Conversión documentada 5-15% vs 1-4% e-commerce con pago directo. Integración futura anotada en spec. |
-| Tailwind tokens | Remapeo completo a nombres EzyHome | Mantener namespace scaffold (brand/surface/text) | Nomenclatura coherente con identidad de marca. Componentes existentes son shells sin implementación real — costo de renombrar es mínimo ahora, creciente después. |
+| Decisión          | Elegida                            | Alternativa rechazada                            | Razón                                                                                                                                                             |
+| ----------------- | ---------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cart state        | React Context + useReducer         | Zustand                                          | Sin dependencia extra; suficiente para v1 con un único dominio de estado global. Zustand agrega overhead de setup sin beneficio real a esta escala.               |
+| Blog rendering    | react-markdown + remark-gfm        | MDX / CMS headless                               | MDX overkill para blog estático de un solo autor. CMS introduce backend en v1 cuando el dueño edita archivos directamente.                                        |
+| Blog data loading | `import.meta.glob` + `?raw`        | Fetch HTTP desde `/public/`                      | `import.meta.glob` es type-safe, tree-shakeable, Vite lo bundlea — sin request de red en runtime para archivos conocidos en build time.                           |
+| Tipografía        | Fontsource (npm)                   | Google Fonts CDN                                 | Fontsource se bundlea con Vite → sin request DNS externo en carga → mejor LCP. Sin dependencia de disponibilidad de Google.                                       |
+| Checkout          | WhatsApp wa.me URL                 | MercadoPago API v1                               | v1 no requiere pasarela. Conversión documentada 5-15% vs 1-4% e-commerce con pago directo. Integración futura anotada en spec.                                    |
+| Tailwind tokens   | Remapeo completo a nombres EzyHome | Mantener namespace scaffold (brand/surface/text) | Nomenclatura coherente con identidad de marca. Componentes existentes son shells sin implementación real — costo de renombrar es mínimo ahora, creciente después. |
 
 ---
 

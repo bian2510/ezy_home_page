@@ -1,5 +1,5 @@
-task_id: "005"
-title: "Cart UI (CartPage + CartItem row component)"
+task_id: '005'
+title: 'Cart UI (CartPage + CartItem row component)'
 assigned_agent: frontend-developer
 status: completed
 requires_reading:
@@ -10,9 +10,9 @@ files_in_scope:
   - src/features/cart/CartItem.tsx
   - tests/cart/CartPage.test.tsx
 acceptance_criteria:
-  - "CartPage at /carrito renders CartItem rows showing product name, quantity, unit price, line subtotal formatted ARS. Shows cart total. Has decrease/increase buttons clamped min 1 and explicit remove button per item. Empty cart shows message and link to /catalogo."
-  - "CartPage includes Comprar por WhatsApp button calling buildWhatsAppMessage. Button disabled when cart empty. If storageAvailable false shows discreet banner."
-  - "Vitest: empty cart shows message; items render with correct subtotal; quantity cannot go below 1."
+  - 'CartPage at /carrito renders CartItem rows showing product name, quantity, unit price, line subtotal formatted ARS. Shows cart total. Has decrease/increase buttons clamped min 1 and explicit remove button per item. Empty cart shows message and link to /catalogo.'
+  - 'CartPage includes Comprar por WhatsApp button calling buildWhatsAppMessage. Button disabled when cart empty. If storageAvailable false shows discreet banner.'
+  - 'Vitest: empty cart shows message; items render with correct subtotal; quantity cannot go below 1.'
 dependencies:
-  - "001"
-  - "004"
+  - '001'
+  - '004'

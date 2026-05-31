@@ -21,7 +21,7 @@
   - [x] ProductCard renders: product image first in images[] with loading lazy, or placeholder text when images empty. Shows name and price ARS. isOnSale shows originalPrice struck-through and Oferta badge. isBestseller shows Mas vendido badge.
   - [x] Clicking card body navigates to /productos/:id. Agregar al carrito button calls addItem without navigating. Button has min-h-11 for 44px tap target. Badge uses warning token for sale, success token for bestseller.
   - [x] Vitest: name and price render; sale badge visible when isOnSale; add-to-cart does not trigger navigation; empty images shows placeholder without broken img.
-  - [x] useBlogPost(slug string) hook uses import.meta.glob targeting src/data/blog/*.md with query ?raw and eager false. Returns {content: string|null, meta: BlogMeta|null, notFound: boolean, loading: boolean}. Looks up slug in index.json; if not found returns notFound true immediately. If found dynamically imports the .md file and sets content to the raw string.
+  - [x] useBlogPost(slug string) hook uses import.meta.glob targeting src/data/blog/\*.md with query ?raw and eager false. Returns {content: string|null, meta: BlogMeta|null, notFound: boolean, loading: boolean}. Looks up slug in index.json; if not found returns notFound true immediately. If found dynamically imports the .md file and sets content to the raw string.
   - [x] Vitest tests: known slug eventually resolves content and meta with notFound false; unknown slug returns notFound true synchronously.
   - [x] ProductDetailPage at /productos/:id finds product by id in products.json. Renders: image gallery with thumbnails when images.length > 1 or placeholder when empty; name; full description; price ARS with originalPrice struck-through if isOnSale; QuantitySelector starting at 1; Agregar al carrito button calling addItem with selected quantity.
   - [x] Invalid id renders 404 message with link to /catalogo.
@@ -47,7 +47,7 @@
 - Source: `build/phase-3/completion-report.md`
 - PRD: EzyHome Storefront Page (F001)
 - Acceptance Criteria: 3 passed, 0 failed (see `build/phase-3/completion-report.md`)
-  - [x] App.tsx registers all routes: / (HomePage), /catalogo (CatalogPage), /productos/:id (ProductDetailPage), /carrito (CartPage), /blog (BlogListPage), /blog/:slug (BlogPostPage), * (NotFoundPage).
+  - [x] App.tsx registers all routes: / (HomePage), /catalogo (CatalogPage), /productos/:id (ProductDetailPage), /carrito (CartPage), /blog (BlogListPage), /blog/:slug (BlogPostPage), \* (NotFoundPage).
   - [x] RootLayout wraps Outlet with CartProvider. SiteHeader shows EzyHome logo linking to /, nav links to /catalogo /blog /carrito, cart icon badge showing itemCount hidden when zero. SiteFooter shows business name and links.
   - [x] SiteHeader and SiteFooter use only EzyHome Tailwind tokens. No hex colors. No old scaffold tokens (no bg-brand- bg-surface text-text-). Vitest: cart badge reflects itemCount; nav links render.
 
@@ -63,27 +63,35 @@
 ## Deferred Items
 
 From Phase 1 (`build/phase-1/completion-report.md`):
+
 - (none)
 
 From Phase 2 (`build/phase-2/completion-report.md`):
+
 - (none)
 
 From Phase 3 (`build/phase-3/completion-report.md`):
+
 - (none)
 
 From Phase 4 (`build/phase-4/completion-report.md`):
+
 - (none)
 
 ## Known Limitations
 
 From Phase 1 (`build/phase-1/completion-report.md`):
+
 - (none)
 
 From Phase 2 (`build/phase-2/completion-report.md`):
+
 - (none)
 
 From Phase 3 (`build/phase-3/completion-report.md`):
+
 - (none)
 
 From Phase 4 (`build/phase-4/completion-report.md`):
+
 - (none)

@@ -17,20 +17,24 @@ EzyHome necesita un blog informativo sobre domótica publicado por el dueño. El
 ## Justificación
 
 **Por qué no CMS headless:**
+
 - Introduce backend y API key en v1 donde no hay ninguno.
 - El dueño edita archivos directamente — no necesita UI de edición.
 - Costo mensual innecesario para v1.
 
 **Por qué no MDX:**
+
 - MDX permite componentes React en Markdown — el dueño no es desarrollador, no usa componentes.
 - Setup más complejo (plugin de Vite, tipos) sin beneficio para este caso de uso.
 
 **Por qué import.meta.glob sobre fetch a /public/:**
+
 - `import.meta.glob` es type-safe y Vite lo bundlea — sin request HTTP extra en runtime.
 - Los archivos conocidos en build time no necesitan fetching dinámico.
 - Tree-shakeable: Vite incluye solo los .md que existen, sin overhead.
 
 **Por qué react-markdown:**
+
 - Biblioteca más usada para Markdown en React (>4M descargas/semana).
 - No ejecuta HTML inline por defecto — seguro para contenido del dueño.
 - `remark-gfm` agrega soporte para tablas, listas de tareas, links automáticos — útil para tutoriales de domótica.
@@ -44,9 +48,9 @@ EzyHome necesita un blog informativo sobre domótica publicado por el dueño. El
 
 ## Alternativas rechazadas
 
-| Alternativa | Razón de rechazo |
-|---|---|
-| CMS headless (Contentful/Strapi) | Backend innecesario en v1; costo; complejidad |
-| MDX | Soporte de componentes React no necesario para este caso de uso; setup más complejo |
-| Fetch desde /public/*.md | Request HTTP extra en runtime; sin type-safety; archivos conocidos en build time |
-| JSON con contenido inline | Markdown en JSON es inmanejable para artículos largos; sin syntax highlighting en editor |
+| Alternativa                      | Razón de rechazo                                                                         |
+| -------------------------------- | ---------------------------------------------------------------------------------------- |
+| CMS headless (Contentful/Strapi) | Backend innecesario en v1; costo; complejidad                                            |
+| MDX                              | Soporte de componentes React no necesario para este caso de uso; setup más complejo      |
+| Fetch desde /public/\*.md        | Request HTTP extra en runtime; sin type-safety; archivos conocidos en build time         |
+| JSON con contenido inline        | Markdown en JSON es inmanejable para artículos largos; sin syntax highlighting en editor |

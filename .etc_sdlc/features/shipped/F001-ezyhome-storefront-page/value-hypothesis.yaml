@@ -15,7 +15,7 @@ current_cost: >
   cercana a cero — prácticamente ningún visitante envía un pedido por WhatsApp.
 
 predicted:
-  metric: "Porcentaje de visitantes únicos que envían un pedido por WhatsApp"
+  metric: 'Porcentaje de visitantes únicos que envían un pedido por WhatsApp'
   direction: increase
   threshold: 3
   window_days: 30

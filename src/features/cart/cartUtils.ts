@@ -17,12 +17,7 @@ const formatLineItem = (item: CartItem): string =>
 const composeMessage = (items: CartItem[]): string => {
   const lines = items.map(formatLineItem);
   const subtotal = computeSubtotal(items);
-  return [
-    GREETING,
-    ...lines,
-    `Subtotal: ${formatPrice(subtotal)}`,
-    SHIPPING_DISCLAIMER,
-  ].join('\n');
+  return [GREETING, ...lines, `Subtotal: ${formatPrice(subtotal)}`, SHIPPING_DISCLAIMER].join('\n');
 };
 
 /**
@@ -35,10 +30,7 @@ const composeMessage = (items: CartItem[]): string => {
  * See DOMAIN.md › Design Implications: el botón de compra debe pre-componer el
  * mensaje en un tap; no puede requerir copiar y pegar manualmente.
  */
-export const buildWhatsAppMessage = (
-  items: CartItem[],
-  phoneNumber: string,
-): string => {
+export const buildWhatsAppMessage = (items: CartItem[], phoneNumber: string): string => {
   const message = composeMessage(items);
   return `${WHATSAPP_BASE_URL}${phoneNumber}?text=${encodeURIComponent(message)}`;
 };

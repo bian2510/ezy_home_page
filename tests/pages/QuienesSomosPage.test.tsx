@@ -23,7 +23,9 @@ describe('QuienesSomosPage', () => {
 
   it('should render the problem section', () => {
     renderPage();
-    expect(screen.getByRole('heading', { name: /el problema que resolvemos/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /el problema que resolvemos/i }),
+    ).toBeInTheDocument();
   });
 
   it('should render the commitment section with three items', () => {

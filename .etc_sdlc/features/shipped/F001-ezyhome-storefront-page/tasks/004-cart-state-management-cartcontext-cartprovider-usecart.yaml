@@ -1,5 +1,5 @@
-task_id: "004"
-title: "Cart state management (CartContext + CartProvider + useCart)"
+task_id: '004'
+title: 'Cart state management (CartContext + CartProvider + useCart)'
 assigned_agent: frontend-developer
 status: completed
 requires_reading:
@@ -12,8 +12,8 @@ files_in_scope:
   - src/features/cart/useCart.ts
   - tests/cart/CartContext.test.tsx
 acceptance_criteria:
-  - "CartContext provides: items CartItem[], addItem(product, quantity defaults 1), removeItem(productId), updateQuantity(productId, quantity) clamped min 1, clearCart(), total number sum of price times quantity, itemCount number sum of all quantities, storageAvailable boolean."
-  - "CartProvider initializes from localStorage key ezyhome_cart via JSON.parse in try-catch. Syncs on each state change via useEffect with JSON.stringify try-catch. If localStorage throws sets storageAvailable false."
-  - "Vitest: addItem works; duplicate productId increments quantity; removeItem removes; updateQuantity clamps to 1; total and itemCount correct; localStorage read on init; localStorage failure sets storageAvailable false."
+  - 'CartContext provides: items CartItem[], addItem(product, quantity defaults 1), removeItem(productId), updateQuantity(productId, quantity) clamped min 1, clearCart(), total number sum of price times quantity, itemCount number sum of all quantities, storageAvailable boolean.'
+  - 'CartProvider initializes from localStorage key ezyhome_cart via JSON.parse in try-catch. Syncs on each state change via useEffect with JSON.stringify try-catch. If localStorage throws sets storageAvailable false.'
+  - 'Vitest: addItem works; duplicate productId increments quantity; removeItem removes; updateQuantity clamps to 1; total and itemCount correct; localStorage read on init; localStorage failure sets storageAvailable false.'
 dependencies:
-  - "002"
+  - '002'

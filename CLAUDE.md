@@ -3,6 +3,7 @@
 ## First: Read These Two Files
 
 Before taking any action in this repository, read in order:
+
 1. `DOMAIN.md` — business domain, constraints, and design implications
 2. `PROJECT.md` — where things live and how the repo is structured
 

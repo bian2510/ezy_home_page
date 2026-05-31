@@ -9,7 +9,7 @@ spec_phase:
   design_mandatory: false
   spec_author_role: SME
   journey_refs:
-  - J-001
+    - J-001
   completed_at: '2026-05-24T00:00:00Z'
 architect_phase:
   classification: research-assisted
@@ -20,9 +20,9 @@ architect_phase:
     gaps_filled_by_user: 4
   architect_author_role: SME + Engineer + PM
   adrs:
-  - docs/adrs/F001-001-cart-state-react-context.md
-  - docs/adrs/F001-002-tailwind-token-remapping.md
-  - docs/adrs/F001-003-blog-static-markdown.md
+    - docs/adrs/F001-001-cart-state-react-context.md
+    - docs/adrs/F001-002-tailwind-token-remapping.md
+    - docs/adrs/F001-003-blog-static-markdown.md
   completed_at: '2026-05-24T00:00:00Z'
 build:
   feature: ezyhome-storefront-page

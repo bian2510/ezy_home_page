@@ -1,5 +1,5 @@
-task_id: "006"
-title: "WhatsApp checkout URL builder (cartUtils)"
+task_id: '006'
+title: 'WhatsApp checkout URL builder (cartUtils)'
 assigned_agent: frontend-developer
 status: completed
 requires_reading:
@@ -9,7 +9,7 @@ files_in_scope:
   - src/features/cart/cartUtils.ts
   - tests/cart/cartUtils.test.ts
 acceptance_criteria:
-  - "buildWhatsAppMessage(items CartItem[], phoneNumber string) returns URL https://wa.me/{phoneNumber}?text={encodeURIComponent(message)}. Message lists each item as quantity x name unit-price-ARS, then Subtotal total-ARS, then note prices exclude shipping. Prices formatted Intl.NumberFormat es-AR ARS."
-  - "Vitest: URL starts https://wa.me/; text param is encodeURIComponent encoded; message includes all items; subtotal correct; phoneNumber in URL."
+  - 'buildWhatsAppMessage(items CartItem[], phoneNumber string) returns URL https://wa.me/{phoneNumber}?text={encodeURIComponent(message)}. Message lists each item as quantity x name unit-price-ARS, then Subtotal total-ARS, then note prices exclude shipping. Prices formatted Intl.NumberFormat es-AR ARS.'
+  - 'Vitest: URL starts https://wa.me/; text param is encodeURIComponent encoded; message includes all items; subtotal correct; phoneNumber in URL.'
 dependencies:
-  - "002"
+  - '002'

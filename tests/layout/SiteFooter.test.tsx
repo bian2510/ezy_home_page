@@ -28,21 +28,17 @@ describe('SiteFooter', () => {
     renderFooter();
 
     const year = String(new Date().getFullYear());
-    expect(
-      screen.getByText((content) => content.includes(year)),
-    ).toBeInTheDocument();
+    expect(screen.getByText((content) => content.includes(year))).toBeInTheDocument();
   });
 
   it('should expose secondary nav links to /catalogo and /blog', () => {
     renderFooter();
 
     const nav = screen.getByRole('navigation', { name: /pie de página/i });
-    expect(
-      within(nav).getByRole('link', { name: /catálogo/i }),
-    ).toHaveAttribute('href', '/catalogo');
-    expect(within(nav).getByRole('link', { name: /blog/i })).toHaveAttribute(
+    expect(within(nav).getByRole('link', { name: /catálogo/i })).toHaveAttribute(
       'href',
-      '/blog',
+      '/catalogo',
     );
+    expect(within(nav).getByRole('link', { name: /blog/i })).toHaveAttribute('href', '/blog');
   });
 });

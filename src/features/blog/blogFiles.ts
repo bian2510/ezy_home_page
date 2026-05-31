@@ -15,7 +15,7 @@
  *
  * See docs/adrs/F001-003-blog-static-markdown.md.
  */
-export const blogFiles = (import.meta as any).glob(
-  '../../data/blog/*.md',
-  { query: '?raw', eager: false },
-) as Record<string, () => Promise<{ default: string }>>;
+export const blogFiles = (import.meta as any).glob('../../data/blog/*.md', {
+  query: '?raw',
+  eager: false,
+}) as Record<string, () => Promise<{ default: string }>>;

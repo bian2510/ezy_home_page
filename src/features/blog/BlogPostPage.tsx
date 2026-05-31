@@ -57,11 +57,7 @@ function BlogPostNotFound() {
 function BlogPostLoading() {
   return (
     <section className="mx-auto w-full max-w-content px-4 py-12">
-      <p
-        role="status"
-        aria-live="polite"
-        className="text-center text-muted-foreground"
-      >
+      <p role="status" aria-live="polite" className="text-center text-muted-foreground">
         Cargando…
       </p>
     </section>
@@ -92,13 +88,8 @@ function BlogPostArticle({ meta, content }: BlogPostArticleProps) {
   return (
     <article className="mx-auto w-full max-w-prose px-4 py-6 sm:py-10">
       <header className="mb-6 space-y-2">
-        <h1 className="text-3xl font-semibold text-foreground sm:text-4xl">
-          {meta.title}
-        </h1>
-        <time
-          dateTime={meta.date}
-          className="block text-sm text-muted-foreground"
-        >
+        <h1 className="text-3xl font-semibold text-foreground sm:text-4xl">{meta.title}</h1>
+        <time dateTime={meta.date} className="block text-sm text-muted-foreground">
           {formatBlogDate(meta.date)}
         </time>
       </header>

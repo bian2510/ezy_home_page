@@ -1,5 +1,5 @@
-task_id: "008"
-title: "Product card + Badge component"
+task_id: '008'
+title: 'Product card + Badge component'
 assigned_agent: frontend-developer
 status: completed
 requires_reading:
@@ -11,10 +11,10 @@ files_in_scope:
   - src/components/ui/Badge.tsx
   - tests/catalog/ProductCard.test.tsx
 acceptance_criteria:
-  - "ProductCard renders: product image first in images[] with loading lazy, or placeholder text when images empty. Shows name and price ARS. isOnSale shows originalPrice struck-through and Oferta badge. isBestseller shows Mas vendido badge."
-  - "Clicking card body navigates to /productos/:id. Agregar al carrito button calls addItem without navigating. Button has min-h-11 for 44px tap target. Badge uses warning token for sale, success token for bestseller."
-  - "Vitest: name and price render; sale badge visible when isOnSale; add-to-cart does not trigger navigation; empty images shows placeholder without broken img."
+  - 'ProductCard renders: product image first in images[] with loading lazy, or placeholder text when images empty. Shows name and price ARS. isOnSale shows originalPrice struck-through and Oferta badge. isBestseller shows Mas vendido badge.'
+  - 'Clicking card body navigates to /productos/:id. Agregar al carrito button calls addItem without navigating. Button has min-h-11 for 44px tap target. Badge uses warning token for sale, success token for bestseller.'
+  - 'Vitest: name and price render; sale badge visible when isOnSale; add-to-cart does not trigger navigation; empty images shows placeholder without broken img.'
 dependencies:
-  - "001"
-  - "002"
-  - "004"
+  - '001'
+  - '002'
+  - '004'

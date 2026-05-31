@@ -72,9 +72,7 @@ describe('CatalogPage', () => {
   it('should render the page heading "Catálogo"', () => {
     render(<CatalogPage />);
 
-    expect(
-      screen.getByRole('heading', { name: /catálogo/i, level: 1 }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /catálogo/i, level: 1 })).toBeInTheDocument();
   });
 
   it('should filter to only iluminacion products when the Iluminación chip is clicked', async () => {
@@ -113,9 +111,7 @@ describe('CatalogPage', () => {
     // present when results exist.
     await user.click(screen.getByRole('button', { name: 'Iluminación' }));
 
-    expect(
-      screen.queryByText(/no hay productos en esta categoría/i),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/no hay productos en esta categoría/i)).not.toBeInTheDocument();
   });
 });
 
@@ -148,9 +144,7 @@ describe('useCatalog', () => {
 
     expect(result.current.selectedCategory).toBe('iluminacion');
     expect(result.current.filtered).toHaveLength(2);
-    expect(result.current.filtered.every((p) => p.category === 'iluminacion')).toBe(
-      true,
-    );
+    expect(result.current.filtered.every((p) => p.category === 'iluminacion')).toBe(true);
   });
 
   it('should return all products again when setCategory is called with null after filtering', () => {

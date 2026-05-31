@@ -47,9 +47,7 @@ describe('BlogPostPage', () => {
 
     renderAt('/blog/test');
 
-    expect(
-      screen.getByRole('heading', { name: 'Mi Artículo', level: 1 }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Mi Artículo', level: 1 })).toBeInTheDocument();
   });
 
   it('should render the Markdown body via ReactMarkdown when content has loaded', () => {
@@ -91,9 +89,7 @@ describe('BlogPostPage', () => {
     renderAt('/blog/test');
 
     expect(screen.queryByTestId('evil')).not.toBeInTheDocument();
-    expect(
-      document.querySelector('article script'),
-    ).not.toBeInTheDocument();
+    expect(document.querySelector('article script')).not.toBeInTheDocument();
   });
 
   it('should render the publication date formatted in es-AR locale above the Markdown body', () => {

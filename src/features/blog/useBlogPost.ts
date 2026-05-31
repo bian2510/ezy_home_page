@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
- 
- 
+
 import { useEffect, useState } from 'react';
 import blogIndex from '@/data/blog/index.json';
 import type { BlogMeta } from '@/types';
@@ -30,8 +29,7 @@ const BLOG_INDEX: readonly BlogMeta[] = blogIndex as readonly BlogMeta[];
 const findMeta = (slug: string): BlogMeta | null =>
   BLOG_INDEX.find((entry) => entry.slug === slug) ?? null;
 
-const loaderKeyForSlug = (slug: string): string =>
-  `../../data/blog/${slug}.md`;
+const loaderKeyForSlug = (slug: string): string => `../../data/blog/${slug}.md`;
 
 /**
  * Loads a single blog post by slug.
@@ -75,9 +73,9 @@ export function useBlogPost(slug: string): UseBlogPostResult {
     setContent(null);
     setLoading(true);
 
-     
     loader().then(
-      (module: { default: string }) => { // <--- CORRECCIÓNaquí
+      (module: { default: string }) => {
+        // <--- CORRECCIÓNaquí
         if (cancelled) return;
         setContent(module.default);
         setLoading(false);

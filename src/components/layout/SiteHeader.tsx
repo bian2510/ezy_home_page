@@ -133,9 +133,7 @@ function CartLink({ hasItems, itemCount }: CartLinkProps) {
     <Link
       to="/carrito"
       aria-label={
-        hasItems
-          ? `Carrito, ${itemCount} ${itemCount === 1 ? 'producto' : 'productos'}`
-          : 'Carrito'
+        hasItems ? `Carrito, ${itemCount} ${itemCount === 1 ? 'producto' : 'productos'}` : 'Carrito'
       }
       className="relative inline-flex min-h-11 min-w-11 items-center justify-center text-sidebar-foreground hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >

@@ -82,28 +82,28 @@ El repositorio debe incluir un `Dockerfile` multi-stage (Stage 1: `node:20-alpin
 ## Acceptance Criteria
 
 1. El catálogo renderiza todos los productos de `src/data/products.json`; seleccionar una categoría filtra la vista y muestra solo esos productos.
-   *As visitor, navigate from the home page to /catalog, click a category filter chip, and see only products from that category rendered in the grid.*
+   _As visitor, navigate from the home page to /catalog, click a category filter chip, and see only products from that category rendered in the grid._
 
 2. Cada card muestra imagen, nombre, precio y badge de descuento cuando `isOnSale = true`; "Agregar al carrito" añade el producto sin navegar fuera de la página.
-   *As visitor, navigate from the catalog to a product card, click "Agregar al carrito", and see the cart icon update with the new item count without leaving the catalog page.*
+   _As visitor, navigate from the catalog to a product card, click "Agregar al carrito", and see the cart icon update with the new item count without leaving the catalog page._
 
 3. La URL `/productos/:id` renderiza detalle con galería, descripción, selector de cantidad (mínimo 1) y botón agregar; un ID inexistente muestra 404.
-   *As visitor, navigate from a product card to /productos/:id, browse the image gallery, select a quantity, click "Agregar al carrito", and return to browsing with the item in the cart.*
+   _As visitor, navigate from a product card to /productos/:id, browse the image gallery, select a quantity, click "Agregar al carrito", and return to browsing with the item in the cart._
 
 4. Al cerrar y reabrir el navegador, los items del carrito persisten tal como se dejaron; el subtotal refleja `cantidad × precio` por item.
-   *As visitor, navigate to the cart after closing and reopening the browser, and see the same products and quantities as when the session ended.*
+   _As visitor, navigate to the cart after closing and reopening the browser, and see the same products and quantities as when the session ended._
 
 5. El botón "Comprar por WhatsApp" genera URL `wa.me/{VITE_WHATSAPP_NUMBER}?text=...` con lista de productos, cantidades y subtotal; abre WhatsApp en un tap.
-   *As visitor, navigate from the cart to the "Comprar por WhatsApp" button, tap it, and see WhatsApp open with a pre-formatted message listing all products, quantities, and subtotal ready to send.*
+   _As visitor, navigate from the cart to the "Comprar por WhatsApp" button, tap it, and see WhatsApp open with a pre-formatted message listing all products, quantities, and subtotal ready to send._
 
 6. `/blog` lista artículos con título, fecha e imagen destacada; `/blog/:slug` renderiza el Markdown del artículo correspondiente.
-   *As visitor, navigate from the main menu to /blog, see a list of articles with title, date and cover image, click one, and read the full article at /blog/:slug.*
+   _As visitor, navigate from the main menu to /blog, see a list of articles with title, date and cover image, click one, and read the full article at /blog/:slug._
 
 7. Todos los colores del sitio usan tokens de `tailwind.config.ts`; ningún hex hardcodeado en componentes.
    `surface_status: backend_only`
 
 8. El sitio funciona en viewport de 360px sin layout roto; Lighthouse mobile Performance ≥ 80.
-   *As visitor on a 360px mobile device, navigate through the home, catalog, product detail, and cart pages without any horizontal scroll, broken layout, or tap targets smaller than 44px.*
+   _As visitor on a 360px mobile device, navigate through the home, catalog, product detail, and cart pages without any horizontal scroll, broken layout, or tap targets smaller than 44px._
 
 9. `docker compose up` levanta el sitio en `http://localhost:3000`; rutas SPA funcionan en recarga directa (nginx `try_files`).
    `surface_status: backend_only`

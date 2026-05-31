@@ -68,11 +68,9 @@ vi.mock('@/data/products.json', () => ({
 // enough information to assert that the right products were passed in.
 vi.mock('@/features/catalog/ProductCard', () => ({
   __esModule: true,
-  default: ({
-    product,
-  }: {
-    product: { id: string; name: string };
-  }) => <div data-testid={`product-card-${product.id}`}>{product.name}</div>,
+  default: ({ product }: { product: { id: string; name: string } }) => (
+    <div data-testid={`product-card-${product.id}`}>{product.name}</div>
+  ),
 }));
 
 const renderHome = () =>
@@ -134,15 +132,9 @@ describe('HomePage', () => {
     const categoryLinks = within(section).getAllByRole('link');
     expect(categoryLinks).toHaveLength(3);
 
-    expect(
-      within(section).getByRole('link', { name: /iluminación/i }),
-    ).toBeInTheDocument();
-    expect(
-      within(section).getByRole('link', { name: /automatización/i }),
-    ).toBeInTheDocument();
-    expect(
-      within(section).getByRole('link', { name: /seguridad/i }),
-    ).toBeInTheDocument();
+    expect(within(section).getByRole('link', { name: /iluminación/i })).toBeInTheDocument();
+    expect(within(section).getByRole('link', { name: /automatización/i })).toBeInTheDocument();
+    expect(within(section).getByRole('link', { name: /seguridad/i })).toBeInTheDocument();
 
     categoryLinks.forEach((link) => {
       expect(link.getAttribute('href')).toMatch(/^\/catalogo/);
@@ -155,10 +147,7 @@ describe('HomePage', () => {
     const whatsappLink = screen.getByRole('link', {
       name: /comprar por whatsapp/i,
     });
-    expect(whatsappLink).toHaveAttribute(
-      'href',
-      'https://wa.me/5491122334455',
-    );
+    expect(whatsappLink).toHaveAttribute('href', 'https://wa.me/5491122334455');
     expect(whatsappLink).toHaveAttribute('target', '_blank');
     expect(whatsappLink).toHaveAttribute('rel', 'noopener noreferrer');
   });

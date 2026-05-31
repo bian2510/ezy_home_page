@@ -1,5 +1,5 @@
-task_id: "002"
-title: "Shared TypeScript interfaces (Product, CartItem, CartState, BlogMeta)"
+task_id: '002'
+title: 'Shared TypeScript interfaces (Product, CartItem, CartState, BlogMeta)'
 assigned_agent: frontend-developer
 status: completed
 requires_reading:
@@ -7,5 +7,5 @@ requires_reading:
 files_in_scope:
   - src/types/index.ts
 acceptance_criteria:
-  - "src/types/index.ts exports: Product (id string, name string, description string, price number, images string[], category string, isBestseller boolean, isOnSale boolean, originalPrice optional number); CartItem (product Product, quantity number); CartState (items CartItem[]); BlogMeta (slug string, title string, date string, image string or null, excerpt optional string). TypeScript compiles without errors."
+  - 'src/types/index.ts exports: Product (id string, name string, description string, price number, images string[], category string, isBestseller boolean, isOnSale boolean, originalPrice optional number); CartItem (product Product, quantity number); CartState (items CartItem[]); BlogMeta (slug string, title string, date string, image string or null, excerpt optional string). TypeScript compiles without errors.'
 dependencies: []

@@ -46,6 +46,7 @@ colors: {
 ```
 
 **Tipografía:**
+
 ```typescript
 fontFamily: {
   sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -70,8 +71,8 @@ Instalación: `@fontsource/inter` + `@fontsource/geist-mono` vía npm. Import en
 
 ## Alternativas rechazadas
 
-| Alternativa | Razón de rechazo |
-|---|---|
+| Alternativa                                      | Razón de rechazo                                                             |
+| ------------------------------------------------ | ---------------------------------------------------------------------------- |
 | Mantener namespace scaffold (brand/surface/text) | Naming confuso; diverge del vocabulario de la marca; deuda técnica inmediata |
-| CSS variables + @layer base | Más verboso; duplica la definición de tokens cuando Tailwind ya lo resuelve |
-| Google Fonts CDN | Request externo en carga → peor LCP; dependencia de DNS de Google |
+| CSS variables + @layer base                      | Más verboso; duplica la definición de tokens cuando Tailwind ya lo resuelve  |
+| Google Fonts CDN                                 | Request externo en carga → peor LCP; dependencia de DNS de Google            |

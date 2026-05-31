@@ -29,10 +29,10 @@ description: >
   context through discovery when needed.
 
 tier_access:
-  tier_0: full       # DOMAIN.md, PROJECT.md — always
-  tier_1: scoped     # specs/plans/sources scoped by task
-  tier_2: scoped     # bounded-context vocabulary, invariants, ADRs filtered
-  tier_3: none       # leaf dev escalates for Tier 3 (regulated) needs
+  tier_0: full # DOMAIN.md, PROJECT.md — always
+  tier_1: scoped # specs/plans/sources scoped by task
+  tier_2: scoped # bounded-context vocabulary, invariants, ADRs filtered
+  tier_3: none # leaf dev escalates for Tier 3 (regulated) needs
 
 default_consumes:
   # --- Tier 0: orientation (always) ---
@@ -68,61 +68,61 @@ discovery:
   # frequent enough to warrant a dedicated kind.
   allowed_requests:
     - kind: additional_prd
-      pattern: "docs/prds/PRD-*.md"
+      pattern: 'docs/prds/PRD-*.md'
       auto_grant: false
       requires: justification
 
     - kind: cross_context_research
-      pattern: "docs/sources/research/**/*"
+      pattern: 'docs/sources/research/**/*'
       auto_grant: false
       requires: justification
 
     - kind: adr_unfiltered
-      pattern: "docs/adrs/*.md"
-      auto_grant: true       # ADRs are always grantable, just logged
+      pattern: 'docs/adrs/*.md'
+      auto_grant: true # ADRs are always grantable, just logged
       requires: reference_id
 
     - kind: plan_reference
-      pattern: "docs/plans/*.md"
+      pattern: 'docs/plans/*.md'
       auto_grant: false
       requires: justification
 
     - kind: design_system_component
       # EDIT ME: point this at your design system source of truth (e.g.
       # src/components/**, packages/ui/**, storybook/**).
-      pattern: "src/components/**"
-      auto_grant: true       # design system lookups are always grantable, just logged
+      pattern: 'src/components/**'
+      auto_grant: true # design system lookups are always grantable, just logged
       requires: reference_id
 
   request_schema:
     # Shape of a discovery request the agent emits
-    kind: string              # one of allowed_requests.kind above
-    target: string            # file path or glob matching the pattern
-    justification: string     # why the default projection is insufficient
-    blocking: boolean         # whether the task cannot proceed without this
+    kind: string # one of allowed_requests.kind above
+    target: string # file path or glob matching the pattern
+    justification: string # why the default projection is insufficient
+    blocking: boolean # whether the task cannot proceed without this
 
 required_outputs:
   # Every task execution must produce these or escalate.
   code_changes_with_tests: true
-  tests_must_fail_before_passing: true   # TDD red/green enforced for testable logic
-  invariants_preserved: true              # API contract invariants preserved
-  cited_sources_listed: true              # every factual claim references a file under docs/sources/ or DOMAIN.md
-  accessibility_checked: true             # UI changes verified against a11y standards
+  tests_must_fail_before_passing: true # TDD red/green enforced for testable logic
+  invariants_preserved: true # API contract invariants preserved
+  cited_sources_listed: true # every factual claim references a file under docs/sources/ or DOMAIN.md
+  accessibility_checked: true # UI changes verified against a11y standards
 
 escalation_triggers:
   # When the agent MUST escalate instead of making a decision.
   - kind: technical
-    when: "a required context file is missing, empty, or unparseable"
+    when: 'a required context file is missing, empty, or unparseable'
     to: parent
 
   - kind: scope
-    when: "task requires changes in a different bounded context"
+    when: 'task requires changes in a different bounded context'
     to: sem
 
   - kind: architectural
-    when: "task requires a new invariant, a new ADR, or violates an existing one"
+    when: 'task requires a new invariant, a new ADR, or violates an existing one'
     to: architect
 
   - kind: discovery_denied
-    when: "a discovery request was denied and the task cannot proceed"
+    when: 'a discovery request was denied and the task cannot proceed'
     to: parent

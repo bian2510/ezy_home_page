@@ -18,13 +18,7 @@ const sampleProduct: Product = {
   isOnSale: false,
 };
 
-function CartSeed({
-  quantity,
-  children,
-}: {
-  quantity: number;
-  children: ReactNode;
-}) {
+function CartSeed({ quantity, children }: { quantity: number; children: ReactNode }) {
   const { addItem } = useCart();
   useEffect(() => {
     if (quantity > 0) {
@@ -62,10 +56,19 @@ describe('SiteHeader', () => {
     renderHeader();
 
     const nav = screen.getByRole('navigation', { name: /principal/i });
-    expect(within(nav).getByRole('link', { name: /catálogo/i })).toHaveAttribute('href', '/catalogo');
+    expect(within(nav).getByRole('link', { name: /catálogo/i })).toHaveAttribute(
+      'href',
+      '/catalogo',
+    );
     expect(within(nav).getByRole('link', { name: /blog/i })).toHaveAttribute('href', '/blog');
-    expect(within(nav).getByRole('link', { name: /quiénes somos/i })).toHaveAttribute('href', '/quienes-somos');
-    expect(within(nav).getByRole('link', { name: /cómo comprar/i })).toHaveAttribute('href', '/como-comprar');
+    expect(within(nav).getByRole('link', { name: /quiénes somos/i })).toHaveAttribute(
+      'href',
+      '/quienes-somos',
+    );
+    expect(within(nav).getByRole('link', { name: /cómo comprar/i })).toHaveAttribute(
+      'href',
+      '/como-comprar',
+    );
     expect(within(nav).getByRole('link', { name: /carrito/i })).toHaveAttribute('href', '/carrito');
   });
 
