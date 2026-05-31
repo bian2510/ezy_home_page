@@ -109,4 +109,3 @@ jobs:
           projectName: ezyhome-storefront
           directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          skipCaching: true
