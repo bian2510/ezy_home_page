@@ -3,6 +3,7 @@ import SiteHeader from '@/components/layout/SiteHeader';
 import SiteFooter from '@/components/layout/SiteFooter';
 import { CartProvider } from '@/features/cart/CartProvider';
 import ToastProvider from '@/features/toast/ToastProvider';
+import CartDrawer from '@/features/cart/CartDrawer';
 
 export default function RootLayout() {
   return (
@@ -15,6 +16,7 @@ export default function RootLayout() {
           </main>
           <SiteFooter />
         </div>
+        <CartDrawer />
       </CartProvider>
     </ToastProvider>
   );

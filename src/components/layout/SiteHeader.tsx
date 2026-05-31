@@ -129,9 +129,12 @@ interface CartLinkProps {
 }
 
 function CartLink({ hasItems, itemCount }: CartLinkProps) {
+  const { openCart } = useCart();
+
   return (
-    <Link
-      to="/carrito"
+    <button
+      type="button"
+      onClick={openCart}
       aria-label={
         hasItems ? `Carrito, ${itemCount} ${itemCount === 1 ? 'producto' : 'productos'}` : 'Carrito'
       }
@@ -147,6 +150,6 @@ function CartLink({ hasItems, itemCount }: CartLinkProps) {
           {itemCount}
         </span>
       )}
-    </Link>
+    </button>
   );
 }

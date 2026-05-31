@@ -31,6 +31,12 @@ export interface CartContextValue {
    * cart will not survive a refresh.
    */
   storageAvailable: boolean;
+  /** `true` while the cart drawer is visible. */
+  isCartOpen: boolean;
+  /** Open the cart drawer. */
+  openCart: () => void;
+  /** Close the cart drawer. */
+  closeCart: () => void;
 }
 
 /**

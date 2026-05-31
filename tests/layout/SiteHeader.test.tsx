@@ -69,7 +69,7 @@ describe('SiteHeader', () => {
       'href',
       '/como-comprar',
     );
-    expect(within(nav).getByRole('link', { name: /carrito/i })).toHaveAttribute('href', '/carrito');
+    expect(within(nav).getByRole('button', { name: /carrito/i })).toBeInTheDocument();
   });
 
   it('should hide the cart badge when itemCount is zero', () => {

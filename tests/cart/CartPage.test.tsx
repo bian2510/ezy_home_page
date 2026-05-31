@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render, renderHook, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
@@ -8,6 +8,10 @@ import { CartProvider } from '@/features/cart/CartProvider';
 import { useCart } from '@/features/cart/useCart';
 import { formatPrice } from '@/types';
 import type { Product } from '@/types';
+
+vi.mock('@/hooks/useToast', () => ({
+  useToast: () => ({ addToast: vi.fn(), removeToast: vi.fn(), toasts: [] }),
+}));
 
 const buildProduct = (overrides: Partial<Product> = {}): Product => ({
   id: 'p-1',

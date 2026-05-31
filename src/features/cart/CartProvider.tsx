@@ -69,6 +69,9 @@ interface CartProviderProps {
 export const CartProvider = ({ children }: CartProviderProps) => {
   const [items, dispatch] = useReducer(cartReducer, undefined, readPersistedItems);
   const [storageAvailable, setStorageAvailable] = useState(true);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const openCart = useCallback(() => setIsCartOpen(true), []);
+  const closeCart = useCallback(() => setIsCartOpen(false), []);
 
   useEffect(() => {
     try {
@@ -114,8 +117,23 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       total,
       itemCount,
       storageAvailable,
+      isCartOpen,
+      openCart,
+      closeCart,
     }),
-    [items, addItem, removeItem, updateQuantity, clearCart, total, itemCount, storageAvailable],
+    [
+      items,
+      addItem,
+      removeItem,
+      updateQuantity,
+      clearCart,
+      total,
+      itemCount,
+      storageAvailable,
+      isCartOpen,
+      openCart,
+      closeCart,
+    ],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

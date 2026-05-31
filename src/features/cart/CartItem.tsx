@@ -9,6 +9,7 @@
 // both here (decrement disabled at 1) and in CartProvider's reducer.
 import type { CartItem as CartItemType } from '@/types';
 import { formatPrice } from '@/types';
+import { useToast } from '@/hooks/useToast';
 
 const MIN_QUANTITY = 1;
 
@@ -21,8 +22,14 @@ interface CartItemProps {
 
 export default function CartItem({ item, onIncrement, onDecrement, onRemove }: CartItemProps) {
   const { product, quantity } = item;
+  const { addToast } = useToast();
   const lineSubtotal = product.price * quantity;
   const atMinimum = quantity <= MIN_QUANTITY;
+
+  const handleRemove = () => {
+    onRemove(product.id);
+    addToast(`${product.name} eliminado del carrito`, 'info');
+  };
 
   return (
     <li className="flex flex-col gap-3 border-b border-border py-4 last:border-b-0 sm:flex-row sm:items-center sm:justify-between">
@@ -64,7 +71,7 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
         <button
           type="button"
           aria-label={`Eliminar ${product.name} del carrito`}
-          onClick={() => onRemove(product.id)}
+          onClick={handleRemove}
           className="text-sm text-destructive transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive"
         >
           Eliminar
