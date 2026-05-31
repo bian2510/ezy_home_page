@@ -26,7 +26,7 @@ export default function SiteHeader() {
   }
 
   return (
-    <header className="border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
+    <header className="sticky top-0 z-50 border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
       <div className="mx-auto flex max-w-content items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           to="/"

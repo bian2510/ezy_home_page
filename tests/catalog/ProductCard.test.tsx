@@ -55,6 +55,11 @@ vi.mock('@/features/cart/useCart', () => ({
   }),
 }));
 
+const addToastMock = vi.fn();
+vi.mock('@/hooks/useToast', () => ({
+  useToast: () => ({ addToast: addToastMock, removeToast: vi.fn(), toasts: [] }),
+}));
+
 const buildProduct = (overrides: Partial<Product> = {}): Product => ({
   id: 'p-1',
   name: 'Foco Inteligente RGBW',
@@ -78,6 +83,7 @@ describe('ProductCard', () => {
   beforeEach(() => {
     navigateMock.mockReset();
     addItemMock.mockReset();
+    addToastMock.mockReset();
     window.localStorage.clear();
   });
 
@@ -164,6 +170,8 @@ describe('ProductCard', () => {
 
     expect(addItemMock).toHaveBeenCalledTimes(1);
     expect(addItemMock).toHaveBeenCalledWith(product, 1);
+    expect(addToastMock).toHaveBeenCalledTimes(1);
+    expect(addToastMock).toHaveBeenCalledWith('Foco agregado al carrito');
   });
 
   it('should not navigate when the add-to-cart button is clicked', async () => {

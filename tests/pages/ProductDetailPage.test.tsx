@@ -57,6 +57,10 @@ vi.mock('@/features/cart/useCart', () => ({
   }),
 }));
 
+vi.mock('@/hooks/useToast', () => ({
+  useToast: () => ({ addToast: vi.fn(), removeToast: vi.fn(), toasts: [] }),
+}));
+
 // `formatPrice` (Intl es-AR) emits a non-breaking space between currency
 // symbol and amount; Testing Library's default normaliser collapses ASCII
 // whitespace but preserves U+00A0. This matcher compares ignoring all

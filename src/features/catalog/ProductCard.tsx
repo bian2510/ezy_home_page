@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { Product } from '@/types';
 import { formatPrice } from '@/types';
 import { useCart } from '@/features/cart/useCart';
+import { useToast } from '@/hooks/useToast';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/cn';
 
@@ -32,6 +33,7 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const { addToast } = useToast();
 
   const hasImage = product.images.length > 0;
   const primaryImage = hasImage ? product.images[0] : null;
@@ -44,6 +46,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     // Prevent the card-body button's onClick from firing and navigating away.
     event.stopPropagation();
     addItem(product, 1);
+    addToast(`${product.name} agregado al carrito`);
   };
 
   return (

@@ -18,6 +18,7 @@ import type { Product } from '@/types';
 import { formatPrice } from '@/types';
 import QuantitySelector from '@/components/ui/QuantitySelector';
 import { useCart } from '@/features/cart/useCart';
+import { useToast } from '@/hooks/useToast';
 
 const products = productsData as Product[];
 
@@ -57,11 +58,13 @@ interface ProductDetailProps {
 
 function ProductDetail({ product }: ProductDetailProps) {
   const { addItem } = useCart();
+  const { addToast } = useToast();
   const [quantity, setQuantity] = useState<number>(MIN_QUANTITY);
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
 
   const handleAddToCart = () => {
     addItem(product, quantity);
+    addToast(`${quantity > 1 ? `${quantity}x ` : ''}${product.name} agregado al carrito`);
   };
 
   const hasImages = product.images.length > 0;

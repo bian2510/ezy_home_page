@@ -43,8 +43,15 @@ const config: Config = {
         prose: '65ch',
         content: '1200px',
       },
+      keyframes: {
+        'slide-in-up': {
+          from: { opacity: '0', transform: 'translateY(8px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
       animation: {
         'fade-slide': 'fadeSlide 0.4s ease-out',
+        'slide-in-up': 'slide-in-up 0.2s ease-out',
       },
     },
   },
