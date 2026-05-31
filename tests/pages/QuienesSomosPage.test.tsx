@@ -28,17 +28,23 @@ describe('QuienesSomosPage', () => {
     ).toBeInTheDocument();
   });
 
+  it('should render the target audience section', () => {
+    renderPage();
+    expect(screen.getByRole('heading', { name: /¿para quién es ezyhome\?/i })).toBeInTheDocument();
+  });
+
+  it('should render the three customer profiles', () => {
+    renderPage();
+    expect(screen.getByText(/querés mejorar tu hogar/i)).toBeInTheDocument();
+    expect(screen.getByText(/la seguridad es prioridad/i)).toBeInTheDocument();
+    expect(screen.getByText(/empezás con algo pequeño/i)).toBeInTheDocument();
+  });
+
   it('should render the commitment section with three items', () => {
     renderPage();
     expect(screen.getByRole('heading', { name: /nuestro compromiso/i })).toBeInTheDocument();
-    // Use exact strings to avoid matching words inside longer sentences.
     expect(screen.getByText('Profesionalismo')).toBeInTheDocument();
     expect(screen.getByText('Accesibilidad')).toBeInTheDocument();
     expect(screen.getByText('Confianza')).toBeInTheDocument();
-  });
-
-  it('should render the target audience section', () => {
-    renderPage();
-    expect(screen.getByRole('heading', { name: /a quién le vendemos/i })).toBeInTheDocument();
   });
 });
