@@ -104,7 +104,7 @@ function HeroCarousel() {
     >
       <div
         key={current}
-        className="mx-auto flex max-w-prose animate-fade-slide flex-col items-center gap-4"
+        className="mx-auto flex min-h-[260px] max-w-prose animate-fade-slide flex-col items-center justify-center gap-4 sm:min-h-[320px]"
         aria-live="polite"
         aria-atomic="true"
       >
