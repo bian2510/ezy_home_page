@@ -43,3 +43,16 @@ Do not skip this step. Context you skip becomes an assumption you will regret.
 - Do not modify `DOMAIN.md` or `PROJECT.md` without explicit user instruction.
 - Do not modify test files unless your task explicitly covers testing.
 - Do not commit or push to version control unless your task explicitly requires it.
+
+---
+
+## Quality Gate — Obligatorio antes de terminar cualquier tarea
+
+Antes de declarar cualquier tarea como completa, ejecutar siempre en orden:
+
+1. `pnpm lint` — debe terminar con 0 errores
+2. `pnpm typecheck` — debe terminar sin errores
+3. `pnpm format:check` — debe pasar sin archivos con diff
+
+Si cualquiera falla, corregir antes de commitear.
+No es válido pushear con la intención de "el CI lo va a detectar".

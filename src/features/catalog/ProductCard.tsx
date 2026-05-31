@@ -37,7 +37,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const primaryImage = hasImage ? product.images[0] : null;
 
   const handleNavigate = () => {
-    navigate(`/productos/${product.id}`);
+    void navigate(`/productos/${product.id}`);
   };
 
   const handleAddToCart = (event: MouseEvent<HTMLButtonElement>) => {

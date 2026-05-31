@@ -37,7 +37,7 @@ export default function BlogCard({ article }: BlogCardProps) {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate(`/blog/${article.slug}`);
+    void navigate(`/blog/${article.slug}`);
   };
 
   return (

@@ -22,7 +22,7 @@ export default function SiteHeader() {
 
   function handleNavClick(to: string) {
     setMenuOpen(false);
-    navigate(to);
+    void navigate(to);
   }
 
   return (
