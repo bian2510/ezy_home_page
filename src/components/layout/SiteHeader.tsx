@@ -7,7 +7,7 @@ interface NavItem {
   label: string;
 }
 
-const NAV_ITEMS: ReadonlyArray<NavItem> = [
+const NAV_ITEMS: readonly NavItem[] = [
   { to: '/catalogo', label: 'Catálogo' },
   { to: '/blog', label: 'Blog' },
   { to: '/quienes-somos', label: 'Quiénes Somos' },

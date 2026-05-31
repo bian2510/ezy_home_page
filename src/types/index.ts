@@ -69,4 +69,4 @@ export const formatPrice = (amount: number): string =>
     maximumFractionDigits: 0,
   })
     .format(amount)
-    .replace(/ /g, ' ');
+    .replace(/\u00A0/g, ' ');

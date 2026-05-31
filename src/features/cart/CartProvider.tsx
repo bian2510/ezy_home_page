@@ -85,6 +85,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
     } catch {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStorageAvailable(false);
     }
   }, [items]);

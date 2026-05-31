@@ -102,7 +102,7 @@ describe('HomePage', () => {
     renderHome();
 
     const heading = screen.getByRole('heading', { name: /más vendidos/i });
-    const section = heading.closest('section') as HTMLElement;
+    const section = heading.closest('section')!;
     expect(section).not.toBeNull();
 
     expect(within(section).getByText('Foco Best Uno')).toBeInTheDocument();
@@ -115,7 +115,7 @@ describe('HomePage', () => {
     renderHome();
 
     const heading = screen.getByRole('heading', { name: /^ofertas$/i });
-    const section = heading.closest('section') as HTMLElement;
+    const section = heading.closest('section')!;
     expect(section).not.toBeNull();
 
     expect(within(section).getByText('Tira Oferta Uno')).toBeInTheDocument();
@@ -128,7 +128,7 @@ describe('HomePage', () => {
     renderHome();
 
     const heading = screen.getByRole('heading', { name: /categorías/i });
-    const section = heading.closest('section') as HTMLElement;
+    const section = heading.closest('section')!;
     expect(section).not.toBeNull();
 
     const categoryLinks = within(section).getAllByRole('link');

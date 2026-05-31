@@ -139,7 +139,7 @@ describe('ProductDetailPage', () => {
 
     const decrement = screen.getByRole('button', { name: /disminuir cantidad/i });
     const increment = screen.getByRole('button', { name: /aumentar cantidad/i });
-    const quantityRegion = decrement.parentElement as HTMLElement;
+    const quantityRegion = decrement.parentElement!;
     expect(within(quantityRegion).getByText('1')).toBeInTheDocument();
     expect(decrement).toBeDisabled();
     expect(increment).not.toBeDisabled();

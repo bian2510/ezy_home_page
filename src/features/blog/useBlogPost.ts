@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+ 
+ 
 import { useEffect, useState } from 'react';
 import blogIndex from '@/data/blog/index.json';
 import type { BlogMeta } from '@/types';
@@ -56,7 +56,7 @@ export function useBlogPost(slug: string): UseBlogPostResult {
     if (meta === null) {
       // Slug is not in the index — nothing to load. Reset transient state
       // in case the previous render had resolved content for a known slug.
-      setContent(null);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setContent(null);
       setLoading(false);
       return;
@@ -75,7 +75,7 @@ export function useBlogPost(slug: string): UseBlogPostResult {
     setContent(null);
     setLoading(true);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+     
     loader().then(
       (module: { default: string }) => { // <--- CORRECCIÓNaquí
         if (cancelled) return;

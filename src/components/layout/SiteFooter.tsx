@@ -15,7 +15,7 @@ interface FooterNavItem {
   label: string;
 }
 
-const FOOTER_NAV_ITEMS: ReadonlyArray<FooterNavItem> = [
+const FOOTER_NAV_ITEMS: readonly FooterNavItem[] = [
   { to: '/catalogo', label: 'Catálogo' },
   { to: '/blog', label: 'Blog' },
   { to: '/carrito', label: 'Carrito' },
