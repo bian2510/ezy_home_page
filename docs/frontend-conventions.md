@@ -95,7 +95,38 @@ const total = useMemo(() => items.reduce(...), [items])
 
 ---
 
-## 6. Tailwind CSS
+## 6. Layout de páginas — estándar obligatorio
+
+### Ancho de contenido
+
+El token `max-w-content` (1200px, definido en `tailwind.config.ts`) es el **único ancho permitido**
+para contenedores de página. No usar `max-w-prose`, `max-w-3xl`, `max-w-5xl`, ni anchos arbitrarios
+para wrappers de página.
+
+```tsx
+// ✅ CORRECTO — dentro del <main> de RootLayout
+<section className="mx-auto w-full max-w-content px-4 py-8 sm:px-6 lg:px-8">
+
+// ❌ MAL — ancho arbitrario
+<div className="mx-auto max-w-prose flex flex-col gap-10">
+<div className="mx-auto max-w-5xl ...">
+```
+
+**Excepción permitida:** `max-w-prose` (65ch) **solo** para cuerpo de artículos de blog o texto de
+lectura larga donde la medida de línea corta mejora la legibilidad (BlogPostPage article).
+
+### Secciones full-bleed
+
+Para secciones que necesiten fondo de color o gradiente de borde a borde (ej. hero, CTA),
+agregar `-mx-4 sm:-mx-6 lg:-mx-8` para romper el padding del contenedor padre:
+
+```tsx
+<section className="-mx-4 bg-sidebar px-4 py-16 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+```
+
+---
+
+## 7. Tailwind CSS
 
 - Solo tokens de `tailwind.config.ts`. Sin hex literales en `className`.
 - Sin `style={}` inline salvo valores dinámicos imposibles de expresar en Tailwind.
@@ -105,7 +136,7 @@ const total = useMemo(() => items.reduce(...), [items])
 
 ---
 
-## 7. Accesibilidad (WCAG 2.1 AA — no negociable)
+## 8. Accesibilidad (WCAG 2.1 AA — no negociable)
 
 - `focus-visible:ring-2 focus-visible:ring-primary` en todo elemento interactivo.
 - `aria-label` en botones/links sin texto visible.
@@ -116,7 +147,7 @@ const total = useMemo(() => items.reduce(...), [items])
 
 ---
 
-## 8. Testing — obligatorio, sin excepciones
+## 9. Testing — obligatorio, sin excepciones
 
 **Testear comportamiento, no implementación.**
 
@@ -155,7 +186,7 @@ export const buildProduct = (overrides?: Partial<Product>): Product => ({
 
 ---
 
-## 9. Nomenclatura
+## 10. Nomenclatura
 
 | Cosa               | Convención                 | Ejemplo                 |
 | ------------------ | -------------------------- | ----------------------- |
@@ -170,8 +201,9 @@ export const buildProduct = (overrides?: Partial<Product>): Product => ({
 
 ---
 
-## 10. Prohibiciones explícitas
+## 11. Prohibiciones explícitas
 
+- ❌ Anchos de página distintos a `max-w-content` (ver sección 6)
 - ❌ `any` en TypeScript
 - ❌ `console.log` en código de producción
 - ❌ Lógica de negocio en componentes `ui/`

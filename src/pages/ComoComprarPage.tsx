@@ -47,7 +47,7 @@ const PASOS = [
 
 export default function ComoComprarPage() {
   return (
-    <div className="mx-auto flex max-w-prose flex-col gap-10">
+    <div className="flex w-full flex-col gap-10">
       <header>
         <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           Cómo Comprar
@@ -58,7 +58,7 @@ export default function ComoComprarPage() {
         </p>
       </header>
 
-      <ol className="flex flex-col gap-4" aria-label="Pasos para comprar">
+      <ol className="grid grid-cols-1 gap-4 md:grid-cols-2" aria-label="Pasos para comprar">
         {PASOS.map(({ numero, titulo, descripcion, cta }) => (
           <li
             key={numero}

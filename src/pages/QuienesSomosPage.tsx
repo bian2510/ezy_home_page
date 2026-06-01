@@ -59,7 +59,7 @@ export default function QuienesSomosPage() {
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <div className="mx-auto w-full max-w-content px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="flex flex-col gap-16">
           {/* Misión + Problema en 2 columnas en desktop */}
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
