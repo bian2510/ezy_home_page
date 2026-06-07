@@ -23,7 +23,7 @@ export function useCatalog(products: Product[]): UseCatalogResult {
   const categories = useMemo(() => {
     const seen = new Set<string>();
     for (const product of products) {
-      seen.add(product.category);
+      seen.add(product.category ?? '');
     }
     return Array.from(seen);
   }, [products]);

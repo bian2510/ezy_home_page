@@ -1,126 +1,588 @@
 [
-  {
-    "id": "smart-bulb-rgbw-001",
-    "name": "Foco Inteligente RGBW WiFi 9W",
-    "description": "Foco LED inteligente con 16 millones de colores y luz blanca regulable (2700K-6500K). Se controla desde la app EzyHome o por voz con Alexa y Google Home, sin necesidad de hub adicional.",
-    "price": 18900,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "iluminacion",
-    "isBestseller": true,
-    "isOnSale": false
-  },
-  {
-    "id": "tira-led-rgb-5m-002",
-    "name": "Tira LED Inteligente RGB 5 metros",
-    "description": "Tira LED de 5 metros con control WiFi, ideal para iluminación ambiental en livings, dormitorios o cocinas. Incluye fuente de alimentación, control remoto y soporta sincronización con música.",
-    "price": 22500,
-    "originalPrice": 28900,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "iluminacion",
-    "isBestseller": false,
-    "isOnSale": true
-  },
-  {
-    "id": "switch-wifi-dimmer-003",
-    "name": "Switch WiFi Dimmer Táctil 1 Tecla",
-    "description": "Llave de luz táctil con regulación de intensidad y control WiFi. Reemplaza una llave tradicional sin obra y permite programar escenas, horarios y comandos por voz. Requiere neutro.",
-    "price": 24500,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "iluminacion",
-    "isBestseller": false,
-    "isOnSale": false
-  },
-  {
-    "id": "enchufe-wifi-16a-004",
-    "name": "Enchufe Inteligente WiFi 16A con Medidor",
-    "description": "Enchufe inteligente con medidor de consumo eléctrico en tiempo real. Compatible con Alexa y Google Home, permite encender/apagar electrodomésticos remotamente y programar horarios desde el celular.",
-    "price": 14900,
-    "originalPrice": 19500,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "automatizacion",
-    "isBestseller": true,
-    "isOnSale": true
-  },
-  {
-    "id": "sensor-apertura-puerta-005",
-    "name": "Sensor de Apertura de Puertas y Ventanas Zigbee",
-    "description": "Sensor magnético inalámbrico que detecta la apertura de puertas y ventanas. Envía notificaciones push instantáneas al celular y se integra con escenas de seguridad. Requiere hub Zigbee EzyHome.",
-    "price": 9500,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "automatizacion",
-    "isBestseller": false,
-    "isOnSale": false
-  },
-  {
-    "id": "hub-zigbee-ezyhome-006",
-    "name": "Hub de Automatización Zigbee 3.0 EzyHome",
-    "description": "Hub central para conectar hasta 50 dispositivos Zigbee del hogar inteligente. Permite crear automatizaciones complejas entre sensores, luces y enchufes. Conexión por Ethernet y WiFi 2.4GHz.",
-    "price": 48900,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "automatizacion",
-    "isBestseller": false,
-    "isOnSale": false
-  },
-  {
-    "id": "termostato-inteligente-007",
-    "name": "Termostato Inteligente WiFi para Caldera",
-    "description": "Termostato programable con pantalla táctil y control remoto desde el celular. Aprende los hábitos del hogar y optimiza el consumo de gas o electricidad. Compatible con calderas y splits inverter.",
-    "price": 56500,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "automatizacion",
-    "isBestseller": false,
-    "isOnSale": false
-  },
-  {
-    "id": "sensor-gas-glp-008",
-    "name": "Sensor de Gas GLP y Natural WiFi",
-    "description": "Detector inteligente de fugas de gas natural y GLP con alarma sonora de 85dB y notificación push al celular. Ideal para cocinas y ambientes con artefactos a gas. Instalación en pared, conexión 220V.",
-    "price": 16500,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "seguridad",
-    "isBestseller": true,
-    "isOnSale": false
-  },
-  {
-    "id": "sensor-monoxido-co-009",
-    "name": "Detector de Monóxido de Carbono WiFi",
-    "description": "Detector de monóxido de carbono (CO) con sensor electroquímico de alta precisión y alarma de 85dB. Envía alertas al celular en tiempo real y registra niveles históricos en la app EzyHome.",
-    "price": 17900,
-    "originalPrice": 21500,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "seguridad",
-    "isBestseller": false,
-    "isOnSale": true
-  },
-  {
-    "id": "detector-humo-wifi-010",
-    "name": "Detector de Humo Fotoeléctrico WiFi",
-    "description": "Detector de humo fotoeléctrico con conexión WiFi y batería de litio de 10 años de duración. Notifica al celular ante cualquier evento y se interconecta con otros detectores EzyHome del hogar.",
-    "price": 13500,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "seguridad",
-    "isBestseller": false,
-    "isOnSale": false
-  },
-  {
-    "id": "camara-wifi-indoor-011",
-    "name": "Cámara WiFi Interior 1080p con Visión Nocturna",
-    "description": "Cámara de seguridad interior Full HD con visión nocturna infrarroja, audio bidireccional y detección de movimiento por IA. Almacenamiento en microSD hasta 128GB o en la nube EzyHome.",
-    "price": 32900,
-    "originalPrice": 38900,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "seguridad",
-    "isBestseller": true,
-    "isOnSale": true
-  },
-  {
-    "id": "sensor-movimiento-pir-012",
-    "name": "Sensor de Movimiento PIR Zigbee",
-    "description": "Sensor de movimiento infrarrojo pasivo (PIR) inalámbrico con detección de hasta 7 metros. Activa luces, alarmas o cámaras automáticamente. Batería CR2450 con autonomía de 2 años. Requiere hub Zigbee.",
-    "price": 10900,
-    "images": ["/images/smart-bulb.jpg"],
-    "category": "seguridad",
-    "isBestseller": false,
-    "isOnSale": false
-  }
+    {
+        "id": "MLA2212382710",
+        "name": "Enchufe Inteligente Wifi Ezyhome Control Y Temporizador Blanco",
+        "description": "SOMOS EZYHOME\n\nEnchufe Inteligente WiFi AU | Control Remoto desde el Celular | CON MONITOREO DE CONSUMO\n\nConvertí cualquier dispositivo eléctrico en inteligente con este enchufe WiFi. Controlá el encendido y apagado desde tu celular, programá rutinas, y gestioná tus dispositivos de forma remota desde la app Tuya Smart o Smart Life.\n\nFUNCIONES DESTACADAS:\n- Control remoto ON/OFF desde la app\n- Programación de horarios y temporizadores\n- Automatización de rutinas personalizadas\n- Compatible con Alexa y Google Assistant por control de voz\n- Monitoreo de consumo\n- No requiere hub adicional\n- Instalación rápida y sencilla\n\nESPECIFICACIONES TÉCNICAS:\n- Tipo de conexión: WiFi 2.4 GHz\n- Alimentación: directa (no requiere batería)\n- Compatibilidad: Tuya Smart, Smart Life, Alexa, Google Assistant\n- Formato de enchufe: AU (tipo I)\n- Color: blanco\n- Certificaciones: SAA, RCM y CE\n\nIdeal para automatizar lámparas, electrodomésticos, cargadores y otros aparatos. Su diseño compacto y compatibilidad con asistentes de voz lo convierten en una solución práctica y moderna para el hogar conectado.\n\nDisfrutá de mayor comodidad y ahorro de energía con EzyHome.",
+        "category": null,
+        "price": 2.5e4,
+        "images": [
+            "https://http2.mlstatic.com/D_704415-MLA93820088651_092025-O.jpg",
+            "https://http2.mlstatic.com/D_721406-MLA91610423787_092025-O.jpg",
+            "https://http2.mlstatic.com/D_607473-MLA91610741603_092025-O.webp",
+            "https://http2.mlstatic.com/D_628666-MLA88934514522_082025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2215029560",
+        "name": "Cámara Seguridad Wifi Tuya 2mp Audio Y Visión Nocturna Blanco",
+        "description": "Protegé tu hogar o negocio con esta cámara inteligente WiFi de 2MP, compatible con la app Tuya Smart o Smart Life. Ideal para vigilancia remota desde tu celular, con visión nocturna, audio bidireccional y detección inteligente de movimiento.\n\nPrincipales funciones:\n\nResolución Full HD 2MP (1920x1080) con lente de 3.6mm\nMovimiento PTZ: rotación horizontal 355° y vertical 90°\nVisión nocturna con infrarrojos (alcance hasta 10 m)\nDetección de movimiento y personas con alertas en la app\nAudio bidireccional: micrófono y parlante integrados\nCompatible con Tuya Smart / Smart Life (iOS y Android)\nConexión WiFi 2.4GHz, no necesita cableado adicional\nCompatible con Alexa y Google Home (opcional)\nGrabación local en tarjeta microSD hasta 128GB (no incluida)\nAcceso remoto desde el celular las 24 hs\n\nEspecificaciones técnicas:\n\nResolución: 2MP (Full HD 1080p)\nConectividad: WiFi 2.4GHz\nVisión nocturna: 6 LEDs IR hasta 10 metros\nAudio: bidireccional con cancelación de eco\nAlimentación: 5V (fuente incluida)\nMaterial: Plástico ABS de alta resistencia\n\nIncluye:\n\nCámara IP WiFi\nFuente de alimentación\nSoporte de montaje\nTornillos\nManual en español\n\nHacé tu vida mas segura con EzyHome",
+        "category": null,
+        "price": 59760.0,
+        "images": [
+            "https://http2.mlstatic.com/D_839888-MLA93819499245_092025-O.webp",
+            "https://http2.mlstatic.com/D_612102-MLA89452614007_082025-O.webp",
+            "https://http2.mlstatic.com/D_670392-MLA89091022080_082025-O.jpg",
+            "https://http2.mlstatic.com/D_968931-MLA89091955348_082025-O.webp",
+            "https://http2.mlstatic.com/D_758939-MLA89453786753_082025-O.jpg",
+            "https://http2.mlstatic.com/D_628440-MLA89091677580_082025-O.jpg",
+            "https://http2.mlstatic.com/D_762407-MLA89091657778_082025-O.jpg",
+            "https://http2.mlstatic.com/D_989594-MLA89091667670_082025-O.jpg",
+            "https://http2.mlstatic.com/D_895700-MLA89091668094_082025-O.jpg",
+            "https://http2.mlstatic.com/D_825664-MLA89453756247_082025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA1514039927",
+        "name": "Tira Neón Led Rgbic 3m Luz Continua Ip68 Wifi Tuya Rgbic",
+        "description": "SOMOS EZYHOME\n\nIluminá tus espacios con estilo moderno y creativo\nEsta tira LED tipo neón RGBIC de 3 metros, compatible con Alexa y Google Home, es ideal para decoración interior o exterior. Su luz continua y sin puntos visibles crea un efecto suave y elegante, a diferencia de las tiras LED tradicionales. Perfecta para ambientes únicos y personalizados.\n\nCaracterísticas principales:\nRGBIC: permite mostrar múltiples colores y efectos dinámicos al mismo tiempo\nLuz continua: diseño tipo neón sin puntos de luz visibles\nAlimentación por USB 5V: fácil de instalar y compatible con cargadores comunes\nProtección IP68: apta para exteriores, baños, cocinas o espacios húmedos\nFlexible: se adapta a cualquier forma, curva o superficie\n\nEspecificaciones técnicas:\n\nTipo: Tira LED Neón Flex RGBIC\nLongitud: 3 metros\nCantidad de LEDs: 60 por metro\nTipo de LED: SMD5050 con chip IC (2812)\nEntrada: USB 5V 2A\nImpermeabilidad: IP68\nTamaño de la tira: 6 mm x 12 mm\nMaterial: Silicona flexible\nColores: RGBIC con efectos multicolor simultáneos\n\n\nContenido del paquete:\n\n1 tira LED tipo neón RGBIC de 3 metros\n\nAplicaciones recomendadas:\n\nTuya Smart\nSmartLife\n\nIdeal para dormitorios, escritorios, espejos, baños, patios, balcones, vidrieras, decoración gamer, negocios, eventos, fiestas y más.\n\nIluminá tu vida con EzyHome",
+        "category": null,
+        "price": 119702.4,
+        "images": [
+            "https://http2.mlstatic.com/D_700804-MLA93402295036_092025-O.webp",
+            "https://http2.mlstatic.com/D_999412-MLA89654141115_082025-O.webp",
+            "https://http2.mlstatic.com/D_936172-MLA89654000981_082025-O.jpg",
+            "https://http2.mlstatic.com/D_737775-MLA89654171093_082025-O.jpg",
+            "https://http2.mlstatic.com/D_688698-MLA89653721523_082025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2200632476",
+        "name": "Plafon Led Inteligente 24w Wifi+bt Rgbc Alexa Smart Home Blanco",
+        "description": "SOMOS EZYHOME\n\nPlafon LED Inteligente 24W Ultra Delgado | WiFi + Bluetooth | Compatible con Alexa y Google Assistant\n\nIluminá tu hogar o negocio con estilo y tecnología con este panel LED inteligente ultra delgado. Diseñado para ofrecer una luz potente, moderna y eficiente, es ideal para cualquier ambiente donde se busque funcionalidad y elegancia.\n\nFUNCIONES DESTACADAS:\n- Conectividad inteligente WiFi + Bluetooth (modo dual) para mayor estabilidad\n- Control remoto desde tu celular mediante app (Android/iOS)\n- Compatible con asistentes de voz: Amazon Alexa, Google Assistant y Xiaodu\n- Modo RGB y blanco ajustable desde la app\n- Ideal para hogares inteligentes, oficinas, comercios o espacios modernos\n\nESPECIFICACIONES TÉCNICAS:\n- Potencia: 24W\n- Lúmenes: 1920 LM (alta luminosidad)\n- Tamaño: 25 x 300 mm\n- Voltaje: 85V - 265V\n- Temperatura de trabajo: -25 °C a 45 °C\n- Conectividad: WiFi 2.4 GHz + Bluetooth BLE\n\nMATERIALES:\n- 1 pieza de papel reflectante\n- 2 piezas de acrílico\n- Base de material PP resistente\n\nEste panel LED inteligente combina diseño moderno con tecnología avanzada, brindando una solución de iluminación eficiente, conectada y adaptable a cualquier necesidad.\n\nConvertí tu espacio en un entorno inteligente con EzyHome.",
+        "category": null,
+        "price": 94685.26,
+        "images": [
+            "https://http2.mlstatic.com/D_708439-MLA109991828246_042026-O.webp",
+            "https://http2.mlstatic.com/D_843196-MLA88637615065_072025-O.jpg",
+            "https://http2.mlstatic.com/D_767401-MLA88292978176_072025-O.jpg",
+            "https://http2.mlstatic.com/D_685472-MLA88637689371_072025-O.jpg",
+            "https://http2.mlstatic.com/D_953533-MLA88636604143_072025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2200566426",
+        "name": "Control Remoto Ir Universal + Sensor De Humedad Wifi",
+        "description": "Control Remoto IR Universal + Sensor de Humedad WiFi\n\n¡Transformá tu hogar en un espacio inteligente!\n\nCon el Control Remoto IR Universal con sensor de humedad de EzyHome, tenés el control total de tus dispositivos desde el celular o por voz, gracias a su compatibilidad con las principales plataformas:\nAlexa, Google Home, Apple HomeKit, Tuya y Smart Life.\n\nControlá tu TV, aire acondicionado, ventiladores y más desde una sola app.\nSensor de humedad integrado para monitorear el ambiente y mantener condiciones saludables.\nConexión WiFi para manejo remoto desde cualquier lugar.\nFunciona con Tuya Smart y Smart Life, integrándose fácilmente a tu ecosistema domótico.\nInstalación simple, sin necesidad de técnicos ni configuraciones complicadas.\n\nEste dispositivo reúne varias funciones clave en un solo producto:\n\nControl inteligente IR para múltiples aparatos.\n\nAutomatización y control por voz para una experiencia cómoda y moderna.\n\nCompatibilidad amplia con marcas y modelos populares.\n\nIdeal para hogares conectados que buscan más comodidad, control y eficiencia.\n\nConvertí tu casa en un hogar inteligente con EzyHome.",
+        "category": null,
+        "price": 4.98e4,
+        "images": [
+            "https://http2.mlstatic.com/D_762018-MLA93399499034_092025-O.webp",
+            "https://http2.mlstatic.com/D_645327-MLA88592247411_072025-O.webp",
+            "https://http2.mlstatic.com/D_853806-MLA88248845600_072025-O.webp",
+            "https://http2.mlstatic.com/D_932596-MLA88592356615_072025-O.webp",
+            "https://http2.mlstatic.com/D_847510-MLA88248617250_072025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA1514819947",
+        "name": "Kit Ambilight Wifi Con Cámara Y Barras Led Rgbic Rgb",
+        "description": "SOMOS EZYHOME\n\nIluminá tu experiencia de entretenimiento con este kit Ambilight RGBIC de 3,8 metros, ideal para televisores de 55 a 65 pulgadas. Su cámara captura los colores de la pantalla en tiempo real y sincroniza la iluminación, creando un efecto envolvente para películas, juegos o música.\n\nCaracterísticas principales:\n\nSincronización de colores con la pantalla mediante cámara.\nIncluye 2 barras LED adicionales para mayor cobertura.\nModo música con respuesta dinámica al ritmo.\nControl por voz con Alexa y Google Assistant.\nProgramación de horarios y temporizadores.\nControl desde la app móvil (iOS y Android).\nFunción de control en grupo y escenarios múltiples.\n\nEspecificaciones técnicas:\n\nLongitud de tira LED: 3,8 m (RGBIC).\nBarras LED: 2 unidades RGBIC\nConectividad: WiFi 2.4GHz y Bluetooth 4.2.\nTecnología inalámbrica: IEEE 802.11 b/g/n.\nEntrada de energía: 12V 2A (máx.).\nMaterial: ABS+PC con retardante de llama UL94V0.\nCable de cámara: USB Tipo-C.\nCompatible con Alexa, Google Home y Yandex Alice.\nRequisitos app: iOS 8.0 o Android 4.1 o superior.\n\nIncluye: cámara, caja controladora, adaptador, tira LED 3,8 m, , 2 barras LED RGBIC\n\nIdeal para crear una atmósfera inmersiva en tu hogar, fácil de instalar y con control total desde tu celular o por voz.\n\nHacé tu vida mas divertida con EzyHome",
+        "category": null,
+        "price": 1.9e5,
+        "images": [
+            "https://http2.mlstatic.com/D_838594-MLA89971969613_082025-O.webp",
+            "https://http2.mlstatic.com/D_610203-MLA89598521184_082025-O.jpg",
+            "https://http2.mlstatic.com/D_893667-MLA89598461460_082025-O.jpg"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA1514651431",
+        "name": "Kit Ambilight Rgbic Wifi 3.8m Con Cámara Para Tv 55-65  Rgb",
+        "description": "SOMOS EZYHOME\n\nIluminá tu experiencia de entretenimiento con este kit Ambilight RGBIC de 3,8 metros, ideal para televisores de 55 a 65 pulgadas. Su cámara captura los colores de la pantalla en tiempo real y sincroniza la iluminación, creando un efecto envolvente para películas, juegos o música.\n\nCaracterísticas principales:\n\nSincronización de colores con la pantalla mediante cámara.\nModo música con respuesta dinámica al ritmo.\nControl por voz con Alexa y Google Assistant.\nProgramación de horarios y temporizadores.\nControl desde la app móvil (iOS y Android).\nFunción de control en grupo y escenarios múltiples.\n\nEspecificaciones técnicas:\n\nLongitud de tira LED: 3,8 m (RGBIC).\nConectividad: WiFi 2.4GHz y Bluetooth 4.2.\nTecnología inalámbrica: IEEE 802.11 b/g/n.\nEntrada de energía: 12V 2A (máx.).\nMaterial: ABS+PC con retardante de llama UL94V0.\nCable de cámara: USB Tipo-C.\nCompatible con Alexa, Google Home y Yandex Alice.\nRequisitos app: iOS 8.0 o Android 4.1 o superior.\n\nIncluye: cámara, caja controladora, adaptador, tira LED 3,8 m.\n\nIdeal para crear una atmósfera inmersiva en tu hogar, fácil de instalar y con control total desde tu celular o por voz.\n\nHacé tu vida mas divertida con EzyHome",
+        "category": null,
+        "price": 1.5e5,
+        "images": [
+            "https://http2.mlstatic.com/D_786764-MLA89598784006_082025-O.webp",
+            "https://http2.mlstatic.com/D_627881-MLA89970966795_082025-O.jpg",
+            "https://http2.mlstatic.com/D_978908-MLA89971085101_082025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2278035632",
+        "name": "Sensor Inteligente Zigbee Para Puertas Y Ventanas Tuya Blanco",
+        "description": "SOMOS EZYHOME\n\nREQUIERE HUB ZIGBEE\n\nMantené tu hogar seguro con este sensor inteligente de puertas y ventanas Zigbee, diseñado para alertarte al instante cuando detecta una apertura o cierre. Su tamaño compacto permite instalarlo fácilmente en cualquier abertura, integrándose de manera discreta en tu hogar u oficina.\n\nGracias a su bajo consumo energético y funcionamiento con solo dos pilas AAA, ofrece más de un año de autonomía, con notificación de batería baja para mayor tranquilidad.\n\nCaracteristicas:\n\nConectividad Zigbee 3.0\nSensor magnético con detección precisa (distancia >16 mm)\nCompatible con Tuya Smart, Google Assistant y Alexa\nInstalación sencilla y sin cables\nIdeal para puertas principales, ventanas y accesos vulnerables\n\nEspecificaciones técnicas\n\nAlimentación: 2 pilas AAA (no incluidas)\nAutonomía: mas de 1 año (uso normal)\nAlerta por batería baja\nTemperatura de funcionamiento: -10 °C a 50 °C\nDimensiones: 73 × 42 × 26 mm\nPeso: 34 g\n\nAplicación recomendada: Tuya Smart o Smart Life (iOS y Android).\nCompatible con asistentes de voz: Google Assistant, Alexa y Yandex Alice.\n\nEste sensor es una solución práctica y confiable para quienes buscan mejorar la seguridad del hogar con tecnología moderna y fácil de usar.\n\nHacé tu vida mas segura con EzyHome",
+        "category": null,
+        "price": 27999.0,
+        "images": [
+            "https://http2.mlstatic.com/D_907655-MLA93838225199_092025-O.jpg",
+            "https://http2.mlstatic.com/D_900503-MLA90261061248_082025-O.webp",
+            "https://http2.mlstatic.com/D_847045-MLA90643702265_082025-O.jpg",
+            "https://http2.mlstatic.com/D_744488-MLA90259433212_082025-O.webp",
+            "https://http2.mlstatic.com/D_611831-MLA90259373480_082025-O.jpg",
+            "https://http2.mlstatic.com/D_694468-MLA90259483022_082025-O.webp",
+            "https://http2.mlstatic.com/D_664496-MLA90261702918_082025-O.webp",
+            "https://http2.mlstatic.com/D_694058-MLA90259433414_082025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2277983812",
+        "name": "Sensor Inteligente Wifi Para Puertas Y Ventanas  Tuya Blanco",
+        "description": "SOMOS EZYHOME\n\nMantené tu hogar seguro con este sensor inteligente de puertas y ventanas con WiFi, diseñado para alertarte al instante cuando detecta una apertura o cierre. Su tamaño compacto permite instalarlo fácilmente en cualquier abertura, integrándose de manera discreta en tu hogar u oficina.\n\nGracias a su bajo consumo energético y funcionamiento con solo dos pilas AAA, ofrece más de un año de autonomía, con notificación de batería baja para mayor tranquilidad.\n\nCaracteristicas:\n\nConectividad WiFi 2.4 GHz\nSensor magnético con detección precisa (distancia >16 mm)\nCompatible con Tuya Smart, Google Assistant y Alexa\nInstalación sencilla y sin cables\nIdeal para puertas principales, ventanas y accesos vulnerables\n\nEspecificaciones técnicas\n\nAlimentación: 2 pilas AAA (no incluidas)\nAutonomía: hasta 1 año (uso normal)\nAlerta por batería baja\nTemperatura de funcionamiento: -10 °C a 50 °C\nDimensiones: 73 × 42 × 26 mm\nPeso: 34 g\n\nAplicación recomendada: Tuya Smart o Smart Life (iOS y Android).\nCompatible con asistentes de voz: Google Assistant, Alexa y Yandex Alice.\n\nEste sensor es una solución práctica y confiable para quienes buscan mejorar la seguridad del hogar con tecnología moderna y fácil de usar.\n\nHacé tu vida mas segura con EzyHome",
+        "category": null,
+        "price": 2.5e4,
+        "images": [
+            "https://http2.mlstatic.com/D_637135-MLA93867619703_102025-O.webp",
+            "https://http2.mlstatic.com/D_939219-MLA90644577051_082025-O.jpg",
+            "https://http2.mlstatic.com/D_847045-MLA90643702265_082025-O.jpg",
+            "https://http2.mlstatic.com/D_744488-MLA90259433212_082025-O.webp",
+            "https://http2.mlstatic.com/D_611831-MLA90259373480_082025-O.jpg",
+            "https://http2.mlstatic.com/D_694468-MLA90259483022_082025-O.webp",
+            "https://http2.mlstatic.com/D_860350-MLA90644862839_082025-O.webp",
+            "https://http2.mlstatic.com/D_694058-MLA90259433414_082025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA1516597341",
+        "name": "Botón De Escena Zigbee Inalambrico | 3 Botones Tuya Smart Blanco",
+        "description": "SOMOS EZYHOME\n\nREQUIERE HUB ZIGBEE TUYA\nNO INCLUYE PILA\n\nControlá tu hogar inteligente con este botón de escena Zigbee de 3 botones. Cada tecla es programable para activar luces, cortinas, enchufes o escenas completas con un solo toque. Funciona con la app Tuya o Smart Life y requiere un hub Zigbee para su conexión.\n\nSu diseño compacto y elegante permite instalarlo fácilmente en cualquier superficie mediante adhesivo, sin necesidad de cableado ni instalación eléctrica. Al estar alimentado por batería, podés colocarlo donde lo necesites para mayor comodidad.\n\nCaracterísticas principales:\n\nTres botones programables para diferentes escenas\nTecnología Zigbee, compatible con Tuya Smart y Smart Life\nAlimentación por batería (fácil de reemplazar) CR2430 (NO INCLUIDA)\nInstalación adhesiva, sin cables\nTamaño: 86 × 86 × 13 mm\n\nIdeal para automatización de ambientes y control centralizado\n\nEste interruptor de escenas es la solución práctica y versátil para simplificar el control de tu casa inteligente.\n\nHacé tu vida mas facil con EzyHome",
+        "category": null,
+        "price": 4.98e4,
+        "images": [
+            "https://http2.mlstatic.com/D_879197-MLA93829921739_092025-O.webp",
+            "https://http2.mlstatic.com/D_616842-MLA90279493040_082025-O.webp",
+            "https://http2.mlstatic.com/D_962433-MLA90279493406_082025-O.webp",
+            "https://http2.mlstatic.com/D_915971-MLA90279284568_082025-O.jpg",
+            "https://http2.mlstatic.com/D_901544-MLA90664994915_082025-O.webp",
+            "https://http2.mlstatic.com/D_996861-MLA90664677997_082025-O.jpg"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA1516563791",
+        "name": "Sensor De Presencia Zigbee Radar 24g Tuya Smart Blanco",
+        "description": "SOMOS EZYHOME\n\nDetectá presencia humana con máxima precisión gracias a este sensor inteligente de radar mmWave 24GHz, capaz de identificar tanto movimiento como presencia estática. A diferencia de los sensores PIR tradicionales, este dispositivo evita falsas detecciones y es ideal para automatización avanzada en hogares y oficinas.\n\nSe conecta mediante Zigbee, es compatible con Tuya Smart y Smart Life, y se alimenta por USB tipo C, lo que lo hace práctico y confiable.\n\nCaracteristicas:\n- Detección de movimiento y presencia estática (Radar 24G)\n- Compatible con Tuya Smart / Smart Life (Zigbee 3.0)\n- Ángulo de detección amplio de 130°\n- Alcance de movimiento hasta 6 m / presencia hasta 4.5 m\n- Alimentación por USB tipo C (5V 1A)\n- Diseño compacto y discreto para cualquier ambiente\n\nEspecificaciones técnicas:\n\n- Tipo: Sensor de presencia con radar mmWave (24GHz)\n- Protocolo inalámbrico: Zigbee\n- Alcance inalámbrico: hasta 30 m (espacio abierto)\n- Detección de movimiento: hasta 6 m\n- Detección de presencia estática: hasta 4.5 m\n- Ángulo de detección: 130°\n- Alimentación: USB Tipo C (5V 1A)\n\nIdeal para activar luces, alarmas o rutinas de automatización sin falsas alarmas.\nPerfecto para hogares, oficinas o espacios donde se requiere detección confiable de presencia real.\n\nHacé tu vida mas facil con EzyHome",
+        "category": null,
+        "price": 6.5e4,
+        "images": [
+            "https://http2.mlstatic.com/D_831516-MLA93410584294_092025-O.jpg",
+            "https://http2.mlstatic.com/D_975351-MLA90652570185_082025-O.jpg",
+            "https://http2.mlstatic.com/D_973139-MLA90652630053_082025-O.jpg",
+            "https://http2.mlstatic.com/D_664131-MLA90652460989_082025-O.jpg",
+            "https://http2.mlstatic.com/D_728708-MLA90652630273_082025-O.jpg",
+            "https://http2.mlstatic.com/D_714159-MLA90268895640_082025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2212420442",
+        "name": "Detector De Humo Zigbee Inteligente Alarma Y Alerta Por App Blanco",
+        "description": "SOMOS EZYHOME\n\nREQUIERE HUB ZIGBEE PARA NOTIFICACIONES EN EL CELULAR\n\nDetector de Humo Inteligente Zigbee | Compatible con Tuya y Smart Life\n\nAumentá la seguridad de tu hogar, oficina o comercio con este detector de humo inteligente. Conectado a tu red WiFi, este sensor te envía alertas inmediatas a tu celular al detectar humo, permitiéndote actuar rápidamente y prevenir accidentes.\n\nFUNCIONES DESTACADAS:\n- Conectividad WiFi 2.4 GHz\n- Notificaciones en tiempo real al celular mediante la app\n- Compatible con Tuya Smart y Smart Life (Android y iOS)\n- Rango de detección de hasta 20 metros\n- Instalación fácil, sin cables\n- Diseño moderno y compacto\n\nESPECIFICACIONES TÉCNICAS:\n- Tipo: Detector de humo inteligente\n- Conectividad: Zigbee\n- Alimentación: 2 pilas AA (3V) – no incluidas\n- Rango de detección: hasta 20 metros\n- Temperatura de funcionamiento: -10 °C a 40 °C\n- Aplicaciones compatibles: Tuya Smart / Smart Life\n\nEste detector inteligente es ideal para integrar a tu sistema de seguridad y automatización. Su instalación sin cables lo hace perfecto para cualquier ambiente, y su funcionamiento autónomo con pilas asegura que continúe activo ante cortes de energía.\n\nProtegé a tu familia y tu espacio con tecnología inteligente. Confianza y seguridad, con EzyHome.",
+        "category": null,
+        "price": 4.5e4,
+        "images": [
+            "https://http2.mlstatic.com/D_972625-MLA90666673657_082025-O.jpg",
+            "https://http2.mlstatic.com/D_663962-MLA90666450605_082025-O.webp",
+            "https://http2.mlstatic.com/D_850646-MLA89292160791_082025-O.jpg",
+            "https://http2.mlstatic.com/D_804185-MLA88933783654_082025-O.jpg",
+            "https://http2.mlstatic.com/D_608273-MLA88934037850_082025-O.webp",
+            "https://http2.mlstatic.com/D_627728-MLA89292120769_082025-O.jpg",
+            "https://http2.mlstatic.com/D_870353-MLA89292476445_082025-O.webp",
+            "https://http2.mlstatic.com/D_672513-MLA89292466291_082025-O.jpg",
+            "https://http2.mlstatic.com/D_628149-MLA89292160807_082025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2212510836",
+        "name": "Detector De Humo Inteligente Wifi  Alarma Y Alerta Por App Blanco",
+        "description": "SOMOS EZYHOME\n\nDetector de Humo Inteligente WiFi | Compatible con Tuya y Smart Life\n\nAumentá la seguridad de tu hogar, oficina o comercio con este detector de humo inteligente. Conectado a tu red WiFi, este sensor te envía alertas inmediatas a tu celular al detectar humo, permitiéndote actuar rápidamente y prevenir accidentes.\n\nFUNCIONES DESTACADAS:\n- Conectividad WiFi 2.4 GHz\n- Notificaciones en tiempo real al celular mediante la app\n- Compatible con Tuya Smart y Smart Life (Android y iOS)\n- Rango de detección de hasta 20 metros\n- Instalación fácil, sin cables\n- Diseño moderno y compacto\n\nESPECIFICACIONES TÉCNICAS:\n- Tipo: Detector de humo inteligente\n- Conectividad: WiFi 2.4 GHz\n- Alimentación: 2 pilas AA (3V) – no incluidas\n- Rango de detección: hasta 20 metros\n- Temperatura de funcionamiento: -10 °C a 40 °C\n- Aplicaciones compatibles: Tuya Smart / Smart Life\n\nEste detector inteligente es ideal para integrar a tu sistema de seguridad y automatización. Su instalación sin cables lo hace perfecto para cualquier ambiente, y su funcionamiento autónomo con pilas asegura que continúe activo ante cortes de energía.\n\nProtegé a tu familia y tu espacio con tecnología inteligente. Confianza y seguridad, con EzyHome.",
+        "category": null,
+        "price": 4.3e4,
+        "images": [
+            "https://http2.mlstatic.com/D_991788-MLA93399893258_092025-O.jpg",
+            "https://http2.mlstatic.com/D_850646-MLA89292160791_082025-O.jpg",
+            "https://http2.mlstatic.com/D_804185-MLA88933783654_082025-O.jpg",
+            "https://http2.mlstatic.com/D_608273-MLA88934037850_082025-O.webp",
+            "https://http2.mlstatic.com/D_627728-MLA89292120769_082025-O.jpg",
+            "https://http2.mlstatic.com/D_870353-MLA89292476445_082025-O.webp",
+            "https://http2.mlstatic.com/D_672513-MLA89292466291_082025-O.jpg",
+            "https://http2.mlstatic.com/D_628149-MLA89292160807_082025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2242235096",
+        "name": "Sensor Detector Humo Wifi App Tuya Alarma Blanco",
+        "description": "¿Estás buscando salir de tu casa o dormir con tranquilidad sin preocuparte por tu seguridad y la de quienes más querés? Cada casa es diferente y requiere soluciones específicas para evitar robos y otras amenazas. Elegí un dispositivo que se adapte a lo que necesitás.\n\nTecnología para cuidarte\nEste dispositivo identifica la presencia de humo en el aire y emite una señal acústica avisando del peligro de incendio e intoxicaciones. Es recomendable que lo ubiques en el techo y al medio de la habitación.",
+        "category": null,
+        "price": 4.3e4,
+        "images": [
+            "https://http2.mlstatic.com/D_996920-MLA100049660605_122025-O.webp",
+            "https://http2.mlstatic.com/D_916677-MLA87811639013_072025-O.webp",
+            "https://http2.mlstatic.com/D_866566-MLA87481079960_072025-O.jpg",
+            "https://http2.mlstatic.com/D_683849-MLA109737823631_032026-O.webp",
+            "https://http2.mlstatic.com/D_696642-MLA109737912175_032026-O.jpg",
+            "https://http2.mlstatic.com/D_895738-MLA109737766207_032026-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2345802612",
+        "name": "Sensor Inteligente Humedad Y Temperatura De Suelo Bluetooth",
+        "description": "SOMOS EZYHOME\n\nMonitoreá tus plantas con este sensor inteligente 2 en 1 que mide humedad del suelo y temperatura ambiente. Gracias a su conexión Bluetooth, podés consultar los datos en tiempo real desde tu celular con la app Tuya o Smart Life y recibir alertas para un mejor cuidado de tus cultivos o macetas.\n\nCompatible con Alexa y Google Home.\n\nFabricado en ABS+PC resistente, funciona con 2 baterías AAA (No. 7) y ofrece precisión confiable para horticultura, jardinería y cuidado de plantas de interior o exterior.\n\nCaracterísticas principales:\n\nSensor 2 en 1: mide humedad del suelo y temperatura\nConexión Bluetooth para monitoreo desde la app\nMaterial: ABS+PC de alta resistencia\nAlimentación: 2 pilas AAA (No. 7)\n\n\nIdeal para plantas en maceta, jardines y huertas\n\nPermite conocer el estado exacto del suelo en todo momento\n\nCon este detector de suelo inteligente, tus plantas estarán siempre bien cuidadas.\n\nHacé tu vida mas facil con EzyHome",
+        "category": null,
+        "price": 7.47e4,
+        "images": [
+            "https://http2.mlstatic.com/D_956158-MLA91842740638_092025-O.webp",
+            "https://http2.mlstatic.com/D_963814-MLA91842736178_092025-O.jpg",
+            "https://http2.mlstatic.com/D_869095-MLA92244273299_092025-O.jpg",
+            "https://http2.mlstatic.com/D_847726-MLA92244428635_092025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2345764792",
+        "name": "Cerradura Inteligente Wifi Con Huella/card/pasword 4585 Negro",
+        "description": "SOMOS EZYHOME\n\nProtegé tu hogar, oficina o apartamento con esta cerradura inteligente de última generación. La cerradura inteligente combina seguridad y comodidad, permitiéndote abrir la puerta con huella digital, contraseña, tarjeta, llave mecánica o directamente desde tu celular mediante la app Tuya Smart / Smart Life\n\nAdemás, podés integrarla con Alexa o Google Assistant para controlar el acceso mediante comandos de voz y automatizaciones.\n\nMúltiples métodos de desbloqueo: Huella digital, contraseña, tarjeta, llave, app móvil y contraseñas temporales\nConexión inteligente: WiFi (Tuya/Smart Life) \nAlta capacidad: Hasta 256 usuarios registrados\nDiseño premium: Aleación de aluminio, elegante y resistente\nSeguridad garantizada: Alimentación de emergencia por USB-C y sistema de claves dinámicas\nFácil instalación: Compatible con puertas de 40 a 120 mm de grosor\nAplicaciones: Ideal para hogares, oficinas, hoteles y alquileres temporarios\n\nCaracterísticas técnicas:\n\nMaterial: Aleación de aluminio\nColor: Negro\nTamaño: 65 × 280 mm\nFuente de energía: 4 pilas AA (no incluidas)\nMétodos de desbloqueo: Huella, contraseña, tarjeta, llave, app, contraseña temporal\nUsuarios soportados: Hasta 256\nApp: Tuya Smart / Smart Life / \nEmergencia: Entrada de energía por USB-C\n\nHace tu vida mas segura con EzyHome",
+        "category": null,
+        "price": 159372.22,
+        "images": [
+            "https://http2.mlstatic.com/D_958942-MLA93417523146_092025-O.webp",
+            "https://http2.mlstatic.com/D_964564-MLA91844460016_092025-O.webp",
+            "https://http2.mlstatic.com/D_931594-MLA92246261417_092025-O.webp",
+            "https://http2.mlstatic.com/D_841765-MLA92246625743_092025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2349563230",
+        "name": "Motor Inteligente Wifi Para Persianas Tuya Alexa Google Home",
+        "description": "SOMOS EZYHOME\n\nAutomatizá tus persianas enrollables con este motor inteligente WiFi, fácil de instalar y controlar desde tu celular. Compatible con la app Tuya Smart / Smart Life, además funciona con Alexa y Google Home para manejo por voz.\n\nControl remoto y por voz – desde la app o asistentes virtuales\nInstalación simple en rieles de persianas enrollables\nDiseño compacto en ABS+PC, resistente y duradero\nVelocidad de apertura/cierre: 3.6 cm/s\nConexión estable mediante WiFi 2.4 GHz\nBateria recargable por USB-C (5V/2A)\n\nEspecificaciones técnicas:\n\nTamaño: 167 × 43 × 37.5 mm\nVoltaje motor: 10V\nPotencia: 4W\nConsumo en espera: 25 mA\nMaterial: ABS+PC\nCompatibilidad: Tuya Smart, Smart Life, Alexa, Google Home\n\nIdeal para hogares inteligentes, oficinas o locales que busquen comodidad y automatización en el control de persianas.\n\nHace tu vida mas facil con EzyHome",
+        "category": null,
+        "price": 1.45e5,
+        "images": [
+            "https://http2.mlstatic.com/D_804220-MLA91933088970_092025-O.jpg",
+            "https://http2.mlstatic.com/D_746434-MLA92336905711_092025-O.webp",
+            "https://http2.mlstatic.com/D_693897-MLA91932774402_092025-O.webp",
+            "https://http2.mlstatic.com/D_880330-MLA91933149202_092025-O.webp",
+            "https://http2.mlstatic.com/D_721243-MLA92336497773_092025-O.jpg",
+            "https://http2.mlstatic.com/D_648511-MLA92336885489_092025-O.jpg",
+            "https://http2.mlstatic.com/D_615928-MLA91932804246_092025-O.webp",
+            "https://http2.mlstatic.com/D_921638-MLA92336915081_092025-O.jpg"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2348802304",
+        "name": "Cerradura Inteligente Wifi/ble Con Huella/card/pasword 6085 Negro",
+        "description": "SOMOS EZYHOME\n\nProtegé tu hogar, oficina o apartamento con esta cerradura inteligente de última generación. La cerradura inteligente combina seguridad y comodidad, permitiéndote abrir la puerta con huella digital, contraseña, tarjeta, llave mecánica o directamente desde tu celular mediante la app Tuya Smart / Smart Life\n\nAdemás, podés integrarla con Alexa o Google Assistant para controlar el acceso mediante comandos de voz y automatizaciones.\n\nMúltiples métodos de desbloqueo: Huella digital, contraseña, tarjeta, llave, app móvil y contraseñas temporales\nConexión inteligente: WiFi (Tuya/Smart Life)\nAlta capacidad: Hasta 256 usuarios registrados\nDiseño premium: Aleación de aluminio, elegante y resistente\nSeguridad garantizada: Alimentación de emergencia por USB-C y sistema de claves dinámicas\nFácil instalación: Compatible con puertas de 40 a 120 mm de grosor\nAplicaciones: Ideal para hogares, oficinas, hoteles y alquileres temporarios\n\nCaracterísticas técnicas:\n\nMaterial: Aleación de aluminio\nColor: Negro\nTamaño: 65 × 280 mm\nFuente de energía: 4 pilas AA (no incluidas)\nMétodos de desbloqueo: Huella, contraseña, tarjeta, llave, app, contraseña temporal\nUsuarios soportados: Hasta 256\nApp: Tuya Smart / Smart Life /\nEmergencia: Entrada de energía por USB-C\n\nHace tu vida mas segura con EzyHome",
+        "category": null,
+        "price": 159388.8,
+        "images": [
+            "https://http2.mlstatic.com/D_622465-MLA93835541881_092025-O.jpg",
+            "https://http2.mlstatic.com/D_964564-MLA91844460016_092025-O.webp",
+            "https://http2.mlstatic.com/D_931594-MLA92246261417_092025-O.webp",
+            "https://http2.mlstatic.com/D_841765-MLA92246625743_092025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA1532732625",
+        "name": "Robot/motor Cortina Inteligente Con Sensores (lumino, Temp)",
+        "description": "SOMOS EZYHOME\n\nAutomatizá tus cortinas de manera fácil y moderna con este robot de cortina inteligente WiFi, compatible con la app Tuya Smart / Smart Life y con asistentes de voz Alexa y Google Home. Controlá la apertura y cierre desde tu celular, programá horarios o automatiza dependiendo de la luminosidad o temperatura para mayor comodidad. Instalalo fácilmente sin herramientas: incluye cabezales/adaptadores intercambiables para distintos tipos de cortinas (riel, barra o rodillo).\n\nControl inteligente desde la app Tuya o control remoto\nCompatibilidad WiFi 2.4GHz para gestión en tiempo real\nProgramación de rutinas y temporizadores\nIncluye cabezales adaptadores para distintos tipos de cortina\nBateria recargable mediante USB Tipo C, carga rápida y segura\nDiseño compacto: 175 × 65 × 51.6 mm\nPotencia: 4W | Voltaje: 10V | Corriente: 5V/1A\n\nIdeal para hogares inteligentes, hoteles, oficinas o cualquier ambiente donde quieras sumar comodidad y domótica sin complicaciones.\n\nIncluye: \nRobot de cortina\ncabezales adaptadores para distintos tipos de cortina\ncable de carga USB-C y manual de usuario.\n\nIdeal para hogares, oficinas y hoteles que buscan sumar comodidad y domótica sin cambiar cortinas existentes.\n\nHacé tu vida mas facil con EzyHome",
+        "category": null,
+        "price": 164406.0,
+        "images": [
+            "https://http2.mlstatic.com/D_629313-MLA91932753306_092025-O.webp",
+            "https://http2.mlstatic.com/D_682416-MLA91931103688_092025-O.jpg",
+            "https://http2.mlstatic.com/D_693271-MLA91930964408_092025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2453082268",
+        "name": "Bombilla Led Rgbc Zigbee Inteligentes Alexa Tuya Smartlife Rgb",
+        "description": "SOMOS EZYHOME\n\nREQUIERE HUB\n\nBombilla LED Inteligente EzyHome RGBC 9W Zigbee RGB + Blanca E27 | Compatible con Alexa y Google Assistant\n\nTransformá tu hogar con las bombillas LED inteligente EzyHome RGBC de 9W. Ideal para crear ambientes personalizados, esta lámpara combinan iluminación RGB multicolor y luz blanca fría y blanco calido 6500K, con un brillo de 850 lúmenes para ofrecer luz potente y eficiente.\n\nControl por voz y app: Compatible con Google Assistant, Amazon Alexa, Apple HomeKit, Tuya y Smart Life. Encendé, apagá o cambiá el color desde tu celular o con comandos de voz.\n\nConectividad Zigbee: Requiere HUB. Controlá tu iluminación desde cualquier lugar con tu celular (Android o iOS).\n\nRosca estándar E27 y diseño A60: Instalación fácil y compatible con la mayoría de las lámparas del hogar u oficina.\n\nBajo consumo energético: Tecnología LED con clasificación A++, ecológica y económica.\n\nIluminación personalizable: Más de 16 millones de colores, ideal para relajarte, trabajar o ambientar tus reuniones.\n\nIncluye:\n\nBombilla LED EzyHome RGBC 9W\nManual de uso impreso\n\nEspecificaciones técnicas:\n\nPotencia: 9W\nFlujo luminoso: 850 lm\nTemperatura de color: 6500K + RGB\nTipo de rosca: E27\nConectividad: Zigbee 3.0\nVida útil: 25.000 horas aprox.\nCompatibilidad: Alexa, Google Home, HomeKit, Tuya, Smart Life\n\nDale estilo y tecnología a tus espacios con una lámpara inteligente que se adapta a tu ritmo de vida.\n\nHacé tu vida mas divertida con EzyHome",
+        "category": null,
+        "price": 3.0e4,
+        "images": [
+            "https://http2.mlstatic.com/D_812786-MLA94809796648_102025-O.webp",
+            "https://http2.mlstatic.com/D_990865-MLA95243090313_102025-O.webp",
+            "https://http2.mlstatic.com/D_966961-MLA95242783549_102025-O.webp",
+            "https://http2.mlstatic.com/D_693597-MLA94809795138_102025-O.webp",
+            "https://http2.mlstatic.com/D_819221-MLA95242892985_102025-O.jpg",
+            "https://http2.mlstatic.com/D_667912-MLA94809795128_102025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2215498322",
+        "name": "Detector De Gas Wifi Autonomo Alarma 70db Tuya Smart Blanco",
+        "description": "SOMOS EZYHOME\n\nMantené tu hogar o comercio seguro con este sensor de gas WiFi inteligente, diseñado para detectar fugas peligrosas y enviarte alertas en tiempo real al celular. Compatible con las apps Tuya Smart y Smart Life, este dispositivo te brinda tranquilidad desde cualquier lugar.\n\nFunciones destacadas:\n\nDetecta fugas de gas en tiempo real\nAlarma sonora potente de 70 dB\nNotificaciones instantáneas en el celular\nCompatible con Tuya Smart y Smart Life\nInstalación en techo para mayor efectividad\nConexión WiFi 2.4GHz\n\nEspecificaciones técnicas:\nConectividad: WiFi 2.4GHz (802.11b/g/n)\nVoltaje de entrada: 85V – 250V AC\nSonido de alarma: 70 dB (a 1 metro)\nPrecisión de detección: 6% LEL ± 3%\nÁrea de cobertura: hasta 20 m²\nInstalación: en enchufe\nTemperatura de operación: -10°C a 50°C\n\nAplicaciones recomendadas:\nCocinas, lavaderos, calderas, parrillas a gas o cualquier ambiente con riesgo de fuga.\n\nIncluye:\nSensor de gas WiFi\nTornillos y base de instalación\nManual en español\n\nHacé tu vida mas segura con EzyHome",
+        "category": null,
+        "price": 67796.0,
+        "images": [
+            "https://http2.mlstatic.com/D_956001-MLA90666332529_082025-O.webp",
+            "https://http2.mlstatic.com/D_613976-MLA89095023312_082025-O.webp",
+            "https://http2.mlstatic.com/D_838343-MLA89093324674_082025-O.jpg",
+            "https://http2.mlstatic.com/D_822635-MLA89455184093_082025-O.jpg",
+            "https://http2.mlstatic.com/D_654008-MLA89455184081_082025-O.jpg",
+            "https://http2.mlstatic.com/D_977349-MLA89456507909_082025-O.webp",
+            "https://http2.mlstatic.com/D_977621-MLA89456110369_082025-O.jpg",
+            "https://http2.mlstatic.com/D_725322-MLA89095555960_082025-O.jpg",
+            "https://http2.mlstatic.com/D_722396-MLA89456110371_082025-O.jpg",
+            "https://http2.mlstatic.com/D_971322-MLA89456725133_082025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2215069312",
+        "name": "Detector De Gas Zigbee Autonomo Alarma 70db Tuya Smart Blanco",
+        "description": "SOMOS EZYHOME\n\nREQUIERE HUB ZIGBEE TUYA PARA NOTIFICACIONES EN EL CELULAR\n\nMantené tu hogar o comercio seguro con este sensor de gas zigbee inteligente, diseñado para detectar fugas peligrosas y enviarte alertas en tiempo real al celular. Compatible con las apps Tuya Smart y Smart Life, este dispositivo te brinda tranquilidad desde cualquier lugar.\n\nFunciones destacadas:\n\nDetecta fugas de gas en tiempo real\nAlarma sonora potente de 70 dB\nNotificaciones instantáneas en el celular\nCompatible con Tuya Smart y Smart Life\nInstalación en techo para mayor efectividad\nConexión Zigbee\n\nEspecificaciones técnicas:\nConectividad: Zigbee\nVoltaje de entrada: 85V – 250V AC\nSonido de alarma: 70 dB (a 1 metro)\nPrecisión de detección: 6% LEL ± 3%\nÁrea de cobertura: hasta 20 m²\nInstalación: en enchufe\nTemperatura de operación: -10°C a 50°C\n\nAplicaciones recomendadas:\nCocinas, lavaderos, calderas, parrillas a gas o cualquier ambiente con riesgo de fuga.\n\nIncluye:\nSensor de gas Zigbee\nTornillos y base de instalación\nManual en español\n\nHacé tu vida mas segura con EzyHome",
+        "category": null,
+        "price": 69748.0,
+        "images": [
+            "https://http2.mlstatic.com/D_947009-MLA90666272377_082025-O.jpg",
+            "https://http2.mlstatic.com/D_981358-MLA89457378675_082025-O.jpg",
+            "https://http2.mlstatic.com/D_838343-MLA89093324674_082025-O.jpg",
+            "https://http2.mlstatic.com/D_822635-MLA89455184093_082025-O.jpg",
+            "https://http2.mlstatic.com/D_654008-MLA89455184081_082025-O.jpg",
+            "https://http2.mlstatic.com/D_977349-MLA89456507909_082025-O.webp",
+            "https://http2.mlstatic.com/D_977621-MLA89456110369_082025-O.jpg",
+            "https://http2.mlstatic.com/D_930818-MLA89457685331_082025-O.webp",
+            "https://http2.mlstatic.com/D_722396-MLA89456110371_082025-O.jpg",
+            "https://http2.mlstatic.com/D_971322-MLA89456725133_082025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA1627746949",
+        "name": "Bombilla Inteligente Wifi Gu10 Rgb+cct Alexa Google Home Rgb",
+        "description": "SOMOS EZYHOME AR\n\nIluminá tus ambientes con esta lámpara LED inteligente GU10 Wifi, que combina RGB + CCT para ofrecer tanto iluminación funcional diaria como ambientación decorativa. Cuenta con blanco cálido y blanco frío reales, gracias a sus canales dedicados, además de millones de colores.\n\nPermite regular la temperatura de color desde blanco cálido hasta blanco frío, adaptándose a cada momento del día, actividad o espacio. Ideal para quienes buscan control total de la iluminación mediante sistemas de domótica wifi.\n\nCompatible con plataformas de automatización del hogar, es una excelente opción para integrar en escenas, rutinas y automatizaciones inteligentes.\n\nCaracterísticas principales:\n\n- Tecnología RGB + CCT\n- Blanco cálido y blanco frío reales (no mezcla RGB)\n- Temperatura de color ajustable 2700K a 6500K\n- Millones de colores RGB\n- Regulable en brillo\n- Ideal para iluminación diaria y decorativa\n- Bajo consumo energético\n- Encendido instantáneo\n- Larga vida útil\n\nEspecificaciones técnicas:\n\n- Zócalo: GU10\n- Formato: Spot / Dicroica\n- Potencia: 5W\n- Flujo luminoso: 420–480 lúmenes\n- Tipo de luz: RGB + CCT\n- Temperatura de color: 2700K – 6500K\n- Protocolo: Wifi\n- Uso: Interior\n- Dimmable: Sí\n\nPerfecto para:\n\n- Living\n- Dormitorio\n- Cocina\n- Pasillos\n- Comercios\n- Iluminación puntual y decorativa\n\nHace tu vida mas facil con EzyHome",
+        "category": null,
+        "price": 2.8e4,
+        "images": [
+            "https://http2.mlstatic.com/D_728065-MLA102755199310_122025-O.webp",
+            "https://http2.mlstatic.com/D_956203-MLA103268246165_122025-O.jpg",
+            "https://http2.mlstatic.com/D_917039-MLA103268305927_122025-O.webp",
+            "https://http2.mlstatic.com/D_753305-MLA103267782767_122025-O.jpg",
+            "https://http2.mlstatic.com/D_915956-MLA103268305929_122025-O.webp",
+            "https://http2.mlstatic.com/D_840791-MLA103268246833_122025-O.webp",
+            "https://http2.mlstatic.com/D_617432-MLA103268305931_122025-O.webp",
+            "https://http2.mlstatic.com/D_972038-MLA103267782777_122025-O.jpg"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2732724166",
+        "name": "Tira Neón Led Rgbic 5 Metros Luz Continua Ip68 Wifi Tuya Rgb",
+        "description": "SOMOS EZYHOME\n\nIluminá tus espacios con estilo moderno y creativo\nEsta tira LED tipo neón RGBIC de 5 metros, compatible con Alexa y Google Home, es ideal para decoración interior o exterior. Su luz continua y sin puntos visibles crea un efecto suave y elegante, a diferencia de las tiras LED tradicionales. Perfecta para ambientes únicos y personalizados.\n\nCaracterísticas principales:\nRGBIC: permite mostrar múltiples colores y efectos dinámicos al mismo tiempo\nLuz continua: diseño tipo neón sin puntos de luz visibles\nAlimentación fuente de alimentacion: Solo enchufás y ya\nProtección IP68: apta para exteriores, baños, cocinas o espacios húmedos\nFlexible: se adapta a cualquier forma, curva o superficie\n\nEspecificaciones técnicas:\n\nTipo: Tira LED Neón Flex RGBIC\nLongitud: 5 metros\nCantidad de LEDs: 60 por metro\nTipo de LED: SMD5050 con chip IC (2812)\nEntrada: 220V\nImpermeabilidad: IP68\nTamaño de la tira: 6 mm x 12 mm\nMaterial: Silicona flexible\nColores: RGBIC con efectos multicolor simultáneos\n\n\nContenido del paquete:\n\n1 tira LED tipo neón RGBIC de 5 metros\n\nAplicaciones recomendadas:\n\nTuya Smart\nSmartLife\n\nIdeal para dormitorios, escritorios, espejos, baños, patios, balcones, vidrieras, decoración gamer, negocios, eventos, fiestas y más.\n\nIluminá tu vida con EzyHome",
+        "category": null,
+        "price": 159571.2,
+        "images": [
+            "https://http2.mlstatic.com/D_809980-MLA102830643360_012026-O.jpg",
+            "https://http2.mlstatic.com/D_623432-MLA102831240234_012026-O.webp",
+            "https://http2.mlstatic.com/D_771146-MLA103345366689_012026-O.jpg",
+            "https://http2.mlstatic.com/D_968808-MLA102830643502_012026-O.webp",
+            "https://http2.mlstatic.com/D_808901-MLA102830643688_012026-O.jpg",
+            "https://http2.mlstatic.com/D_978654-MLA102830643754_012026-O.jpg",
+            "https://http2.mlstatic.com/D_924438-MLA102830643742_012026-O.webp",
+            "https://http2.mlstatic.com/D_964365-MLA102831796514_012026-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2941946216",
+        "name": "Control Remoto Universal Inteligente Wifi Ir + Rf Tuya Smart Negro",
+        "description": "SOMOS EZYHOME\n\n¡Convertí tu casa en un hogar inteligente con el Smart IR+RF de EZY Home!\n\nOlvidate de tener diez controles remotos sobre la mesa. Con este dispositivo compacto, podés controlar todos tus equipos electrónicos directamente desde tu celular, estés donde estés.\n\nA diferencia de los modelos básicos, este dispositivo incluye Radiofrecuencia (RF). Esto significa que no solo controla televisores o aires acondicionados, sino también cortinas motorizadas, portones eléctricos y luces que funcionan con control remoto de 433MHz.\n\nCaracterísticas Principales:\nCompatibilidad Total: Funciona con las apps Tuya Smart y Smart Life (disponibles en iOS y Android).\n\nControl por Voz: Compatible al 100% con Amazon Alexa y Google Home. \"Alexa, encendé el aire a 24 grados\".\n\nDoble Tecnología:\n\nInfrarrojo (IR): TV, Decodificadores, Aire Acondicionado, Equipos de audio.\n\nRadiofrecuencia (RF 433MHz): Cortinas, portones, llaves de luz RF.\n\nFunción DIY (Aprendizaje): Si tenés un control remoto viejo o de una marca desconocida, el dispositivo puede \"aprender\" la señal manualmente.\n\nAutomatización y Escenas: Programá horarios para que el aire se apague solo a la madrugada o creá una escena de \"Cine\" que baje las cortinas y prenda la TV con un solo toque.\n\n\nEspecificaciones Técnicas:\n\nModelo: EZY Home Smart IR+RF\nEntrada de energía: 5V DC 1A (Micro USB)\nFrecuencia Infrarroja: 38-56K Hz\nDirección Infrarroja: Multidireccional (360°)\nAlcance IR: Hasta 7 metros.\nFrecuencia RF: 433MHz.\nConectividad: Wi-Fi 2.4GHz (no compatible con redes 5G).\n\nHacé tu vida mas facil con EzyHome!",
+        "category": null,
+        "price": 4.5e4,
+        "images": [
+            "https://http2.mlstatic.com/D_795417-MLA107202157294_032026-O.jpg",
+            "https://http2.mlstatic.com/D_979362-MLA107903489655_032026-O.jpg",
+            "https://http2.mlstatic.com/D_777045-MLA107902929943_032026-O.webp",
+            "https://http2.mlstatic.com/D_882827-MLA107903489651_032026-O.jpg",
+            "https://http2.mlstatic.com/D_687297-MLA107201795200_032026-O.webp",
+            "https://http2.mlstatic.com/D_715983-MLA107902929937_032026-O.webp",
+            "https://http2.mlstatic.com/D_645735-MLA107903429819_032026-O.webp",
+            "https://http2.mlstatic.com/D_676453-MLA107201797268_032026-O.jpg"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA1511472677",
+        "name": "Sensor Detector Movimiento Zigbee Smart Smartlife Tuya Blanco",
+        "description": "SOMOS EZYHOME\n\nSensor de Movimiento Zigbee a Pila | Compatible con Smartlife y Tuya\n\nREQUIERE HUB ZIGBEE (Podés encontrarlo en nuestros productos)\nNO INCLUYE PILA\n\nCARACTERÍSTICAS PRINCIPALES:\n- Sensor infrarrojo piroeléctrico de alta sensibilidad y baja interferencia\n- Funciona con batería CR2450\n- Ángulo de detección de 150° y alcance de hasta 7 metros\n- Diseño compacto y discreto, fácil de instalar y ocultar\n- Base giratoria de 360°, para instalación horizontal, vertical o invertida\n- Consumo ultra bajo: autonomía de hasta 365 días\n- Aviso de batería baja configurable desde la app\n- Alertas en tiempo real al detectar movimiento (vía app)\n\nIDEAL PARA AUTOMATIZACIONES:\n- Encender luces al abrir una puerta\n- Apagar enchufes al salir de la cocina\n- Encender lámparas al levantarse de noche\n\nVENTAJAS DEL PROTOCOLO ZIGBEE:\n- No satura la red WiFi\n- Compatible con múltiples dispositivos\n- Red de malla: más estable y escalable\n- Mayor seguridad que WiFi o Bluetooth\n\nESPECIFICACIONES TÉCNICAS:\n- Ángulo de detección: 150º\n- Distancia de detección: 5 – 10 m\n- Batería: CR2450 (3V) x1 – No incluida\n- Temperatura de operación: -10 ºC a 55 ºC\n- Conectividad: Zigbee 802.15.4\n- Material: ABS\n\nINSTALACIÓN Y USO:\n1. Insertar la batería CR2450\n2. Vincular con Hub Zigbee compatible con Tuya o Smart Life\n3. Configurar automatizaciones desde la aplicación\n\nDisfrutá de un hogar más seguro e inteligente con EzyHome.",
+        "category": null,
+        "price": 32999.0,
+        "images": [
+            "https://http2.mlstatic.com/D_640214-MLA89690279094_082025-O.jpg",
+            "https://http2.mlstatic.com/D_615149-MLA83729818880_042025-O.jpg",
+            "https://http2.mlstatic.com/D_751497-MLA83727853080_042025-O.jpg",
+            "https://http2.mlstatic.com/D_701384-MLA83729818884_042025-O.jpg"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2616773126",
+        "name": "Bombilla Lampara Led Rgb+c Cct Wifi Alexa/tuya/smartlife Rgb",
+        "description": "SOMOS EZYHOME\n\nBombilla LED Inteligente EzyHome RGBC 9W Wifi RGB + Blanca calida y blanca fria E27 | Compatible con Alexa y Google Assistant\n\nTransformá tu hogar con las bombillas LED inteligente EzyHome RGBC de 9W. Ideal para crear ambientes personalizados, esta lámpara combinan iluminación RGB multicolor y luz blanca fría y blanco calido 6500K, con un brillo de 850 lúmenes para ofrecer luz potente y eficiente.\n\nControl por voz y app: Compatible con Google Assistant, Amazon Alexa, Apple HomeKit, Tuya y Smart Life. Encendé, apagá o cambiá el color desde tu celular o con comandos de voz.\n\nConectividad Wifi: Controlá tu iluminación desde cualquier lugar con tu celular (Android o iOS).\n\nRosca estándar E27 y diseño A60: Instalación fácil y compatible con la mayoría de las lámparas del hogar u oficina.\n\nBajo consumo energético: Tecnología LED con clasificación A++, ecológica y económica.\n\nIluminación personalizable: Más de 16 millones de colores, ideal para relajarte, trabajar o ambientar tus reuniones.\n\nIncluye:\n\nBombilla LED EzyHome RGBC 9W\nManual de uso impreso\n\nEspecificaciones técnicas:\n\nPotencia: 9W\nFlujo luminoso: 850 lm\nTemperatura de color: 6500K + RGB\nTipo de rosca: E27\nConectividad: Wifi 3.0\nVida útil: 25.000 horas aprox.\nCompatibilidad: Alexa, Google Home, HomeKit, Tuya, Smart Life\n\nDale estilo y tecnología a tus espacios con una lámpara inteligente que se adapta a tu ritmo de vida.\n\nHacé tu vida mas divertida con EzyHome",
+        "category": null,
+        "price": 2.0e4,
+        "images": [
+            "https://http2.mlstatic.com/D_841005-MLA99506324020_112025-O.webp",
+            "https://http2.mlstatic.com/D_701158-MLA99506739000_112025-O.webp",
+            "https://http2.mlstatic.com/D_836751-MLA99990770143_112025-O.webp",
+            "https://http2.mlstatic.com/D_781527-MLA99506323860_112025-O.jpg",
+            "https://http2.mlstatic.com/D_887464-MLA99990760307_112025-O.webp",
+            "https://http2.mlstatic.com/D_946614-MLA99506323854_112025-O.jpg",
+            "https://http2.mlstatic.com/D_613677-MLA99990770149_112025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2200553772",
+        "name": "Zigbee Hub Gateway Blanco Wifi 2.4g Compatible Tuya Smartlife Domótica",
+        "description": "¿Estás buscando salir de tu casa o dormir con tranquilidad sin preocuparte por tu seguridad y la de quienes más querés? Cada casa es diferente y requiere soluciones específicas para evitar robos y otras amenazas. Elegí un dispositivo que se adapte a lo que necesitás.",
+        "category": null,
+        "price": 79734.4,
+        "images": [
+            "https://http2.mlstatic.com/D_999254-MLA96170518689_102025-O.jpg",
+            "https://http2.mlstatic.com/D_762231-MLA82915225137_032025-O.webp",
+            "https://http2.mlstatic.com/D_668015-MLA82628312830_032025-O.webp",
+            "https://http2.mlstatic.com/D_885984-MLA83068479058_032025-O.jpg",
+            "https://http2.mlstatic.com/D_973334-MLA83068332144_032025-O.webp",
+            "https://http2.mlstatic.com/D_977369-MLA83068469406_032025-O.webp",
+            "https://http2.mlstatic.com/D_670100-MLA83068479076_032025-O.jpg",
+            "https://http2.mlstatic.com/D_829867-MLA96750893571_102025-O.jpg",
+            "https://http2.mlstatic.com/D_885783-MLA96750893581_102025-O.jpg",
+            "https://http2.mlstatic.com/D_950878-MLA96751230773_102025-O.jpg",
+            "https://http2.mlstatic.com/D_710581-MLA96302151478_102025-O.jpg"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA3122052710",
+        "name": "Detector De Monoxido De Carbono (co) Y Humo Wifi Inteligente Blanco",
+        "description": "EZYHOME\n\nDETECTOR INTELIGENTE DE HUMO Y MONÓXIDO DE CARBONO (CO) WIFI CON APP TUYA/SMART LIFE\n¡PROTEGE TU HOGAR Y A TU FAMILIA CON LA TECNOLOGÍA MÁS AVANZADA!\n\nEste no es un detector común. Es un sistema de seguridad inteligente 2-en-1 que detecta tanto el humo como el mortal monóxido de carbono (CO). Al ser Wi-Fi, se conecta directamente a tu teléfono, enviándote alertas instantáneas estés donde estés, dándote un tiempo precioso para reaccionar.\n\nCARACTERÍSTICAS DESTACADAS:\nPROTECCIÓN 2-EN-1: Sensores separados y precisos para humo y monóxido de carbono en un solo dispositivo compacto.\n\nCONECTIVIDAD WIFI Y ALERTAS EN TIEMPO REAL: Se integra perfectamente con las aplicaciones líderes Tuya Smart y Smart Life. Si la alarma se activa, recibirás una notificación automática en tu celular, incluso si no estás en casa.\n\nSIRENA POTENTE DE 85dB: Una alarma fuerte y clara para despertar y alertar a todos los ocupantes en caso de emergencia.\n\nLED INDICADOR DE ESTADO: Diferentes patrones de luz para identificar rápidamente si es una alerta de humo, CO o batería baja.\n\nINSTALACIÓN SIN CABLES: Funciona con 2 pilas AA (no incluidas). Fácil de montar en el techo o pared con el soporte y kit de tornillos incluidos.\n\nBOTÓN DE PRUEBA Y SILENCIO: Cuenta con un botón central de fácil acceso para realizar pruebas semanales y silenciar falsas alarmas.\n\nMONITOREO DE BATERÍA: La aplicación te notificará cuando la batería esté baja, asegurando que el dispositivo siempre esté operativo.\n\nCÓMO FUNCIONA LA DETECCIÓN:\nEl detector utiliza una lógica de alerta inteligente para protegerte de dos amenazas muy distintas:\n\nHumo (Incendio): El indicador LED parpadea en rojo rápidamente acompañado de 4 pitidos largos, sincronizados con la alerta en tu celular.\n\nMonóxido de Carbono (El Asesino Silencioso): El gas CO es inodoro, incoloro e insípido. El detector te alertará con pitidos y parpadeos LED específicos según la concentración del gas, para que evacues de inmediato.\n\nESPECIFICACIONES TÉCNICAS (Basadas en manual):\nModelo: CSO1\n\nAlimentación: DC 2 x 1.5V AA Alcalinas (LR6, MN1500)\n\nVolumen de la alarma: 85 dB(A) a 3 metros\n\nSensibilidad al humo: 0.09 - 0.17 dB/m\n\nSensibilidad al CO:\n\n50ppm: 60-90min\n\n100ppm: 10-40min\n\n300ppm: = 3min\n\nAlerta de batería baja: 2.6 +- 0.1 V\n\nTiempo de silencio: Aprox. 10 minutos\n\nConectividad Wi-Fi: 2.4GHz\n\nEstándares de Cumplimiento:\nHumo: EN14604:2005/AC:2008\nCO: EN 50291:2010\n\nTU COMPRA INCLUYE:\n\nDetector inteligente de humo y monóxido de carbono (CO) Wi-Fi.\n\nSoporte de montaje.\n\nKit de tornillos y tacos plásticos para instalación.\n\nManual de usuario detallado.\n\n\n¡NO ARRIESGUES LO QUE MÁS QUIERES!\nAñade este detector inteligente a tu carrito hoy mismo y disfruta de la tranquilidad de saber que tu hogar está protegido las 24 horas, estés donde estés.\n\nHace tu vida mas segura con EzyHome",
+        "category": null,
+        "price": 79750.4,
+        "images": [
+            "https://http2.mlstatic.com/D_963316-MLA111161196867_052026-O.jpg",
+            "https://http2.mlstatic.com/D_626352-MLA111161375131_052026-O.webp",
+            "https://http2.mlstatic.com/D_981173-MLA108967683688_032026-O.jpg",
+            "https://http2.mlstatic.com/D_698606-MLA108967475014_032026-O.webp",
+            "https://http2.mlstatic.com/D_675197-MLA108967240956_032026-O.jpg",
+            "https://http2.mlstatic.com/D_870470-MLA109796053037_032026-O.webp",
+            "https://http2.mlstatic.com/D_866894-MLA109795128373_032026-O.jpg",
+            "https://http2.mlstatic.com/D_851350-MLA109797300935_032026-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA1748996789",
+        "name": "Arrancador 4000a Inflador Neumáticos150psi Powerbank15000mah",
+        "description": "SOMOS EZYHOME\n\n¿TE QUEDASTE SIN BATERÍA O CON UNA LLANTA BAJA? ¡NUNCA MÁS TE DETENGAS!\n\nPresentamos el JS800, la herramienta definitiva de emergencia 4 en 1. Diseñado para conductores exigentes que buscan potencia, fiabilidad y versatilidad en un solo dispositivo compacto. Con una potencia de pico de 4000A, este equipo es capaz de revivir motores de gran cilindrada en segundos.\n\nPOR QUÉ EL JS800 ES TU MEJOR ALIADO EN EL CAMINO:\n1. POTENCIA DE ARRANQUE BRUTAL (4000A)\nNo importa si tu vehículo es a gasolina (hasta 9.0L) o diésel (hasta 6.5L). Su corriente de pico de 4000A garantiza un arranque instantáneo incluso en condiciones climáticas extremas (-20°C a 50°C).\n\n2. COMPRESOR DE AIRE INTELIGENTE (150 PSI)\nOlvídate de buscar gasolineras. Infla neumáticos de auto, motocicletas, bicicletas o balones en minutos.\n\nVelocidad: 23L/min.\n\nPrecisión: Configura la presión deseada y el inflador se detendrá automáticamente.\n\n3. ESTACIÓN DE CARGA PORTÁTIL (POWER BANK 15000mAh)\nMantén tus dispositivos siempre activos. Gracias a su tecnología QC18W (Quick Charge), carga tu smartphone, tablet o laptop mucho más rápido que un cargador convencional.\n\n4. ILUMINACIÓN DE EMERGENCIA MULTIMODO\nEquipado con una linterna LED de alto brillo (160lm) con 3 modos:\n\nLuz fija: Para reparaciones nocturnas.\n\nSOS y Estroboscópico: Para hacerte visible en situaciones de riesgo.\n\nESPECIFICACIONES TÉCNICAS:\nModelo: JS800\n\nCapacidad de Batería: 15000mAh (37Wh)\n\nCorriente de Pico: 4000A\n\nPresión Máxima: 150 PSI\n\nEntrada/Salida: USB-C Quick Charge 18W\n\nTiempo de carga total: 180 minutos aprox.\n\nDimensiones: Compacto para guardar en la guantera o maletero.\n\n¿QUÉ INCLUYE TU COMPRA?\n1x Unidad Principal JS800 (Arrancador + Inflador)\n\n1x Pinzas inteligentes de seguridad (Smart Clips EC5)\n\n1x Cable de carga USB-C\n\n1x Manguera de aire (Interfaz traqueal)\n\n1x Set de boquillas para inflables\n\n1x Manual de usuario\n\nVENTAJAS COMPETITIVAS:\nSeguridad Primero: Protecciones contra cortocircuito, sobrecalentamiento y sobrecarga.\n\nPantalla Digital: Monitorea la presión y el nivel de batería en tiempo real.\n\nDiseño Robusto: Construido para resistir el uso rudo y las vibraciones del camino.\n\n¡No esperes a quedarte varado para comprarlo! \n\nHACÉ TU VIDA MAS FÁCIL CON EZYHOME",
+        "category": null,
+        "price": 258960.0,
+        "images": [
+            "https://http2.mlstatic.com/D_866004-MLA109565300998_042026-O.jpg",
+            "https://http2.mlstatic.com/D_911853-MLA109564298756_042026-O.jpg",
+            "https://http2.mlstatic.com/D_897288-MLA109563764282_042026-O.jpg",
+            "https://http2.mlstatic.com/D_843748-MLA109563764280_042026-O.jpg",
+            "https://http2.mlstatic.com/D_774749-MLA110439886065_042026-O.jpg",
+            "https://http2.mlstatic.com/D_987451-MLA110440860061_042026-O.jpg",
+            "https://http2.mlstatic.com/D_719420-MLA110440889983_042026-O.jpg",
+            "https://http2.mlstatic.com/D_643016-MLA110439916195_042026-O.jpg",
+            "https://http2.mlstatic.com/D_655914-MLA110440860065_042026-O.jpg",
+            "https://http2.mlstatic.com/D_637010-MLA110441039751_042026-O.jpg",
+            "https://http2.mlstatic.com/D_655874-MLA110440415995_042026-O.jpg",
+            "https://http2.mlstatic.com/D_792950-MLA110440800067_042026-O.jpg"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA2731741474",
+        "name": "Bombilla Inteligente Zigbee Gu10 Rgb+cct Alexa Google Home Rgb",
+        "description": "SOMOS EZYHOME AR\n\n--- REQUIERE HUB ZIGBEE ---\n\nIluminá tus ambientes con esta lámpara LED inteligente GU10 Zigbee, que combina RGB + CCT para ofrecer tanto iluminación funcional diaria como ambientación decorativa. Cuenta con blanco cálido y blanco frío reales, gracias a sus canales dedicados, además de millones de colores.\n\nPermite regular la temperatura de color desde blanco cálido hasta blanco frío, adaptándose a cada momento del día, actividad o espacio. Ideal para quienes buscan control total de la iluminación mediante sistemas de domótica Zigbee.\n\nCompatible con gateways Zigbee y plataformas de automatización del hogar, es una excelente opción para integrar en escenas, rutinas y automatizaciones inteligentes.\n\nCaracterísticas principales:\n\n- Tecnología RGB + CCT\n- Blanco cálido y blanco frío reales (no mezcla RGB)\n- Temperatura de color ajustable 2700K a 6500K\n- Millones de colores RGB\n- Regulable en brillo\n- Ideal para iluminación diaria y decorativa\n- Bajo consumo energético\n- Encendido instantáneo\n- Larga vida útil\n\nEspecificaciones técnicas:\n\n- Zócalo: GU10\n- Formato: Spot / Dicroica\n- Potencia: 5W\n- Flujo luminoso: 420–480 lúmenes\n- Tipo de luz: RGB + CCT\n- Temperatura de color: 2700K – 6500K\n- Protocolo: Zigbee\n- Uso: Interior\n- Dimmable: Sí\n\nPerfecto para:\n\n- Living\n- Dormitorio\n- Cocina\n- Pasillos\n- Comercios\n- Iluminación puntual y decorativa\n\nHace tu vida mas facil con EzyHome",
+        "category": null,
+        "price": 32450.0,
+        "images": [
+            "https://http2.mlstatic.com/D_695648-MLA103267483757_122025-O.jpg",
+            "https://http2.mlstatic.com/D_654013-MLA102754508410_122025-O.webp",
+            "https://http2.mlstatic.com/D_986790-MLA103267775157_122025-O.jpg",
+            "https://http2.mlstatic.com/D_736687-MLA102754350248_122025-O.webp",
+            "https://http2.mlstatic.com/D_722252-MLA103267676773_122025-O.jpg",
+            "https://http2.mlstatic.com/D_611548-MLA102754508414_122025-O.webp",
+            "https://http2.mlstatic.com/D_606353-MLA102754350252_122025-O.jpg",
+            "https://http2.mlstatic.com/D_814060-MLA102754508416_122025-O.webp",
+            "https://http2.mlstatic.com/D_760625-MLA102754419318_122025-O.webp",
+            "https://http2.mlstatic.com/D_631245-MLA102754508420_122025-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA3316416628",
+        "name": "Tira Led Wifi Rgb 10m 5050 Compatible Tuya Smart Life Rgb",
+        "description": "SOMOS EZYHOME\n\nIluminá tus ambientes con esta tira LED inteligente de 10 metros con control WiFi, incluye 19 leds por metro. Su tecnología RGB permite efectos dinámicos, cambios de color precisos y sincronización con escenas desde la app Tuya Smart o Smart Life. Ideal para dormitorios, livings, bares, setups gamers y decoración moderna.\n\nCompatible con asistentes de voz como Alexa y Google Home mediante rutinas de la app.\n\nCaracterísticas principales:\n\n• Control por app Tuya Smart / Smart Life\n• Tecnología RGB para efectos dinámicos\n• Longitud total de 10 metros\n• 19 LEDs por metro\n• Modo de colores, escenas y brillo regulable\n• Instalación sencilla con adhesivo posterior\n• Control remoto desde el celular vía WiFi\n• Resistente a salpicaduras (IP44)\n\nEspecificaciones técnicas:\n\n• Tamaño del strip: 6 mm de ancho x 12 mm alto\n• LEDs: SMD5050 \n• Entrada: 100–240V, 50/60Hz\n• Salida: DC 12V\n• Potencia controlada por adaptador\n• Color: RGB\n• Longitud: 10 metros\n\nHace tu vida mas facil con EzyHome",
+        "category": null,
+        "price": 64740.0,
+        "images": [
+            "https://http2.mlstatic.com/D_753699-MLA111662439791_052026-O.jpg",
+            "https://http2.mlstatic.com/D_745730-MLA111662499501_052026-O.webp",
+            "https://http2.mlstatic.com/D_698870-MLA110708062322_052026-O.webp",
+            "https://http2.mlstatic.com/D_672984-MLA111662915687_052026-O.jpg",
+            "https://http2.mlstatic.com/D_901004-MLA111662945349_052026-O.webp",
+            "https://http2.mlstatic.com/D_871424-MLA111662349803_052026-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    },
+    {
+        "id": "MLA3363742976",
+        "name": "Cerradura Inteligente Wifi Con Huella/card/pasword 6085 Negro",
+        "description": "SOMOS EZYHOME\n\nProtegé tu hogar, oficina o apartamento con esta cerradura inteligente de última generación. La cerradura inteligente combina seguridad y comodidad, permitiéndote abrir la puerta con huella digital, contraseña, tarjeta, llave mecánica o directamente desde tu celular mediante la app Tuya Smart / Smart Life\n\nAdemás, podés integrarla con Alexa o Google Assistant para controlar el acceso mediante comandos de voz y automatizaciones.\n\nMúltiples métodos de desbloqueo: Huella digital, contraseña, tarjeta, llave, app móvil y contraseñas temporales\nConexión inteligente: WiFi (Tuya/Smart Life)\nAlta capacidad: Hasta 256 usuarios registrados\nDiseño premium: Aleación de aluminio, elegante y resistente\nSeguridad garantizada: Alimentación de emergencia por USB-C y sistema de claves dinámicas\nFácil instalación: Compatible con puertas de 40 a 120 mm de grosor\nAplicaciones: Ideal para hogares, oficinas, hoteles y alquileres temporarios\n\nCaracterísticas técnicas:\n\nMaterial: Aleación de aluminio\nColor: Negro\nTamaño: 65 × 280 mm\nFuente de energía: 4 pilas AA (no incluidas)\nMétodos de desbloqueo: Huella, contraseña, tarjeta, llave, app, contraseña temporal\nUsuarios soportados: Hasta 256\nApp: Tuya Smart / Smart Life /\nEmergencia: Entrada de energía por USB-C\n\nHace tu vida mas segura con EzyHome\n\nGarantía de fábrica: 30 días",
+        "category": null,
+        "price": 159388.0,
+        "images": [
+            "https://http2.mlstatic.com/D_941921-MLA112111617367_052026-O.jpg",
+            "https://http2.mlstatic.com/D_656431-MLA112110911309_052026-O.webp",
+            "https://http2.mlstatic.com/D_950517-MLA112110503425_052026-O.webp",
+            "https://http2.mlstatic.com/D_617066-MLA111118357846_052026-O.webp",
+            "https://http2.mlstatic.com/D_897790-MLA111118271754_052026-O.jpg",
+            "https://http2.mlstatic.com/D_624525-MLA111118946410_052026-O.webp"
+        ],
+        "isBestseller": false,
+        "isOnSale": false
+    }
 ]

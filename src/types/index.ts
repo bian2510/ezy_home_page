@@ -14,7 +14,7 @@ export interface Product {
   /** Rutas relativas a las imágenes; la primera es la imagen principal. */
   images: string[];
   /** Categoría de catálogo: 'iluminacion' | 'automatizacion' | 'seguridad'. */
-  category: string;
+  category: string | null;
   isBestseller: boolean;
   isOnSale: boolean;
   /** Precio original previo al descuento; definido solo cuando `isOnSale === true`. */
