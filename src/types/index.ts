@@ -17,6 +17,9 @@ export interface Product {
   category: string | null;
   isBestseller: boolean;
   isOnSale: boolean;
+  /** Visibilidad en el storefront — `false` oculta el producto (Home, Catálogo,
+   *  Detalle) sin borrarlo del dataset. Útil para productos sin stock. */
+  active: boolean;
   /** Precio promocional vigente; definido y usado solo cuando `isOnSale === true`.
    *  Cuando está presente, `price` pasa a mostrarse tachado como precio de lista. */
   promotionalPrice?: number;

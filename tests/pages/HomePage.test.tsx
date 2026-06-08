@@ -17,6 +17,7 @@ vi.mock('@/data/products.json', () => ({
       category: 'iluminacion',
       isBestseller: true,
       isOnSale: false,
+      active: true,
     },
     {
       id: 'best-2',
@@ -27,6 +28,7 @@ vi.mock('@/data/products.json', () => ({
       category: 'seguridad',
       isBestseller: true,
       isOnSale: false,
+      active: true,
     },
     {
       id: 'sale-1',
@@ -38,6 +40,7 @@ vi.mock('@/data/products.json', () => ({
       category: 'iluminacion',
       isBestseller: false,
       isOnSale: true,
+      active: true,
     },
     {
       id: 'sale-2',
@@ -49,6 +52,7 @@ vi.mock('@/data/products.json', () => ({
       category: 'seguridad',
       isBestseller: false,
       isOnSale: true,
+      active: true,
     },
     {
       id: 'plain-1',
@@ -59,6 +63,18 @@ vi.mock('@/data/products.json', () => ({
       category: 'automatizacion',
       isBestseller: false,
       isOnSale: false,
+      active: true,
+    },
+    {
+      id: 'inactive-1',
+      name: 'Termostato Inactivo',
+      description: 'Inactive product, must stay hidden everywhere.',
+      price: 25900,
+      images: ['/images/inactive-1.jpg'],
+      category: 'automatizacion',
+      isBestseller: true,
+      isOnSale: true,
+      active: false,
     },
   ],
 }));
@@ -120,6 +136,12 @@ describe('HomePage', () => {
     expect(within(section).getByText('Camara Oferta Dos')).toBeInTheDocument();
     expect(within(section).queryByText('Foco Best Uno')).toBeNull();
     expect(within(section).queryByText('Hub Plano')).toBeNull();
+  });
+
+  it('should exclude inactive products from "Más vendidos" and "Ofertas" even when flagged as bestseller/on sale', () => {
+    renderHome();
+
+    expect(screen.queryByText('Termostato Inactivo')).not.toBeInTheDocument();
   });
 
   it('should render three category cards linking to /catalogo', () => {

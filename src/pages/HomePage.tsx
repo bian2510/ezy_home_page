@@ -48,8 +48,8 @@ const HERO_SLIDES: ReadonlyArray<HeroSlide> = [
 const AUTOADVANCE_MS = 4500;
 
 export default function HomePage() {
-  const bestsellers = products.filter((p) => p.isBestseller);
-  const onSale = products.filter((p) => p.isOnSale);
+  const bestsellers = products.filter((p) => p.active && p.isBestseller);
+  const onSale = products.filter((p) => p.active && p.isOnSale);
   const whatsappNumber = process.env.VITE_WHATSAPP_NUMBER ?? '';
   const whatsappHref = `https://wa.me/${whatsappNumber}`;
 

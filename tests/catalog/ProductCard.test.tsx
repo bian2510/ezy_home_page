@@ -69,6 +69,7 @@ const buildProduct = (overrides: Partial<Product> = {}): Product => ({
   category: 'iluminacion',
   isBestseller: false,
   isOnSale: false,
+  active: true,
   ...overrides,
 });
 

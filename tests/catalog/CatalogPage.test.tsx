@@ -22,6 +22,7 @@ vi.mock('@/data/products.json', () => ({
       isBestseller: false,
       isOnSale: false,
       description: 'Test',
+      active: true,
     },
     {
       id: '2',
@@ -32,6 +33,7 @@ vi.mock('@/data/products.json', () => ({
       isBestseller: false,
       isOnSale: false,
       description: 'Test',
+      active: true,
     },
     {
       id: '3',
@@ -42,6 +44,18 @@ vi.mock('@/data/products.json', () => ({
       isBestseller: false,
       isOnSale: false,
       description: 'Test',
+      active: true,
+    },
+    {
+      id: '4',
+      name: 'Cerradura Inactiva',
+      category: 'seguridad',
+      price: 20000,
+      images: ['/img.jpg'],
+      isBestseller: false,
+      isOnSale: false,
+      description: 'Test',
+      active: false,
     },
   ],
 }));
@@ -55,6 +69,7 @@ const buildProduct = (overrides: Partial<Product> = {}): Product => ({
   category: 'iluminacion',
   isBestseller: false,
   isOnSale: false,
+  active: true,
   ...overrides,
 });
 
@@ -67,6 +82,12 @@ describe('CatalogPage', () => {
     expect(screen.getByText('Bulbo RGBW')).toBeInTheDocument();
     expect(screen.getByText('Sensor Gas')).toBeInTheDocument();
     expect(screen.getByText('Enchufe WiFi')).toBeInTheDocument();
+  });
+
+  it('should not render inactive products in the catalog grid', () => {
+    render(<CatalogPage />);
+
+    expect(screen.queryByText('Cerradura Inactiva')).not.toBeInTheDocument();
   });
 
   it('should render the page heading "Catálogo"', () => {
@@ -182,6 +203,29 @@ describe('useCatalog', () => {
     expect(result.current.categories).toEqual(
       expect.arrayContaining(['iluminacion', 'seguridad', 'automatizacion']),
     );
+  });
+
+  it('should exclude inactive products from filtered', () => {
+    const products = [
+      buildProduct({ id: '1', category: 'iluminacion', active: true }),
+      buildProduct({ id: '2', category: 'iluminacion', active: false }),
+    ];
+
+    const { result } = renderHook(() => useCatalog(products));
+
+    expect(result.current.filtered).toHaveLength(1);
+    expect(result.current.filtered.every((p) => p.active)).toBe(true);
+  });
+
+  it('should not derive a category from an inactive product', () => {
+    const products = [
+      buildProduct({ id: '1', category: 'iluminacion', active: true }),
+      buildProduct({ id: '2', category: 'seguridad', active: false }),
+    ];
+
+    const { result } = renderHook(() => useCatalog(products));
+
+    expect(result.current.categories).toEqual(['iluminacion']);
   });
 
   it('should return an empty filtered list when the selected category matches no products', () => {

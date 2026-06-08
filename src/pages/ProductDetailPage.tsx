@@ -26,7 +26,7 @@ const MIN_QUANTITY = 1;
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const product = useMemo(() => products.find((p) => p.id === id), [id]);
+  const product = useMemo(() => products.find((p) => p.id === id && p.active), [id]);
 
   if (product === undefined) {
     return <ProductNotFound />;

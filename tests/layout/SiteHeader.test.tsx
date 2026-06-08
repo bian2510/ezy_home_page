@@ -16,6 +16,7 @@ const sampleProduct: Product = {
   category: 'iluminacion',
   isBestseller: false,
   isOnSale: false,
+  active: true,
 };
 
 function CartSeed({ quantity, children }: { quantity: number; children: ReactNode }) {

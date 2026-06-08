@@ -20,18 +20,20 @@ export interface UseCatalogResult {
 export function useCatalog(products: Product[]): UseCatalogResult {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  const activeProducts = useMemo(() => products.filter((product) => product.active), [products]);
+
   const categories = useMemo(() => {
     const seen = new Set<string>();
-    for (const product of products) {
+    for (const product of activeProducts) {
       seen.add(product.category ?? '');
     }
     return Array.from(seen);
-  }, [products]);
+  }, [activeProducts]);
 
   const filtered = useMemo(() => {
-    if (selectedCategory === null) return products;
-    return products.filter((product) => product.category === selectedCategory);
-  }, [products, selectedCategory]);
+    if (selectedCategory === null) return activeProducts;
+    return activeProducts.filter((product) => product.category === selectedCategory);
+  }, [activeProducts, selectedCategory]);
 
   const setCategory = useCallback((category: string | null) => {
     setSelectedCategory(category);

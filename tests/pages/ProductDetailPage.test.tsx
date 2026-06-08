@@ -17,6 +17,7 @@ vi.mock('@/data/products.json', () => ({
       category: 'iluminacion',
       isBestseller: true,
       isOnSale: false,
+      active: true,
     },
     {
       id: 'p-2',
@@ -28,6 +29,7 @@ vi.mock('@/data/products.json', () => ({
       category: 'iluminacion',
       isBestseller: false,
       isOnSale: true,
+      active: true,
     },
     {
       id: 'p-3',
@@ -38,6 +40,18 @@ vi.mock('@/data/products.json', () => ({
       category: 'seguridad',
       isBestseller: false,
       isOnSale: false,
+      active: true,
+    },
+    {
+      id: 'p-4',
+      name: 'Cerradura Inactiva',
+      description: 'Producto sin stock, oculto del storefront.',
+      price: 15900,
+      images: ['/images/cerradura.jpg'],
+      category: 'seguridad',
+      isBestseller: false,
+      isOnSale: false,
+      active: false,
     },
   ],
 }));
@@ -132,6 +146,14 @@ describe('ProductDetailPage', () => {
 
   it('should show a 404 message and a link to /catalogo when the id does not match any product', () => {
     renderAt('/productos/does-not-exist');
+
+    expect(screen.getByText(/404/i)).toBeInTheDocument();
+    const link = screen.getByRole('link', { name: /volver al catálogo/i });
+    expect(link).toHaveAttribute('href', '/catalogo');
+  });
+
+  it('should show the same 404 message when the matching product is inactive (out of stock)', () => {
+    renderAt('/productos/p-4');
 
     expect(screen.getByText(/404/i)).toBeInTheDocument();
     const link = screen.getByRole('link', { name: /volver al catálogo/i });
