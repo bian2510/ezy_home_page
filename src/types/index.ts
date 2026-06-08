@@ -17,8 +17,9 @@ export interface Product {
   category: string | null;
   isBestseller: boolean;
   isOnSale: boolean;
-  /** Precio original previo al descuento; definido solo cuando `isOnSale === true`. */
-  originalPrice?: number;
+  /** Precio promocional vigente; definido y usado solo cuando `isOnSale === true`.
+   *  Cuando está presente, `price` pasa a mostrarse tachado como precio de lista. */
+  promotionalPrice?: number;
 }
 
 /**
@@ -70,3 +71,12 @@ export const formatPrice = (amount: number): string =>
   })
     .format(amount)
     .replace(/\u00A0/g, ' ');
+
+/**
+ * Precio efectivo a cobrar/destacar: `promotionalPrice` cuando el producto está
+ * en oferta y lo tiene definido; `price` en cualquier otro caso.
+ */
+export const getEffectivePrice = (product: Product): number =>
+  product.isOnSale && product.promotionalPrice !== undefined
+    ? product.promotionalPrice
+    : product.price;

@@ -8,7 +8,7 @@
 // Constraints (Carrito persistente). The min-quantity invariant is enforced
 // both here (decrement disabled at 1) and in CartProvider's reducer.
 import type { CartItem as CartItemType } from '@/types';
-import { formatPrice } from '@/types';
+import { formatPrice, getEffectivePrice } from '@/types';
 import { useToast } from '@/hooks/useToast';
 
 const MIN_QUANTITY = 1;
@@ -23,7 +23,7 @@ interface CartItemProps {
 export default function CartItem({ item, onIncrement, onDecrement, onRemove }: CartItemProps) {
   const { product, quantity } = item;
   const { addToast } = useToast();
-  const lineSubtotal = product.price * quantity;
+  const lineSubtotal = getEffectivePrice(product) * quantity;
   const atMinimum = quantity <= MIN_QUANTITY;
 
   const handleRemove = () => {
@@ -35,7 +35,9 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
     <li className="flex flex-col gap-3 border-b border-border py-4 last:border-b-0 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex flex-1 flex-col gap-1">
         <p className="text-base font-medium text-foreground">{product.name}</p>
-        <p className="text-sm text-muted-foreground">{formatPrice(product.price)} c/u</p>
+        <p className="text-sm text-muted-foreground">
+          {formatPrice(getEffectivePrice(product))} c/u
+        </p>
       </div>
 
       <div className="flex items-center gap-2">

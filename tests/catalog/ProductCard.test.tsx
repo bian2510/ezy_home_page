@@ -118,19 +118,20 @@ describe('ProductCard', () => {
     expect(screen.getByText(/sin imagen/i)).toBeInTheDocument();
   });
 
-  it('should show the "Oferta" badge and a struck-through original price when isOnSale is true', () => {
+  it('should show the "Oferta" badge, the promotional price highlighted, and the regular price struck-through when isOnSale is true', () => {
     const product = buildProduct({
-      price: 9000,
+      price: 12000,
       isOnSale: true,
-      originalPrice: 12000,
+      promotionalPrice: 9000,
     });
 
     renderWithProviders(<ProductCard product={product} />);
 
     expect(screen.getByText(/oferta/i)).toBeInTheDocument();
-    const original = screen.getByText(matchesPrice(12000));
-    expect(original).toBeInTheDocument();
-    expect(original.tagName.toLowerCase()).toBe('s');
+    expect(screen.getByText(matchesPrice(9000))).toBeInTheDocument();
+    const regular = screen.getByText(matchesPrice(12000));
+    expect(regular).toBeInTheDocument();
+    expect(regular.tagName.toLowerCase()).toBe('s');
   });
 
   it('should not show the "Oferta" badge when isOnSale is false', () => {

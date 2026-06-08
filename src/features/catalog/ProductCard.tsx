@@ -1,7 +1,7 @@
 import type { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '@/types';
-import { formatPrice } from '@/types';
+import { formatPrice, getEffectivePrice } from '@/types';
 import { useCart } from '@/features/cart/useCart';
 import { useToast } from '@/hooks/useToast';
 import { Badge } from '@/components/ui/Badge';
@@ -22,9 +22,10 @@ import { cn } from '@/lib/cn';
  *    event propagation so it never triggers the card navigation. The
  *    button has `min-h-11` (44px) to satisfy the mobile tap-target rule
  *    in BR-008.
- *  - When `isOnSale`, the `originalPrice` is rendered struck-through and
- *    an "Oferta" badge (warning token) is shown. When `isBestseller`, a
- *    "Más vendido" badge (success token) is shown.
+ *  - When `isOnSale` and `promotionalPrice` is set, `price` is rendered
+ *    struck-through and `promotionalPrice` is the highlighted price shown
+ *    (and charged). An "Oferta" badge (warning token) is shown. When
+ *    `isBestseller`, a "Más vendido" badge (success token) is shown.
  */
 interface ProductCardProps {
   product: Product;
@@ -65,7 +66,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
         )}
       >
-        <div className="relative aspect-square w-full bg-muted">
+        <div className="relative aspect-square w-full overflow-hidden bg-muted">
           {primaryImage ? (
             <img
               src={primaryImage}
@@ -91,15 +92,15 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <div className="flex flex-1 flex-col gap-2 p-3">
-          <h3 className="text-sm font-medium text-foreground">{product.name}</h3>
+          <h3 className="line-clamp-2 h-10 text-sm font-medium text-foreground">{product.name}</h3>
 
           <div className="flex items-baseline gap-2">
             <span className="font-mono text-base font-semibold text-foreground">
-              {formatPrice(product.price)}
+              {formatPrice(getEffectivePrice(product))}
             </span>
-            {product.isOnSale && product.originalPrice !== undefined && (
+            {product.isOnSale && product.promotionalPrice !== undefined && (
               <s className="font-mono text-xs text-muted-foreground">
-                {formatPrice(product.originalPrice)}
+                {formatPrice(product.price)}
               </s>
             )}
           </div>

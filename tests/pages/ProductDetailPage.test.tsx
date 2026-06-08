@@ -22,8 +22,8 @@ vi.mock('@/data/products.json', () => ({
       id: 'p-2',
       name: 'Tira LED RGB',
       description: 'Tira LED de 5 metros para iluminación ambiental.',
-      price: 22500,
-      originalPrice: 28900,
+      price: 28900,
+      promotionalPrice: 22500,
       images: ['/images/tira-led.jpg'],
       category: 'iluminacion',
       isBestseller: false,
@@ -108,12 +108,12 @@ describe('ProductDetailPage', () => {
     ).toBeInTheDocument();
   });
 
-  it('should display the original price struck-through and the sale price when isOnSale', () => {
+  it('should display the regular price struck-through and the promotional price highlighted when isOnSale', () => {
     renderAt('/productos/p-2');
 
-    const original = screen.getByText(priceText(28900));
-    expect(original).toBeInTheDocument();
-    expect(original.tagName.toLowerCase()).toBe('s');
+    const regular = screen.getByText(priceText(28900));
+    expect(regular).toBeInTheDocument();
+    expect(regular.tagName.toLowerCase()).toBe('s');
     expect(screen.getByText(priceText(22500))).toBeInTheDocument();
   });
 

@@ -15,7 +15,7 @@ import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import productsData from '@/data/products.json';
 import type { Product } from '@/types';
-import { formatPrice } from '@/types';
+import { formatPrice, getEffectivePrice } from '@/types';
 import QuantitySelector from '@/components/ui/QuantitySelector';
 import { useCart } from '@/features/cart/useCart';
 import { useToast } from '@/hooks/useToast';
@@ -79,7 +79,7 @@ function ProductDetail({ product }: ProductDetailProps) {
             <img
               src={activeImage}
               alt={product.name}
-              className="aspect-square w-full rounded-md border border-border bg-card object-cover"
+              className="aspect-square w-full rounded-md border border-border bg-card object-contain"
             />
           ) : (
             <div
@@ -118,13 +118,13 @@ function ProductDetail({ product }: ProductDetailProps) {
           <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">{product.name}</h1>
 
           <div className="flex items-baseline gap-3">
-            {product.isOnSale && product.originalPrice !== undefined && (
+            {product.isOnSale && product.promotionalPrice !== undefined && (
               <s className="font-mono text-base text-muted-foreground">
-                {formatPrice(product.originalPrice)}
+                {formatPrice(product.price)}
               </s>
             )}
             <p className="font-mono text-2xl font-semibold text-foreground">
-              {formatPrice(product.price)}
+              {formatPrice(getEffectivePrice(product))}
             </p>
           </div>
 

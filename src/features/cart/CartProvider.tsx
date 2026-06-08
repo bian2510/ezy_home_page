@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useState, type ReactNode } from 'react';
 import { CartContext, type CartContextValue } from './CartContext';
 import type { CartItem, Product } from '@/types';
+import { getEffectivePrice } from '@/types';
 
 const STORAGE_KEY = 'ezyhome_cart';
 const MIN_QUANTITY = 1;
@@ -101,7 +102,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const clearCart = useCallback(() => dispatch({ type: 'CLEAR_CART' }), []);
 
   const total = useMemo(
-    () => items.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
+    () => items.reduce((sum, item) => sum + getEffectivePrice(item.product) * item.quantity, 0),
     [items],
   );
 
