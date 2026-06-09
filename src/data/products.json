@@ -14,7 +14,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 19900
+    "promotionalPrice": 19900
   },
   {
     "id": "MLA2215029560",
@@ -37,7 +37,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 45000.0
+    "promotionalPrice": 45000.0
   },
   {
     "id": "MLA1514039927",
@@ -55,7 +55,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 62900.0
+    "promotionalPrice": 62900.0
   },
   {
     "id": "MLA2200632476",
@@ -73,7 +73,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "salePrice": 69900.0
+    "promotionalPrice": 69900.0
   },
   {
     "id": "MLA2200566426",
@@ -91,7 +91,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 37900.0
+    "promotionalPrice": 37900.0
   },
   {
     "id": "MLA1514819947",
@@ -142,7 +142,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "salePrice": 19900.0
+    "promotionalPrice": 19900.0
   },
   {
     "id": "MLA2277983812",
@@ -163,7 +163,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "salePrice": 19900.0
+    "promotionalPrice": 19900.0
   },
   {
     "id": "MLA1516597341",
@@ -182,7 +182,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 35000.0
+    "promotionalPrice": 35000.0
   },
   {
     "id": "MLA1516563791",
@@ -276,7 +276,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 49900.0
+    "promotionalPrice": 49900.0
   },
   {
     "id": "MLA2345764792",
@@ -293,7 +293,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 120000.0
+    "promotionalPrice": 120000.0
   },
   {
     "id": "MLA2349563230",
@@ -314,7 +314,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "salePrice": 120000.0
+    "promotionalPrice": 120000.0
   },
   {
     "id": "MLA2348802304",
@@ -331,7 +331,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 120000.0
+    "promotionalPrice": 120000.0
   },
   {
     "id": "MLA1532732625",
@@ -347,7 +347,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "salePrice": 120000.0
+    "promotionalPrice": 120000.0
   },
   {
     "id": "MLA2453082268",
@@ -366,7 +366,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "salePrice": 23000.0
+    "promotionalPrice": 23000.0
   },
   {
     "id": "MLA2215498322",
@@ -389,7 +389,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "salePrice": 39900.0
+    "promotionalPrice": 39900.0
   },
   {
     "id": "MLA2215069312",
@@ -412,7 +412,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "salePrice": 39900.0
+    "promotionalPrice": 39900.0
   },
   {
     "id": "MLA1627746949",
@@ -433,7 +433,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 19000.0
+    "promotionalPrice": 19000.0
   },
   {
     "id": "MLA2732724166",
@@ -454,7 +454,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 89900
+    "promotionalPrice": 89900
   },
   {
     "id": "MLA2941946216",
@@ -475,7 +475,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 32000
+    "promotionalPrice": 32000
   },
   {
     "id": "MLA1511472677",
@@ -492,7 +492,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 25000.0
+    "promotionalPrice": 25000.0
   },
   {
     "id": "MLA2616773126",
@@ -512,7 +512,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 15000
+    "promotionalPrice": 15000
   },
   {
     "id": "MLA2200553772",
@@ -536,7 +536,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "salePrice": 55000
+    "promotionalPrice": 55000
   },
   {
     "id": "MLA3122052710",
@@ -557,7 +557,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "salePrice": 49900
+    "promotionalPrice": 49900
   },
   {
     "id": "MLA1748996789",
@@ -582,7 +582,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 190000
+    "promotionalPrice": 190000
   },
   {
     "id": "MLA2731741474",
@@ -605,7 +605,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "salePrice": 25000
+    "promotionalPrice": 25000
   },
   {
     "id": "MLA3316416628",
@@ -624,7 +624,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 49900
+    "promotionalPrice": 49900
   },
   {
     "id": "MLA3363742976",
@@ -643,6 +643,6 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "salePrice": 120000
+    "promotionalPrice": 120000
   }
 ]
