@@ -455,7 +455,7 @@
     ],
     "isBestseller": false,
     "isOnSale": true,
-    "active": true
+    "active": true,
     "salePrice": 89900
   },
   {
@@ -476,7 +476,7 @@
     ],
     "isBestseller": false,
     "isOnSale": true,
-    "active": true
+    "active": true,
     "salePrice": 32000
   },
   {
@@ -537,7 +537,7 @@
     ],
     "isBestseller": true,
     "isOnSale": true,
-    "active": true
+    "active": true,
     "salePrice": 55000
   },
   {
@@ -558,7 +558,7 @@
     ],
     "isBestseller": true,
     "isOnSale": true,
-    "active": true
+    "active": true,
     "salePrice": 49900
   },
   {
@@ -583,7 +583,7 @@
     ],
     "isBestseller": false,
     "isOnSale": true,
-    "active": true
+    "active": true,
     "salePrice": 190000
   },
   {
@@ -606,7 +606,7 @@
     ],
     "isBestseller": true,
     "isOnSale": true,
-    "active": true
+    "active": true,
     "salePrice": 25000
   },
   {
@@ -625,7 +625,7 @@
     ],
     "isBestseller": false,
     "isOnSale": true,
-    "active": true
+    "active": true,
     "salePrice": 49900
   },
   {
