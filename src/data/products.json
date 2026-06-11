@@ -499,7 +499,7 @@
     "name": "Bombilla LED Inteligente WiFi RGB + Blanca E27",
     "description": "Cambiá el ambiente de cualquier habitación con un toque desde el celular o un comando de voz. Esta bombilla LED EzyHome combina luz RGB multicolor con blanco cálido y blanco frío (6500K) en una sola rosca E27 de instalación estándar.\n\n- Más de 16 millones de colores y 850 lúmenes de brillo\n- Control por app y por voz: compatible con Alexa, Google Assistant, Apple HomeKit, Tuya y Smart Life\n- Conectividad WiFi: manejá la iluminación desde cualquier lugar, con Android o iOS\n- Diseño A60 con rosca E27, compatible con la mayoría de los portalámparas del hogar\n- Bajo consumo energético con clasificación A++ y vida útil aproximada de 25.000 horas\n\nFicha técnica: potencia de 9W, flujo luminoso de 850 lm, temperatura de color 6500K + RGB, conectividad WiFi 3.0. Incluye manual de uso impreso.\n\nDale estilo y tecnología a tus ambientes con EzyHome.",
     "category": "Iluminación Inteligente",
-    "price": 20000,
+    "price": 25000,
     "images": [
       "https://http2.mlstatic.com/D_841005-MLA99506324020_112025-O.webp",
       "https://http2.mlstatic.com/D_701158-MLA99506739000_112025-O.webp",
@@ -512,7 +512,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 15000
+    "promotionalPrice": 20000
   },
   {
     "id": "MLA2200553772",
