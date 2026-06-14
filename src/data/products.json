@@ -433,7 +433,8 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 19000.0
+    "promotionalPrice": 22000,
+    "promotionBadge": "2x1"
   },
   {
     "id": "MLA2732724166",
@@ -512,7 +513,8 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 20000
+    "promotionalPrice": 20000,
+    "promotionBadge": "2x1"
   },
   {
     "id": "MLA2200553772",

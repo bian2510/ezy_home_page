@@ -83,8 +83,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
 
-          {(product.isOnSale || product.isBestseller) && (
+          {(product.isOnSale || product.isBestseller || product.promotionBadge) && (
             <div className="absolute left-2 top-2 flex flex-col gap-1">
+              {product.promotionBadge && <Badge variant="primary">{product.promotionBadge}</Badge>}
               {product.isOnSale && <Badge variant="warning">Oferta</Badge>}
               {product.isBestseller && <Badge variant="success">Más vendido</Badge>}
             </div>

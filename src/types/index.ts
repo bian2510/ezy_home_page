@@ -23,6 +23,8 @@ export interface Product {
   /** Precio promocional vigente; definido y usado solo cuando `isOnSale === true`.
    *  Cuando está presente, `price` pasa a mostrarse tachado como precio de lista. */
   promotionalPrice?: number;
+  /** Etiqueta de promoción especial (ej. "2x1"). Se muestra como badge en la card y el detalle. */
+  promotionBadge?: string;
 }
 
 /**

@@ -17,6 +17,7 @@ import productsData from '@/data/products.json';
 import type { Product } from '@/types';
 import { formatPrice, getEffectivePrice } from '@/types';
 import QuantitySelector from '@/components/ui/QuantitySelector';
+import { Badge } from '@/components/ui/Badge';
 import { useCart } from '@/features/cart/useCart';
 import { useToast } from '@/hooks/useToast';
 
@@ -115,7 +116,14 @@ function ProductDetail({ product }: ProductDetailProps) {
         </div>
 
         <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">{product.name}</h1>
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">{product.name}</h1>
+            {product.promotionBadge && (
+              <Badge variant="primary" className="text-sm">
+                {product.promotionBadge}
+              </Badge>
+            )}
+          </div>
 
           <div className="flex items-baseline gap-3">
             {product.isOnSale && product.promotionalPrice !== undefined && (

@@ -14,7 +14,7 @@ import { cn } from '@/lib/cn';
  * Color is paired with text inside the badge so it never becomes the sole
  * indicator (DOMAIN.md › Design Implications: trust & accessibility).
  */
-export type BadgeVariant = 'warning' | 'success' | 'default';
+export type BadgeVariant = 'warning' | 'success' | 'default' | 'primary';
 
 interface BadgeProps {
   children: ReactNode;
@@ -26,6 +26,7 @@ const variantClasses: Record<BadgeVariant, string> = {
   warning: 'bg-warning text-warning-foreground',
   success: 'bg-success text-white',
   default: 'bg-muted text-muted-foreground',
+  primary: 'bg-primary text-primary-foreground',
 };
 
 export function Badge({ children, variant = 'default', className }: BadgeProps) {
