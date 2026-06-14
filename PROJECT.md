@@ -36,6 +36,8 @@
 | Code conventions (TS, Tailwind, tests)   | `docs/frontend-conventions.md`                      |
 | Component complexity rules (props/lines) | `docs/standards/reglas-componentes.md`              |
 | Where utility functions live             | `docs/standards/funciones-utils.md`                 |
+| Testing patterns (builders, mocks, etc)  | `docs/standards/testing.md`                         |
+| Design tokens cheatsheet                 | `docs/standards/tailwind-tokens.md`                 |
 | Agent working protocol (detailed)        | `docs/agents.md`                                    |
 | How to add a product                     | `docs/guides/agregar-producto.md`                   |
 | How to add a PDF manual                  | `docs/guides/agregar-pdf-manual.md`                 |

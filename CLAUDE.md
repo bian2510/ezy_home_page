@@ -56,6 +56,8 @@ Después de leer `DOMAIN.md` y `PROJECT.md`, leer el doc específico a tu tarea:
 | Decidir dónde poner un componente                      | [`docs/standards/componentes-ui-vs-feature.md`](docs/standards/componentes-ui-vs-feature.md) |
 | Componente con muchas props o que crece en líneas      | [`docs/standards/reglas-componentes.md`](docs/standards/reglas-componentes.md)               |
 | Escribir una función reutilizable / evitar duplicación | [`docs/standards/funciones-utils.md`](docs/standards/funciones-utils.md)                     |
+| Escribir o corregir tests                              | [`docs/standards/testing.md`](docs/standards/testing.md)                                     |
+| Agregar colores, tipografía o estilos Tailwind         | [`docs/standards/tailwind-tokens.md`](docs/standards/tailwind-tokens.md)                     |
 | Crear o modificar una feature                          | [`docs/standards/modulos-feature.md`](docs/standards/modulos-feature.md)                     |
 | Agregar estado global o Context                        | [`docs/standards/gestion-estado.md`](docs/standards/gestion-estado.md)                       |
 | Agregar imágenes o PDFs a un producto                  | [`docs/standards/assets-estaticos.md`](docs/standards/assets-estaticos.md)                   |
