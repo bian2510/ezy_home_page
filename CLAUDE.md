@@ -50,18 +50,21 @@ Do not skip this step. Context you skip becomes an assumption you will regret.
 
 Después de leer `DOMAIN.md` y `PROJECT.md`, leer el doc específico a tu tarea:
 
-| Tarea                                            | Leer antes de empezar                                                                        |
-| ------------------------------------------------ | -------------------------------------------------------------------------------------------- |
-| Crear o modificar cualquier archivo `.tsx`/`.ts` | [`docs/frontend-conventions.md`](docs/frontend-conventions.md)                               |
-| Decidir dónde poner un componente                | [`docs/standards/componentes-ui-vs-feature.md`](docs/standards/componentes-ui-vs-feature.md) |
-| Crear o modificar una feature                    | [`docs/standards/modulos-feature.md`](docs/standards/modulos-feature.md)                     |
-| Agregar estado global o Context                  | [`docs/standards/gestion-estado.md`](docs/standards/gestion-estado.md)                       |
-| Agregar imágenes o PDFs a un producto            | [`docs/standards/assets-estaticos.md`](docs/standards/assets-estaticos.md)                   |
-| Agregar un producto nuevo al catálogo            | [`docs/guides/agregar-producto.md`](docs/guides/agregar-producto.md)                         |
-| Agregar el PDF de instrucciones de un producto   | [`docs/guides/agregar-pdf-manual.md`](docs/guides/agregar-pdf-manual.md)                     |
-| Crear una feature nueva desde cero               | [`docs/guides/agregar-feature.md`](docs/guides/agregar-feature.md)                           |
-| Entender la arquitectura en capas general        | [`docs/standards/capas-arquitectura.md`](docs/standards/capas-arquitectura.md)               |
-| Entender por qué se tomó una decisión técnica    | [`docs/adrs/`](docs/adrs/) — ver README en `docs/standards/README.md`                        |
+| Tarea                                                  | Leer antes de empezar                                                                        |
+| ------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| Crear o modificar cualquier archivo `.tsx`/`.ts`       | [`docs/frontend-conventions.md`](docs/frontend-conventions.md)                               |
+| Decidir dónde poner un componente                      | [`docs/standards/componentes-ui-vs-feature.md`](docs/standards/componentes-ui-vs-feature.md) |
+| Componente con muchas props o que crece en líneas      | [`docs/standards/reglas-componentes.md`](docs/standards/reglas-componentes.md)               |
+| Escribir una función reutilizable / evitar duplicación | [`docs/standards/funciones-utils.md`](docs/standards/funciones-utils.md)                     |
+| Crear o modificar una feature                          | [`docs/standards/modulos-feature.md`](docs/standards/modulos-feature.md)                     |
+| Agregar estado global o Context                        | [`docs/standards/gestion-estado.md`](docs/standards/gestion-estado.md)                       |
+| Agregar imágenes o PDFs a un producto                  | [`docs/standards/assets-estaticos.md`](docs/standards/assets-estaticos.md)                   |
+| Agregar un producto nuevo al catálogo                  | [`docs/guides/agregar-producto.md`](docs/guides/agregar-producto.md)                         |
+| Agregar el PDF de instrucciones de un producto         | [`docs/guides/agregar-pdf-manual.md`](docs/guides/agregar-pdf-manual.md)                     |
+| Crear una feature nueva desde cero                     | [`docs/guides/agregar-feature.md`](docs/guides/agregar-feature.md)                           |
+| Entender la arquitectura en capas general              | [`docs/standards/capas-arquitectura.md`](docs/standards/capas-arquitectura.md)               |
+| Entender por qué se tomó una decisión técnica          | [`docs/adrs/`](docs/adrs/) — ver README en `docs/standards/README.md`                        |
+| Protocolo de trabajo detallado para agentes de IA      | [`docs/agents.md`](docs/agents.md)                                                           |
 
 ---
 

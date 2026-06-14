@@ -12,6 +12,8 @@ Para las reglas de código (TypeScript, Tailwind, testing, nomenclatura) ver [`d
 | [`capas-arquitectura.md`](./capas-arquitectura.md)               | Antes de crear cualquier archivo nuevo. Define las 6 capas y qué puede importar de qué.          |
 | [`componentes-ui-vs-feature.md`](./componentes-ui-vs-feature.md) | Cuando no sabés si un componente va en `ui/` o en una feature.                                   |
 | [`modulos-feature.md`](./modulos-feature.md)                     | Cuando creás o modificás una feature. Define la estructura de carpetas y el contrato `index.ts`. |
+| [`reglas-componentes.md`](./reglas-componentes.md)               | Cuando un componente tiene muchas props o está creciendo. Límites concretos y árbol de decisión. |
+| [`funciones-utils.md`](./funciones-utils.md)                     | Antes de escribir cualquier función reutilizable. Dónde va y cómo evitar duplicación.            |
 
 ## Estado
 
