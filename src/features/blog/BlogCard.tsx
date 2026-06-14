@@ -31,7 +31,12 @@ const dateFormatter = new Intl.DateTimeFormat('es-AR', {
   day: 'numeric',
 });
 
-const formatBlogDate = (isoDate: string): string => dateFormatter.format(new Date(isoDate));
+// `new Date('YYYY-MM-DD')` parses as UTC midnight → shifts a day back in UTC-3.
+// Build with the local-time constructor so the displayed day is stable across timezones.
+const formatBlogDate = (isoDate: string): string => {
+  const [year, month, day] = isoDate.split('-') as [string, string, string];
+  return dateFormatter.format(new Date(Number(year), Number(month) - 1, Number(day)));
+};
 
 export default function BlogCard({ article }: BlogCardProps) {
   const navigate = useNavigate();

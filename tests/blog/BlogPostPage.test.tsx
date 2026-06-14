@@ -107,11 +107,13 @@ describe('BlogPostPage', () => {
 
     renderAt('/blog/test');
 
+    // Use the local-time constructor (not the UTC-parsing string form) so the
+    // expected value matches the component's own formatBlogDate in all timezones.
     const expected = new Intl.DateTimeFormat('es-AR', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
-    }).format(new Date('2026-05-01'));
+    }).format(new Date(2026, 4, 1));
 
     const time = screen.getByText(expected);
     expect(time).toBeInTheDocument();
