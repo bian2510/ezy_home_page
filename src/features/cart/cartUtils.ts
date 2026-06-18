@@ -2,17 +2,22 @@
 // See DOMAIN.md › How EzyHome Makes Money: el checkout v1 cierra vía WhatsApp.
 
 import type { CartItem } from '@/types';
-import { formatPrice } from '@/types';
+import { formatPrice, getEffectivePrice } from '@/types';
 
 const WHATSAPP_BASE_URL = 'https://wa.me/';
 const GREETING = 'Hola! Quiero hacer un pedido:';
 const SHIPPING_DISCLAIMER = '(Los precios no incluyen envío)';
 
 const computeSubtotal = (items: CartItem[]): number =>
-  items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  items.reduce((sum, item) => sum + getEffectivePrice(item.product) * item.quantity, 0);
 
-const formatLineItem = (item: CartItem): string =>
-  `- ${item.quantity}x ${item.product.name} → ${formatPrice(item.product.price)} c/u`;
+const formatLineItem = (item: CartItem): string => {
+  const effectivePrice = getEffectivePrice(item.product);
+  if (item.product.promotionBadge === '2x1') {
+    return `- ${item.quantity * 2}x ${item.product.name} (2x1) → ${formatPrice(effectivePrice)} el par`;
+  }
+  return `- ${item.quantity}x ${item.product.name} → ${formatPrice(effectivePrice)} c/u`;
+};
 
 const composeMessage = (items: CartItem[]): string => {
   const lines = items.map(formatLineItem);

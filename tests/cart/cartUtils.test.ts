@@ -103,3 +103,166 @@ describe('buildWhatsAppMessage', () => {
     expect(decoded).toContain(`${formatPrice(15000)} c/u`);
   });
 });
+
+describe('buildWhatsAppMessage — precios promocionales', () => {
+  it('should use promotionalPrice in line item when product isOnSale', () => {
+    const items: CartItem[] = [
+      buildItem({ isOnSale: true, price: 15000, promotionalPrice: 9000 }, 1),
+    ];
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER);
+    const decoded = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    expect(decoded).toContain(formatPrice(9000));
+    expect(decoded).not.toContain(formatPrice(15000));
+  });
+
+  it('should use promotionalPrice in subtotal when product isOnSale', () => {
+    const items: CartItem[] = [
+      buildItem({ isOnSale: true, price: 15000, promotionalPrice: 9000 }, 2),
+    ];
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER);
+    const decoded = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    expect(decoded).toContain(`Subtotal: ${formatPrice(9000 * 2)}`);
+    expect(decoded).not.toContain(`Subtotal: ${formatPrice(15000 * 2)}`);
+  });
+
+  it('should use regular price when isOnSale is false even if promotionalPrice is defined', () => {
+    const items: CartItem[] = [
+      buildItem({ isOnSale: false, price: 15000, promotionalPrice: 9000 }, 1),
+    ];
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER);
+    const decoded = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    expect(decoded).toContain(formatPrice(15000));
+  });
+
+  it('should compute correct subtotal in mixed cart with sale and regular products', () => {
+    const items: CartItem[] = [
+      buildItem({ id: 'p-1', isOnSale: true, price: 15000, promotionalPrice: 9000 }, 2),
+      buildItem({ id: 'p-2', isOnSale: false, price: 8500 }, 1),
+    ];
+    const expectedSubtotal = 9000 * 2 + 8500 * 1;
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER);
+    const decoded = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    expect(decoded).toContain(`Subtotal: ${formatPrice(expectedSubtotal)}`);
+  });
+});
+
+describe('buildWhatsAppMessage — promoción 2x1', () => {
+  it('should display doubled quantity for a 2x1 product', () => {
+    const items: CartItem[] = [
+      buildItem(
+        {
+          name: 'Lámpara GU10',
+          isOnSale: true,
+          price: 50000,
+          promotionalPrice: 22000,
+          promotionBadge: '2x1',
+        },
+        1,
+      ),
+    ];
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER);
+    const decoded = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    expect(decoded).toContain('2x Lámpara GU10');
+  });
+
+  it('should include the (2x1) label in the line item', () => {
+    const items: CartItem[] = [
+      buildItem(
+        { isOnSale: true, price: 50000, promotionalPrice: 22000, promotionBadge: '2x1' },
+        1,
+      ),
+    ];
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER);
+    const decoded = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    expect(decoded).toContain('(2x1)');
+  });
+
+  it('should show "el par" instead of "c/u" for 2x1 products', () => {
+    const items: CartItem[] = [
+      buildItem(
+        { isOnSale: true, price: 50000, promotionalPrice: 22000, promotionBadge: '2x1' },
+        1,
+      ),
+    ];
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER);
+    const decoded = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    expect(decoded).toContain('el par');
+    expect(decoded).not.toContain('c/u');
+  });
+
+  it('should use promotionalPrice as the price per pair for 2x1 products', () => {
+    const items: CartItem[] = [
+      buildItem(
+        { isOnSale: true, price: 50000, promotionalPrice: 22000, promotionBadge: '2x1' },
+        1,
+      ),
+    ];
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER);
+    const decoded = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    expect(decoded).toContain(formatPrice(22000));
+    expect(decoded).not.toContain(formatPrice(50000));
+  });
+
+  it('should scale physical units and subtotal correctly when quantity > 1 for 2x1', () => {
+    const items: CartItem[] = [
+      buildItem(
+        {
+          name: 'Lámpara GU10',
+          isOnSale: true,
+          price: 50000,
+          promotionalPrice: 22000,
+          promotionBadge: '2x1',
+        },
+        2,
+      ),
+    ];
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER);
+    const decoded = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    // 2 sets → 4 physical units shown
+    expect(decoded).toContain('4x Lámpara GU10');
+    // Subtotal = 2 sets × $22.000 (not doubled quantity × price)
+    expect(decoded).toContain(`Subtotal: ${formatPrice(22000 * 2)}`);
+  });
+
+  it('should compute correct subtotal in a cart with 2x1 and regular products', () => {
+    const items: CartItem[] = [
+      buildItem(
+        {
+          id: 'p-1',
+          name: 'Lámpara GU10',
+          isOnSale: true,
+          price: 50000,
+          promotionalPrice: 22000,
+          promotionBadge: '2x1',
+        },
+        1,
+      ),
+      buildItem({ id: 'p-2', name: 'Sensor de Gas', price: 8500 }, 1),
+    ];
+    // Subtotal = 1 par × $22.000 + 1 × $8.500
+    const expectedSubtotal = 22000 + 8500;
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER);
+    const decoded = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    expect(decoded).toContain(`Subtotal: ${formatPrice(expectedSubtotal)}`);
+  });
+});
