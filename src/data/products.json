@@ -14,7 +14,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 19900
+    "promotionalPrice": 22500
   },
   {
     "id": "MLA2215029560",
@@ -55,7 +55,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 62900.0
+    "promotionalPrice": 79900.0
   },
   {
     "id": "MLA2200632476",
@@ -91,14 +91,14 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 37900.0
+    "promotionalPrice": 39900.0
   },
   {
     "id": "MLA1514819947",
-    "name": "Kit Ambilight WiFi RGBIC 3,8m con Cámara y Barras LED para TV",
+    "name": "Kit Ambilight WiFi RGBIC 3m con Cámara y Barras LED para TV",
     "description": "Llevá la experiencia de tus películas, juegos o música a otro nivel: este kit Ambilight sincroniza la iluminación de tu cuarto con lo que pasa en pantalla, ideal para TVs de 55 a 65 pulgadas.\n\n- Cámara que capta los colores de la pantalla en tiempo real y los proyecta en la tira LED\n- Incluye 2 barras LED RGBIC adicionales para mayor cobertura\n- Modo música con respuesta dinámica al ritmo\n- Control por voz con Alexa y Google Assistant, programación de horarios y escenarios\n\nFicha técnica: tira LED RGBIC de 3,8 m + 2 barras LED RGBIC, conectividad WiFi 2.4GHz y Bluetooth 4.2, entrada de energía 12V 2A, material ABS+PC. Incluye cámara, caja controladora, adaptador y cable USB-C.\n\nCreá una atmósfera envolvente en tu hogar con EzyHome.",
     "category": "Iluminación Inteligente",
-    "price": 1.9e5,
+    "price": 119702,
     "images": [
       "https://http2.mlstatic.com/D_838594-MLA89971969613_082025-O.webp",
       "https://http2.mlstatic.com/D_610203-MLA89598521184_082025-O.jpg",
@@ -107,10 +107,11 @@
     "isBestseller": false,
     "isOnSale": false,
     "active": false
+    "promotionalPrice": 80000.0
   },
   {
     "id": "MLA1514651431",
-    "name": "Kit Ambilight WiFi RGBIC 3,8m con Cámara para TV",
+    "name": "Kit Ambilight WiFi RGBIC 5m con Cámara para TV",
     "description": "Sumá un efecto envolvente a tus películas, series o partidas: este kit Ambilight sincroniza el color de la tira LED con lo que se ve en pantalla, pensado para TVs de 55 a 65 pulgadas.\n\n- Cámara que analiza los colores de la pantalla en tiempo real y sincroniza la iluminación\n- Modo música con respuesta dinámica al ritmo\n- Control por voz con Alexa y Google Assistant\n- Programación de horarios, temporizadores y escenarios desde la app\n- Función de control en grupo para manejar varios kits a la vez\n\nFicha técnica: tira LED RGBIC de 3,8 m, conectividad WiFi 2.4GHz y Bluetooth 4.2, entrada de energía 12V 2A, material ABS+PC con retardante de llama. Incluye cámara, caja controladora, adaptador y cable USB-C.\n\nTransformá tu living en una experiencia inmersiva con EzyHome.",
     "category": "Iluminación Inteligente",
     "price": 1.5e5,
@@ -128,7 +129,7 @@
     "name": "Sensor Zigbee para Puertas y Ventanas (requiere Hub)",
     "description": "Enterate al instante cuando se abre una puerta o ventana: este sensor Zigbee es compacto, discreto y se integra a tu sistema de seguridad inteligente.\n\n- Detección magnética precisa de apertura y cierre (distancia mayor a 16 mm)\n- Funciona con 2 pilas AAA y ofrece más de un año de autonomía, con aviso de batería baja\n- Conectividad Zigbee 3.0 — requiere hub Zigbee para conectarse a la app\n- Compatible con Tuya Smart, Alexa y Google Assistant\n- Instalación simple, sin cables, ideal para puertas principales y accesos vulnerables\n\nFicha técnica: dimensiones 73 × 42 × 26 mm, peso 34 g, temperatura de funcionamiento de -10°C a 50°C.\n\nSumá una capa más de seguridad a tu hogar con EzyHome.",
     "category": "Seguridad",
-    "price": 27999.0,
+    "price": 28000.0,
     "images": [
       "https://http2.mlstatic.com/D_907655-MLA93838225199_092025-O.jpg",
       "https://http2.mlstatic.com/D_900503-MLA90261061248_082025-O.webp",
@@ -142,14 +143,14 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 19900.0
+    "promotionalPrice": 22500.0
   },
   {
     "id": "MLA2277983812",
     "name": "Sensor WiFi para Puertas y Ventanas",
     "description": "Sumá un aviso instantáneo cada vez que se abre o cierra una puerta o ventana — sin necesidad de hub, directo a tu WiFi. Compacto y discreto, se instala en minutos en cualquier abertura.\n\n- Detección magnética precisa de apertura y cierre (distancia mayor a 16 mm)\n- Conectividad WiFi 2.4 GHz, sin necesidad de hub adicional\n- Funciona con 2 pilas AAA y ofrece hasta un año de autonomía, con aviso de batería baja\n- Compatible con Tuya Smart, Alexa y Google Assistant\n- Instalación sencilla y sin cables, ideal para puertas principales y accesos vulnerables\n\nFicha técnica: dimensiones 73 × 42 × 26 mm, peso 34 g, temperatura de funcionamiento de -10°C a 50°C.\n\nMejorá la seguridad de tu hogar con la domótica simple de EzyHome.",
     "category": "Seguridad",
-    "price": 2.5e4,
+    "price": 25000,
     "images": [
       "https://http2.mlstatic.com/D_637135-MLA93867619703_102025-O.webp",
       "https://http2.mlstatic.com/D_939219-MLA90644577051_082025-O.jpg",
@@ -163,7 +164,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 19900.0
+    "promotionalPrice": 21300.0
   },
   {
     "id": "MLA1516597341",
@@ -182,7 +183,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 35000.0
+    "promotionalPrice": 39000.0
   },
   {
     "id": "MLA1516563791",
@@ -199,8 +200,9 @@
       "https://http2.mlstatic.com/D_714159-MLA90268895640_082025-O.webp"
     ],
     "isBestseller": false,
-    "isOnSale": false,
-    "active": false
+    "isOnSale": true,
+    "active": true,
+    "promotionalPrice": 48600.0
   },
   {
     "id": "MLA2212420442",
@@ -276,7 +278,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 49900.0
+    "promotionalPrice": 45000.0
   },
   {
     "id": "MLA2345764792",
@@ -293,7 +295,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 120000.0
+    "promotionalPrice": 128000.0
   },
   {
     "id": "MLA2349563230",
@@ -314,7 +316,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 120000.0
+    "promotionalPrice": 117000.0
   },
   {
     "id": "MLA2348802304",
@@ -331,7 +333,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 120000.0
+    "promotionalPrice": 128000.0
   },
   {
     "id": "MLA1532732625",
@@ -347,7 +349,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 120000.0
+    "promotionalPrice": 122400.0
   },
   {
     "id": "MLA2453082268",
@@ -366,7 +368,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 23000.0
+    "promotionalPrice": 25000.0
   },
   {
     "id": "MLA2215498322",
@@ -389,7 +391,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 39900.0
+    "promotionalPrice": 42000.0
   },
   {
     "id": "MLA2215069312",
@@ -412,7 +414,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 39900.0
+    "promotionalPrice": 48000.0
   },
   {
     "id": "MLA1627746949",
@@ -433,7 +435,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 22000,
+    "promotionalPrice": 20000,
     "promotionBadge": "2x1"
   },
   {
@@ -455,7 +457,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 89900
+    "promotionalPrice": 92700
   },
   {
     "id": "MLA2941946216",
@@ -476,24 +478,24 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 32000
+    "promotionalPrice": 36000
   },
   {
     "id": "MLA1511472677",
-    "name": "Sensor de Movimiento Zigbee de Alta Sensibilidad (requiere Hub)",
+    "name": "Mini Sensor de Movimiento Zigbee de Alta Sensibilidad (requiere Hub)",
     "description": "Sumá este sensor de movimiento Zigbee a tu sistema de domótica y activá luces, enchufes o escenas apenas detecta presencia — ideal para entradas, pasillos o dormitorios. Funciona con pila CR2450 (no incluida) y requiere un hub Zigbee compatible con Tuya o Smart Life.\n\n- Sensor infrarrojo piroeléctrico de alta sensibilidad y baja interferencia\n- Ángulo de detección de 150° y alcance de hasta 7 metros, con base giratoria 360°\n- Autonomía de hasta 365 días y aviso de batería baja desde la app\n- Alertas de movimiento en tiempo real para crear automatizaciones (encender luces al abrir una puerta, apagar enchufes al salir, etc.)\n- Protocolo Zigbee: no satura tu red WiFi y arma una red en malla más estable y segura\n\nFicha técnica: distancia de detección de 5 a 10 metros, batería CR2450 (3V, no incluida), temperatura de operación de -10°C a 55°C, conectividad Zigbee 802.15.4, cuerpo de ABS.\n\nHacé tu hogar más seguro e inteligente con EzyHome.",
     "category": "Seguridad",
-    "price": 45000.0,
+    "price": 25000.0,
     "images": [
-      "https://http2.mlstatic.com/D_640214-MLA89690279094_082025-O.jpg",
-      "https://http2.mlstatic.com/D_615149-MLA83729818880_042025-O.jpg",
-      "https://http2.mlstatic.com/D_751497-MLA83727853080_042025-O.jpg",
-      "https://http2.mlstatic.com/D_701384-MLA83729818884_042025-O.jpg"
+      "https://http2.mlstatic.com/D_NQ_NP_2X_937451-MLA114120512839_072026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_707871-MLA112913581204_072026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_979517-MLA112913019542_072026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_663781-MLA112914260902_072026-F.webp"
     ],
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 25000.0
+    "promotionalPrice": 19000.0
   },
   {
     "id": "MLA2616773126",
@@ -538,7 +540,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 55000
+    "promotionalPrice": 54000
   },
   {
     "id": "MLA3122052710",
@@ -582,8 +584,8 @@
       "https://http2.mlstatic.com/D_792950-MLA110440800067_042026-O.jpg"
     ],
     "isBestseller": false,
-    "isOnSale": true,
-    "active": true,
+    "isOnSale": false,
+    "active": false,
     "promotionalPrice": 190000
   },
   {
@@ -607,7 +609,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 25000
+    "promotionalPrice": 29000
   },
   {
     "id": "MLA3316416628",
@@ -624,8 +626,8 @@
       "https://http2.mlstatic.com/D_871424-MLA111662349803_052026-O.webp"
     ],
     "isBestseller": false,
-    "isOnSale": true,
-    "active": true,
+    "isOnSale": false,
+    "active": false,
     "promotionalPrice": 49900
   },
   {
@@ -645,6 +647,6 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 120000
+    "promotionalPrice": 128000
   }
 ]
