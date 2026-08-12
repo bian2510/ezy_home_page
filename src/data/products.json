@@ -106,7 +106,7 @@
     ],
     "isBestseller": false,
     "isOnSale": false,
-    "active": false
+    "active": false,
     "promotionalPrice": 80000.0
   },
   {
@@ -648,5 +648,58 @@
     "isOnSale": true,
     "active": true,
     "promotionalPrice": 128000
+  },
+
+
+  {
+    "id": "MLAU4249033256",
+    "name": "Boton Emergencia SOS Discapacidad Ancianos Zigbee Smart",
+    "description": "¡Cuidá a los tuyos y obtené máxima tranquilidad! Este botón antipánico inalámbrico está diseñado especialmente para brindar una solución de asistencia rápida y efectiva a adultos mayores, personas con movilidad reducida, pacientes o niños. Con solo presionar el botón central, se enviará una notificación de alerta instantánea a los celulares de toda la familia.",
+    "category": "Seguridad",
+    "price": 35000.0,
+    "images": [
+      "https://http2.mlstatic.com/D_NQ_NP_2X_794632-MLA113007415090_072026-F.webpg",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_943215-MLA113007191246_072026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_972040-MLA114225182879_072026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_935247-MLA113007655380_072026-F.webp"
+    ],
+    "isBestseller": false,
+    "isOnSale": true,
+    "active": true,
+    "promotionalPrice": 29250
+  },
+  {
+    "id": "MLAU4623672542",
+    "name": "Control Remoto Inteligente Universal Wifi Ir Tuya Smart Life",
+    "description": "Con este Control Remoto Universal WiFi Infrarrojo, podés manejar la televisión, el aire acondicionado, decodificadores, equipos de música, ventiladores y más, directamente desde tu celular o mediante comandos de voz con Alexa y Google Assistant.",
+    "category": "Confort",
+    "price": 17000.0,
+    "images": [
+      "https://http2.mlstatic.com/D_NQ_NP_2X_624683-MLA115721912137_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_837936-MLA115721583269_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_787174-MLA114377498888_082026-F.webp"
+    ],
+    "isBestseller": false,
+    "isOnSale": true,
+    "active": true,
+    "promotionalPrice": 16000
+  },
+  {
+  "id": "MLA3484999596",
+    "name": "Válvula Termostática Inteligente Tv05 Zigbee Radiador",
+    "description": "Válvula Termostática Inteligente TV05 Zigbee para radiadores. Automatiza y controla la calefacción del hogar mediante la gestión eficiente de la temperatura por habitación desde un smartphone, logrando un ahorro energético superior al 15%.",
+    "category": "Confort",
+    "price": 88000.0,
+    "images": [
+      "https://http2.mlstatic.com/D_NQ_NP_2X_890168-MLA113466929781_062026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_742529-MLA112312452036_062026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_689411-MLA113466635767_062026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_922241-MLA112312452052_062026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_862768-MLA113467166471_062026-F.webp"
+    ],
+    "isBestseller": false,
+    "isOnSale": true,
+    "active": true,
+    "promotionalPrice": 87990
   }
 ]
