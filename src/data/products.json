@@ -649,8 +649,6 @@
     "active": true,
     "promotionalPrice": 128000
   },
-
-
   {
     "id": "MLAU4249033256",
     "name": "Boton Emergencia SOS Discapacidad Ancianos Zigbee Smart",
@@ -702,8 +700,8 @@
     "active": true,
     "promotionalPrice": 87990
   },
-{
-  "id": "MLAU4193945703",
+  {
+    "id": "MLAU4193945703",
     "name": "Sensor Inteligente De Fuga De Agua Zigbee Smart Life Tuya",
     "description": "Este detector inteligente te avisa de inmediato a tu celular ante cualquier filtración de agua en baños, cocinas, lavaderos o cerca de termotanques.",
     "category": "Confort",
@@ -721,7 +719,7 @@
     "promotionalPrice": 32850
   },
   {
-  "id": "MLAU4097682592",
+    "id": "MLAU4097682592",
     "name": "Localizador Gps Rastreador Find My Tag iPhone Ios Blanco",
     "description": "No vuelvas a perder lo que más querés. Localizá tus llaves, mochila, cartera, valija o mascota fácilmente. Compatible con Apple Find My (Encontrar), sin suscripciones mensuales. 6Características: Bluetooth 5.2, alcance de hasta 40 m. Localización mediante la red de dispositivos Apple. Batería recargable de 250 mAh por USB-C. Modo Perdido con datos de contacto. Tamaño: 42,9 × 42,9 × 13,5 mm. Peso: 15 g. Compatibilidad: iPhone y iPad con iOS/iPadOS 14.5 o superior. No compatible con Android. Incluye: Localizador, correa ajustable y manual.",
     "category": "Seguridad",
@@ -738,8 +736,8 @@
     "active": true,
     "promotionalPrice": 18000
   },
-   {
-  "id": "MLAU4092298728",
+  {
+    "id": "MLAU4092298728",
     "name": "Localizador Gps Rastreador Find My Tag Android Color Blanco",
     "description": "No vuelvas a perder lo que más querés. Localizá tus llaves, mochila, cartera, valija o mascota fácilmente. Compatible con Apple Find My (Encontrar), sin suscripciones mensuales.Características: Bluetooth 5.2, alcance de hasta 40 m. Localización mediante la red de dispositivos Apple. Batería recargable de 250 mAh por USB-C. Modo Perdido con datos de contacto. Tamaño: 42,9 × 42,9 × 13,5 mm. Peso: 15 g. Compatibilidad: iPhone y iPad con iOS/iPadOS 14.5 o superior. No compatible con Android. Incluye: Localizador, correa ajustable y manual.",
     "category": "Seguridad",
@@ -757,7 +755,7 @@
     "promotionalPrice": 18000
   },
    {
-  "id": "MLAU4222595010",
+    "id": "MLAU4222595010",
     "name": "Mini Sensor De Movimiento Infrarrojo Zigbee Tuya Smart Life",
     "description": "Detectá movimiento y automatizá tu hogar de forma simple. Recibí alertas en tu celular o activá escenas automáticas con otros dispositivos inteligentes. Importante: requiere Hub/Gateway Zigbee compatible con Tuya o Smart Life. No se conecta directamente al WiFi. Características: detección PIR de hasta 5 m y 120° de cobertura. Diseño compacto de 33 × 27 mm. Instalación inalámbrica con adhesivo incluido. Funciona con pila CR2450, con autonomía de hasta 1,5 años. Compatibilidad: Tuya Smart y Smart Life. Incluye: sensor, pila CR2450, adhesivo doble faz y manual.",
     "category": "Seguridad",
