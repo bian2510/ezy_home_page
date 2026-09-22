@@ -22,22 +22,22 @@ expect(screen.getByRole('menu')).toBeVisible();
 
 ## Patrón 1 — Builder de datos de test
 
-No duplicar objetos de datos en cada test. Definir un `buildX()` local en el archivo de test
-(o en un helper compartido si se usa en varios archivos).
+No duplicar objetos de datos en cada test.
+
+- **Un solo archivo lo usa** → `buildX()` local en ese archivo.
+- **Dos o más lo usan** → sube a [`tests/helpers/builders.ts`](../../tests/helpers/builders.ts),
+  que hoy exporta `buildProduct`, `buildCartItem`, `buildBlogMeta` y `buildToast`.
 
 ```ts
-const buildProduct = (overrides: Partial<Product> = {}): Product => ({
-  id: 'p-1',
-  name: 'Foco Inteligente',
-  description: 'Foco LED Wi-Fi 9W',
-  price: 12500,
-  images: ['/images/foco.jpg'],
-  category: 'iluminacion',
-  isBestseller: false,
-  isOnSale: false,
-  active: true,
-  ...overrides,
-});
+import { buildProduct } from '../../helpers/builders';
+```
+
+Si un archivo necesita otros valores por defecto, envolver el builder compartido
+en vez de copiar el objeto entero:
+
+```ts
+const buildProduct = (overrides: Partial<Product> = {}): Product =>
+  buildBaseProduct({ name: 'Smart Bulb RGBW', price: 15000, ...overrides });
 ```
 
 Usar `overrides` solo cuando el test necesita un valor específico:
@@ -54,7 +54,7 @@ Para testear hooks que consumen un Context, usar el `wrapper` de `renderHook`:
 
 ```ts
 import type { ReactNode } from 'react';
-import { CartProvider } from '@/features/cart/CartProvider';
+import { CartProvider } from '@/features/cart';
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <CartProvider>{children}</CartProvider>
@@ -198,7 +198,7 @@ consoleError.mockRestore();
 Testing Library normaliza solo ASCII — `getByText('$ 12.500')` falla. Usar el matcher de precio:
 
 ```ts
-import { formatPrice } from '@/types';
+import { formatPrice } from '@/lib/formatPrice';
 
 const NBSP = / /g;
 const normalize = (s: string) => s.replace(NBSP, ' ').trim();
@@ -229,6 +229,7 @@ screen.getByText(matchesPrice(12500));
 | Función en `lib/`                 | `tests/unit/<nombre>.test.ts` (sin render, sin DOM) |
 | Función en `features/xxx/utils`   | `tests/features/<feature>/<nombre>Utils.test.ts`    |
 | Test de integración multi-feature | `tests/integration/<nombre>.test.tsx`               |
+| Builders compartidos (no es test) | `tests/helpers/builders.ts`                         |
 
 ---
 

@@ -97,7 +97,7 @@ Los siguientes errores se han observado o son de alto riesgo. Verificar activame
 
 **Control de versiones:**
 
-- NO commitear sin pasar el quality gate completo (`pnpm lint && pnpm typecheck && pnpm format:check`)
+- NO commitear sin pasar el quality gate completo (`pnpm lint && pnpm typecheck && pnpm format:check && pnpm test`)
 - NO modificar `DOMAIN.md` o `PROJECT.md` sin instrucción explícita del usuario
 
 ---
@@ -122,7 +122,11 @@ Antes de declarar cualquier tarea como terminada:
 pnpm lint          # 0 errores
 pnpm typecheck     # 0 errores
 pnpm format:check  # 0 diffs
+pnpm test          # 0 fallos
 ```
+
+El test corre **antes** del fix, no después: primero el test que falla, después
+el código que lo pone en verde.
 
 Si alguno falla, corregir antes de reportar como completo. No es válido decir "el CI lo va a detectar".
 

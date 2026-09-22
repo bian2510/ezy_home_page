@@ -14,7 +14,7 @@
   → src/lib/
 
 ¿La función es pura pero conoce tipos del dominio (Product, CartItem...)?
-  → src/features/<nombre>/utils.ts   (o <nombre>Utils.ts si la convención ya existe)
+  → src/features/<nombre>/<nombre>Utils.ts   (convención del repo: cartUtils.ts)
 
 ¿La función transforma o calcula a partir de un tipo específico?
   → Puede ir como función exportada en src/types/index.ts, cerca del tipo.
@@ -32,16 +32,17 @@ Funciones puras que no conocen EzyHome. Reutilizables fuera del proyecto.
 
 ```ts
 // src/lib/formatPrice.ts
-export function formatPrice(amount: number): string {
-  return new Intl.NumberFormat('es-AR', {
+export const formatPrice = (amount: number): string =>
+  new Intl.NumberFormat('es-AR', {
     style: 'currency',
     currency: 'ARS',
-    minimumFractionDigits: 0,
-  }).format(amount);
-}
+    maximumFractionDigits: 0,
+  })
+    .format(amount)
+    .replace(/\u00A0/g, ' ');
 ```
 
-Test obligatorio en `tests/lib/<nombre>.test.ts` — sin render, sin DOM.
+Test obligatorio en `tests/unit/<nombre>.test.ts` — sin render, sin DOM.
 
 ---
 
@@ -49,15 +50,14 @@ Test obligatorio en `tests/lib/<nombre>.test.ts` — sin render, sin DOM.
 
 Funciones puras que conocen los tipos del dominio de esa feature, pero no React.
 
-**Ejemplos válidos:** `cartUtils.ts` (calcular total, formatear items), `catalogUtils.ts` (filtrar productos)
+**Ejemplos válidos:** `cartUtils.ts` (armar el mensaje de WhatsApp, calcular subtotales)
 
 **No poner aquí:** side effects, llamadas a APIs, lógica de renderizado.
 
 ```ts
 // src/features/cart/cartUtils.ts
-export function calculateCartTotal(items: CartItem[]): number {
-  return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-}
+const computeSubtotal = (items: CartItem[]): number =>
+  items.reduce((sum, item) => sum + getEffectivePrice(item.product) * item.quantity, 0);
 ```
 
 Test obligatorio en `tests/features/<feature>/<nombre>.test.ts`.
@@ -104,12 +104,14 @@ grep -r "formatPrice\|calcular\|getEffective" src/lib/ src/features/
 src/
   lib/                         ← pura, sin dominio, reutilizable en cualquier proyecto
     cn.ts
+    env.ts
     formatPrice.ts
   features/
     cart/
       cartUtils.ts             ← pura, conoce CartItem/Product
-    catalog/
-      catalogUtils.ts          ← pura, conoce Product/Category
   types/
-    index.ts                   ← helpers acoplados al tipo que transforman
+    index.ts                   ← getEffectivePrice: acoplado a Product
 ```
+
+`formatPrice` recibe un `number`, no un `Product`: por eso vive en `lib/` y no
+en `types/`.

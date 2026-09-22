@@ -6,18 +6,28 @@
 
 ## Estructura de carpetas
 
+**Plana por defecto.** Todos los archivos de la feature al mismo nivel:
+
 ```
 src/features/<nombre>/
-  components/         ← componentes que conocen este dominio
-    ComponenteA.tsx
-    ComponenteB.tsx
-  hooks/              ← hooks específicos del dominio (opcional si hay pocos)
-    useAlgo.ts
+  ComponenteA.tsx     ← componentes que conocen este dominio
+  ComponenteB.tsx
   <Nombre>Context.ts  ← contrato del contexto (si hay estado global)
   <Nombre>Provider.tsx← estado + efectos (si hay estado global)
   use<Nombre>.ts      ← hook consumidor con error guard (si hay contexto)
   <nombre>Utils.ts    ← funciones puras del dominio
   index.ts            ← API pública del módulo ← OBLIGATORIO
+```
+
+**Cuándo agrupar en subcarpetas:** con más de ~6 archivos, mover los
+componentes a `components/` y los hooks a `hooks/`. Antes de ese umbral la
+subcarpeta agrega saltos de navegación sin ganar nada.
+
+```
+src/features/<nombre>/
+  components/         ← solo a partir de ~6 archivos
+  hooks/
+  index.ts
 ```
 
 ### Ejemplo real — `features/cart/`
@@ -32,7 +42,10 @@ features/cart/
   CartProvider.tsx
   cartUtils.ts
   useCart.ts          ← único punto de entrada al estado del carrito
+  index.ts            ← API pública
 ```
+
+`cart` ya pasó el umbral: es la primera candidata a agrupar en `components/`.
 
 ---
 
@@ -42,12 +55,17 @@ Cada feature **debe** tener un `index.ts` que exporta solo lo que otras capas ne
 
 ```ts
 // features/catalog/index.ts
-export { default as ProductCard } from './ProductCard';
 export { default as CatalogPage } from './CatalogPage';
+export { default as ProductCard } from './ProductCard';
+export { default as ProductGrid } from './ProductGrid';
 export { default as CategoryFilter } from './CategoryFilter';
 export { useCatalog } from './useCatalog';
+export type { UseCatalogResult } from './useCatalog';
 // NO exportar: helpers internos, subcomponentes que solo usa CatalogPage
 ```
+
+Dentro de la feature los imports son **relativos** (`./ProductCard`); el alias
+`@/features/<nombre>` es para consumirla desde afuera.
 
 ### Por qué importa
 
@@ -69,6 +87,10 @@ Si mañana renombrás `ProductCard.tsx` o lo movés a `components/`, solo cambia
 2. **Una feature no importa de otra feature directamente** — solo de su `index.ts`.
 3. **Lo que no está en `index.ts` es un detalle de implementación** — puede cambiar sin aviso.
 4. **Si no sabés si exportar algo**, no lo exportes. Es más fácil abrir el acceso que cerrarlo.
+
+Las cuatro reglas las aplica `eslint` (`@typescript-eslint/no-restricted-imports`
+por capa en `eslint.config.js`): un import a `@/features/<x>/<archivo>` desde
+otra capa falla `pnpm lint`.
 
 ---
 

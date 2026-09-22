@@ -13,7 +13,7 @@
 | Compartido entre hermanos     | Subir al padre            | `quantity` entre stepper y botón agregar  |
 | Global de un dominio          | Context + Provider + hook | `CartProvider` + `useCart`                |
 | Estado del servidor (v2+)     | React Query o SWR         | — (no implementado)                       |
-| Filtros / paginación          | `useSearchParams`         | — (pendiente en catalog)                  |
+| Filtros / paginación          | `useSearchParams`         | `?category=` en `CatalogPage`             |
 
 **Anti-patrón crítico — nunca sincronizar estado con estado:**
 
@@ -51,13 +51,16 @@ export const CartContext = createContext<CartContextValue | null>(null);
 
 ```tsx
 // CartProvider.tsx — solo la implementación
-export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => loadFromStorage());
+export const CartProvider = ({ children }: { children: ReactNode }) => {
+  // useReducer cuando las transiciones son varias y con reglas
+  // (agregar, quitar, cambiar cantidad, vaciar); useState alcanza para estado
+  // de una sola forma.
+  const [items, dispatch] = useReducer(cartReducer, undefined, readPersistedItems);
   useEffect(() => {
     saveToStorage(items);
   }, [items]);
   // ...
-}
+};
 ```
 
 ```ts
@@ -96,22 +99,40 @@ Cuando migrés, el cambio es quirúrgico: reemplazás `CartProvider.tsx` y `useC
 
 ## Persistencia en localStorage
 
-Patrón actual en `CartProvider`:
+Patrón actual en `CartProvider` — lectura perezosa al inicializar, escritura en
+un efecto:
 
 ```ts
-// Inicializar desde storage
-const [items, setItems] = useState<CartItem[]>(() => {
+// Inicializar desde storage: cualquier fallo devuelve vacío, nunca tira
+const readPersistedItems = (): CartItem[] => {
   try {
-    return JSON.parse(localStorage.getItem('cart') ?? '[]');
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (raw === null) return [];
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(isPersistedItem).map(reconcileWithCatalog);
   } catch {
     return [];
   }
-});
+};
+
+const [items, dispatch] = useReducer(cartReducer, undefined, readPersistedItems);
 
 // Sincronizar a storage
 useEffect(() => {
-  localStorage.setItem('cart', JSON.stringify(items));
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 }, [items]);
 ```
 
 Este patrón es obligatorio para cualquier estado que deba sobrevivir a un refresh (requisito de negocio: [`DOMAIN.md`](../../DOMAIN.md) § Operational Constraints).
+
+**Tres reglas que salieron de bugs reales:**
+
+1. **Validar la forma de lo persistido.** Un objeto guardado por una versión
+   vieja puede no tener los campos que el código de hoy asume; una entrada
+   inválida se descarta, no rompe el render.
+2. **Reconciliar contra la fuente de verdad.** El carrito guarda un snapshot
+   del producto: al hidratar se reemplaza por la versión vigente de
+   `data/catalog.ts`, o el cliente compra a un precio viejo.
+3. **Nunca vaciar sin acción del usuario.** Un ítem cuyo producto ya no está en
+   el catálogo conserva su snapshot en vez de desaparecer.

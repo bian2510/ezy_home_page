@@ -15,11 +15,13 @@ src/
     layout/     ← chrome de página (SiteHeader, SiteFooter). Máx 2-3 archivos.
   features/
     <nombre>/   ← todo lo de un dominio: context, provider, hook, subcomponentes, utils
-  hooks/        ← hooks que consumen un context (useCart, useToast). Sin estado propio.
-  lib/          ← utilidades puras sin React (cn, formatPrice). Testeables sin render.
+                  + index.ts obligatorio con la API pública
+  hooks/        ← hooks genéricos sin dominio (useMediaQuery, useDebounce). Hoy vacío.
+                  El hook consumidor de un context vive en SU feature (useCart, useToast).
+  lib/          ← utilidades puras sin React (cn, env, formatPrice). Testeables sin render.
   pages/        ← páginas que no pertenecen a ninguna feature
   types/        ← interfaces y tipos compartidos entre features
-  data/         ← datos estáticos (JSON, markdown)
+  data/         ← datos estáticos (JSON, markdown) + catalog.ts, el acceso tipado
 ```
 
 **Regla de dependencias — unidireccional, sin excepciones:**
@@ -28,7 +30,10 @@ src/
 pages → features → components/ui → lib
 ```
 
-`ui/` nunca importa de `features/`. `lib/` nunca importa de React.
+`ui/` nunca importa de `features/`. `lib/` nunca importa de React. Una feature se
+consume por su `index.ts`, nunca por una ruta interna.
+
+Estas reglas las aplica `eslint` por capa: cruzar una frontera falla `pnpm lint`.
 
 ---
 
@@ -100,8 +105,12 @@ const total = useMemo(() => items.reduce(...), [items])
 ### Ancho de contenido
 
 El token `max-w-content` (1200px, definido en `tailwind.config.ts`) es el **único ancho permitido**
-para contenedores de página. No usar `max-w-prose`, `max-w-3xl`, `max-w-5xl`, ni anchos arbitrarios
-para wrappers de página.
+para el contenedor que centra una página o sección. No usar `max-w-3xl`, `max-w-5xl`, ni anchos
+arbitrarios para ese wrapper.
+
+**Qué NO cuenta como wrapper de página:** limitar la medida de línea de un bloque de texto
+_dentro_ de una sección ya contenida (copy de un hero, párrafo de un CTA, cuerpo de un artículo).
+Ahí `max-w-prose` es correcto — es legibilidad, no layout de página.
 
 ```tsx
 // ✅ CORRECTO — dentro del <main> de RootLayout
@@ -112,8 +121,8 @@ para wrappers de página.
 <div className="mx-auto max-w-5xl ...">
 ```
 
-**Excepción permitida:** `max-w-prose` (65ch) **solo** para cuerpo de artículos de blog o texto de
-lectura larga donde la medida de línea corta mejora la legibilidad (BlogPostPage article).
+**Usos legítimos de `max-w-prose` (65ch) hoy:** cuerpo del artículo en `BlogPostPage`,
+copy del hero en `HeroCarousel`, texto del CTA de WhatsApp en `HomePage`.
 
 ### Secciones full-bleed
 
@@ -163,21 +172,27 @@ expect(screen.getByRole('menu')).toBeVisible();
 
 - Todo componente nuevo en `ui/` → test en `tests/components/ui/<Nombre>.test.tsx`
 - Todo hook nuevo → test en `tests/features/<feature>/<hook>.test.ts` con `renderHook`
+- Función pura en `lib/` → test en `tests/unit/<nombre>.test.ts`, sin render ni DOM
 - Todo cambio de comportamiento → test que lo cubra antes del commit
 - Lógica pura en `lib/` → tests unitarios sin render
 
 **No testear:** clases CSS, estructura interna del DOM, tipos de TypeScript.
 
-**Builders centralizados en `tests/helpers/builders.ts`** — no duplicar en cada archivo:
+**Builders compartidos en [`tests/helpers/builders.ts`](../tests/helpers/builders.ts)** —
+`buildProduct`, `buildCartItem`, `buildBlogMeta`, `buildToast`. Un `buildX()` local es correcto
+mientras lo use un solo archivo; con dos, sube al helper:
 
 ```ts
-export const buildProduct = (overrides?: Partial<Product>): Product => ({
-  id: 'test-id',
-  name: 'Producto Test',
-  price: 1000,
-  description: '',
-  images: [],
-  category: 'iluminacion',
+export const buildProduct = (overrides: Partial<Product> = {}): Product => ({
+  id: 'p-1',
+  name: 'Foco Inteligente',
+  description: 'Foco LED Wi-Fi 9W',
+  price: 12500,
+  images: ['/images/foco.jpg'],
+  category: 'Iluminación Inteligente',
+  isBestseller: false,
+  isOnSale: false,
+  active: true,
   ...overrides,
 });
 ```
@@ -203,7 +218,7 @@ export const buildProduct = (overrides?: Partial<Product>): Product => ({
 
 ## 11. Prohibiciones explícitas
 
-- ❌ Anchos de página distintos a `max-w-content` (ver sección 6)
+- ❌ Wrappers de página/sección con ancho distinto a `max-w-content` (ver sección 6)
 - ❌ `any` en TypeScript
 - ❌ `console.log` en código de producción
 - ❌ Lógica de negocio en componentes `ui/`

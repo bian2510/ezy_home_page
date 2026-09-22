@@ -77,6 +77,10 @@ Antes de declarar cualquier tarea como completa, ejecutar siempre en orden:
 1. `pnpm lint` — debe terminar con 0 errores
 2. `pnpm typecheck` — debe terminar sin errores
 3. `pnpm format:check` — debe pasar sin archivos con diff
+4. `pnpm test` — debe terminar sin tests fallando
+
+El test va primero en el trabajo, no último: para un bug o un cambio de
+comportamiento, escribir el test que falla antes del código que lo arregla.
 
 Si cualquiera falla, corregir antes de commitear.
 No es válido pushear con la intención de "el CI lo va a detectar".
