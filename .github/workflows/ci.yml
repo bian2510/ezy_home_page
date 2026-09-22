@@ -83,6 +83,8 @@ jobs:
       - run: pnpm build
         env:
           VITE_WHATSAPP_NUMBER: ${{ secrets.VITE_WHATSAPP_NUMBER }}
+      - name: Presupuesto de peso del critical path
+        run: pnpm check:bundle
       - uses: actions/upload-artifact@v4
         with:
           name: dist

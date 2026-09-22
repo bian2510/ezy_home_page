@@ -21,6 +21,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "validate:products": "vitest run tests/data/products-schema.test.ts",
+    "check:bundle": "node scripts/check-bundle-size.js",
     "prepare": "husky"
   },
   "dependencies": {

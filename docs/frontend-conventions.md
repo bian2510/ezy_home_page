@@ -218,6 +218,19 @@ export const buildProduct = (overrides: Partial<Product> = {}): Product => ({
   cuyo riesgo #1 es la confianza visual (DOMAIN.md › Risk Posture), eso es perder la
   venta y al visitante.
 
+### Presupuesto de peso
+
+El critical path —lo que se descarga antes de la primera pantalla— tiene un tope de
+**105 kB gzip**, verificado en CI por `scripts/check-bundle-size.js`. Hoy usa 93 kB.
+
+```bash
+pnpm build && pnpm check:bundle
+```
+
+Si una dependencia nueva lo pasa, el orden de ataque es: moverla detrás de un
+`lazy()`, buscar una alternativa más liviana, o subir el tope explicando por qué en
+el commit. Subirlo sin justificación convierte el presupuesto en decoración.
+
 ---
 
 ## 10. Nomenclatura
