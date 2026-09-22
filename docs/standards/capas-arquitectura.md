@@ -111,6 +111,16 @@ pages  →  features  →  components/ui  →  lib
 
 \* Una feature puede importar de otra **solo a través de su `index.ts`**, nunca de rutas internas.
 
+### Carga por demanda
+
+`App.tsx` monta cada ruta con `lazy()` + `<Suspense>`, salvo la landing y el
+404: son la primera pantalla del visitante que llega de Instagram y DOMAIN.md
+pide LCP < 2.5s en 4G. El bundle inicial es 244 kB (75 kB gzip); el resto de
+las rutas viaja en su propio chunk.
+
+El `import()` apunta siempre al `index.ts` de la feature, nunca a un archivo
+interno, así que la regla de capas sigue valiendo dentro del split.
+
 ### Enforcement
 
 Estas reglas no son honor system: `eslint.config.js` las aplica con

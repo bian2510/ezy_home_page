@@ -201,6 +201,25 @@ export const buildProduct = (overrides: Partial<Product> = {}): Product => ({
 
 ---
 
+## 9 bis. Rutas, carga por demanda y errores
+
+- **Toda ruta nueva se monta con `lazy()` + `<Suspense fallback={<RouteFallback />}>`**
+  en `App.tsx`. Las únicas excepciones son la landing y el 404, que viajan en el bundle
+  inicial porque son la primera pantalla.
+- El `import()` apunta al `index.ts` de la feature (`import('@/features/catalog')`),
+  nunca a un archivo interno.
+- El fallback de carga lleva `role="status"` y un nombre accesible: el lector de
+  pantalla tiene que enterarse de que algo está cargando.
+- **`ErrorBoundary` envuelve el `<Outlet />` en `RootLayout`**, no la app entera: si
+  una página revienta, el header, el carrito y el footer siguen en pie y el visitante
+  puede seguir navegando. La `key={location.pathname}` lo remonta al cambiar de ruta,
+  para que el error no quede pegado.
+- Una excepción de render sin boundary deja la pantalla en blanco. Para una tienda
+  cuyo riesgo #1 es la confianza visual (DOMAIN.md › Risk Posture), eso es perder la
+  venta y al visitante.
+
+---
+
 ## 10. Nomenclatura
 
 | Cosa               | Convención                 | Ejemplo                 |

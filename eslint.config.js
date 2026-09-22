@@ -113,7 +113,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/pages/**/*.{ts,tsx}', 'src/layouts/**/*.{ts,tsx}'],
+    files: ['src/pages/**/*.{ts,tsx}', 'src/layouts/**/*.{ts,tsx}', 'src/App.tsx'],
     rules: {
       '@typescript-eslint/no-restricted-imports': [
         'error',
