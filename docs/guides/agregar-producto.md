@@ -32,9 +32,11 @@ Copiar esta plantilla y completar todos los campos:
 
 ```json
 "promotionalPrice": 00000,
-"promotionBadge": "2x1",
-"manualUrl": "/products/MLA________/manual.pdf"
+"promotionBadge": "2x1"
 ```
+
+No hay otros campos: la validación rechaza cualquier campo desconocido, para
+que un typo como `pirce` no deje el precio real en `undefined`.
 
 ### 3. Categorías válidas
 
@@ -46,7 +48,12 @@ Las categorías existentes en el catálogo son:
 - `"Protección y Alertas"`
 - `"Hubs"`
 
-Si el producto no encaja en ninguna, consultá antes de crear una categoría nueva (afecta el `CategoryFilter`).
+Si el producto no encaja en ninguna, consultá antes de crear una categoría nueva: el
+`CategoryFilter` deriva los chips de este campo, así que cada valor nuevo es un chip nuevo.
+
+Escribirla exactamente igual que las existentes. La validación rechaza variantes que difieren
+solo en mayúsculas o espacios (`"seguridad "` vs `"Seguridad"`), porque generarían dos chips
+para la misma categoría.
 
 ### 4. Reglas de precio
 
@@ -58,6 +65,13 @@ Si el producto no encaja en ninguna, consultá antes de crear una categoría nue
 | `promotionBadge`   | Solo para promociones especiales como `"2x1"`.                   |
 
 Cuando `isOnSale: true` y `promotionalPrice` está definido, `price` se muestra tachado.
+
+**La validación exige que la oferta esté completa:** `isOnSale: true` sin `promotionalPrice`
+se rechaza (la card anunciaría un descuento y cobraría el precio de lista), igual que un
+`promotionalPrice` mayor o igual al `price`, o presente con `isOnSale: false`.
+
+**Sin centavos:** `price` y `promotionalPrice` son enteros. Con decimales, la card redondea
+para mostrar pero el carrito suma el valor exacto, y al cliente le cierra mal la cuenta.
 
 ### 5. Agregar imágenes locales (opcional, recomendado para productos propios)
 
@@ -89,10 +103,29 @@ Ver [`docs/guides/agregar-pdf-manual.md`](./agregar-pdf-manual.md).
 
 El producto no aparece en Home, Catálogo ni Detalle, pero persiste en el JSON para reactivarlo cuando vuelva el stock.
 
-### 8. Quality gate
+### 8. Validar el catálogo
 
 ```bash
-pnpm lint && pnpm typecheck && pnpm format:check
+pnpm validate:products
 ```
 
-TypeScript valida que el JSON respeta la interfaz `Product` definida en `src/types/index.ts`. Si falta un campo requerido o el tipo no coincide, `typecheck` falla.
+Corre el esquema de [`src/data/productSchema.ts`](../../src/data/productSchema.ts) contra el
+archivo real y falla nombrando el producto y el campo:
+
+```
+producto MLA2200632476 › price: price debe ser un entero en pesos, sin centavos
+producto MLA3316416628 › isOnSale: tiene promotionalPrice pero isOnSale es false
+```
+
+Valida forma (tipos, campos obligatorios, campos desconocidos), reglas de negocio (precios
+enteros y positivos, ofertas coherentes, categoría obligatoria si el producto está activo) y
+reglas del catálogo completo (ids únicos, categorías sin variantes disfrazadas).
+
+`pnpm typecheck` **no** cubre esto: `products.json` entra a la app con un cast
+(`as Product[]`) que no verifica nada en runtime.
+
+### 9. Quality gate
+
+```bash
+pnpm lint && pnpm typecheck && pnpm format:check && pnpm test
+```

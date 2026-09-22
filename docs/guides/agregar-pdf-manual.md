@@ -2,6 +2,13 @@
 
 **Ver también:** [`docs/standards/assets-estaticos.md`](../standards/assets-estaticos.md) · [`docs/guides/agregar-producto.md`](./agregar-producto.md)
 
+> **Estado: no implementado.** `manualUrl` no existe hoy en la interfaz `Product`
+> ni en `ProductDetailPage`, y la validación de `products.json` rechaza los campos
+> desconocidos: agregarlo al JSON hace fallar `pnpm validate:products`. Esta guía
+> describe cómo construir la feature, no un procedimiento vigente. Para
+> habilitarla hay que sumar `manualUrl` al tipo, al esquema y al detalle de
+> producto, en ese orden.
+
 ---
 
 ## Prerequisito
