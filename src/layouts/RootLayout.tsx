@@ -1,9 +1,8 @@
 import { Outlet } from 'react-router-dom';
 import SiteHeader from '@/components/layout/SiteHeader';
 import SiteFooter from '@/components/layout/SiteFooter';
-import { CartProvider } from '@/features/cart/CartProvider';
-import ToastProvider from '@/features/toast/ToastProvider';
-import CartDrawer from '@/features/cart/CartDrawer';
+import { CartProvider, CartDrawer } from '@/features/cart';
+import { ToastProvider } from '@/features/toast';
 
 export default function RootLayout() {
   return (

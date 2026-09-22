@@ -1,20 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { buildWhatsAppMessage } from '@/features/cart/cartUtils';
-import { formatPrice } from '@/types';
+import { formatPrice } from '@/lib/formatPrice';
 import type { CartItem, Product } from '@/types';
+import { buildProduct as buildBaseProduct } from '../../helpers/builders';
 
-const buildProduct = (overrides: Partial<Product> = {}): Product => ({
-  id: 'p-1',
-  name: 'Smart Bulb RGBW',
-  description: 'Foco LED inteligente Wi-Fi 9W RGBW',
-  price: 15000,
-  images: ['/images/bulb.jpg'],
-  category: 'iluminacion',
-  isBestseller: false,
-  isOnSale: false,
-  active: true,
-  ...overrides,
-});
+const buildProduct = (overrides: Partial<Product> = {}): Product =>
+  buildBaseProduct({
+    name: 'Smart Bulb RGBW',
+    description: 'Foco LED inteligente Wi-Fi 9W RGBW',
+    price: 15000,
+    images: ['/images/bulb.jpg'],
+    ...overrides,
+  });
 
 const buildItem = (productOverrides: Partial<Product> = {}, quantity = 1): CartItem => ({
   product: buildProduct(productOverrides),

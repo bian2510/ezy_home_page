@@ -16,10 +16,9 @@ import RootLayout from '@/layouts/RootLayout';
 import HomePage from '@/pages/HomePage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import ProductDetailPage from '@/pages/ProductDetailPage';
-import CartPage from '@/features/cart/CartPage';
-import CatalogPage from '@/features/catalog/CatalogPage';
-import BlogListPage from '@/features/blog/BlogListPage';
-import BlogPostPage from '@/features/blog/BlogPostPage';
+import { CartPage } from '@/features/cart';
+import { CatalogPage } from '@/features/catalog';
+import { BlogListPage, BlogPostPage } from '@/features/blog';
 import QuienesSomosPage from '@/pages/QuienesSomosPage';
 import ComoComprarPage from '@/pages/ComoComprarPage';
 

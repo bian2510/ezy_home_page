@@ -57,25 +57,19 @@ export interface BlogMeta {
   excerpt?: string;
 }
 
+/** Severidad visual de una notificación efímera. */
+export type ToastType = 'success' | 'error' | 'info';
+
 /**
- * Formatea un monto entero de ARS al estilo de moneda local argentino,
- * sin decimales (ej. 12500 -> "$ 12.500").
- *
- * `Intl.NumberFormat('es-AR', { style: 'currency' })` emits a non-breaking
- * space (U+00A0) between symbol and digits. That character is treated as
- * whitespace by Testing Library's default normalizer (`/\s+/g`) but is *not*
- * normalized in the matcher side, which breaks `getByText(formatPrice(x))`
- * round-trips. We post-process to a regular space so DOM text and matcher
- * compare equal after normalization, without changing the visible output.
+ * Toast — notificación efímera. Vive en `types/` porque lo consumen dos capas:
+ * el primitivo visual `components/ui/Toast` y la feature `toast`, que no puede
+ * importar de la otra dirección (ver `docs/standards/capas-arquitectura.md`).
  */
-export const formatPrice = (amount: number): string =>
-  new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    maximumFractionDigits: 0,
-  })
-    .format(amount)
-    .replace(/\u00A0/g, ' ');
+export interface Toast {
+  id: string;
+  message: string;
+  type: ToastType;
+}
 
 /**
  * Precio efectivo a cobrar/destacar: `promotionalPrice` cuando el producto está

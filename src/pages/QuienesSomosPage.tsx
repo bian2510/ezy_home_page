@@ -45,6 +45,9 @@ export default function QuienesSomosPage() {
         aria-labelledby="quienes-somos-heading"
         className="bg-gradient-to-br from-sidebar to-sidebar-accent px-4 py-16 text-center sm:px-8 sm:py-24"
       >
+        {/* max-w-3xl es una excepción heredada al estándar de anchos
+            (frontend-conventions.md §6). Se deja como está: cambiarlo altera el
+            ancho visual sin beneficio. No replicar en páginas nuevas. */}
         <div className="mx-auto max-w-3xl">
           <h1
             id="quienes-somos-heading"

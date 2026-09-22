@@ -1,12 +1,5 @@
 import { createContext } from 'react';
-
-export type ToastType = 'success' | 'error' | 'info';
-
-export interface Toast {
-  id: string;
-  message: string;
-  type: ToastType;
-}
+import type { Toast, ToastType } from '@/types';
 
 export interface ToastContextValue {
   toasts: Toast[];

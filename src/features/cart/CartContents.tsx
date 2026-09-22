@@ -2,11 +2,8 @@ import { Link } from 'react-router-dom';
 import { useCart } from './useCart';
 import CartItem from './CartItem';
 import { buildWhatsAppMessage } from './cartUtils';
-import { formatPrice } from '@/types';
-
-const WHATSAPP_PHONE_NUMBER =
-  (import.meta as unknown as { env?: Record<string, string | undefined> }).env
-    ?.VITE_WHATSAPP_NUMBER ?? '';
+import { formatPrice } from '@/lib/formatPrice';
+import { getWhatsAppNumber } from '@/lib/env';
 
 interface CartContentsProps {
   /** Called after a successful checkout tap — used by the drawer to close itself. */
@@ -32,7 +29,7 @@ export default function CartContents({ onClose }: CartContentsProps) {
 
   const handleCheckout = () => {
     if (isEmpty) return;
-    const url = buildWhatsAppMessage(items, WHATSAPP_PHONE_NUMBER);
+    const url = buildWhatsAppMessage(items, getWhatsAppNumber());
     window.open(url, '_blank', 'noopener,noreferrer');
     onClose?.();
   };

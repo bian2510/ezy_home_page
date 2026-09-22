@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import HomePage from '@/pages/HomePage';
@@ -6,6 +6,7 @@ import HomePage from '@/pages/HomePage';
 // Mock the static product dataset so tests are deterministic and isolated
 // from real catalog data. Includes products with various combinations of
 // `isBestseller` and `isOnSale` so we can assert section partitioning.
+// Las categorías replican la taxonomía real de `products.json`.
 vi.mock('@/data/products.json', () => ({
   default: [
     {
@@ -14,7 +15,7 @@ vi.mock('@/data/products.json', () => ({
       description: 'Bestseller-only product.',
       price: 18900,
       images: ['/images/best-1.jpg'],
-      category: 'iluminacion',
+      category: 'Iluminación Inteligente',
       isBestseller: true,
       isOnSale: false,
       active: true,
@@ -25,7 +26,7 @@ vi.mock('@/data/products.json', () => ({
       description: 'Bestseller-only product.',
       price: 9500,
       images: ['/images/best-2.jpg'],
-      category: 'seguridad',
+      category: 'Seguridad',
       isBestseller: true,
       isOnSale: false,
       active: true,
@@ -37,7 +38,7 @@ vi.mock('@/data/products.json', () => ({
       price: 28900,
       promotionalPrice: 22500,
       images: ['/images/sale-1.jpg'],
-      category: 'iluminacion',
+      category: 'Iluminación Inteligente',
       isBestseller: false,
       isOnSale: true,
       active: true,
@@ -49,7 +50,7 @@ vi.mock('@/data/products.json', () => ({
       price: 38900,
       promotionalPrice: 32900,
       images: ['/images/sale-2.jpg'],
-      category: 'seguridad',
+      category: 'Seguridad',
       isBestseller: false,
       isOnSale: true,
       active: true,
@@ -60,7 +61,7 @@ vi.mock('@/data/products.json', () => ({
       description: 'Neither bestseller nor on sale.',
       price: 48900,
       images: ['/images/plain-1.jpg'],
-      category: 'automatizacion',
+      category: 'Confort',
       isBestseller: false,
       isOnSale: false,
       active: true,
@@ -71,10 +72,21 @@ vi.mock('@/data/products.json', () => ({
       description: 'Inactive product, must stay hidden everywhere.',
       price: 25900,
       images: ['/images/inactive-1.jpg'],
-      category: 'automatizacion',
+      category: 'Hubs',
       isBestseller: true,
       isOnSale: true,
       active: false,
+    },
+    {
+      id: 'sin-categoria-1',
+      name: 'Lámpara Sin Categoría',
+      description: 'Active product with no category assigned.',
+      price: 7900,
+      images: ['/images/sin-categoria.jpg'],
+      category: null,
+      isBestseller: false,
+      isOnSale: false,
+      active: true,
     },
   ],
 }));
@@ -89,6 +101,12 @@ vi.mock('@/features/catalog/ProductCard', () => ({
   ),
 }));
 
+// El número de WhatsApp se lee por el accessor de entorno, nunca desde
+// `process.env` (inexistente en el browser bajo Vite).
+vi.mock('@/lib/env', () => ({
+  getWhatsAppNumber: () => '5491122334455',
+}));
+
 const renderHome = () =>
   render(
     <MemoryRouter initialEntries={['/']}>
@@ -96,15 +114,10 @@ const renderHome = () =>
     </MemoryRouter>,
   );
 
+const categoriesSection = () =>
+  screen.getByRole('heading', { name: /categorías/i }).closest('section')!;
+
 describe('HomePage', () => {
-  beforeEach(() => {
-    vi.stubEnv('VITE_WHATSAPP_NUMBER', '5491122334455');
-  });
-
-  afterEach(() => {
-    vi.unstubAllEnvs();
-  });
-
   it('should render a hero CTA that links to /catalogo', () => {
     renderHome();
 
@@ -144,26 +157,42 @@ describe('HomePage', () => {
     expect(screen.queryByText('Termostato Inactivo')).not.toBeInTheDocument();
   });
 
-  it('should render three category cards linking to /catalogo', () => {
+  it('should render one category card per category present in the active catalog', () => {
     renderHome();
 
-    const heading = screen.getByRole('heading', { name: /categorías/i });
-    const section = heading.closest('section')!;
-    expect(section).not.toBeNull();
+    const links = within(categoriesSection()).getAllByRole('link');
 
-    const categoryLinks = within(section).getAllByRole('link');
-    expect(categoryLinks).toHaveLength(3);
-
-    expect(within(section).getByRole('link', { name: /iluminación/i })).toBeInTheDocument();
-    expect(within(section).getByRole('link', { name: /automatización/i })).toBeInTheDocument();
-    expect(within(section).getByRole('link', { name: /seguridad/i })).toBeInTheDocument();
-
-    categoryLinks.forEach((link) => {
-      expect(link.getAttribute('href')).toMatch(/^\/catalogo/);
-    });
+    expect(links.map((link) => link.textContent?.trim())).toEqual([
+      'Iluminación Inteligente',
+      'Seguridad',
+      'Confort',
+    ]);
   });
 
-  it('should render a WhatsApp CTA using VITE_WHATSAPP_NUMBER with safe link attributes', () => {
+  it('should link each category card to the catalog filtered by that category', () => {
+    renderHome();
+
+    expect(within(categoriesSection()).getByRole('link', { name: 'Seguridad' })).toHaveAttribute(
+      'href',
+      '/catalogo?category=Seguridad',
+    );
+    expect(
+      within(categoriesSection()).getByRole('link', { name: 'Iluminación Inteligente' }),
+    ).toHaveAttribute(
+      'href',
+      `/catalogo?category=${encodeURIComponent('Iluminación Inteligente')}`,
+    );
+  });
+
+  it('should not render a category card for a category that only inactive products use', () => {
+    renderHome();
+
+    expect(
+      within(categoriesSection()).queryByRole('link', { name: 'Hubs' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('should render a WhatsApp CTA using the configured number with safe link attributes', () => {
     renderHome();
 
     const whatsappLink = screen.getByRole('link', {

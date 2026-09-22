@@ -19,7 +19,7 @@
 import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { useBlogPost } from '@/features/blog/useBlogPost';
+import { useBlogPost } from './useBlogPost';
 import type { BlogMeta } from '@/types';
 
 export default function BlogPostPage() {

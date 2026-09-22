@@ -1,9 +1,10 @@
 import type { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '@/types';
-import { formatPrice, getEffectivePrice } from '@/types';
-import { useCart } from '@/features/cart/useCart';
-import { useToast } from '@/hooks/useToast';
+import { getEffectivePrice } from '@/types';
+import { formatPrice } from '@/lib/formatPrice';
+import { useCart } from '@/features/cart';
+import { useToast } from '@/features/toast';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/cn';
 

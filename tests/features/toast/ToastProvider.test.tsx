@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import ToastProvider from '@/features/toast/ToastProvider';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/features/toast/useToast';
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <ToastProvider>{children}</ToastProvider>

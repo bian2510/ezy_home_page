@@ -3,22 +3,9 @@ import { act, render, renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { CartProvider } from '@/features/cart/CartProvider';
 import { useCart } from '@/features/cart/useCart';
-import type { Product } from '@/types';
+import { buildProduct } from '../../helpers/builders';
 
 const STORAGE_KEY = 'ezyhome_cart';
-
-const buildProduct = (overrides: Partial<Product> = {}): Product => ({
-  id: 'p-1',
-  name: 'Foco Inteligente',
-  description: 'Foco LED Wi-Fi 9W',
-  price: 12500,
-  images: ['/images/foco.jpg'],
-  category: 'iluminacion',
-  isBestseller: false,
-  isOnSale: false,
-  active: true,
-  ...overrides,
-});
 
 const wrapper = ({ children }: { children: ReactNode }) => <CartProvider>{children}</CartProvider>;
 

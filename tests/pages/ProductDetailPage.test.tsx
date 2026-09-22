@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import ProductDetailPage from '@/pages/ProductDetailPage';
 import { CartProvider } from '@/features/cart/CartProvider';
-import { formatPrice } from '@/types';
+import { formatPrice } from '@/lib/formatPrice';
 
 vi.mock('@/data/products.json', () => ({
   default: [
@@ -71,7 +71,7 @@ vi.mock('@/features/cart/useCart', () => ({
   }),
 }));
 
-vi.mock('@/hooks/useToast', () => ({
+vi.mock('@/features/toast/useToast', () => ({
   useToast: () => ({ addToast: vi.fn(), removeToast: vi.fn(), toasts: [] }),
 }));
 

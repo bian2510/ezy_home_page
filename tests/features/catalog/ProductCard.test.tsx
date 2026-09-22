@@ -5,9 +5,10 @@ import { MemoryRouter } from 'react-router-dom';
 import type * as RRD from 'react-router-dom';
 import type { ReactElement } from 'react';
 import type { Product } from '@/types';
-import { formatPrice } from '@/types';
+import { formatPrice } from '@/lib/formatPrice';
 import ProductCard from '@/features/catalog/ProductCard';
 import { CartProvider } from '@/features/cart/CartProvider';
+import { buildProduct as buildBaseProduct } from '../../helpers/builders';
 
 // Intl.NumberFormat for es-AR currency emits non-breaking spaces (U+00A0)
 // between symbol and digits. Testing Library's default normalizer trims and
@@ -56,22 +57,12 @@ vi.mock('@/features/cart/useCart', () => ({
 }));
 
 const addToastMock = vi.fn();
-vi.mock('@/hooks/useToast', () => ({
+vi.mock('@/features/toast/useToast', () => ({
   useToast: () => ({ addToast: addToastMock, removeToast: vi.fn(), toasts: [] }),
 }));
 
-const buildProduct = (overrides: Partial<Product> = {}): Product => ({
-  id: 'p-1',
-  name: 'Foco Inteligente RGBW',
-  description: 'Foco LED Wi-Fi 9W',
-  price: 12500,
-  images: ['/images/foco.jpg'],
-  category: 'iluminacion',
-  isBestseller: false,
-  isOnSale: false,
-  active: true,
-  ...overrides,
-});
+const buildProduct = (overrides: Partial<Product> = {}): Product =>
+  buildBaseProduct({ name: 'Foco Inteligente RGBW', ...overrides });
 
 const renderWithProviders = (ui: ReactElement) =>
   render(

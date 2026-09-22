@@ -17,15 +17,32 @@ export interface UseCatalogResult {
   categories: string[];
 }
 
-export function useCatalog(products: Product[]): UseCatalogResult {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+/**
+ * @param initialCategory Categoría preseleccionada (p. ej. la que llega por
+ * `?category=` desde las tarjetas del Home). Se ignora si ningún producto
+ * activo la usa, para no dejar el catálogo vacío ante un link viejo.
+ */
+export function useCatalog(
+  products: Product[],
+  initialCategory: string | null = null,
+): UseCatalogResult {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(() =>
+    initialCategory !== null &&
+    products.some((product) => product.active && product.category === initialCategory)
+      ? initialCategory
+      : null,
+  );
 
   const activeProducts = useMemo(() => products.filter((product) => product.active), [products]);
 
   const categories = useMemo(() => {
     const seen = new Set<string>();
     for (const product of activeProducts) {
-      seen.add(product.category ?? '');
+      const category = product.category?.trim();
+      // Un producto sin categoría sigue estando en la grilla, pero no genera
+      // un chip — antes producía un filtro con etiqueta vacía.
+      if (category === undefined || category === '') continue;
+      seen.add(category);
     }
     return Array.from(seen);
   }, [activeProducts]);

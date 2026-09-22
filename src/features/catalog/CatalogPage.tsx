@@ -1,10 +1,11 @@
-import productsData from '@/data/products.json';
-import type { Product } from '@/types';
-import ProductCard from '@/features/catalog/ProductCard';
-import CategoryFilter from '@/features/catalog/CategoryFilter';
-import { useCatalog } from '@/features/catalog/useCatalog';
+import { useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { allProducts } from '@/data/catalog';
+import ProductCard from './ProductCard';
+import CategoryFilter from './CategoryFilter';
+import { useCatalog } from './useCatalog';
 
-const products = productsData as Product[];
+const CATEGORY_PARAM = 'category';
 
 /**
  * Catalog landing page (route `/catalogo`). Reads the static product dataset
@@ -13,9 +14,31 @@ const products = productsData as Product[];
  *
  * Mobile-first: 1 column at 360px, 2 at `sm`, 3 at `md` — see DOMAIN.md
  * › Design Implications and PRD F001 BR-008.
+ *
+ * El filtro vive también en el query string (`/catalogo?category=…`) para que
+ * las tarjetas de categoría del Home lleguen filtradas y el filtro sea
+ * compartible.
  */
 export default function CatalogPage() {
-  const { filtered, selectedCategory, setCategory, categories } = useCatalog(products);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { filtered, selectedCategory, setCategory, categories } = useCatalog(
+    allProducts,
+    searchParams.get(CATEGORY_PARAM),
+  );
+
+  const handleSelectCategory = useCallback(
+    (category: string | null) => {
+      setCategory(category);
+      const next = new URLSearchParams(searchParams);
+      if (category === null) {
+        next.delete(CATEGORY_PARAM);
+      } else {
+        next.set(CATEGORY_PARAM, category);
+      }
+      setSearchParams(next, { replace: true });
+    },
+    [searchParams, setSearchParams, setCategory],
+  );
 
   return (
     <section className="mx-auto w-full max-w-content px-4 py-6">
@@ -25,7 +48,7 @@ export default function CatalogPage() {
         <CategoryFilter
           categories={categories}
           selectedCategory={selectedCategory}
-          onSelectCategory={setCategory}
+          onSelectCategory={handleSelectCategory}
         />
       </div>
 

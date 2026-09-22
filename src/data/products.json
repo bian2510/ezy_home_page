@@ -114,7 +114,7 @@
     "name": "Kit Ambilight WiFi RGBIC 5m con Cámara para TV",
     "description": "Sumá un efecto envolvente a tus películas, series o partidas: este kit Ambilight sincroniza el color de la tira LED con lo que se ve en pantalla, pensado para TVs de 55 a 65 pulgadas.\n\n- Cámara que analiza los colores de la pantalla en tiempo real y sincroniza la iluminación\n- Modo música con respuesta dinámica al ritmo\n- Control por voz con Alexa y Google Assistant\n- Programación de horarios, temporizadores y escenarios desde la app\n- Función de control en grupo para manejar varios kits a la vez\n\nFicha técnica: tira LED RGBIC de 3,8 m, conectividad WiFi 2.4GHz y Bluetooth 4.2, entrada de energía 12V 2A, material ABS+PC con retardante de llama. Incluye cámara, caja controladora, adaptador y cable USB-C.\n\nTransformá tu living en una experiencia inmersiva con EzyHome.",
     "category": "Iluminación Inteligente",
-    "price": 1.5e5,
+    "price": 150000.0,
     "images": [
       "https://http2.mlstatic.com/D_786764-MLA89598784006_082025-O.webp",
       "https://http2.mlstatic.com/D_627881-MLA89970966795_082025-O.jpg",
@@ -592,7 +592,7 @@
     "id": "MLA2731741474",
     "name": "Lámpara LED GU10 Zigbee RGB + CCT Regulable (requiere Hub)",
     "description": "Sumá esta lámpara GU10 a tu sistema Zigbee y combiná luz funcional con ambientación decorativa: tiene blanco cálido y blanco frío reales (no mezclados con RGB) además de millones de colores, todo regulable según el momento del día.\n\n- Tecnología RGB + CCT con temperatura de color ajustable de 2700K a 6500K\n- Millones de colores RGB, regulable en brillo y de encendido instantáneo\n- Requiere hub Zigbee — se integra con gateways y plataformas de domótica para crear escenas y rutinas\n- Bajo consumo energético y larga vida útil\n- Formato spot/dicroica, ideal para living, dormitorio, cocina, pasillos o locales comerciales\n\nFicha técnica: zócalo GU10, potencia de 5W, flujo luminoso de 420 a 480 lúmenes, protocolo Zigbee, uso en interiores, regulable (dimmable).\n\nHacé tu vida más fácil con EzyHome.",
-    "category": null,
+    "category": "Iluminación Inteligente",
     "price": 55000.0,
     "images": [
       "https://http2.mlstatic.com/D_695648-MLA103267483757_122025-O.jpg",

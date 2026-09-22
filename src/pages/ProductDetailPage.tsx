@@ -13,21 +13,20 @@
 // - ID inexistente => 404 con link de regreso al catálogo.
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import productsData from '@/data/products.json';
+import { findActiveProductById } from '@/data/catalog';
 import type { Product } from '@/types';
-import { formatPrice, getEffectivePrice } from '@/types';
+import { getEffectivePrice } from '@/types';
+import { formatPrice } from '@/lib/formatPrice';
 import QuantitySelector from '@/components/ui/QuantitySelector';
 import { Badge } from '@/components/ui/Badge';
-import { useCart } from '@/features/cart/useCart';
-import { useToast } from '@/hooks/useToast';
-
-const products = productsData as Product[];
+import { useCart } from '@/features/cart';
+import { useToast } from '@/features/toast';
 
 const MIN_QUANTITY = 1;
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const product = useMemo(() => products.find((p) => p.id === id && p.active), [id]);
+  const product = useMemo(() => findActiveProductById(id), [id]);
 
   if (product === undefined) {
     return <ProductNotFound />;

@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState, type ReactNode } from 'react';
-import { ToastContext, type Toast, type ToastType } from './ToastContext';
+import { ToastContext } from './ToastContext';
+import type { Toast, ToastType } from '@/types';
 import { ToastList } from '@/components/ui/Toast';
 
 const TOAST_DURATION_MS = 3000;

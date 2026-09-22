@@ -1,5 +1,5 @@
 import { cn } from '@/lib/cn';
-import type { Toast as ToastItem, ToastType } from '@/features/toast/ToastContext';
+import type { Toast as ToastItem, ToastType } from '@/types';
 
 interface ToastProps {
   toast: ToastItem;

@@ -1,6 +1,6 @@
 import blogIndex from '@/data/blog/index.json';
 import type { BlogMeta } from '@/types';
-import BlogCard from '@/features/blog/BlogCard';
+import BlogCard from './BlogCard';
 
 const articles = blogIndex as BlogMeta[];
 

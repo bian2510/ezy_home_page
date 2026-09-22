@@ -7,6 +7,7 @@
 // `storageAvailable` so the UI can warn the user.
 import { useCallback, useEffect, useMemo, useReducer, useState, type ReactNode } from 'react';
 import { CartContext, type CartContextValue } from './CartContext';
+import { findProductById } from '@/data/catalog';
 import type { CartItem, Product } from '@/types';
 import { getEffectivePrice } from '@/types';
 
@@ -48,16 +49,41 @@ const cartReducer = (state: CartItem[], action: CartAction): CartItem[] => {
   }
 };
 
+const isPersistedItem = (value: unknown): value is CartItem => {
+  if (typeof value !== 'object' || value === null) return false;
+  const candidate = value as { product?: unknown; quantity?: unknown };
+  if (typeof candidate.quantity !== 'number') return false;
+  if (typeof candidate.product !== 'object' || candidate.product === null) return false;
+  return typeof (candidate.product as { id?: unknown }).id === 'string';
+};
+
+/**
+ * Reemplaza el snapshot persistido por la versión vigente del catálogo, para
+ * que un carrito viejo no arrastre precios desactualizados al mensaje de
+ * WhatsApp. Un producto que ya no está en el catálogo conserva su snapshot:
+ * DOMAIN.md exige que el carrito no se pierda sin acción del usuario.
+ */
+const reconcileWithCatalog = (item: CartItem): CartItem => {
+  const current = findProductById(item.product.id);
+  if (current === undefined) return item;
+  return { product: current, quantity: item.quantity };
+};
+
 /**
  * Reads the persisted cart from localStorage. Any failure (missing key,
  * corrupted JSON, unavailable storage) yields an empty cart — never throws.
+ * Las entradas con forma inválida se descartan en vez de romper el render.
  */
 const readPersistedItems = (): CartItem[] => {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw === null) return [];
     const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as CartItem[]) : [];
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter(isPersistedItem)
+      .map(reconcileWithCatalog)
+      .map((item) => ({ ...item, quantity: Math.max(MIN_QUANTITY, item.quantity) }));
   } catch {
     return [];
   }

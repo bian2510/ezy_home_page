@@ -1,17 +1,11 @@
 import { cn } from '@/lib/cn';
 
 /**
- * Spanish display label for each catalog category. Keys must match the
- * `category` field in `src/data/products.json` (see DOMAIN.md › Product Core).
+ * Las categorías se muestran tal cual vienen de `src/data/products.json`: ese
+ * archivo es la fuente de verdad (ver DOMAIN.md › Product Core). No hay tabla
+ * de labels intermedia — una tabla desactualizada dejaba chips sin traducir y
+ * obligaba a tocar dos archivos por cada categoría nueva.
  */
-const CATEGORY_LABELS: Record<string, string> = {
-  iluminacion: 'Iluminación',
-  automatizacion: 'Automatización',
-  seguridad: 'Seguridad',
-};
-
-const labelFor = (category: string): string => CATEGORY_LABELS[category] ?? category;
-
 interface CategoryFilterProps {
   categories: string[];
   selectedCategory: string | null;
@@ -55,7 +49,7 @@ export default function CategoryFilter({
             aria-pressed={isActive}
             className={cn(chipBase, isActive ? chipActive : chipInactive)}
           >
-            {labelFor(category)}
+            {category}
           </button>
         );
       })}

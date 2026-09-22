@@ -1,30 +1,26 @@
-/* eslint-disable @typescript-eslint/array-type */
-import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import productsData from '@/data/products.json';
+import { activeProducts } from '@/data/catalog';
 import type { Product } from '@/types';
-import ProductCard from '@/features/catalog/ProductCard';
+import { ProductGrid } from '@/features/catalog';
+import HeroCarousel, { type HeroSlide } from '@/components/ui/HeroCarousel';
+import { getWhatsAppNumber } from '@/lib/env';
 
-const products = productsData as Product[];
+/**
+ * Categorías que se ofrecen como tarjetas: las que realmente tiene el catálogo
+ * activo. Antes era una lista fija con slugs que no existían en
+ * `products.json`, así que las tarjetas llevaban a un catálogo sin resultados.
+ */
+const categoryTiles = (items: Product[]): string[] => {
+  const seen = new Set<string>();
+  for (const product of items) {
+    const category = product.category?.trim();
+    if (category === undefined || category === '') continue;
+    seen.add(category);
+  }
+  return Array.from(seen);
+};
 
-interface CategoryTile {
-  slug: string;
-  label: string;
-}
-
-const CATEGORY_TILES: ReadonlyArray<CategoryTile> = [
-  { slug: 'iluminacion', label: 'Iluminación' },
-  { slug: 'automatizacion', label: 'Automatización' },
-  { slug: 'seguridad', label: 'Seguridad' },
-];
-
-interface HeroSlide {
-  heading: string;
-  subheading: string;
-  cta: { label: string; to: string };
-}
-
-const HERO_SLIDES: ReadonlyArray<HeroSlide> = [
+const HERO_SLIDES: readonly HeroSlide[] = [
   {
     heading: 'Domótica para tu hogar',
     subheading:
@@ -45,24 +41,21 @@ const HERO_SLIDES: ReadonlyArray<HeroSlide> = [
   },
 ];
 
-const AUTOADVANCE_MS = 4500;
-
 export default function HomePage() {
-  const bestsellers = products.filter((p) => p.active && p.isBestseller);
-  const onSale = products.filter((p) => p.active && p.isOnSale);
-  const whatsappNumber = process.env.VITE_WHATSAPP_NUMBER ?? '';
-  const whatsappHref = `https://wa.me/${whatsappNumber}`;
+  const bestsellers = activeProducts.filter((p) => p.isBestseller);
+  const onSale = activeProducts.filter((p) => p.isOnSale);
+  const whatsappHref = `https://wa.me/${getWhatsAppNumber()}`;
 
   return (
     <div className="flex flex-col gap-12 sm:gap-16">
-      <HeroCarousel />
-      <ProductGridSection
+      <HeroCarousel slides={HERO_SLIDES} label="Presentación EzyHome" />
+      <ProductGrid
         id="mas-vendidos"
         heading="Más vendidos"
         products={bestsellers}
         emptyMessage="Próximamente sumamos nuestros productos más vendidos."
       />
-      <ProductGridSection
+      <ProductGrid
         id="ofertas"
         heading="Ofertas"
         products={onSale}
@@ -74,112 +67,6 @@ export default function HomePage() {
   );
 }
 
-function HeroCarousel() {
-  const [current, setCurrent] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  const next = useCallback(() => {
-    setCurrent((c) => (c + 1) % HERO_SLIDES.length);
-  }, []);
-
-  const goTo = useCallback((index: number) => {
-    setCurrent(index);
-  }, []);
-
-  useEffect(() => {
-    if (paused) return;
-    const timer = setInterval(next, AUTOADVANCE_MS);
-    return () => clearInterval(timer);
-  }, [paused, next]);
-
-  const slide = HERO_SLIDES[current];
-
-  return (
-    <section
-      aria-label="Presentación EzyHome"
-      aria-roledescription="carrusel"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      className="relative overflow-hidden rounded-lg bg-gradient-to-br from-sidebar to-sidebar-accent px-4 py-10 text-center sm:px-8 sm:py-16"
-    >
-      <div
-        key={current}
-        className="mx-auto flex min-h-[260px] max-w-prose animate-fade-slide flex-col items-center justify-center gap-4 sm:min-h-[320px]"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <h1 className="text-3xl font-semibold tracking-tight text-sidebar-foreground sm:text-5xl">
-          {slide?.heading}
-        </h1>
-        <p className="text-base text-sidebar-foreground/70 sm:text-lg">{slide?.subheading}</p>
-        <Link
-          to={slide?.cta.to ?? '/catalogo'}
-          className="mt-2 inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        >
-          {slide?.cta.label}
-        </Link>
-      </div>
-
-      <div
-        role="tablist"
-        aria-label="Slides"
-        className="mt-8 flex items-center justify-center gap-2"
-      >
-        {HERO_SLIDES.map((_, i) => (
-          <button
-            key={i}
-            role="tab"
-            aria-selected={i === current}
-            aria-label={`Slide ${i + 1}`}
-            onClick={() => goTo(i)}
-            className={`h-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-              i === current
-                ? 'w-6 bg-primary'
-                : 'w-2 bg-sidebar-foreground/30 hover:bg-sidebar-foreground/60'
-            }`}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-interface ProductGridSectionProps {
-  id: string;
-  heading: string;
-  products: Product[];
-  emptyMessage: string;
-}
-
-function ProductGridSection({
-  id,
-  heading,
-  products: items,
-  emptyMessage,
-}: ProductGridSectionProps) {
-  const headingId = `${id}-heading`;
-  return (
-    <section aria-labelledby={headingId} className="flex flex-col gap-4">
-      <h2 id={headingId} className="text-2xl font-semibold text-foreground sm:text-3xl">
-        {heading}
-      </h2>
-      {items.length === 0 ? (
-        <p className="text-muted-foreground" role="status">
-          {emptyMessage}
-        </p>
-      ) : (
-        <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 md:grid-cols-3">
-          {items.map((product) => (
-            <li key={product.id}>
-              <ProductCard product={product} />
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
-  );
-}
-
 function CategoriesSection() {
   return (
     <section aria-labelledby="categorias-heading" className="flex flex-col gap-4">
@@ -187,13 +74,13 @@ function CategoriesSection() {
         Categorías
       </h2>
       <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-3">
-        {CATEGORY_TILES.map(({ slug, label }) => (
-          <li key={slug}>
+        {categoryTiles(activeProducts).map((category) => (
+          <li key={category}>
             <Link
-              to={`/catalogo?category=${slug}`}
+              to={`/catalogo?category=${encodeURIComponent(category)}`}
               className="flex min-h-32 items-center justify-center rounded-lg border border-border bg-card px-4 py-8 text-center text-lg font-medium text-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              {label}
+              {category}
             </Link>
           </li>
         ))}

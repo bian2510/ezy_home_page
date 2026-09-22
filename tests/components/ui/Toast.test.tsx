@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Toast, { ToastList } from '@/components/ui/Toast';
-import type { Toast as ToastItem } from '@/features/toast/ToastContext';
+import type { Toast as ToastItem } from '@/types';
 
 const buildToast = (overrides: Partial<ToastItem> = {}): ToastItem => ({
   id: 'toast-1',

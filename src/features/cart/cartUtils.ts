@@ -2,7 +2,8 @@
 // See DOMAIN.md › How EzyHome Makes Money: el checkout v1 cierra vía WhatsApp.
 
 import type { CartItem } from '@/types';
-import { formatPrice, getEffectivePrice } from '@/types';
+import { getEffectivePrice } from '@/types';
+import { formatPrice } from '@/lib/formatPrice';
 
 const WHATSAPP_BASE_URL = 'https://wa.me/';
 const GREETING = 'Hola! Quiero hacer un pedido:';

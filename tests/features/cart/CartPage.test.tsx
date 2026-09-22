@@ -6,25 +6,12 @@ import { MemoryRouter } from 'react-router-dom';
 import CartPage from '@/features/cart/CartPage';
 import { CartProvider } from '@/features/cart/CartProvider';
 import { useCart } from '@/features/cart/useCart';
-import { formatPrice } from '@/types';
-import type { Product } from '@/types';
+import { formatPrice } from '@/lib/formatPrice';
+import { buildProduct } from '../../helpers/builders';
 
-vi.mock('@/hooks/useToast', () => ({
+vi.mock('@/features/toast/useToast', () => ({
   useToast: () => ({ addToast: vi.fn(), removeToast: vi.fn(), toasts: [] }),
 }));
-
-const buildProduct = (overrides: Partial<Product> = {}): Product => ({
-  id: 'p-1',
-  name: 'Foco Inteligente',
-  description: 'Foco LED Wi-Fi 9W',
-  price: 12500,
-  images: ['/images/foco.jpg'],
-  category: 'iluminacion',
-  isBestseller: false,
-  isOnSale: false,
-  active: true,
-  ...overrides,
-});
 
 const renderCartPage = () =>
   render(

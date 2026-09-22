@@ -8,8 +8,9 @@
 // Constraints (Carrito persistente). The min-quantity invariant is enforced
 // both here (decrement disabled at 1) and in CartProvider's reducer.
 import type { CartItem as CartItemType } from '@/types';
-import { formatPrice, getEffectivePrice } from '@/types';
-import { useToast } from '@/hooks/useToast';
+import { getEffectivePrice } from '@/types';
+import { formatPrice } from '@/lib/formatPrice';
+import { useToast } from '@/features/toast';
 
 const MIN_QUANTITY = 1;
 
