@@ -184,16 +184,15 @@ export const agruparPublicaciones = (filas: FilaMercadoLibre[]): GrupoMercadoLib
     else grupo.push(fila);
   }
 
-  return [...porTitulo.values()].map((publicaciones) => {
-    const ordenadas = [...publicaciones].sort((a, b) =>
-      a.stock !== b.stock ? a.stock - b.stock : a.id.localeCompare(b.id),
-    );
-    return {
-      representante: ordenadas[ordenadas.length - 1],
-      publicaciones,
-      stockTotal: publicaciones.reduce((suma, fila) => suma + fila.stock, 0),
-    };
-  });
+  // `reduce` sin valor inicial en vez de indexar: cada grupo nace con al menos
+  // una publicación, y así el tipo sale sin `undefined` bajo cualquier tsconfig.
+  return [...porTitulo.values()].map((publicaciones) => ({
+    representante: publicaciones.reduce((mejor, fila) =>
+      fila.stock > mejor.stock || (fila.stock === mejor.stock && fila.id > mejor.id) ? fila : mejor,
+    ),
+    publicaciones,
+    stockTotal: publicaciones.reduce((suma, fila) => suma + fila.stock, 0),
+  }));
 };
 
 /**
