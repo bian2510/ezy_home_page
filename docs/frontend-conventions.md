@@ -231,6 +231,23 @@ Si una dependencia nueva lo pasa, el orden de ataque es: moverla detrás de un
 `lazy()`, buscar una alternativa más liviana, o subir el tope explicando por qué en
 el commit. Subirlo sin justificación convierte el presupuesto en decoración.
 
+### Smoke test del sitio publicado
+
+Un deploy en verde no garantiza que el sitio quedó bien. `scripts/smoke-test.sh`
+corre después del deploy en CI y verifica que producción responde 200, que el bundle
+que el HTML referencia se puede descargar, y que el dominio sirve **el build recién
+desplegado** y no uno anterior.
+
+```bash
+SITE_URL=https://ezyhome-storefront.pages.dev bash scripts/smoke-test.sh
+```
+
+Si falla, el mensaje incluye cómo volver atrás: en el panel de Cloudflare Pages,
+Deployments › el último que funcionaba › _Rollback to this deployment_. Es
+instantáneo, reapunta el dominio sin recompilar. El rollback es manual a propósito:
+revertir automáticamente por un falso positivo deja el sitio en un estado que nadie
+decidió.
+
 ---
 
 ## 10. Nomenclatura

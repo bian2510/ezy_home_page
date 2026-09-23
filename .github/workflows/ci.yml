@@ -108,7 +108,15 @@ jobs:
       # 404 y el job fallaba con "Unable to resolve action". El reemplazo
       # oficial es wrangler-action con el comando `pages deploy`.
       - uses: cloudflare/wrangler-action@v4
+        id: deploy
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=ezyhome-storefront
+      # Un deploy en verde no garantiza que el sitio quedó bien: verificamos
+      # que producción responde y sirve el build que se acaba de publicar.
+      - name: Smoke test del sitio publicado
+        env:
+          SITE_URL: https://ezyhome-storefront.pages.dev
+          DEPLOY_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: bash scripts/smoke-test.sh
