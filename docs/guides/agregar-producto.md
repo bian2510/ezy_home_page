@@ -103,7 +103,42 @@ Ver [`docs/guides/agregar-pdf-manual.md`](./agregar-pdf-manual.md).
 
 El producto no aparece en Home, Catálogo ni Detalle, pero persiste en el JSON para reactivarlo cuando vuelva el stock.
 
-### 8. Validar el catálogo
+### 8. Actualización masiva desde el export de Mercado Libre
+
+Para actualizar precios y stock de todo el catálogo de una vez, en vez de producto
+por producto, exportar los precios desde Mercado Libre y pasar el CSV al script:
+
+```bash
+pnpm precios:informe  "ruta/al/Precios.csv"   # muestra qué cambiaría, no escribe
+pnpm precios:aplicar  "ruta/al/Precios.csv"   # aplica
+```
+
+El informe siempre va primero: los precios son plata, y conviene mirar la lista de
+cambios —ordenada por variación— antes de publicarla.
+
+**Qué espera del CSV:** las columnas del export de ML (`ITEM_ID`, `TITLE`,
+`STOCK_FLEX`, `PRICE`, `SALE_PRICE`) más la columna `PRECIO PAGINA`, que en el
+template ocupa el lugar de `VALUE_ADDED_TAX` y trae el precio para la web.
+
+**Qué hace:**
+
+- Agrupa las publicaciones duplicadas de ML por título y toma la de más stock.
+- Vincula cada grupo con el catálogo por `id`, y si no hay coincidencia, por
+  título — así reconoce los productos con id `MLAU` que en el export figuran con
+  otro id.
+- Con promoción en ML, el precio de lista de ML queda como precio tachado y el de
+  la web como precio efectivo. Sin promoción, hay un solo precio.
+- Redondea a pesos enteros y oculta (`active: false`) los productos cuyo grupo se
+  quedó sin stock.
+
+**Qué NO toca:** `name`, `description`, `images`, `category`, `isBestseller` ni
+`promotionBadge`. Los títulos y textos de la web están mejor redactados que los de
+ML y se mantienen.
+
+**Productos nuevos:** el script los lista pero no los crea, porque el CSV no trae
+categoría, descripción ni imágenes. Se completan a mano siguiendo los pasos 1 a 7.
+
+### 9. Validar el catálogo
 
 ```bash
 pnpm validate:products
@@ -124,7 +159,7 @@ reglas del catálogo completo (ids únicos, categorías sin variantes disfrazada
 `pnpm typecheck` **no** cubre esto: `products.json` entra a la app con un cast
 (`as Product[]`) que no verifica nada en runtime.
 
-### 9. Quality gate
+### 10. Quality gate
 
 ```bash
 pnpm lint && pnpm typecheck && pnpm format:check && pnpm test
