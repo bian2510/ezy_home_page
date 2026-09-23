@@ -100,6 +100,9 @@ jobs:
       contents: read
       deployments: write
     steps:
+      # Hace falta el repo para correr `scripts/smoke-test.sh`: este job no
+      # compila, así que sin checkout el workspace solo tendría `dist/`.
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: dist
