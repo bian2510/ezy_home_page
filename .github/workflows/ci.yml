@@ -116,6 +116,10 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=ezyhome-storefront
+          # Sin esto, la acción infiere el gestor por el lockfile: ve
+          # `pnpm-lock.yaml` y trata de instalar wrangler con pnpm, que en este
+          # job no existe. Solo compila el job `build`; acá alcanza npm.
+          packageManager: npm
       # Un deploy en verde no garantiza que el sitio quedó bien: verificamos
       # que producción responde y sirve el build que se acaba de publicar.
       - name: Smoke test del sitio publicado
