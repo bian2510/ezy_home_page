@@ -1,7 +1,7 @@
 # Plan: SEO orgánico — aparecer en búsquedas de domótica
 
 **Fecha:** 2026-09-22
-**Estado:** bloque 1 **hecho** (2026-09-24). Pendientes: Search Console, bloque 2
+**Estado:** bloque 1 y Search Console **hechos** (2026-09-24). Pendientes: bloque 2
 (contenido) y bloque 3 (prerender).
 **Objetivo del dueño:** "que mi página aparezca más cuando busquen domótica"
 
@@ -137,10 +137,48 @@ productos por WhatsApp se vuelva un canal deliberado. No antes.
 
 ## Fuera de código (vale más que varias horas de desarrollo)
 
-- [ ] **Google Search Console.** Gratis. Es donde se ve si Google está
-      indexando y qué búsquedas traen gente. Sin esto, todo lo demás es a
-      ciegas.
+- [x] **Google Search Console** — verificado el 2026-09-24. Ver abajo.
 - [ ] **Perfil de Google Business**, si hay anclaje geográfico en la venta.
+
+---
+
+## Google Search Console — cómo quedó y qué saber
+
+**Propiedad:** tipo _prefijo de URL_, sobre `https://ezyhome-storefront.pages.dev/`.
+No sirve el tipo _Dominio_: pide un registro DNS en `pages.dev`, que es de
+Cloudflare y no nuestro.
+
+**Verificación: meta tag en `index.html`.**
+
+```html
+<meta name="google-site-verification" content="…" />
+```
+
+**El método de archivo HTML no puede funcionar en este sitio, y conviene saberlo
+antes de perder media hora.** Google, antes de dar por buena la verificación,
+pide un archivo inventado que no debería existir:
+
+```
+GET /google-inexistente-000.html  → 200 + el index.html de la app
+```
+
+Esto es una SPA en Cloudflare Pages: cualquier ruta devuelve 200 con el
+`index.html`, que es lo que hace andar el ruteo del lado del cliente. Google
+recibe 200 donde esperaba 404, concluye que el servidor responde 200 a todo, y
+reporta _"your verification file has the wrong content"_ — mensaje engañoso: el
+contenido estaba bien, el método es el que no aplica. Se suma que Cloudflare le
+saca la extensión a las URLs y `/google….html` respondía 308.
+
+**No borrar la meta tag del `index.html`:** sacarla revierte la verificación y se
+pierde el acceso a los informes.
+
+**Sitemap:** enviado como `sitemap.xml`. Si al enviarlo se cuela un `./` u otro
+sufijo, Google pide una URL que cae en el catch-all de la SPA, recibe HTML en vez
+de XML y reporta _"Couldn't fetch"_. El estado "Couldn't fetch" recién enviado
+también es normal: Google lo encola y lo lee horas después.
+
+**Si cambia el dominio:** hay que crear una propiedad nueva en Search Console
+(la actual es de `pages.dev`), cambiar `VITE_SITE_URL` y reenviar el sitemap.
 
 ---
 

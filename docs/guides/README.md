@@ -22,9 +22,10 @@ Instrucciones paso a paso para tareas operativas. Cada guía es autocontenida.
 
 ## Operación y publicación
 
-| Guía                                 | Cuándo usarla                                                                 |
-| ------------------------------------ | ----------------------------------------------------------------------------- |
-| [`deploy-y-ci.md`](./deploy-y-ci.md) | Cómo se publica el sitio, qué corre el CI, y cómo volver atrás si algo falla. |
+| Guía                                                                         | Cuándo usarla                                                                 |
+| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [`deploy-y-ci.md`](./deploy-y-ci.md)                                         | Cómo se publica el sitio, qué corre el CI, y cómo volver atrás si algo falla. |
+| [`../plans/2026-09-22-seo-organico.md`](../plans/2026-09-22-seo-organico.md) | SEO: qué se hizo, cómo está verificado Search Console, y qué falta.           |
 
 ---
 
