@@ -11,13 +11,15 @@ arrives later through a typed API client under `src/lib`.
 - `public/` — static assets copied verbatim into the bundle
 - `.github/` — CI (`workflows/ci.yml`), security scans (`workflows/security.yml`), Dependabot config
 - `.husky/` — Git hooks (lint-staged pre-commit, commitlint commit-msg, test pre-push)
-- `docs/` — product documentation, including the J-001 customer journey
+- `docs/` — standards, operational guides, ADRs, plans and the J-001 customer journey
+- `scripts/` — operational scripts: price updates, bundle budget, post-deploy smoke test
 - `index.html` — Vite entry HTML
 - `vite.config.ts`, `vitest.config.ts`, `tailwind.config.ts`, `postcss.config.js` — build, test, and styling configs
 - `eslint.config.js`, `.prettierrc.json`, `commitlint.config.js`, `.editorconfig` — code quality configs
 - `tsconfig.json` (+ `tsconfig.app.json`, `tsconfig.node.json`) — TypeScript project references
 - `package.json` — npm scripts and dependency manifest (pnpm 9 as canonical PM)
-- `DOMAIN.md`, `PROJECT.md` — domain and project intent (currently placeholders)
+- `DOMAIN.md`, `PROJECT.md` — business domain and repo orientation (do not edit without instruction)
+- `CLAUDE.md` — agent working rules, doc navigation table, and the quality gate
 - `README.md`, `CONTRIBUTING.md` — operator and contributor docs
 
 ## Dependencies
@@ -46,3 +48,5 @@ arrives later through a typed API client under `src/lib`.
 - No secrets in client bundle: only `VITE_`-prefixed env vars reach the browser
 - File and function size limits from `~/.claude/standards/code/clean-code.md` apply (functions <= 50 lines, files <= 300 lines)
 - Static bundle target — no server-side rendering, no Node runtime at deploy time
+- Production is Cloudflare Pages, published by CI on push to `main`; the Docker and
+  nginx files are for local use only and are not part of any deploy path

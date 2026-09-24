@@ -32,12 +32,29 @@ Commit messages are linted by `@commitlint/config-conventional` via a
 
 ## Pull Request Process
 
-1. Ensure `pnpm lint`, `pnpm typecheck`, and `pnpm test` all pass locally.
+1. Ensure the full quality gate passes locally:
+
+   ```bash
+   pnpm lint && pnpm typecheck && pnpm format:check && pnpm test
+   ```
+
+   Pushing with the intention of "CI will catch it" is not acceptable.
+
 2. Update the relevant `.meta/description.md` file(s) when you change a
    directory's purpose, dependencies, patterns, or constraints.
 3. Open a PR against `main`. Describe the user-facing change and link the
    issue or journey it addresses.
-4. At least one reviewer approval is required. CI must be green.
+4. CI must be green. Reviewer approval is required whenever more than one
+   person is working on the repo; today it has a single maintainer, who merges
+   their own PRs.
+
+Merging into `main` publishes the site. See
+[`docs/guides/deploy-y-ci.md`](docs/guides/deploy-y-ci.md).
+
+## Where the Standards Live
+
+Coding standards, architecture rules and step-by-step guides are under `docs/`,
+in Spanish. `CLAUDE.md` maps each kind of task to the document to read first.
 
 ## Running the Test Suite
 

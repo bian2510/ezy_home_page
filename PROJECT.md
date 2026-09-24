@@ -19,33 +19,36 @@
 
 ## Where Things Live
 
-| What you need                            | Where to find it                                    |
-| ---------------------------------------- | --------------------------------------------------- |
-| Business domain and constraints          | `DOMAIN.md`                                         |
-| Customer journeys                        | `docs/mvp/journeys/`                                |
-| Per-bounded-context requirements         | `docs/prds/`                                        |
-| Architectural decisions (ADRs)           | `docs/adrs/` — índice en `docs/standards/README.md` |
-| Ground truth research                    | `docs/sources/`                                     |
-| Implementation plans (dated)             | `docs/plans/`                                       |
-| Architecture layer map + import rules    | `docs/standards/capas-arquitectura.md`              |
-| Where to put a component (ui/ vs feat.)  | `docs/standards/componentes-ui-vs-feature.md`       |
-| Feature module structure + index.ts      | `docs/standards/modulos-feature.md`                 |
-| State management patterns                | `docs/standards/gestion-estado.md`                  |
-| Images and PDFs per product              | `docs/standards/assets-estaticos.md`                |
-| All engineering standards (index)        | `docs/standards/README.md`                          |
-| Code conventions (TS, Tailwind, tests)   | `docs/frontend-conventions.md`                      |
-| Component complexity rules (props/lines) | `docs/standards/reglas-componentes.md`              |
-| Where utility functions live             | `docs/standards/funciones-utils.md`                 |
-| Testing patterns (builders, mocks, etc)  | `docs/standards/testing.md`                         |
-| Design tokens cheatsheet                 | `docs/standards/tailwind-tokens.md`                 |
-| Agent working protocol (detailed)        | `docs/agents.md`                                    |
-| How to add a product                     | `docs/guides/agregar-producto.md`                   |
-| How to add a PDF manual                  | `docs/guides/agregar-pdf-manual.md`                 |
-| How to add a new feature module          | `docs/guides/agregar-feature.md`                    |
-| All operational guides (index)           | `docs/guides/README.md`                             |
-| Feature specs (ETC harness)              | `.etc_sdlc/features/`                               |
-| App source                               | `src/`                                              |
-| Tests                                    | `tests/`                                            |
+| What you need                                   | Where to find it                                    |
+| ----------------------------------------------- | --------------------------------------------------- |
+| Business domain and constraints                 | `DOMAIN.md`                                         |
+| Customer journeys                               | `docs/mvp/journeys/`                                |
+| Per-bounded-context requirements                | `docs/prds/`                                        |
+| Architectural decisions (ADRs)                  | `docs/adrs/` — índice en `docs/standards/README.md` |
+| Ground truth research                           | `docs/sources/`                                     |
+| Implementation plans (dated)                    | `docs/plans/`                                       |
+| Architecture layer map + import rules           | `docs/standards/capas-arquitectura.md`              |
+| Where to put a component (ui/ vs feat.)         | `docs/standards/componentes-ui-vs-feature.md`       |
+| Feature module structure + index.ts             | `docs/standards/modulos-feature.md`                 |
+| State management patterns                       | `docs/standards/gestion-estado.md`                  |
+| Images and PDFs per product                     | `docs/standards/assets-estaticos.md`                |
+| All engineering standards (index)               | `docs/standards/README.md`                          |
+| Code conventions (TS, Tailwind, tests)          | `docs/frontend-conventions.md`                      |
+| Component complexity rules (props/lines)        | `docs/standards/reglas-componentes.md`              |
+| Where utility functions live                    | `docs/standards/funciones-utils.md`                 |
+| Testing patterns (builders, mocks, etc)         | `docs/standards/testing.md`                         |
+| Design tokens cheatsheet                        | `docs/standards/tailwind-tokens.md`                 |
+| Agent working protocol (detailed)               | `docs/agents.md`                                    |
+| How to add a product                            | `docs/guides/agregar-producto.md`                   |
+| How to add a PDF manual                         | `docs/guides/agregar-pdf-manual.md`                 |
+| How to add a new feature module                 | `docs/guides/agregar-feature.md`                    |
+| Cómo se publica el sitio (CI, deploy, rollback) | `docs/guides/deploy-y-ci.md`                        |
+| Actualizar precios y stock desde ML             | `docs/guides/actualizar-precios.md`                 |
+| Scripts de operación (precios, bundle, smoke)   | `scripts/`                                          |
+| All operational guides (index)                  | `docs/guides/README.md`                             |
+| Feature specs (ETC harness)                     | `.etc_sdlc/features/`                               |
+| App source                                      | `src/`                                              |
+| Tests                                           | `tests/`                                            |
 
 **Anti-fabrication rule:** If an agent needs to make a factual claim about the
 business or the system, that claim must cite `DOMAIN.md` or a file in
@@ -62,7 +65,8 @@ business or the system, that claim must cite `DOMAIN.md` or a file in
 - **Linting/Formatting:** ESLint + Prettier — `eslint.config.js`, `.prettierrc.json`
 - **CI:** GitHub Actions — `.github/workflows/ci.yml`
 - **Local dev:** `pnpm install && pnpm dev` (Node 20+, pnpm 9)
-- **Hosting target:** AWS EC2 (misma instancia que app existente)
+- **Hosting:** Cloudflare Pages (proyecto `ezyhome-storefront`), estático, publicado por el CI en cada push a `main` — `docs/guides/deploy-y-ci.md`
+- **Scripts de operación:** `scripts/` (precios, presupuesto de bundle, smoke test)
 - **Email (futuro):** Resend — ya disponible en app existente del dueño
 
 **Key ADRs to read before touching architecture:**

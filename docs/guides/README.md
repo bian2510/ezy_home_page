@@ -6,16 +6,25 @@ Instrucciones paso a paso para tareas operativas. Cada guía es autocontenida.
 
 ## Catálogo de productos
 
-| Guía                                               | Cuándo usarla                                             |
-| -------------------------------------------------- | --------------------------------------------------------- |
-| [`agregar-producto.md`](./agregar-producto.md)     | Agregar un nuevo producto al catálogo (JSON + imágenes).  |
-| [`agregar-pdf-manual.md`](./agregar-pdf-manual.md) | Adjuntar el PDF de instrucciones a un producto existente. |
+| Guía                                               | Cuándo usarla                                                                |
+| -------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [`agregar-producto.md`](./agregar-producto.md)     | Agregar un nuevo producto al catálogo (JSON + imágenes).                     |
+| [`agregar-pdf-manual.md`](./agregar-pdf-manual.md) | Adjuntar el PDF de instrucciones a un producto existente.                    |
+| [`actualizar-precios.md`](./actualizar-precios.md) | Rutina mensual: actualizar precios y stock desde el export de Mercado Libre. |
 
 ## Código
 
 | Guía                                         | Cuándo usarla                                                                   |
 | -------------------------------------------- | ------------------------------------------------------------------------------- |
 | [`agregar-feature.md`](./agregar-feature.md) | Crear un nuevo módulo feature desde cero (carpetas, contexto, index.ts, tests). |
+
+---
+
+## Operación y publicación
+
+| Guía                                 | Cuándo usarla                                                                 |
+| ------------------------------------ | ----------------------------------------------------------------------------- |
+| [`deploy-y-ci.md`](./deploy-y-ci.md) | Cómo se publica el sitio, qué corre el CI, y cómo volver atrás si algo falla. |
 
 ---
 

@@ -62,6 +62,8 @@ Después de leer `DOMAIN.md` y `PROJECT.md`, leer el doc específico a tu tarea:
 | Agregar estado global o Context                        | [`docs/standards/gestion-estado.md`](docs/standards/gestion-estado.md)                       |
 | Agregar imágenes o PDFs a un producto                  | [`docs/standards/assets-estaticos.md`](docs/standards/assets-estaticos.md)                   |
 | Agregar un producto nuevo al catálogo                  | [`docs/guides/agregar-producto.md`](docs/guides/agregar-producto.md)                         |
+| Actualizar precios o stock desde Mercado Libre         | [`docs/guides/actualizar-precios.md`](docs/guides/actualizar-precios.md)                     |
+| Entender el CI, el deploy, o volver atrás un deploy    | [`docs/guides/deploy-y-ci.md`](docs/guides/deploy-y-ci.md)                                   |
 | Agregar el PDF de instrucciones de un producto         | [`docs/guides/agregar-pdf-manual.md`](docs/guides/agregar-pdf-manual.md)                     |
 | Crear una feature nueva desde cero                     | [`docs/guides/agregar-feature.md`](docs/guides/agregar-feature.md)                           |
 | Entender la arquitectura en capas general              | [`docs/standards/capas-arquitectura.md`](docs/standards/capas-arquitectura.md)               |
