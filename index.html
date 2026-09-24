@@ -6,11 +6,34 @@
     <link rel="apple-touch-icon" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0F766E" />
+
+    <!--
+      Metadatos por defecto. Cada ruta los reescribe en runtime con
+      `useDocumentMeta` (src/hooks/useDocumentMeta.ts), que es lo que lee
+      Googlebot: ejecuta JavaScript.
+
+      Los crawlers de WhatsApp, Instagram y Facebook NO ejecutan JS: para ellos
+      esto es todo lo que hay, así que el preview de cualquier link compartido
+      es el de la marca, no el del producto. Arreglarlo requiere prerender
+      (docs/plans/2026-09-22-seo-organico.md, bloque 3).
+    -->
     <meta
       name="description"
-      content="EzyHome — Tu tienda de domotica y automatizacion del hogar."
+      content="EzyHome — Iluminación inteligente, automatización y seguridad para el hogar argentino. Simple, confiable y al alcance de todos."
     />
-    <title>EzyHome</title>
+    <title>EzyHome — Domótica para tu casa</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EzyHome" />
+    <meta property="og:title" content="EzyHome — Domótica para tu casa" />
+    <meta
+      property="og:description"
+      content="Iluminación inteligente, automatización y seguridad para el hogar argentino. Simple, confiable y al alcance de todos."
+    />
+    <meta property="og:url" content="%SITE_URL%/" />
+    <meta property="og:image" content="%SITE_URL%/images/smart-bulb.jpg" />
+    <meta property="og:locale" content="es_AR" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body class="bg-surface-muted text-text antialiased">
     <div id="root"></div>

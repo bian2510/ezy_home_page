@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { CartProvider } from '@/features/cart/CartProvider';
 import CartPage from '@/features/cart/CartPage';
 import { buildProduct } from '../../helpers/builders';
+import type * as EnvModule from '@/lib/env';
 
 const STORAGE_KEY = 'ezyhome_cart';
 
@@ -14,7 +15,10 @@ vi.mock('@/features/toast/useToast', () => ({
 
 // El número sale del accessor de entorno — nunca de `process.env`, que no
 // existe en el browser bajo Vite.
-vi.mock('@/lib/env', () => ({
+// Mock parcial: se reemplaza solo el número y el resto del módulo queda real,
+// para que agregar un accessor nuevo a `lib/env` no rompa este test.
+vi.mock('@/lib/env', async (importOriginal) => ({
+  ...(await importOriginal<typeof EnvModule>()),
   getWhatsAppNumber: () => '5491122334455',
 }));
 

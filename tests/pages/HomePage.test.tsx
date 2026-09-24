@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import HomePage from '@/pages/HomePage';
+import type * as EnvModule from '@/lib/env';
 
 // Mock the static product dataset so tests are deterministic and isolated
 // from real catalog data. Includes products with various combinations of
@@ -103,7 +104,10 @@ vi.mock('@/features/catalog/ProductCard', () => ({
 
 // El número de WhatsApp se lee por el accessor de entorno, nunca desde
 // `process.env` (inexistente en el browser bajo Vite).
-vi.mock('@/lib/env', () => ({
+// Mock parcial: se reemplaza solo el número y el resto del módulo queda real,
+// para que agregar un accessor nuevo a `lib/env` no rompa este test.
+vi.mock('@/lib/env', async (importOriginal) => ({
+  ...(await importOriginal<typeof EnvModule>()),
   getWhatsAppNumber: () => '5491122334455',
 }));
 

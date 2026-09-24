@@ -4,6 +4,8 @@ import type { Product } from '@/types';
 import { ProductGrid } from '@/features/catalog';
 import HeroCarousel, { type HeroSlide } from '@/components/ui/HeroCarousel';
 import { getWhatsAppNumber } from '@/lib/env';
+import { SITE_NAME } from '@/lib/seo';
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
 /**
  * Categorías que se ofrecen como tarjetas: las que realmente tiene el catálogo
@@ -42,6 +44,13 @@ const HERO_SLIDES: readonly HeroSlide[] = [
 ];
 
 export default function HomePage() {
+  useDocumentMeta({
+    title: SITE_NAME,
+    description:
+      'Iluminación inteligente, automatización y seguridad para el hogar argentino. Simple, confiable y al alcance de todos.',
+    path: '/',
+  });
+
   const bestsellers = activeProducts.filter((p) => p.isBestseller);
   const onSale = activeProducts.filter((p) => p.isOnSale);
   const whatsappHref = `https://wa.me/${getWhatsAppNumber()}`;

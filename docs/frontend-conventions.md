@@ -250,6 +250,73 @@ decidió.
 
 ---
 
+## 9 ter. SEO y metadatos
+
+**Toda ruta nueva llama a `useDocumentMeta`.** Sin eso hereda el título y la
+description de `index.html`, y todas las páginas compiten con el mismo texto.
+
+```tsx
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
+
+export default function CatalogPage() {
+  useDocumentMeta({
+    title: 'Catálogo',
+    description: 'Todo el catálogo de EzyHome: iluminación inteligente, seguridad…',
+    path: '/catalogo',
+  });
+  // …
+}
+```
+
+| Campo         | Qué es                                                                 |
+| ------------- | ---------------------------------------------------------------------- |
+| `title`       | Sin la marca. El hook arma `<title> — EzyHome`.                        |
+| `description` | Hasta 160 caracteres. Si sale de datos, pasarla por `truncateForMeta`. |
+| `path`        | La ruta, para la URL canónica absoluta.                                |
+| `jsonLd`      | Opcional. Datos estructurados de la página.                            |
+| `noIndex`     | Opcional. Carrito y 404: no aportan a una búsqueda.                    |
+
+Reglas que no son negociables:
+
+- **El hook se llama siempre, antes de cualquier `return` temprano.** Es un hook:
+  si una página hace `if (notFound) return …` antes de llamarlo, rompe las reglas
+  de hooks. Ver `ProductDetailPage`, que arma los metadatos del 404 y del
+  producto en la misma llamada.
+- **La decisión de qué texto va es pura y vive en `src/lib/seo.ts`.** El hook solo
+  aplica el efecto sobre el `<head>`. No meter lógica de texto en el hook.
+- **Una ficha de producto lleva `jsonLd`.** Es lo que habilita que Google muestre
+  el precio en el resultado, no solo el título.
+
+### Sitemap y robots.txt
+
+Los genera el build, no se editan a mano:
+[`scripts/vite-plugin-seo.ts`](../scripts/vite-plugin-seo.ts) los emite en cada
+`pnpm build` leyendo `products.json` (solo `active: true`) y el índice del blog.
+El catálogo cambia todos los meses con `pnpm precios:aplicar`; un sitemap escrito
+a mano queda viejo en el primer cambio de stock, y un sitemap que lista páginas
+que devuelven 404 es peor que no tener sitemap.
+
+**Ruta nueva que valga la pena indexar → agregarla a `RUTAS_ESTATICAS`** en
+[`scripts/lib/sitemap.ts`](../scripts/lib/sitemap.ts).
+
+### El dominio
+
+Sale de `VITE_SITE_URL`, con `https://ezyhome-storefront.pages.dev` por defecto.
+Lo leen los dos lados —la app para las canónicas (`getSiteUrl`) y el build para
+el sitemap—, y un test verifica que los dos defaults no se separen. El día que
+haya dominio propio se cambia la variable, no el código.
+
+### Lo que esto no arregla
+
+Googlebot ejecuta JavaScript, así que los metadatos puestos en runtime sí sirven
+para búsqueda. **Los crawlers de WhatsApp, Instagram y Facebook no.** Para ellos
+solo existe el HTML que sirve el servidor, que es el `index.html` genérico: al
+compartir un producto se ve el preview de la marca, no el del producto. Eso se
+arregla con prerender, que es otro trabajo — ver
+[`docs/plans/2026-09-22-seo-organico.md`](./plans/2026-09-22-seo-organico.md).
+
+---
+
 ## 10. Nomenclatura
 
 | Cosa               | Convención                 | Ejemplo                 |

@@ -10,6 +10,8 @@
 interface ImportMetaEnv {
   /** Número de WhatsApp de EzyHome en formato internacional, sin `+` ni espacios. */
   readonly VITE_WHATSAPP_NUMBER?: string;
+  /** Dominio público del sitio, con esquema y sin barra final. */
+  readonly VITE_SITE_URL?: string;
 }
 
 interface ImportMeta {

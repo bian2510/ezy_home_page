@@ -130,6 +130,23 @@ export default tseslint.config(
     },
   },
   {
+    files: ['src/hooks/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/features/*', '@/features/*/*', '@/pages/*', '@/layouts/*', '@/data/*'],
+              message:
+                '`hooks/` son hooks genéricos, ciegos al dominio: solo pueden importar de `lib/` y `types/`. Un hook que conoce una feature vive dentro de esa feature.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['src/lib/**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-restricted-imports': [

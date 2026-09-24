@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
 const PASOS = [
   {
@@ -46,6 +47,13 @@ const PASOS = [
 ] as const;
 
 export default function ComoComprarPage() {
+  useDocumentMeta({
+    title: 'Cómo Comprar',
+    description:
+      'En EzyHome comprás de forma asistida: te acompañamos en cada paso para que llegues al producto correcto sin complicaciones.',
+    path: '/como-comprar',
+  });
+
   return (
     <div className="flex w-full flex-col gap-10">
       <header>

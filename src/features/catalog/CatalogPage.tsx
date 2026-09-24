@@ -4,6 +4,7 @@ import { allProducts } from '@/data/catalog';
 import ProductCard from './ProductCard';
 import CategoryFilter from './CategoryFilter';
 import { useCatalog } from './useCatalog';
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
 const CATEGORY_PARAM = 'category';
 
@@ -20,6 +21,13 @@ const CATEGORY_PARAM = 'category';
  * compartible.
  */
 export default function CatalogPage() {
+  useDocumentMeta({
+    title: 'Catálogo',
+    description:
+      'Todo el catálogo de EzyHome: iluminación inteligente, seguridad, confort, protección y alertas, y hubs para tu hogar.',
+    path: '/catalogo',
+  });
+
   const [searchParams, setSearchParams] = useSearchParams();
   const { filtered, selectedCategory, setCategory, categories } = useCatalog(
     allProducts,

@@ -21,10 +21,21 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useBlogPost } from './useBlogPost';
 import type { BlogMeta } from '@/types';
+import { truncateForMeta } from '@/lib/seo';
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
   const { content, meta, notFound, loading } = useBlogPost(slug ?? '');
+
+  useDocumentMeta({
+    title: meta?.title ?? 'Blog',
+    description: truncateForMeta(
+      meta?.excerpt ?? 'Artículo del blog de EzyHome sobre domótica y hogar inteligente.',
+    ),
+    path: `/blog/${slug ?? ''}`,
+    ...(notFound ? { noIndex: true } : {}),
+  });
 
   if (notFound) {
     return <BlogPostNotFound />;

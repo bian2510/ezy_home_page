@@ -51,6 +51,20 @@ src/components/ui/
 
 Ver cuándo usar `ui/` vs `features/` en [`docs/standards/componentes-ui-vs-feature.md`](./componentes-ui-vs-feature.md).
 
+### `hooks/`
+
+Hooks de React reutilizables entre features y **ciegos al dominio**: no saben
+que existe `Product`, `Cart` ni `Blog`.
+
+```
+src/hooks/
+  useDocumentMeta.ts  ← escribe título, description, canónica y JSON-LD en el <head>
+```
+
+El hook consumidor de un contexto (`useCart`, `useToast`) **no** vive acá: vive
+dentro de su feature. Acá sube lo genérico, y recién cuando tiene dos
+consumidores reales.
+
 ### `types/`
 
 Contratos de datos compartidos entre features. Solo interfaces, tipos y funciones puras de transformación.
@@ -96,6 +110,8 @@ viven una sola vez en `catalog.ts`, que además es neutral entre features
 
 ```
 pages  →  features  →  components/ui  →  lib
+   ↓          ↓              ↓            ↑
+ hooks ─────────────────────────────────→ ┘
               ↓              ↓
             types           types
               ↓
@@ -107,6 +123,7 @@ pages  →  features  →  components/ui  →  lib
 | `pages/`         | `features/`, `components/ui`, `types`, `lib` | —                                |
 | `features/`      | `components/ui`, `types`, `lib`, `data`      | Otras `features/` directamente\* |
 | `components/ui/` | `lib`, `types`                               | `features/`                      |
+| `hooks/`         | `lib`, `types`                               | `features/`, `pages/`, `data/`   |
 | `lib/`           | — (nada de la app)                           | Todo                             |
 
 \* Una feature puede importar de otra **solo a través de su `index.ts`**, nunca de rutas internas.

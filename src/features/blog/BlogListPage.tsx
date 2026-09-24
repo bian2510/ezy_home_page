@@ -1,6 +1,7 @@
 import blogIndex from '@/data/blog/index.json';
 import type { BlogMeta } from '@/types';
 import BlogCard from './BlogCard';
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
 const articles = blogIndex as BlogMeta[];
 
@@ -13,6 +14,13 @@ const articles = blogIndex as BlogMeta[];
  * `index.json` — date-based sorting is out of scope for Task 010.
  */
 export default function BlogListPage() {
+  useDocumentMeta({
+    title: 'Blog',
+    description:
+      'Guías y notas sobre domótica: cómo elegir, instalar y aprovechar los dispositivos inteligentes de tu casa.',
+    path: '/blog',
+  });
+
   return (
     <section className="mx-auto w-full max-w-content px-4 py-6">
       <h1 className="mb-4 text-2xl font-semibold text-foreground sm:text-3xl">Blog</h1>

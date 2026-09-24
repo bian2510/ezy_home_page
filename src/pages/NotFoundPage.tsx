@@ -1,6 +1,15 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
 export default function NotFoundPage() {
+  const { pathname } = useLocation();
+  useDocumentMeta({
+    title: 'Página no encontrada',
+    description: 'La página que buscás no existe.',
+    path: pathname,
+    noIndex: true,
+  });
+
   return (
     <section className="space-y-4 py-10 text-center">
       <h1 className="text-3xl font-semibold">404</h1>

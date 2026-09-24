@@ -1,3 +1,5 @@
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
+
 const COMPROMISOS = [
   {
     titulo: 'Profesionalismo',
@@ -38,6 +40,13 @@ const PERFILES = [
 ] as const;
 
 export default function QuienesSomosPage() {
+  useDocumentMeta({
+    title: 'Quiénes Somos',
+    description:
+      'Somos EzyHome — una tienda argentina de domótica que cree que el hogar inteligente debe estar al alcance de todos, no solo de los expertos.',
+    path: '/quienes-somos',
+  });
+
   return (
     <div className="flex flex-col">
       {/* Hero */}

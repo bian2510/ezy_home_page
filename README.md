@@ -41,6 +41,11 @@ cp .env.example .env          # set VITE_WHATSAPP_NUMBER (digits only, no +)
 pnpm prepare                  # installs Husky hooks
 ```
 
+| Variable               | Required | Purpose                                                                                                  |
+| ---------------------- | -------- | -------------------------------------------------------------------------------------------------------- |
+| `VITE_WHATSAPP_NUMBER` | yes      | WhatsApp checkout number, international format, no `+`                                                   |
+| `VITE_SITE_URL`        | no       | Public site URL for canonicals, sitemap and og: tags. Defaults to `https://ezyhome-storefront.pages.dev` |
+
 ## Run (local dev)
 
 | Command              | Purpose                             |

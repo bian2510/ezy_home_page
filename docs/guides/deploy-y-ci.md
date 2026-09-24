@@ -71,6 +71,12 @@ Se configuran en GitHub › Settings › Secrets and variables › Actions:
 Si `VITE_WHATSAPP_NUMBER` falta, el build **no falla**: publica un sitio donde el
 botón de WhatsApp no lleva a ningún lado. Ver [`src/lib/env.ts`](../../src/lib/env.ts).
 
+Hay además una variable **opcional**, `VITE_SITE_URL`: el dominio público del
+sitio. Alimenta las URLs canónicas, el `sitemap.xml` y las og: tags. Sin ella se
+usa `https://ezyhome-storefront.pages.dev`. **El día que haya dominio propio, esta
+es la variable que hay que cambiar** — y también hay que reenviar el sitemap en
+Google Search Console.
+
 ---
 
 ## El smoke test
@@ -97,6 +103,20 @@ Correrlo a mano en cualquier momento:
 bash scripts/smoke-test.sh
 SITE_URL=https://otro-dominio.pages.dev bash scripts/smoke-test.sh
 ```
+
+---
+
+## Qué emite el build además del bundle
+
+`pnpm build` genera dos archivos que no están en el repo, desde
+[`scripts/vite-plugin-seo.ts`](../../scripts/vite-plugin-seo.ts):
+
+- `dist/sitemap.xml` — rutas fijas + un producto por `active: true` + un artículo
+  por post. Hoy son 39 URLs.
+- `dist/robots.txt` — apunta al sitemap y excluye `/carrito`.
+
+No se editan a mano: el catálogo cambia todos los meses y un sitemap escrito a
+mano queda viejo en el primer cambio de stock.
 
 ---
 

@@ -17,6 +17,9 @@ import { findActiveProductById } from '@/data/catalog';
 import type { Product } from '@/types';
 import { getEffectivePrice } from '@/types';
 import { formatPrice } from '@/lib/formatPrice';
+import { getSiteUrl } from '@/lib/env';
+import { buildCanonical, buildProductJsonLd, truncateForMeta } from '@/lib/seo';
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import QuantitySelector from '@/components/ui/QuantitySelector';
 import { Badge } from '@/components/ui/Badge';
 import { useCart } from '@/features/cart';
@@ -27,6 +30,36 @@ const MIN_QUANTITY = 1;
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const product = useMemo(() => findActiveProductById(id), [id]);
+  const path = `/productos/${id ?? ''}`;
+
+  // El JSON-LD es lo que habilita que Google muestre el precio en el resultado,
+  // en vez de solo el título. Si el id no existe, la página es un 404: no se
+  // declara producto y se pide no indexarla.
+  useDocumentMeta(
+    product === undefined
+      ? {
+          title: 'Producto no encontrado',
+          description: 'El producto que buscás no existe o ya no está disponible.',
+          path,
+          noIndex: true,
+        }
+      : {
+          title: product.name,
+          description: truncateForMeta(product.description),
+          path,
+          jsonLd: buildProductJsonLd(
+            {
+              id: product.id,
+              name: product.name,
+              description: product.description,
+              images: product.images,
+              price: getEffectivePrice(product),
+              available: product.active,
+            },
+            buildCanonical(getSiteUrl(), path),
+          ),
+        },
+  );
 
   if (product === undefined) {
     return <ProductNotFound />;

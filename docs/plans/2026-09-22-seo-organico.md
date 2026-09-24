@@ -1,7 +1,8 @@
 # Plan: SEO orgánico — aparecer en búsquedas de domótica
 
 **Fecha:** 2026-09-22
-**Estado:** pendiente de arrancar (bloque 1)
+**Estado:** bloque 1 **hecho** (2026-09-24). Pendientes: Search Console, bloque 2
+(contenido) y bloque 3 (prerender).
 **Objetivo del dueño:** "que mi página aparezca más cuando busquen domótica"
 
 > Plan de trabajo, no verdad de dominio. Para contexto de negocio ver
@@ -16,15 +17,15 @@ canal nuevo, no una mejora de uno existente.
 
 Lo que encontramos al revisar:
 
-| Qué                       | Estado hoy                                                |
-| ------------------------- | --------------------------------------------------------- |
-| `public/robots.txt`       | Dos líneas, sin referencia a sitemap                      |
-| `sitemap.xml`             | No existe                                                 |
-| `<title>` y `description` | Fijos en `index.html`: las 48 rutas comparten "EzyHome"   |
-| Datos estructurados       | No hay                                                    |
-| URL canónica              | No hay                                                    |
-| Velocidad                 | Critical path 93 kB gzip, con presupuesto de 105 kB en CI |
-| Blog                      | 2 artículos                                               |
+| Qué                       | Antes (2026-09-22)                                        | Hoy (2026-09-24)                          |
+| ------------------------- | --------------------------------------------------------- | ----------------------------------------- |
+| `robots.txt`              | Dos líneas, sin referencia a sitemap                      | Generado en el build, apunta al sitemap   |
+| `sitemap.xml`             | No existe                                                 | Generado en el build — 39 URLs            |
+| `<title>` y `description` | Fijos en `index.html`: las 48 rutas comparten "EzyHome"   | Propios por página (`useDocumentMeta`)    |
+| Datos estructurados       | No hay                                                    | `schema.org/Product` en cada ficha        |
+| URL canónica              | No hay                                                    | Absoluta, una por página                  |
+| Velocidad                 | Critical path 93 kB gzip, con presupuesto de 105 kB en CI | 94 kB gzip — el hook costó ~0,9 kB        |
+| Blog                      | 2 artículos                                               | 2 artículos — sin cambios, es el bloque 2 |
 
 ---
 
@@ -62,32 +63,39 @@ buena parte de ese tiempo.
 
 ---
 
-## Bloque 1 — Higiene técnica (1-2 h, es lo de mañana)
+## Bloque 1 — Higiene técnica ✅ hecho el 2026-09-24
 
 Condición necesaria: sin esto Google no sabe qué hay ni cómo mostrarlo. Se hace
 una vez y no caduca.
 
-- [ ] **`sitemap.xml` generado en el build** desde `src/data/products.json` y
-      `src/data/blog/index.json`. Hoy Google tiene que descubrir las 40 fichas
-      tropezándose con links internos. Solo productos con `active: true`.
-- [ ] **`robots.txt`** apuntando al sitemap.
-- [ ] **Título y meta description por página.** Hook propio de ~20 líneas
-      (`useDocumentMeta`), sin librería: el presupuesto de bundle tiene 12 kB
-      de margen y conviene no gastarlos acá. - Producto: `<nombre> — EzyHome`, description del `description` del producto. - Catálogo, blog, artículos, institucionales: uno por página.
-- [ ] **URL canónica** por página.
-- [ ] **JSON-LD `Product`** en la ficha: nombre, imagen, precio, moneda ARS,
-      disponibilidad. Es lo que habilita que Google muestre el precio en el
-      resultado.
-- [ ] Corregir la description de `index.html`: dice "domotica" y
-      "automatizacion", sin tildes.
+- [x] **`sitemap.xml` generado en el build** desde `src/data/products.json` y
+      `src/data/blog/index.json`, solo `active: true`. Lo emite
+      `scripts/vite-plugin-seo.ts`; la lógica pura está en `scripts/lib/sitemap.ts`.
+- [x] **`robots.txt`** generado también en el build, apuntando al sitemap y
+      excluyendo `/carrito`. Se borró el estático de `public/` para no tener dos
+      fuentes de verdad.
+- [x] **Título y meta description por página**, con `src/hooks/useDocumentMeta.ts`
+      (~60 líneas, sin librería). Las 9 rutas lo llaman.
+- [x] **URL canónica** absoluta por página, normalizada (sin query, sin hash, sin
+      barra final).
+- [x] **JSON-LD `Product`** en la ficha, con precio efectivo en ARS y
+      disponibilidad.
+- [x] Corregida la description de `index.html`, más og: tags por defecto para que
+      un link compartido al menos muestre la marca.
+- [x] **Extra no planificado:** `noindex` en carrito y 404, y `VITE_SITE_URL` para
+      no tener el dominio hardcodeado.
+
+**Cobertura:** 54 tests nuevos (helpers puros, el hook sobre el DOM, el sitemap y
+un integration que verifica que cada ruta real escribe lo suyo).
 
 **Restricciones del repo que aplican:** tests primero (rojo antes que verde),
 capas y `index.ts` (lo aplica ESLint), presupuesto de 105 kB gzip verificado en
 CI, y el quality gate completo antes de cerrar.
 
-**Dato que falta para arrancar:** el dominio real del sitio, para el sitemap y
-las canónicas. Si todavía no está definido, entra como `VITE_SITE_URL` con un
-valor por defecto y se cambia después.
+**Sobre el dominio:** entró como `VITE_SITE_URL`, con
+`https://ezyhome-storefront.pages.dev` por defecto. Cuando haya dominio propio
+se cambia esa variable en el CI y se reenvía el sitemap en Search Console; no
+hay que tocar código.
 
 ---
 
@@ -138,7 +146,18 @@ productos por WhatsApp se vuelva un canal deliberado. No antes.
 
 ## Orden de ataque
 
-1. Bloque 1 completo (mañana).
-2. Search Console, para poder medir.
+1. ~~Bloque 1 completo.~~ Hecho el 2026-09-24.
+2. **Search Console** — lo próximo, y no es trabajo de código: lo tiene que crear
+   el dueño. Sin esto no se sabe si Google está indexando ni qué búsquedas traen
+   gente, y el bloque 2 se hace a ciegas.
 3. Bloque 2 como hábito.
 4. Bloque 3 cuando 1 y 2 estén asentados.
+
+---
+
+## Qué mirar cuando Search Console esté
+
+- Que las 39 URLs del sitemap queden indexadas (no van a ser todas ni enseguida).
+- Que la ficha de producto sea elegible para resultado enriquecido — se prueba en
+  el Rich Results Test de Google pegando la URL de un producto.
+- Qué consultas traen impresiones: ahí salen los temas del bloque 2.
