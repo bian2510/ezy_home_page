@@ -8,6 +8,19 @@
     <meta name="theme-color" content="#0F766E" />
 
     <!--
+      Verificación de propiedad de Google Search Console.
+
+      Va acá y no como archivo suelto en `public/`: el sitio es una SPA y
+      Cloudflare responde 200 con este HTML para cualquier ruta inexistente,
+      así que el método de archivo falla siempre — Google pide un archivo
+      inventado, recibe 200, y concluye que el servidor le da 200 a todo.
+
+      No borrar: sacarla revierte la verificación y se pierde el acceso a los
+      informes.
+    -->
+    <meta name="google-site-verification" content="_XpTfF-23JTQNv-k9xVykCOYMFyndLKoznVAKOjQwDs" />
+
+    <!--
       Metadatos por defecto. Cada ruta los reescribe en runtime con
       `useDocumentMeta` (src/hooks/useDocumentMeta.ts), que es lo que lee
       Googlebot: ejecuta JavaScript.

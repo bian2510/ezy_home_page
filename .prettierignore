@@ -6,7 +6,3 @@ pnpm-lock.yaml
 package-lock.json
 .next
 .cache
-
-# Archivo de verificación de Google Search Console: Google lo compara tal cual
-# lo entregó. Prettier lo reformatearía como HTML y dejaría de validar.
-public/google*.html
