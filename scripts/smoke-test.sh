@@ -16,11 +16,11 @@
 # versión vieja sin que nadie lo notara.
 #
 # Uso:
-#   SITE_URL=https://ezyhome-storefront.pages.dev bash scripts/smoke-test.sh
+#   SITE_URL=https://shop.ezyhome.app bash scripts/smoke-test.sh
 #   DEPLOY_URL=https://abc123.ezyhome-storefront.pages.dev  (opcional, lo pasa el CI)
 set -euo pipefail
 
-SITE_URL="${SITE_URL:-https://ezyhome-storefront.pages.dev}"
+SITE_URL="${SITE_URL:-https://shop.ezyhome.app}"
 DEPLOY_URL="${DEPLOY_URL:-}"
 
 MAX_INTENTOS="${MAX_INTENTOS:-10}"

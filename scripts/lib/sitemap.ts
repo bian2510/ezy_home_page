@@ -10,12 +10,12 @@
 // peor que no tener sitemap.
 
 /**
- * Dominio por defecto. Debe coincidir con `DEFAULT_SITE_URL` de
+ * Dominio público del storefront. Debe coincidir con `DEFAULT_SITE_URL` de
  * `src/lib/seo.ts`, y hay un test que lo verifica: el sitemap lo escribe el
  * build y las canónicas las escribe la app; si se separan, Google recibe dos
  * dominios para el mismo sitio.
  */
-export const SITIO_POR_DEFECTO = 'https://ezyhome-storefront.pages.dev';
+export const SITIO_POR_DEFECTO = 'https://shop.ezyhome.app';
 
 /**
  * Rutas fijas que vale la pena indexar.

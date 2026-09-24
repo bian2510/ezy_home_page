@@ -124,6 +124,6 @@ jobs:
       # que producción responde y sirve el build que se acaba de publicar.
       - name: Smoke test del sitio publicado
         env:
-          SITE_URL: https://ezyhome-storefront.pages.dev
+          SITE_URL: https://shop.ezyhome.app
           DEPLOY_URL: ${{ steps.deploy.outputs.deployment-url }}
         run: bash scripts/smoke-test.sh

@@ -239,7 +239,7 @@ que el HTML referencia se puede descargar, y que el dominio sirve **el build rec
 desplegado** y no uno anterior.
 
 ```bash
-SITE_URL=https://ezyhome-storefront.pages.dev bash scripts/smoke-test.sh
+SITE_URL=https://shop.ezyhome.app bash scripts/smoke-test.sh
 ```
 
 Si falla, el mensaje incluye cómo volver atrás: en el panel de Cloudflare Pages,
@@ -301,7 +301,7 @@ que devuelven 404 es peor que no tener sitemap.
 
 ### El dominio
 
-Sale de `VITE_SITE_URL`, con `https://ezyhome-storefront.pages.dev` por defecto.
+Sale de `VITE_SITE_URL`, con `https://shop.ezyhome.app` por defecto.
 Lo leen los dos lados —la app para las canónicas (`getSiteUrl`) y el build para
 el sitemap—, y un test verifica que los dos defaults no se separen. El día que
 haya dominio propio se cambia la variable, no el código.

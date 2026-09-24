@@ -92,10 +92,12 @@ un integration que verifica que cada ruta real escribe lo suyo).
 capas y `index.ts` (lo aplica ESLint), presupuesto de 105 kB gzip verificado en
 CI, y el quality gate completo antes de cerrar.
 
-**Sobre el dominio:** entró como `VITE_SITE_URL`, con
-`https://ezyhome-storefront.pages.dev` por defecto. Cuando haya dominio propio
-se cambia esa variable en el CI y se reenvía el sitemap en Search Console; no
-hay que tocar código.
+**Sobre el dominio:** el storefront se publica en **`https://shop.ezyhome.app`**,
+y ese es el valor por defecto. El `ezyhome-storefront.pages.dev` sigue
+respondiendo lo mismo —es la dirección interna del proyecto de Cloudflare— pero
+no es la que se anuncia. `ezyhome.app` sin el `shop.` es **otra aplicación** del
+dueño, ajena a este repo. Si el storefront cambiara de dirección, se define
+`VITE_SITE_URL` y no hay que tocar código.
 
 ---
 
@@ -144,9 +146,12 @@ productos por WhatsApp se vuelva un canal deliberado. No antes.
 
 ## Google Search Console — cómo quedó y qué saber
 
-**Propiedad:** tipo _prefijo de URL_, sobre `https://ezyhome-storefront.pages.dev/`.
-No sirve el tipo _Dominio_: pide un registro DNS en `pages.dev`, que es de
-Cloudflare y no nuestro.
+**Propiedad:** tipo _prefijo de URL_, sobre **`https://shop.ezyhome.app/`**.
+
+La primera propiedad se creó sobre `ezyhome-storefront.pages.dev` antes de saber
+que había dominio propio; quedó obsoleta y se puede borrar. También existe la
+opción de una propiedad tipo _Dominio_ sobre `ezyhome.app`, que cubriría de una
+vez el storefront y la otra aplicación del dueño, pero se verifica por DNS.
 
 **Verificación: meta tag en `index.html`.**
 
@@ -177,8 +182,14 @@ sufijo, Google pide una URL que cae en el catch-all de la SPA, recibe HTML en ve
 de XML y reporta _"Couldn't fetch"_. El estado "Couldn't fetch" recién enviado
 también es normal: Google lo encola y lo lee horas después.
 
-**Si cambia el dominio:** hay que crear una propiedad nueva en Search Console
-(la actual es de `pages.dev`), cambiar `VITE_SITE_URL` y reenviar el sitemap.
+**Dos direcciones para el mismo contenido:** `shop.ezyhome.app` y
+`ezyhome-storefront.pages.dev` sirven lo mismo, y eso podría leerse como
+contenido duplicado. Lo resuelven las canónicas: todas apuntan a
+`shop.ezyhome.app`, así que Google consolida ahí. No hace falta bloquear el
+`pages.dev`.
+
+**Si cambia el dominio:** crear la propiedad nueva en Search Console, definir
+`VITE_SITE_URL` y reenviar el sitemap.
 
 ---
 

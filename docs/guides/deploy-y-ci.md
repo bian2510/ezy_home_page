@@ -6,8 +6,10 @@ Cómo llega un commit a producción, qué lo verifica, y qué hacer cuando algo 
 
 ## Lo esencial en tres líneas
 
-- El sitio vive en **Cloudflare Pages**, proyecto `ezyhome-storefront`, hoy en
-  `https://ezyhome-storefront.pages.dev`.
+- El sitio vive en **Cloudflare Pages**, proyecto `ezyhome-storefront`, publicado
+  en **`https://shop.ezyhome.app`**. El `ezyhome-storefront.pages.dev` sigue
+  respondiendo lo mismo: es la dirección interna del proyecto, útil para depurar.
+  Ojo: `ezyhome.app` sin el `shop.` es **otra aplicación** del dueño, no este sitio.
 - **Se publica solo**, desde GitHub Actions, en cada push a `main` que pase lint,
   typecheck, tests y build.
 - **No hay deploy manual desde tu máquina.** Si querés publicar, mergeás a `main`.
@@ -73,9 +75,10 @@ botón de WhatsApp no lleva a ningún lado. Ver [`src/lib/env.ts`](../../src/lib
 
 Hay además una variable **opcional**, `VITE_SITE_URL`: el dominio público del
 sitio. Alimenta las URLs canónicas, el `sitemap.xml` y las og: tags. Sin ella se
-usa `https://ezyhome-storefront.pages.dev`. **El día que haya dominio propio, esta
-es la variable que hay que cambiar** — y también hay que reenviar el sitemap en
-Google Search Console.
+usa `https://shop.ezyhome.app`, que es el dominio real, y por eso hoy nadie la
+define. Está para el día que el storefront cambie de dirección: se define la
+variable y, además, hay que crear la propiedad nueva en Search Console y
+reenviar el sitemap.
 
 ---
 

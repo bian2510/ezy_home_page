@@ -16,13 +16,19 @@ export const SITE_NAME = 'EzyHome';
 export const DEFAULT_TITLE = `${SITE_NAME} — Domótica para tu casa`;
 
 /**
- * Dominio por defecto cuando no hay `VITE_SITE_URL`. Sin barra final.
+ * Dominio público del storefront, sin barra final. Es el que sirve Cloudflare
+ * Pages como dominio propio; `ezyhome-storefront.pages.dev` sigue respondiendo,
+ * pero es la dirección interna del proyecto, no la que se publica.
+ *
+ * `ezyhome.app` (sin `shop.`) es otra aplicación del dueño, no este sitio.
+ *
+ * Se puede sobrescribir con `VITE_SITE_URL`.
  *
  * El mismo valor vive en `scripts/lib/sitemap.ts` para el build, y un test
  * verifica que no se separen: el sitemap y las canónicas tienen que hablar del
  * mismo dominio o Google recibe dos sitios distintos.
  */
-export const DEFAULT_SITE_URL = 'https://ezyhome-storefront.pages.dev';
+export const DEFAULT_SITE_URL = 'https://shop.ezyhome.app';
 
 /** Largo máximo de una meta description antes de que Google la corte. */
 const MAX_DESCRIPTION = 160;

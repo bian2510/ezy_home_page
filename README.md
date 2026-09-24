@@ -41,10 +41,10 @@ cp .env.example .env          # set VITE_WHATSAPP_NUMBER (digits only, no +)
 pnpm prepare                  # installs Husky hooks
 ```
 
-| Variable               | Required | Purpose                                                                                                  |
-| ---------------------- | -------- | -------------------------------------------------------------------------------------------------------- |
-| `VITE_WHATSAPP_NUMBER` | yes      | WhatsApp checkout number, international format, no `+`                                                   |
-| `VITE_SITE_URL`        | no       | Public site URL for canonicals, sitemap and og: tags. Defaults to `https://ezyhome-storefront.pages.dev` |
+| Variable               | Required | Purpose                                                                                                         |
+| ---------------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
+| `VITE_WHATSAPP_NUMBER` | yes      | WhatsApp checkout number, international format, no `+`                                                          |
+| `VITE_SITE_URL`        | no       | Overrides the public site URL used for canonicals, sitemap and og: tags. Defaults to `https://shop.ezyhome.app` |
 
 ## Run (local dev)
 
@@ -159,7 +159,10 @@ container registry involved.
 4. `scripts/smoke-test.sh` verifies that the live domain serves the build that was
    just published — not a previous one.
 
-Live at `https://ezyhome-storefront.pages.dev`.
+Live at `https://shop.ezyhome.app`. The `ezyhome-storefront.pages.dev` address
+still answers — it is the Cloudflare project's internal URL — but it is not the
+published one. `ezyhome.app` without the `shop.` subdomain is a different
+application, not this site.
 
 **Rolling back** is a single click in the Cloudflare dashboard (Deployments ›
 pick the last good one › _Rollback to this deployment_). It is deliberately
