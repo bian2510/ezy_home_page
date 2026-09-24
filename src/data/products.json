@@ -36,7 +36,7 @@
     ],
     "isBestseller": false,
     "isOnSale": true,
-    "active": true,
+    "active": false,
     "promotionalPrice": 49562
   },
   {
@@ -55,7 +55,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 64581
+    "promotionalPrice": 82800
   },
   {
     "id": "MLA2200632476",
@@ -73,7 +73,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 89775
+    "promotionalPrice": 85410
   },
   {
     "id": "MLA2200566426",
@@ -91,7 +91,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 30755
+    "promotionalPrice": 28800
   },
   {
     "id": "MLA1514819947",
@@ -142,7 +142,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 29889
+    "promotionalPrice": 28800
   },
   {
     "id": "MLA2277983812",
@@ -182,14 +182,14 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 37280
+    "promotionalPrice": 28800
   },
   {
     "id": "MLA1516563791",
     "name": "Sensor de Presencia Zigbee con Radar 24GHz",
     "description": "Detectá presencia real con precisión — este sensor de radar mmWave distingue entre movimiento y presencia estática, evitando las falsas alarmas típicas de los sensores PIR tradicionales.\n\n- Radar de 24GHz con ángulo de detección de 130°\n- Detecta movimiento hasta 6 m y presencia estática hasta 4.5 m\n- Conectividad Zigbee 3.0, compatible con Tuya Smart y Smart Life\n- Se alimenta por USB tipo C (5V 1A), sin pilas que cambiar\n- Diseño compacto y discreto, ideal para activar luces, alarmas o rutinas automáticas\n\nFicha técnica: alcance inalámbrico de hasta 30 m en espacio abierto, compatible con Google Assistant, Alexa y Yandex Alice.\n\nAutomatizá tu hogar con detección confiable y sin falsas alarmas — EzyHome.",
     "category": "Seguridad",
-    "price": 58500,
+    "price": 76000,
     "images": [
       "https://http2.mlstatic.com/D_831516-MLA93410584294_092025-O.jpg",
       "https://http2.mlstatic.com/D_975351-MLA90652570185_082025-O.jpg",
@@ -201,7 +201,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 48009
+    "promotionalPrice": 64980
   },
   {
     "id": "MLA2212420442",
@@ -277,7 +277,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 63869
+    "promotionalPrice": 44991
   },
   {
     "id": "MLA2345764792",
@@ -388,7 +388,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 40838
+    "promotionalPrice": 53910
   },
   {
     "id": "MLA2215069312",
@@ -411,7 +411,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 43941
+    "promotionalPrice": 58410
   },
   {
     "id": "MLA1627746949",
@@ -433,7 +433,7 @@
     "isOnSale": true,
     "active": true,
     "promotionBadge": "2x1",
-    "promotionalPrice": 18000
+    "promotionalPrice": 13500
   },
   {
     "id": "MLA2732724166",
@@ -454,7 +454,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 93349
+    "promotionalPrice": 103500
   },
   {
     "id": "MLA2941946216",
@@ -536,7 +536,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 45141
+    "promotionalPrice": 58500
   },
   {
     "id": "MLA3122052710",
@@ -557,7 +557,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 56745
+    "promotionalPrice": 47102
   },
   {
     "id": "MLA1748996789",
@@ -604,7 +604,7 @@
     "isBestseller": true,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 33611
+    "promotionalPrice": 28800
   },
   {
     "id": "MLA3316416628",
@@ -658,30 +658,29 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 34115
+    "promotionalPrice": 34114
   },
   {
     "id": "MLAU4623672542",
     "name": "Control Remoto Inteligente Universal Wifi Ir Tuya Smart Life",
     "description": "Con este Control Remoto Universal WiFi Infrarrojo, podés manejar la televisión, el aire acondicionado, decodificadores, equipos de música, ventiladores y más, directamente desde tu celular o mediante comandos de voz con Alexa y Google Assistant.",
     "category": "Confort",
-    "price": 25000,
+    "price": 28800,
     "images": [
       "https://http2.mlstatic.com/D_NQ_NP_2X_624683-MLA115721912137_082026-F.webp",
       "https://http2.mlstatic.com/D_NQ_NP_2X_837936-MLA115721583269_082026-F.webp",
       "https://http2.mlstatic.com/D_NQ_NP_2X_787174-MLA114377498888_082026-F.webp"
     ],
     "isBestseller": false,
-    "isOnSale": true,
-    "active": true,
-    "promotionalPrice": 17460
+    "isOnSale": false,
+    "active": true
   },
   {
     "id": "MLA3484999596",
     "name": "Válvula Termostática Inteligente Tv05 Zigbee Radiador",
     "description": "Válvula Termostática Inteligente TV05 Zigbee para radiadores. Automatiza y controla la calefacción del hogar mediante la gestión eficiente de la temperatura por habitación desde un smartphone, logrando un ahorro energético superior al 15%.",
     "category": "Confort",
-    "price": 88110,
+    "price": 110000,
     "images": [
       "https://http2.mlstatic.com/D_NQ_NP_2X_890168-MLA113466929781_062026-F.webp",
       "https://http2.mlstatic.com/D_NQ_NP_2X_742529-MLA112312452036_062026-F.webp",
@@ -690,8 +689,9 @@
       "https://http2.mlstatic.com/D_NQ_NP_2X_862768-MLA113467166471_062026-F.webp"
     ],
     "isBestseller": false,
-    "isOnSale": false,
-    "active": true
+    "isOnSale": true,
+    "active": true,
+    "promotionalPrice": 87229
   },
   {
     "id": "MLAU4193945703",
@@ -727,7 +727,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 19206
+    "promotionalPrice": 34200
   },
   {
     "id": "MLAU4092298728",
@@ -745,7 +745,7 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 19206
+    "promotionalPrice": 34200
   },
   {
     "id": "MLAU4222595010",
@@ -763,6 +763,66 @@
     "isBestseller": false,
     "isOnSale": true,
     "active": true,
-    "promotionalPrice": 27849
+    "promotionalPrice": 27000
+  },
+  {
+    "id": "MLA2023818393",
+    "name": "Robot Limpiavidrios G9 Premium 10000Pa con Doble Pulverizador",
+    "description": "Limpia ventanas, espejos y mamparas solo, sin escaleras y sin esfuerzo. Se adhiere al vidrio con 10.000 Pa de succión —más del triple que los robots de gama estándar, que rondan los 2.500 a 3.000 Pa— y recorre toda la superficie detectando bordes y esquinas por su cuenta, también en vidrios sin marco y en pisos altos.\n\n- Matriz de pulverización de 8 boquillas: spray a pulso de alta presión que humedece parejo, contra 1 o 2 boquillas de los modelos comunes\n- Succión ultra alta de 10.000 Pa: firmeza y estabilidad incluso con corrientes de aire o cristales gruesos en altura\n- Brazos biónicos vibratorios que imitan la presión de la mano para despegar manchas difíciles, gotas secas y suciedad acumulada\n- 4 cepillos giratorios de esquina a 200 RPM que limpian los ángulos del marco, donde los robots cuadrados suelen dejar sin limpiar\n- Control desde la app Smart Life o Tuya por WiFi y Bluetooth, o con el control remoto incluido\n- 8 microswitches con sensores de presión de aire y detección de borde: trabaja en ventanales, espejos y mamparas sin marco sin riesgo de caída\n- Cuerda de seguridad integrada con mosquetón de alta resistencia\n\nFicha técnica: succión de 10.000 Pa, matriz de pulverización de 8 boquillas con 4 salidas laterales, 4 cepillos de esquina a 200 RPM, 8 microswitches de detección de borde, conectividad WiFi y Bluetooth con app Smart Life / Tuya y comandos por voz, apto para vidrio simple y doble vidriado hermético (DVH) sin límite de grosor, manija central de cuero sintético. Incluye robot, cable de alimentación con adaptador de corriente, cuerda y mosquetón de seguridad, par de paños de microfibra reutilizables y lavables, envase con pulverizador para líquido limpiavidrios, control remoto y manual de usuario.\n\nDejá los vidrios impecables sin subirte a una escalera — con el respaldo de EzyHome.",
+    "price": 980000,
+    "images": [
+      "https://http2.mlstatic.com/D_NQ_NP_2X_661205-MLA115369099356_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_864020-MLA115444393810_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_691945-MLA116870208601_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_955072-MLA115444949022_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_847875-MLA116870796669_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_777072-MLA115444393794_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_905712-MLA115445775488_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_628343-MLA116870535129_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_925315-MLA116870505135_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_914873-MLA115445037058_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_960702-MLA116870505139_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_642877-MLA116547490709_082026-F.webp"
+    ],
+    "category": "Confort",
+    "isBestseller": true,
+    "isOnSale": true,
+    "active": true,
+    "promotionalPrice": 529200
+  },
+  {
+    "id": "MLA2038708437",
+    "name": "Kit 6 Paños de Repuesto para Robot Limpiavidrios G9",
+    "description": "Los paños son lo que define el acabado: un juego gastado deja vetas y marcas por más que el robot funcione bien. Este kit de 6 repuestos está cortado y armado específicamente para la estructura, los cepillos de esquina y el sistema de frotado biónico del Liectroux G9.\n\n- Nano-microfibra de alta densidad: atrapa el polvo fino, absorbe líquidos al instante y remueve manchas difíciles o gotas secas sin rayar el vidrio\n- Base impermeable de polietileno (PE) que evita que la humedad o el líquido de limpieza traspase hacia los mecanismos internos durante la pulverización\n- Resisten la fricción y la presión dinámica de los brazos biónicos sin deformarse ni deshilacharse\n- Corte preciso para que los 4 cepillos giratorios limpien los marcos a 200 RPM sin atascamientos\n- 100% lavables y reutilizables, a mano o en lavarropas, sin perder textura ni absorción\n- Fijación por velcro firme que mantiene el paño en su lugar bajo la máxima succión de 10.000 Pa\n\nCómo usarlos: primero una pasada con paños secos para retirar el polvo superficial, después paños limpios humedecidos —o con la matriz de spray de 8 boquillas activa— para ablandar y rematar las manchas difíciles.\n\nFicha técnica: compatible exclusivamente con el Robot Limpiavidrios Liectroux G9. Material: microfibra ultrafina con lámina inferior protectora de PE. Color gris claro / beige. Juego de 6 unidades. Lavar con agua tibia y jabón neutro; no usar suavizante de telas ni blanqueadores para prolongar la vida útil de las microfibras. Producto nuevo, sin garantía.\n\nMantené tu G9 rindiendo como el primer día — con el respaldo de EzyHome.",
+    "price": 95000,
+    "images": [
+      "https://http2.mlstatic.com/D_NQ_NP_2X_938674-MLA115347407110_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_631210-MLA115348467328_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_846104-MLA115348285844_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_850779-MLA116759646179_082026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_665145-MLA116759648423_082026-F.webp"
+    ],
+    "category": "Confort",
+    "isBestseller": false,
+    "isOnSale": true,
+    "active": true,
+    "promotionalPrice": 48888
+  },
+  {
+    "id": "MLA3959292798",
+    "name": "Detector 2 en 1 de Humo y Monóxido de Carbono Zigbee (requiere Hub)",
+    "description": "Un solo equipo que vigila las dos amenazas más peligrosas del hogar: el fuego y el monóxido de carbono, un gas que no se ve, no se huele ni se saborea. Conectado por Zigbee a tu hub, te avisa al instante en el celular estés donde estés, y te da el tiempo que hace falta para reaccionar.\n\nImportante: al ser Zigbee necesita un hub Zigbee del entorno Tuya Smart o Smart Life, que no viene incluido. Si preferís no depender de un hub, en la tienda tenemos el mismo detector en versión WiFi.\n\n- Protección 2 en 1: sensores separados y precisos para humo y monóxido de carbono en un mismo equipo compacto\n- Alertas en tiempo real en el celular desde la app Tuya Smart o Smart Life, incluso si no estás en casa\n- Sirena de 85 dB, fuerte y clara para despertar y alertar a todos los ocupantes\n- Señales distintas según la amenaza: ante humo, LED rojo parpadeando rápido y 4 pitidos largos; ante CO, pitidos y parpadeos según la concentración del gas\n- Botón central de prueba y silencio, para los chequeos semanales y para cortar una falsa alarma\n- Aviso de batería baja en la app, para que nunca quede fuera de servicio sin que te enteres\n- Instalación sin cables, a pila, con soporte y kit de tornillos incluidos\n\nFicha técnica: modelo SMC003, alimentación con 1 pila alcalina de 9V 6LR61 (no incluida), sirena de 85 dB(A), sensibilidad al humo de 0,09 a 0,17 dB/m, sensibilidad al CO de 50 ppm en 60 a 90 minutos, 100 ppm en 10 a 40 minutos y 300 ppm en 3 minutos o menos, alerta de batería baja a 2,6 ±0,1 V, tiempo de silencio de aproximadamente 10 minutos, conectividad Zigbee. Incluye soporte de montaje, kit de tornillos y tacos plásticos, y manual de usuario. Garantía del vendedor: 60 días.\n\nHacé tu vida más segura con EzyHome.",
+    "price": 54900,
+    "images": [
+      "https://http2.mlstatic.com/D_NQ_NP_2X_982593-MLA116263181128_092026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_949073-MLA117752991219_092026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_975842-MLA116263157066_092026-F.webp",
+      "https://http2.mlstatic.com/D_NQ_NP_2X_779710-MLA116262098052_092026-F.webp"
+    ],
+    "category": "Seguridad",
+    "isBestseller": false,
+    "isOnSale": true,
+    "active": true,
+    "promotionalPrice": 46940
   }
 ]
