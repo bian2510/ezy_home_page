@@ -510,7 +510,7 @@
     ],
     "isBestseller": false,
     "isOnSale": true,
-    "active": true,
+    "active": false,
     "promotionBadge": "2x1",
     "promotionalPrice": 9540
   },
