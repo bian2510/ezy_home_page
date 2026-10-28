@@ -75,12 +75,15 @@ export default function CartContents({ onClose }: CartContentsProps) {
 
       <div className="mt-auto border-t border-border pt-4">
         <div className="mb-3 flex flex-col gap-1">
-          <p className="text-base font-semibold text-foreground">
-            Total: <span className="font-mono">{formatPrice(total)}</span>
+          <p data-testid="main-total" className="text-base font-semibold text-foreground">
+            {transferTotal < total ? 'Total con transferencia: ' : 'Total: '}
+            <span className="font-mono">
+              {formatPrice(transferTotal < total ? transferTotal : total)}
+            </span>
           </p>
           {transferTotal < total && (
-            <p className="text-sm text-muted-foreground">
-              Con transferencia: <span className="font-mono">{formatPrice(transferTotal)}</span>
+            <p data-testid="secondary-total" className="text-sm text-muted-foreground">
+              Con Mercado Pago: <span className="font-mono">{formatPrice(total)}</span>
             </p>
           )}
           {hasUnpriced && (

@@ -90,8 +90,13 @@ describe('Checkout por WhatsApp', () => {
     const user = userEvent.setup();
     renderCart();
 
-    expect(screen.getByText(/con transferencia/i)).toHaveTextContent(
+    expect(screen.getByTestId('main-total')).toHaveTextContent(/con transferencia/i);
+    expect(screen.getByTestId('main-total')).toHaveTextContent(
       formatPrice(40000).replace(/\u00A0/g, ' '),
+    );
+    expect(screen.getByTestId('secondary-total')).toHaveTextContent(/con mercado pago/i);
+    expect(screen.getByTestId('secondary-total')).toHaveTextContent(
+      formatPrice(42000).replace(/\u00A0/g, ' '),
     );
     await user.click(screen.getByRole('button', { name: /comprar por whatsapp/i }));
 
