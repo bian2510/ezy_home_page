@@ -30,8 +30,6 @@ export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const product = useMemo(() => findActiveProductById(id), [id]);
   const path = `/productos/${id ?? ''}`;
-  const { pricingOf } = usePricing();
-  const pricing = product === undefined ? undefined : pricingOf(product);
 
   // El JSON-LD es lo que habilita que Google muestre el precio en el resultado,
   // en vez de solo el título. Si el id no existe, la página es un 404: no se
@@ -54,10 +52,9 @@ export default function ProductDetailPage() {
               name: product.name,
               description: product.description,
               images: product.images,
-              // Precio y stock del ERP, como en la página. El `price` del JSON
-              // (no mantenido) solo queda si el ERP no dio precio.
-              price: pricing?.price ?? product.price,
-              available: product.active && pricing?.availability !== 'out_of_stock',
+              // Precio del JSON: no se mantiene, solo alimenta el JSON-LD.
+              price: product.price,
+              available: product.active,
             },
             buildCanonical(getSiteUrl(), path),
           ),

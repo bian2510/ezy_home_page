@@ -13,7 +13,7 @@ export interface Product {
   name: string;
   description: string;
   /** Precio en ARS del JSON. No se mantiene ni se muestra: el precio de venta
-   *  viene del ERP. Solo va al JSON-LD si el ERP no dio precio. */
+   *  viene del ERP. Solo lo usa el JSON-LD (SEO). */
   price: number;
   /** Rutas relativas a las imágenes; la primera es la imagen principal. */
   images: string[];

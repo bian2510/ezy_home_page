@@ -91,14 +91,6 @@ const priceText = (amount: number) => {
   return (content: string) => content.replace(/\s+/g, '') === expected;
 };
 
-const offers = () => {
-  const script = document.head.querySelector('script[type="application/ld+json"]');
-  const datos = JSON.parse(script?.textContent ?? '{}') as {
-    offers?: { price: string; availability: string };
-  };
-  return datos.offers;
-};
-
 const renderAt = (path: string) =>
   render(
     <MemoryRouter initialEntries={[path]}>
@@ -171,23 +163,6 @@ describe('ProductDetailPage', () => {
 
     expect(screen.getByRole('status', { name: /cargando precio/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /agregar al carrito/i })).toBeDisabled();
-  });
-
-  it('should publish the ERP price and stock in the JSON-LD, so Google matches the page', () => {
-    erpPricing = { price: 31000, transferPrice: null, availability: 'out_of_stock' };
-    renderAt('/productos/p-2');
-
-    expect(offers()).toMatchObject({
-      price: '31000',
-      availability: 'https://schema.org/OutOfStock',
-    });
-  });
-
-  it('should fall back to the JSON price in the JSON-LD only when the ERP has no price', () => {
-    erpPricing = { price: null, transferPrice: null, availability: 'no_price' };
-    renderAt('/productos/p-2');
-
-    expect(offers()).toMatchObject({ price: '28900', availability: 'https://schema.org/InStock' });
   });
 
   it('should render a thumbnail strip when the product has more than one image', () => {

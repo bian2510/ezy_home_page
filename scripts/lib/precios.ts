@@ -193,8 +193,8 @@ export const agruparPublicaciones = (filas: FilaMercadoLibre[]): GrupoMercadoLib
 
 /**
  * Precio de la web a partir de la publicación de ML. Sin ofertas: el precio de
- * venta de la tienda viene del ERP (ADR-025 del ERP) y este queda solo como
- * respaldo del JSON-LD.
+ * venta de la tienda viene del ERP (ADR-025 del ERP) y este queda solo para el
+ * JSON-LD.
  */
 export const calcularPrecios = (fila: FilaMercadoLibre): PreciosCalculados => {
   const pagina = fila.precioPagina ?? fila.precioPromo ?? fila.precioLista;
