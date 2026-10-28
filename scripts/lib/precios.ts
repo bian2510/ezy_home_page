@@ -24,16 +24,14 @@ export interface FilaMercadoLibre {
 /** Un producto tal como vive en `src/data/products.json`. */
 export interface ProductoCatalogo {
   id: string;
+  sku: string;
   name: string;
   description: string;
   price: number;
   images: string[];
   category: string | null;
   isBestseller: boolean;
-  isOnSale: boolean;
   active: boolean;
-  promotionalPrice?: number;
-  promotionBadge?: string;
 }
 
 /** Publicaciones que son el mismo producto, con una elegida como referencia. */
@@ -45,8 +43,6 @@ export interface GrupoMercadoLibre {
 
 export interface PreciosCalculados {
   price: number;
-  promotionalPrice?: number;
-  isOnSale: boolean;
 }
 
 export interface Actualizacion {
@@ -196,11 +192,9 @@ export const agruparPublicaciones = (filas: FilaMercadoLibre[]): GrupoMercadoLib
 };
 
 /**
- * Traduce los precios de ML al contrato de `Product`.
- *
- * Con promoción en ML, el precio tachado que ve el cliente es el de lista real
- * de ML y el que paga es el de la web. Sin promoción hay un solo precio, el de
- * la web: marcar oferta sin descuento sería mentirle al cliente.
+ * Precio de la web a partir de la publicación de ML. Sin ofertas: el precio de
+ * venta de la tienda viene del ERP (ADR-025 del ERP) y este queda solo para el
+ * JSON-LD.
  */
 export const calcularPrecios = (fila: FilaMercadoLibre): PreciosCalculados => {
   const pagina = fila.precioPagina ?? fila.precioPromo ?? fila.precioLista;
@@ -208,36 +202,15 @@ export const calcularPrecios = (fila: FilaMercadoLibre): PreciosCalculados => {
     throw new Error(`La publicación ${fila.id} no tiene ningún precio utilizable.`);
   }
 
-  const precioPagina = redondearPeso(pagina);
-  if (fila.precioPromo === null || fila.precioLista === null) {
-    return { price: precioPagina, isOnSale: false };
-  }
-
-  const lista = redondearPeso(fila.precioLista);
-  // Si el precio de lista no queda por encima del de la web no hay descuento
-  // que mostrar, y el validador rechaza una promoción que no descuenta nada.
-  if (lista <= precioPagina) {
-    return { price: precioPagina, isOnSale: false };
-  }
-
-  return { price: lista, promotionalPrice: precioPagina, isOnSale: true };
+  return { price: redondearPeso(pagina) };
 };
 
-/** Aplica los precios y la visibilidad, dejando intacto todo lo editorial. */
-const aplicarGrupo = (producto: ProductoCatalogo, grupo: GrupoMercadoLibre): ProductoCatalogo => {
-  const precios = calcularPrecios(grupo.representante);
-  const { promotionalPrice: _descartado, ...resto } = producto;
-
-  return {
-    ...resto,
-    price: precios.price,
-    isOnSale: precios.isOnSale,
-    ...(precios.promotionalPrice === undefined
-      ? {}
-      : { promotionalPrice: precios.promotionalPrice }),
-    active: grupo.stockTotal > 0,
-  };
-};
+/** Aplica el precio y la visibilidad, dejando intacto todo lo editorial. */
+const aplicarGrupo = (producto: ProductoCatalogo, grupo: GrupoMercadoLibre): ProductoCatalogo => ({
+  ...producto,
+  price: calcularPrecios(grupo.representante).price,
+  active: grupo.stockTotal > 0,
+});
 
 /**
  * Cruza el export con el catálogo. Primero por id; si ninguna publicación del
@@ -281,9 +254,3 @@ export const vincular = (
     sinTocar: productos.filter((producto) => !usados.has(producto.id)),
   };
 };
-
-/** Precio que el cliente termina pagando, para comparar antes y después. */
-export const precioEfectivo = (producto: ProductoCatalogo): number =>
-  producto.isOnSale && producto.promotionalPrice !== undefined
-    ? producto.promotionalPrice
-    : producto.price;

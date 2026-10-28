@@ -5,6 +5,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import ProductDetailPage from '@/pages/ProductDetailPage';
 import { CartProvider } from '@/features/cart/CartProvider';
 import { formatPrice } from '@/lib/formatPrice';
+import type { ProductPricing } from '@/types';
 
 vi.mock('@/data/products.json', () => ({
   default: [
@@ -16,7 +17,6 @@ vi.mock('@/data/products.json', () => ({
       images: ['/images/foco-1.jpg', '/images/foco-2.jpg'],
       category: 'iluminacion',
       isBestseller: true,
-      isOnSale: false,
       active: true,
     },
     {
@@ -24,11 +24,9 @@ vi.mock('@/data/products.json', () => ({
       name: 'Tira LED RGB',
       description: 'Tira LED de 5 metros para iluminación ambiental.',
       price: 28900,
-      promotionalPrice: 22500,
       images: ['/images/tira-led.jpg'],
       category: 'iluminacion',
       isBestseller: false,
-      isOnSale: true,
       active: true,
     },
     {
@@ -39,7 +37,6 @@ vi.mock('@/data/products.json', () => ({
       images: [],
       category: 'seguridad',
       isBestseller: false,
-      isOnSale: false,
       active: true,
     },
     {
@@ -50,7 +47,6 @@ vi.mock('@/data/products.json', () => ({
       images: ['/images/cerradura.jpg'],
       category: 'seguridad',
       isBestseller: false,
-      isOnSale: false,
       active: false,
     },
   ],
@@ -68,6 +64,17 @@ vi.mock('@/features/cart/useCart', () => ({
     total: 0,
     itemCount: 0,
     storageAvailable: true,
+  }),
+}));
+
+// Precio del ERP: por defecto el `price` del JSON mockeado hace de precio del
+// ERP; cada test puede fijar otro.
+let erpPricing: ProductPricing | null = null;
+vi.mock('@/features/pricing/usePricing', () => ({
+  usePricing: () => ({
+    status: 'ready',
+    pricingOf: (product: { price: number }) =>
+      erpPricing ?? { price: product.price, transferPrice: null, availability: 'available' },
   }),
 }));
 
@@ -103,6 +110,7 @@ describe('ProductDetailPage', () => {
 
   afterEach(() => {
     window.localStorage.clear();
+    erpPricing = null;
   });
 
   it('should render the product name and price for a valid id', () => {
@@ -122,13 +130,39 @@ describe('ProductDetailPage', () => {
     ).toBeInTheDocument();
   });
 
-  it('should display the regular price struck-through and the promotional price highlighted when isOnSale', () => {
+  it('should show the ERP price and the transfer price instead of the JSON price', () => {
+    erpPricing = { price: 31000, transferPrice: 29500, availability: 'available' };
     renderAt('/productos/p-2');
 
-    const regular = screen.getByText(priceText(28900));
-    expect(regular).toBeInTheDocument();
-    expect(regular.tagName.toLowerCase()).toBe('s');
-    expect(screen.getByText(priceText(22500))).toBeInTheDocument();
+    expect(screen.getByText(priceText(31000))).toBeInTheDocument();
+    expect(screen.getByText(priceText(29500))).toBeInTheDocument();
+    expect(screen.queryByText(priceText(28900))).not.toBeInTheDocument();
+  });
+
+  it('should offer a WhatsApp consult instead of adding to the cart when out of stock', () => {
+    erpPricing = { price: 31000, transferPrice: null, availability: 'out_of_stock' };
+    renderAt('/productos/p-2');
+
+    expect(screen.getByText(/sin stock/i)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /agregar al carrito/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /consultar por whatsapp/i })).toBeInTheDocument();
+  });
+
+  it('should ask to consult the price when the ERP has none', () => {
+    erpPricing = { price: null, transferPrice: null, availability: 'no_price' };
+    renderAt('/productos/p-2');
+
+    expect(screen.getByText('Consultar precio')).toBeInTheDocument();
+    expect(screen.queryByText(priceText(28900))).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /consultar por whatsapp/i })).toBeInTheDocument();
+  });
+
+  it('should disable "Agregar al carrito" while the price is loading', () => {
+    erpPricing = { price: null, transferPrice: null, availability: 'loading' };
+    renderAt('/productos/p-2');
+
+    expect(screen.getByRole('status', { name: /cargando precio/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /agregar al carrito/i })).toBeDisabled();
   });
 
   it('should render a thumbnail strip when the product has more than one image', () => {

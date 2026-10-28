@@ -185,13 +185,13 @@ mientras lo use un solo archivo; con dos, sube al helper:
 ```ts
 export const buildProduct = (overrides: Partial<Product> = {}): Product => ({
   id: 'p-1',
+  sku: 'FOCO-001',
   name: 'Foco Inteligente',
   description: 'Foco LED Wi-Fi 9W',
   price: 12500,
   images: ['/images/foco.jpg'],
   category: 'Iluminación Inteligente',
   isBestseller: false,
-  isOnSale: false,
   active: true,
   ...overrides,
 });

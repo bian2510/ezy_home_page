@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useCart } from './useCart';
 import CartItem from './CartItem';
-import { buildWhatsAppMessage } from './cartUtils';
+import { buildWhatsAppMessage, computeCartTotals } from './cartUtils';
 import { formatPrice } from '@/lib/formatPrice';
 import { getWhatsAppNumber } from '@/lib/env';
+import { usePricing } from '@/features/pricing';
 
 interface CartContentsProps {
   /** Called after a successful checkout tap — used by the drawer to close itself. */
@@ -11,7 +12,9 @@ interface CartContentsProps {
 }
 
 export default function CartContents({ onClose }: CartContentsProps) {
-  const { items, updateQuantity, removeItem, total, storageAvailable } = useCart();
+  const { items, updateQuantity, removeItem, storageAvailable } = useCart();
+  const { pricingOf } = usePricing();
+  const { total, transferTotal, hasUnpriced } = computeCartTotals(items, pricingOf);
 
   const isEmpty = items.length === 0;
 
@@ -29,7 +32,7 @@ export default function CartContents({ onClose }: CartContentsProps) {
 
   const handleCheckout = () => {
     if (isEmpty) return;
-    const url = buildWhatsAppMessage(items, getWhatsAppNumber());
+    const url = buildWhatsAppMessage(items, getWhatsAppNumber(), pricingOf);
     window.open(url, '_blank', 'noopener,noreferrer');
     onClose?.();
   };
@@ -71,9 +74,21 @@ export default function CartContents({ onClose }: CartContentsProps) {
       )}
 
       <div className="mt-auto border-t border-border pt-4">
-        <p className="mb-3 text-base font-semibold text-foreground">
-          Total: <span className="font-mono">{formatPrice(total)}</span>
-        </p>
+        <div className="mb-3 flex flex-col gap-1">
+          <p className="text-base font-semibold text-foreground">
+            Total: <span className="font-mono">{formatPrice(total)}</span>
+          </p>
+          {transferTotal < total && (
+            <p className="text-sm text-muted-foreground">
+              Con transferencia: <span className="font-mono">{formatPrice(transferTotal)}</span>
+            </p>
+          )}
+          {hasUnpriced && (
+            <p className="text-sm text-muted-foreground">
+              Los productos sin precio te los cotizamos por WhatsApp.
+            </p>
+          )}
+        </div>
         <button
           type="button"
           onClick={handleCheckout}

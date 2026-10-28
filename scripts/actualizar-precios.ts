@@ -12,7 +12,6 @@ import { resolve } from 'node:path';
 import {
   agruparPublicaciones,
   parsearCsv,
-  precioEfectivo,
   vincular,
   type ProductoCatalogo,
 } from './lib/precios.ts';
@@ -43,8 +42,8 @@ console.log(`Catálogo: ${productos.length} productos\n`);
 const cambios = actualizaciones
   .map((actualizacion) => ({
     ...actualizacion,
-    antes: precioEfectivo(actualizacion.producto),
-    despues: precioEfectivo(actualizacion.resultado),
+    antes: actualizacion.producto.price,
+    despues: actualizacion.resultado.price,
   }))
   .filter(
     ({ antes, despues, producto, resultado }) =>

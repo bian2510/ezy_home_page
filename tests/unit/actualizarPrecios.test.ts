@@ -27,13 +27,13 @@ const buildFila = (overrides: Partial<FilaMercadoLibre> = {}): FilaMercadoLibre 
 
 const buildProducto = (overrides: Partial<ProductoCatalogo> = {}): ProductoCatalogo => ({
   id: 'MLA1',
+  sku: 'SNS-001',
   name: 'Sensor Zigbee para puertas',
   description: 'Descripción cuidada',
   price: 12000,
   images: ['/img.webp'],
   category: 'Seguridad',
   isBestseller: false,
-  isOnSale: false,
   active: true,
   ...overrides,
 });
@@ -162,37 +162,28 @@ describe('agruparPublicaciones', () => {
 });
 
 describe('calcularPrecios', () => {
-  it('should treat the ML list price as the struck-through price when there is a promotion', () => {
+  it('should use the page price as the only price, even when ML has a promotion', () => {
     const precios = calcularPrecios(
       buildFila({ precioLista: 105000, precioPromo: 99750, precioPagina: 89775 }),
     );
 
-    expect(precios).toEqual({ price: 105000, promotionalPrice: 89775, isOnSale: true });
+    expect(precios).toEqual({ price: 89775 });
   });
 
-  it('should use the page price as the only price when there is no promotion', () => {
+  it('should use the page price when there is no promotion', () => {
     const precios = calcularPrecios(
       buildFila({ precioLista: 175900, precioPromo: null, precioPagina: 158310 }),
     );
 
-    expect(precios).toEqual({ price: 158310, isOnSale: false });
+    expect(precios).toEqual({ price: 158310 });
   });
 
-  it('should round both prices to whole pesos', () => {
+  it('should round the price to whole pesos', () => {
     const precios = calcularPrecios(
       buildFila({ precioLista: 79734.4, precioPromo: 50156.52, precioPagina: 45140.87 }),
     );
 
-    expect(precios.price).toBe(79734);
-    expect(precios.promotionalPrice).toBe(45141);
-  });
-
-  it('should never leave a promotional price at or above the list price', () => {
-    const precios = calcularPrecios(
-      buildFila({ precioLista: 10000, precioPromo: 10000, precioPagina: 9000 }),
-    );
-
-    expect(precios.promotionalPrice).toBeLessThan(precios.price);
+    expect(precios.price).toBe(45141);
   });
 });
 
@@ -277,7 +268,7 @@ describe('vincular', () => {
       images: ['/products/MLA1/01.webp'],
       category: 'Iluminación Inteligente',
       isBestseller: true,
-      promotionBadge: '2x1',
+      sku: 'PLAFON-24W',
     });
 
     const { actualizaciones } = vincular(
@@ -291,20 +282,6 @@ describe('vincular', () => {
     expect(resultado?.images).toEqual(['/products/MLA1/01.webp']);
     expect(resultado?.category).toBe('Iluminación Inteligente');
     expect(resultado?.isBestseller).toBe(true);
-    expect(resultado?.promotionBadge).toBe('2x1');
-  });
-
-  it('should drop a stale promotional price when the product is no longer on sale', () => {
-    const { actualizaciones } = vincular(
-      grupos([
-        buildFila({ id: 'MLA1', precioLista: 50000, precioPromo: null, precioPagina: 45000 }),
-      ]),
-      [buildProducto({ id: 'MLA1', isOnSale: true, promotionalPrice: 30000 })],
-    );
-    const resultado = actualizaciones[0]?.resultado;
-
-    expect(resultado?.isOnSale).toBe(false);
-    expect(resultado?.promotionalPrice).toBeUndefined();
-    expect(resultado?.price).toBe(45000);
+    expect(resultado?.sku).toBe('PLAFON-24W');
   });
 });

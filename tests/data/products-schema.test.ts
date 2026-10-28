@@ -11,13 +11,13 @@ import type { Product } from '@/types';
 
 const buildRaw = (overrides: Record<string, unknown> = {}) => ({
   id: 'p-1',
+  sku: 'FOCO-001',
   name: 'Foco Inteligente',
   description: 'Foco LED Wi-Fi 9W',
   price: 12500,
   images: ['https://http2.mlstatic.com/foco.webp'],
   category: 'Iluminación Inteligente',
   isBestseller: false,
-  isOnSale: false,
   active: true,
   ...overrides,
 });
@@ -27,6 +27,14 @@ describe('products.json — el catálogo publicado', () => {
     const result = CatalogSchema.safeParse(productsData);
 
     expect(result.success ? '' : formatIssues(result.error)).toBe('');
+  });
+
+  it('should not publish a placeholder SKU: it must be the real one from the ERP', () => {
+    const placeholders = (productsData as { id: string; sku: string }[])
+      .filter((product) => /PENDIENTE/i.test(product.sku))
+      .map((product) => product.id);
+
+    expect(placeholders).toEqual([]);
   });
 
   it('should type-check as Product[] once validated', () => {
@@ -79,28 +87,18 @@ describe('ProductSchema — forma de un producto', () => {
   });
 });
 
-describe('ProductSchema — coherencia de promociones', () => {
-  it('should reject isOnSale without a promotional price', () => {
-    expect(ProductSchema.safeParse(buildRaw({ isOnSale: true })).success).toBe(false);
+describe('ProductSchema — SKU y ofertas', () => {
+  it('should reject a product without SKU or with a blank one', () => {
+    const { sku: _sku, ...withoutSku } = buildRaw();
+
+    expect(ProductSchema.safeParse(withoutSku).success).toBe(false);
+    expect(ProductSchema.safeParse(buildRaw({ sku: '  ' })).success).toBe(false);
   });
 
-  it('should reject a promotional price without isOnSale', () => {
+  it('should reject the old offer fields: the price comes from the ERP', () => {
+    expect(ProductSchema.safeParse(buildRaw({ isOnSale: false })).success).toBe(false);
     expect(ProductSchema.safeParse(buildRaw({ promotionalPrice: 9000 })).success).toBe(false);
-  });
-
-  it('should reject a promotional price that is not below the list price', () => {
-    expect(
-      ProductSchema.safeParse(buildRaw({ isOnSale: true, promotionalPrice: 12500 })).success,
-    ).toBe(false);
-    expect(
-      ProductSchema.safeParse(buildRaw({ isOnSale: true, promotionalPrice: 13000 })).success,
-    ).toBe(false);
-  });
-
-  it('should accept a coherent promotion', () => {
-    expect(
-      ProductSchema.safeParse(buildRaw({ isOnSale: true, promotionalPrice: 9000 })).success,
-    ).toBe(true);
+    expect(ProductSchema.safeParse(buildRaw({ promotionBadge: '2x1' })).success).toBe(false);
   });
 });
 
@@ -117,15 +115,21 @@ describe('ProductSchema — categoría', () => {
 
 describe('CatalogSchema — reglas del catálogo completo', () => {
   it('should reject duplicated ids', () => {
-    const catalog = [buildRaw({ id: 'dup' }), buildRaw({ id: 'dup', name: 'Otro' })];
+    const catalog = [buildRaw({ id: 'dup' }), buildRaw({ id: 'dup', sku: 'OTRO', name: 'Otro' })];
+
+    expect(CatalogSchema.safeParse(catalog).success).toBe(false);
+  });
+
+  it('should reject SKUs repeated ignoring case and spaces, like the ERP compares them', () => {
+    const catalog = [buildRaw({ id: 'a', sku: 'SNS-001' }), buildRaw({ id: 'b', sku: ' sns-001' })];
 
     expect(CatalogSchema.safeParse(catalog).success).toBe(false);
   });
 
   it('should reject categories that differ only in case or whitespace', () => {
     const catalog = [
-      buildRaw({ id: 'a', category: 'Seguridad' }),
-      buildRaw({ id: 'b', category: 'seguridad ' }),
+      buildRaw({ id: 'a', sku: 'A', category: 'Seguridad' }),
+      buildRaw({ id: 'b', sku: 'B', category: 'seguridad ' }),
     ];
 
     expect(CatalogSchema.safeParse(catalog).success).toBe(false);
@@ -133,8 +137,8 @@ describe('CatalogSchema — reglas del catálogo completo', () => {
 
   it('should accept genuinely different categories', () => {
     const catalog = [
-      buildRaw({ id: 'a', category: 'Seguridad' }),
-      buildRaw({ id: 'b', category: 'Confort' }),
+      buildRaw({ id: 'a', sku: 'A', category: 'Seguridad' }),
+      buildRaw({ id: 'b', sku: 'B', category: 'Confort' }),
     ];
 
     expect(CatalogSchema.safeParse(catalog).success).toBe(true);

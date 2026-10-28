@@ -70,8 +70,8 @@ consumidores reales.
 Contratos de datos compartidos entre features. Solo interfaces, tipos y funciones puras de transformación.
 
 ```
-src/types/index.ts    → Product, CartItem, CartState, BlogMeta, Toast, ToastType,
-                         getEffectivePrice
+src/types/index.ts    → Product, ProductPricing, Availability, CartItem, CartState,
+                         BlogMeta, Toast, ToastType
 ```
 
 Regla: si un tipo es usado por una sola feature, vive dentro de esa feature. Sube a `types/` solo cuando lo usan 2+ features.

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import type * as RRD from 'react-router-dom';
 import type { ReactElement } from 'react';
-import type { Product } from '@/types';
+import type { Product, ProductPricing } from '@/types';
 import { formatPrice } from '@/lib/formatPrice';
 import ProductCard from '@/features/catalog/ProductCard';
 import { CartProvider } from '@/features/cart/CartProvider';
@@ -56,6 +56,13 @@ vi.mock('@/features/cart/useCart', () => ({
   }),
 }));
 
+// usePricing: el precio de venta viene del ERP; cada test fija el que necesita.
+const AVAILABLE: ProductPricing = { price: 12500, transferPrice: null, availability: 'available' };
+let currentPricing: ProductPricing = AVAILABLE;
+vi.mock('@/features/pricing/usePricing', () => ({
+  usePricing: () => ({ status: 'ready', pricingOf: () => currentPricing }),
+}));
+
 const addToastMock = vi.fn();
 vi.mock('@/features/toast/useToast', () => ({
   useToast: () => ({ addToast: addToastMock, removeToast: vi.fn(), toasts: [] }),
@@ -76,16 +83,63 @@ describe('ProductCard', () => {
     navigateMock.mockReset();
     addItemMock.mockReset();
     addToastMock.mockReset();
+    currentPricing = AVAILABLE;
     window.localStorage.clear();
   });
 
-  it('should render the product name and ARS-formatted price', () => {
+  it('should render the product name and the ERP price, not the JSON price', () => {
+    currentPricing = { price: 21000, transferPrice: null, availability: 'available' };
     const product = buildProduct({ name: 'Foco Inteligente RGBW', price: 12500 });
 
     renderWithProviders(<ProductCard product={product} />);
 
     expect(screen.getByText('Foco Inteligente RGBW')).toBeInTheDocument();
-    expect(screen.getByText(matchesPrice(12500))).toBeInTheDocument();
+    expect(screen.getByText(matchesPrice(21000))).toBeInTheDocument();
+    expect(screen.queryByText(matchesPrice(12500))).not.toBeInTheDocument();
+  });
+
+  it('should show the transfer price below when it is lower', () => {
+    currentPricing = { price: 21000, transferPrice: 20000, availability: 'available' };
+
+    renderWithProviders(<ProductCard product={buildProduct()} />);
+
+    expect(screen.getByText(matchesPrice(20000))).toBeInTheDocument();
+    expect(screen.getByText(/con transferencia/i)).toBeInTheDocument();
+  });
+
+  it('should show a skeleton and a disabled add button while the ERP answer is loading', () => {
+    currentPricing = { price: null, transferPrice: null, availability: 'loading' };
+
+    renderWithProviders(<ProductCard product={buildProduct({ price: 12500 })} />);
+
+    expect(screen.getByRole('status', { name: /cargando precio/i })).toBeInTheDocument();
+    expect(screen.queryByText(matchesPrice(12500))).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /agregar al carrito/i })).toBeDisabled();
+  });
+
+  it('should ask to consult the price by WhatsApp when the ERP has no price for it', () => {
+    currentPricing = { price: null, transferPrice: null, availability: 'no_price' };
+
+    renderWithProviders(<ProductCard product={buildProduct({ name: 'Foco', price: 12500 })} />);
+
+    expect(screen.getByText('Consultar precio')).toBeInTheDocument();
+    expect(screen.queryByText(matchesPrice(12500))).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /agregar al carrito/i })).not.toBeInTheDocument();
+    const consult = screen.getByRole('link', { name: /consultar por whatsapp/i });
+    expect(consult).toHaveAttribute('href', expect.stringContaining('https://wa.me/'));
+    expect(decodeURIComponent(consult.getAttribute('href') ?? '')).toContain('Foco');
+  });
+
+  it('should show "Sin stock" and offer to consult instead of adding to the cart', async () => {
+    const user = userEvent.setup();
+    currentPricing = { price: 21000, transferPrice: null, availability: 'out_of_stock' };
+
+    renderWithProviders(<ProductCard product={buildProduct()} />);
+
+    expect(screen.getByText(/sin stock/i)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /agregar al carrito/i })).not.toBeInTheDocument();
+    await user.click(screen.getByRole('link', { name: /consultar por whatsapp/i }));
+    expect(navigateMock).not.toHaveBeenCalled();
   });
 
   it('should render the first image with loading="lazy" when images is non-empty', () => {
@@ -108,30 +162,6 @@ describe('ProductCard', () => {
 
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
     expect(screen.getByText(/sin imagen/i)).toBeInTheDocument();
-  });
-
-  it('should show the "Oferta" badge, the promotional price highlighted, and the regular price struck-through when isOnSale is true', () => {
-    const product = buildProduct({
-      price: 12000,
-      isOnSale: true,
-      promotionalPrice: 9000,
-    });
-
-    renderWithProviders(<ProductCard product={product} />);
-
-    expect(screen.getByText(/oferta/i)).toBeInTheDocument();
-    expect(screen.getByText(matchesPrice(9000))).toBeInTheDocument();
-    const regular = screen.getByText(matchesPrice(12000));
-    expect(regular).toBeInTheDocument();
-    expect(regular.tagName.toLowerCase()).toBe('s');
-  });
-
-  it('should not show the "Oferta" badge when isOnSale is false', () => {
-    const product = buildProduct({ isOnSale: false });
-
-    renderWithProviders(<ProductCard product={product} />);
-
-    expect(screen.queryByText(/oferta/i)).not.toBeInTheDocument();
   });
 
   it('should show the "Más vendido" badge when isBestseller is true', () => {

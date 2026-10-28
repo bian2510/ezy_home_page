@@ -21,8 +21,6 @@ export interface CartContextValue {
   updateQuantity: (productId: string, quantity: number) => void;
   /** Empty the cart entirely. */
   clearCart: () => void;
-  /** Σ (product.price × quantity) across every item. */
-  total: number;
   /** Σ quantity across every item — used by the header badge. */
   itemCount: number;
   /**

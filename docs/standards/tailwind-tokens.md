@@ -32,7 +32,7 @@ Si un color no existe como token, agregarlo al config — no hardcodearlo.
 | Token                | Clase Tailwind                        | Hex       | Cuándo usarlo                                    |
 | -------------------- | ------------------------------------- | --------- | ------------------------------------------------ |
 | `success`            | `bg-success` / `text-success`         | `#4caf86` | Confirmaciones, checkmarks, badge "Más vendido". |
-| `warning`            | `bg-warning`                          | `#d4a017` | Alertas no críticas, badge "Oferta".             |
+| `warning`            | `bg-warning`                          | `#d4a017` | Alertas no críticas.                             |
 | `warning-foreground` | `text-warning-foreground`             | `#7a5a00` | Texto sobre fondo `warning`.                     |
 | `destructive`        | `bg-destructive` / `text-destructive` | `#e53935` | Errores, acciones irreversibles (eliminar).      |
 

@@ -102,17 +102,6 @@ describe('CartContext', () => {
     expect(result.current.items).toEqual([]);
   });
 
-  it('should compute total as the sum of price times quantity for every item', () => {
-    const { result } = renderHook(() => useCart(), { wrapper });
-
-    act(() => {
-      result.current.addItem(buildProduct({ id: 'p-1', price: 10000 }), 2);
-      result.current.addItem(buildProduct({ id: 'p-2', price: 5500 }), 3);
-    });
-
-    expect(result.current.total).toBe(10000 * 2 + 5500 * 3);
-  });
-
   it('should compute itemCount as the sum of all item quantities', () => {
     const { result } = renderHook(() => useCart(), { wrapper });
 
@@ -139,7 +128,6 @@ describe('CartContext', () => {
     expect(getItemSpy).toHaveBeenCalledWith(STORAGE_KEY);
     expect(result.current.items).toHaveLength(1);
     expect(result.current.items[0]?.quantity).toBe(2);
-    expect(result.current.total).toBe(12500 * 2);
   });
 
   it('should set storageAvailable to false when localStorage.setItem throws', () => {

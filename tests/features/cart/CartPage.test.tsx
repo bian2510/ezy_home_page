@@ -9,6 +9,18 @@ import { useCart } from '@/features/cart/useCart';
 import { formatPrice } from '@/lib/formatPrice';
 import { buildProduct } from '../../helpers/builders';
 
+// Precio del ERP: en estos tests el `price` del builder hace de precio del ERP.
+vi.mock('@/features/pricing/usePricing', () => ({
+  usePricing: () => ({
+    status: 'ready',
+    pricingOf: (product: { price: number }) => ({
+      price: product.price,
+      transferPrice: null,
+      availability: 'available',
+    }),
+  }),
+}));
+
 vi.mock('@/features/toast/useToast', () => ({
   useToast: () => ({ addToast: vi.fn(), removeToast: vi.fn(), toasts: [] }),
 }));

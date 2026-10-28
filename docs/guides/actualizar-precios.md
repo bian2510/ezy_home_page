@@ -1,30 +1,63 @@
-# Actualizar precios y stock desde Mercado Libre
+# Precios y stock: vienen del ERP
 
-Rutina mensual: los precios reales se manejan en Mercado Libre, y la web se
-sincroniza desde el export de ML. No se editan precios a mano en el JSON.
-
----
-
-## Respuesta corta a "¿cuántos archivos necesito?"
-
-**Uno solo** para la rutina normal: el export de precios de Mercado Libre. Con
-eso se actualizan precios, promociones y stock de todo el catálogo.
-
-**Un segundo archivo solo cuando hay productos nuevos**, y lo armás vos a mano:
-el export de ML no trae categoría, descripción ni imágenes, y sin esas tres cosas
-un producto no puede publicarse. El script te lista cuáles son; crearlos es
-trabajo manual siguiendo [`agregar-producto.md`](./agregar-producto.md).
-
-| Archivo                          | Cuándo            | Quién lo genera |
-| -------------------------------- | ----------------- | --------------- |
-| Export de precios de ML (`.csv`) | Todos los meses   | Mercado Libre   |
-| Planilla de productos nuevos     | Solo si hay altas | Vos, a mano     |
+**Desde 2026-10-28 el precio y el stock que ve el cliente salen del ERP de
+EzyHome**, no de este repo (ADR-025 del ERP, camino 1). Ya no hay rutina mensual
+de precios ni ofertas.
 
 ---
 
-## La rutina, paso a paso
+## Cómo funciona
 
-### 1. Exportar los precios desde Mercado Libre
+- Cada producto de `src/data/products.json` tiene un **`sku`**, que tiene que ser
+  **igual al SKU del producto en el ERP** (mayúsculas y espacios alrededor no
+  importan).
+- Al cargar el sitio, `PricingProvider` (`src/features/pricing/`) pide una sola
+  vez al ERP el precio y el stock de todos los SKU activos:
+  `GET https://ezyhome.app/api/store/products?skus=...` con la clave
+  `VITE_STORE_API_KEY` (secret del repo, ver [`deploy-y-ci.md`](./deploy-y-ci.md)).
+- El ERP devuelve dos precios: **con Mercado Pago** (precio del local + recargo,
+  redondeado a $100) y **con transferencia** (precio del local − descuento). Los
+  dos se ajustan en Configuración del ERP, no acá.
+- La card y el detalle muestran el precio con Mercado Pago y, debajo, "$X con
+  transferencia" cuando es menor. El carrito y el mensaje de WhatsApp usan esos
+  mismos precios.
+
+| Qué devuelve el ERP para el SKU     | Qué ve el cliente                                       |
+| ----------------------------------- | ------------------------------------------------------- |
+| Precio y stock                      | Precio y "Agregar al carrito"                           |
+| Precio sin stock                    | Precio, "Sin stock" y "Consultar por WhatsApp"          |
+| Nada (SKU desconocido o sin precio) | "Consultar precio" y "Consultar por WhatsApp"           |
+| El ERP no responde / sin clave      | "Consultar precio" en todos los productos               |
+| Todavía cargando                    | Un skeleton en lugar del precio; el botón deshabilitado |
+
+**El `price` del JSON no se muestra nunca y no se mantiene.** Solo lo usa el
+JSON-LD de la página de detalle (SEO), así que puede estar desactualizado.
+
+## Si cambiás un SKU en el ERP
+
+Cambialo también en `products.json`. Si no, el ERP no devuelve ese producto y
+el sitio lo muestra como "Consultar precio". Para detectarlo, el sitio escribe
+en la consola del navegador:
+
+```
+[precios] El ERP no devolvió estos SKU: ...
+```
+
+Cuando exista la ficha de tienda en el ERP (camino 2) el JSON desaparece y esto
+deja de hacer falta.
+
+---
+
+## El script de precios de Mercado Libre (heredado)
+
+`pnpm precios:informe` / `pnpm precios:aplicar` siguen existiendo y hacen lo de
+antes **sin ofertas**: escriben `price` (el `PRECIO PAGINA` del export de ML) y
+`active` (stock 0 en ML → oculto). Ya no son parte de ninguna rutina: el precio
+de venta viene del ERP. Se dejan hasta decidir si se borran.
+
+## El script, paso a paso
+
+### 1. Exportar el CSV desde Mercado Libre
 
 Desde el panel de ML, exportar la planilla de publicaciones. Guardarla como CSV.
 El script espera las columnas del export (`ITEM_ID`, `TITLE`, `STOCK_FLEX`,
@@ -33,9 +66,6 @@ de `VALUE_ADDED_TAX`.
 
 `PRECIO PAGINA` es el precio para la web y lo calcula la planilla, no el script:
 es el precio vigente de ML menos 10%. **La web queda 10% más barata que ML.**
-
-> El CSV es la fuente de verdad del precio. Si el número de la planilla no es el
-> que querés publicar, se corrige en la planilla, no en el JSON.
 
 ### 2. Mirar el informe antes de tocar nada
 
@@ -102,19 +132,8 @@ los productos con id `MLAU` que en el export figuran con otro id. Cuando vincula
 por título, **conserva el id que ya tenía la web**: cambiarlo rompería los links
 compartidos y la carpeta de imágenes.
 
-**Traduce el precio al contrato de `Product`:**
-
-| Situación en ML           | `price`         | `promotionalPrice` | `isOnSale` |
-| ------------------------- | --------------- | ------------------ | ---------- |
-| Tiene precio en promoción | precio lista ML | `PRECIO PAGINA`    | `true`     |
-| No tiene promoción        | `PRECIO PAGINA` | —                  | `false`    |
-
-Con promoción, el precio tachado que ve el cliente es el de lista real de ML y el
-que paga es el de la web. Sin promoción hay un solo precio: anunciar un descuento
-que no existe erosiona la confianza, que es el riesgo #1 del negocio
-(`DOMAIN.md` › Risk Posture).
-
-Si un producto deja de estar en promoción, **limpia el `promotionalPrice` viejo**.
+**Escribe `price` = `PRECIO PAGINA`** (sin ofertas: el precio de venta viene del
+ERP).
 
 **Redondea a pesos enteros**, medio hacia arriba. El esquema del catálogo rechaza
 centavos.
@@ -124,7 +143,7 @@ pero sigue en el JSON. Si vuelve el stock, el mismo script lo vuelve a publicar.
 
 ### Qué NO toca
 
-`name`, `description`, `images`, `category`, `isBestseller` y `promotionBadge`
+`sku`, `name`, `description`, `images`, `category` e `isBestseller`
 quedan intactos siempre. Los títulos y textos de la web están mejor redactados que
 los de ML —los de ML están escritos para el buscador de ML— y las imágenes y
 categorías no existen en el CSV. Hay un test que lo garantiza.

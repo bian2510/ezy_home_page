@@ -9,7 +9,6 @@ import { useCallback, useEffect, useMemo, useReducer, useState, type ReactNode }
 import { CartContext, type CartContextValue } from './CartContext';
 import { findProductById } from '@/data/catalog';
 import type { CartItem, Product } from '@/types';
-import { getEffectivePrice } from '@/types';
 
 const STORAGE_KEY = 'ezyhome_cart';
 const MIN_QUANTITY = 1;
@@ -59,14 +58,17 @@ const isPersistedItem = (value: unknown): value is CartItem => {
 
 /**
  * Reemplaza el snapshot persistido por la versión vigente del catálogo, para
- * que un carrito viejo no arrastre precios desactualizados al mensaje de
- * WhatsApp. Un producto que ya no está en el catálogo conserva su snapshot:
+ * que un carrito viejo no arrastre datos desactualizados (el SKU con el que se
+ * pide el precio al ERP). Un producto que ya no está en el catálogo conserva su snapshot:
  * DOMAIN.md exige que el carrito no se pierda sin acción del usuario.
  */
 const reconcileWithCatalog = (item: CartItem): CartItem => {
   const current = findProductById(item.product.id);
-  if (current === undefined) return item;
-  return { product: current, quantity: item.quantity };
+  if (current !== undefined) return { product: current, quantity: item.quantity };
+  // Un snapshot de antes del SKU no lo tiene: con SKU vacío queda sin precio
+  // del ERP ("consultar precio") en vez de romper.
+  const sku = typeof item.product.sku === 'string' ? item.product.sku : '';
+  return { product: { ...item.product, sku }, quantity: item.quantity };
 };
 
 /**
@@ -127,11 +129,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
   const clearCart = useCallback(() => dispatch({ type: 'CLEAR_CART' }), []);
 
-  const total = useMemo(
-    () => items.reduce((sum, item) => sum + getEffectivePrice(item.product) * item.quantity, 0),
-    [items],
-  );
-
   const itemCount = useMemo(() => items.reduce((sum, item) => sum + item.quantity, 0), [items]);
 
   const value = useMemo<CartContextValue>(
@@ -141,7 +138,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       removeItem,
       updateQuantity,
       clearCart,
-      total,
       itemCount,
       storageAvailable,
       isCartOpen,
@@ -154,7 +150,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       removeItem,
       updateQuantity,
       clearCart,
-      total,
       itemCount,
       storageAvailable,
       isCartOpen,

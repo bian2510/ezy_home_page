@@ -11,7 +11,6 @@ vi.mock('@/data/products.json', () => ({
       images: ['/images/foco.jpg'],
       category: 'Iluminación Inteligente',
       isBestseller: false,
-      isOnSale: false,
       active: true,
     },
     {
@@ -22,7 +21,6 @@ vi.mock('@/data/products.json', () => ({
       images: ['/images/cerradura.jpg'],
       category: 'Seguridad',
       isBestseller: false,
-      isOnSale: false,
       active: false,
     },
   ],

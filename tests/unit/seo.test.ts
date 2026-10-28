@@ -133,7 +133,7 @@ describe('buildProductJsonLd', () => {
     expect(jsonLd.image).toBeUndefined();
   });
 
-  it('should use the promotional price when the product is on sale', () => {
+  it('should publish the given price as a string', () => {
     const { offers } = buildProductJsonLd({ ...entrada, price: 45141 }, url);
 
     expect(offers.price).toBe('45141');

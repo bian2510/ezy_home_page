@@ -12,6 +12,10 @@ interface ImportMetaEnv {
   readonly VITE_WHATSAPP_NUMBER?: string;
   /** Dominio público del sitio, con esquema y sin barra final. */
   readonly VITE_SITE_URL?: string;
+  /** Base de la API del ERP para precio y stock; por defecto `https://ezyhome.app`. */
+  readonly VITE_STORE_API_URL?: string;
+  /** Clave de solo lectura de la API de la tienda en el ERP (pública: va en el bundle). */
+  readonly VITE_STORE_API_KEY?: string;
 }
 
 interface ImportMeta {

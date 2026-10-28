@@ -42,7 +42,7 @@ ships to the browser.
   `noUncheckedIndexedAccess` from `tsconfig.app.json`. Keep both aligned:
   otherwise `eslint --fix` strips assertions that `pnpm typecheck` then demands.
 - `actualizar-precios.ts` never touches editorial fields (`name`, `description`,
-  `images`, `category`, `isBestseller`, `promotionBadge`) — a test enforces it.
+  `images`, `category`, `isBestseller`, `sku`) — a test enforces it.
 - Changing the 105 kB budget in `check-bundle-size.js` requires a justification
   in the commit; otherwise the budget becomes decoration.
 - Guides: `docs/guides/actualizar-precios.md` and `docs/guides/deploy-y-ci.md`.

@@ -23,3 +23,23 @@ export const getWhatsAppNumber = (): string => import.meta.env.VITE_WHATSAPP_NUM
  */
 export const getSiteUrl = (): string =>
   (import.meta.env.VITE_SITE_URL ?? DEFAULT_SITE_URL).replace(/\/+$/, '');
+
+/** Dominio del ERP cuando no se configura `VITE_STORE_API_URL`. */
+const DEFAULT_STORE_API_URL = 'https://ezyhome.app';
+
+/**
+ * Base de la API de la tienda en el ERP (precio y stock por SKU), sin barra
+ * final. En desarrollo se apunta al ERP local con `VITE_STORE_API_URL`.
+ */
+export const getStoreApiUrl = (): string => {
+  // Vacía cuenta como no configurada: el CI la pasa vacía si no hay secret.
+  const configured = import.meta.env.VITE_STORE_API_URL ?? '';
+  return (configured === '' ? DEFAULT_STORE_API_URL : configured).replace(/\/+$/, '');
+};
+
+/**
+ * Clave de la API de la tienda. Viaja en el bundle, así que es pública: solo
+ * permite leer precio y stock, que ya se muestran en el sitio. Sin clave el
+ * sitio muestra "Consultar precio".
+ */
+export const getStoreApiKey = (): string => import.meta.env.VITE_STORE_API_KEY ?? '';

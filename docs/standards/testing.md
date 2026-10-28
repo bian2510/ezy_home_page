@@ -43,7 +43,7 @@ const buildProduct = (overrides: Partial<Product> = {}): Product =>
 Usar `overrides` solo cuando el test necesita un valor específico:
 
 ```ts
-const saleProduct = buildProduct({ isOnSale: true, promotionalPrice: 9000 });
+const bestseller = buildProduct({ isBestseller: true });
 ```
 
 ---
