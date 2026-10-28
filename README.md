@@ -24,8 +24,6 @@ push to `main`.
 **Development (local)**
 
 - Node.js >= 18.18 (Node 20 LTS recommended)
-- Node.js >= 22 only for `pnpm precios:*` — those scripts run TypeScript
-  directly via native type stripping, with no build step
 - pnpm 9 (`corepack enable && corepack prepare pnpm@9.2.0 --activate`)
 
 **Docker (optional — not used for deployment)**
@@ -62,16 +60,14 @@ pnpm prepare                  # installs Husky hooks
 
 ### Catalog and release commands
 
-| Command                      | Purpose                                                         |
-| ---------------------------- | --------------------------------------------------------------- |
-| `pnpm validate:products`     | Validate `src/data/products.json` against the runtime schema    |
-| `pnpm precios:informe`       | Dry-run report of a Mercado Libre price export (writes nothing) |
-| `pnpm precios:aplicar`       | Apply that export to the catalog                                |
-| `pnpm check:bundle`          | Fail if the critical path exceeds the 105 kB gzip budget        |
-| `bash scripts/smoke-test.sh` | Check that production serves the expected build                 |
+| Command                      | Purpose                                                      |
+| ---------------------------- | ------------------------------------------------------------ |
+| `pnpm validate:products`     | Validate `src/data/products.json` against the runtime schema |
+| `pnpm check:bundle`          | Fail if the critical path exceeds the 105 kB gzip budget     |
+| `bash scripts/smoke-test.sh` | Check that production serves the expected build              |
 
-See [`docs/guides/actualizar-precios.md`](docs/guides/actualizar-precios.md) for the
-monthly price routine and [`docs/guides/deploy-y-ci.md`](docs/guides/deploy-y-ci.md)
+Prices and stock come from the ERP by SKU: see
+[`docs/guides/actualizar-precios.md`](docs/guides/actualizar-precios.md). See [`docs/guides/deploy-y-ci.md`](docs/guides/deploy-y-ci.md)
 for the release pipeline.
 
 ## Docker (optional, local only)
@@ -132,8 +128,6 @@ The app is served on `http://localhost:3000`. nginx is configured with SPA fallb
 │   ├── data/            Catalog validation against the schema
 │   └── integration/     Component + routing integration tests
 ├── scripts/
-│   ├── actualizar-precios.ts  Bulk price/stock update from a Mercado Libre export
-│   ├── lib/precios.ts         Pure logic behind it (unit-tested)
 │   ├── check-bundle-size.js   Critical-path gzip budget, enforced in CI
 │   └── smoke-test.sh          Post-deploy verification of the live site
 ├── docs/                Standards, guides, ADRs and plans (see docs/guides/README.md)

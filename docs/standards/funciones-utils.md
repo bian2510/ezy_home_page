@@ -55,9 +55,8 @@ Funciones puras que conocen los tipos del dominio de esa feature, pero no React.
 **No poner aquí:** side effects, llamadas a APIs, lógica de renderizado.
 
 ```ts
-// src/features/cart/cartUtils.ts
-const computeSubtotal = (items: CartItem[]): number =>
-  items.reduce((sum, item) => sum + getEffectivePrice(item.product) * item.quantity, 0);
+// src/features/pricing/pricingUtils.ts
+export const isPurchasable = (availability: Availability): boolean => availability === 'available';
 ```
 
 Test obligatorio en `tests/features/<feature>/<nombre>.test.ts`.
@@ -68,7 +67,9 @@ Test obligatorio en `tests/features/<feature>/<nombre>.test.ts`.
 
 Funciones de transformación o cálculo que viven con el tipo que transforman. Solo cuando el helper no tiene sentido fuera del tipo.
 
-**Ejemplos válidos:** `getEffectivePrice(product: Product): number`
+**Ejemplos válidos:** ninguno hoy. El precio de venta antes era `getEffectivePrice(product)`
+acá; desde que viene del ERP depende de la respuesta de la API y vive en
+`features/pricing/pricingUtils.ts` (`resolvePricing`).
 
 ---
 
@@ -110,7 +111,7 @@ src/
     cart/
       cartUtils.ts             ← pura, conoce CartItem/Product
   types/
-    index.ts                   ← getEffectivePrice: acoplado a Product
+    index.ts                   ← solo tipos (Product, ProductPricing, …)
 ```
 
 `formatPrice` recibe un `number`, no un `Product`: por eso vive en `lib/` y no

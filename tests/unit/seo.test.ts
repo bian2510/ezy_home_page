@@ -90,8 +90,7 @@ describe('buildProductJsonLd', () => {
     name: 'Plafón LED Inteligente 24W RGB con WiFi',
     description: 'Plafón regulable con control desde el celular.',
     images: ['/products/MLA2200632476/01.webp'],
-    price: 85217,
-    available: true,
+    offer: { price: 85217, available: true },
   };
   const url = 'https://ezyhome.com/productos/MLA2200632476';
 
@@ -107,16 +106,19 @@ describe('buildProductJsonLd', () => {
   it('should price the offer in ARS, which is what Google shows in the result', () => {
     const { offers } = buildProductJsonLd(entrada, url);
 
-    expect(offers.price).toBe('85217');
-    expect(offers.priceCurrency).toBe('ARS');
-    expect(offers.url).toBe(url);
-    expect(offers.availability).toBe('https://schema.org/InStock');
+    expect(offers?.price).toBe('85217');
+    expect(offers?.priceCurrency).toBe('ARS');
+    expect(offers?.url).toBe(url);
+    expect(offers?.availability).toBe('https://schema.org/InStock');
   });
 
   it('should mark an inactive product as out of stock', () => {
-    const { offers } = buildProductJsonLd({ ...entrada, available: false }, url);
+    const { offers } = buildProductJsonLd(
+      { ...entrada, offer: { price: 85217, available: false } },
+      url,
+    );
 
-    expect(offers.availability).toBe('https://schema.org/OutOfStock');
+    expect(offers?.availability).toBe('https://schema.org/OutOfStock');
   });
 
   it('should turn relative images into absolute URLs', () => {
@@ -133,10 +135,20 @@ describe('buildProductJsonLd', () => {
     expect(jsonLd.image).toBeUndefined();
   });
 
-  it('should use the promotional price when the product is on sale', () => {
-    const { offers } = buildProductJsonLd({ ...entrada, price: 45141 }, url);
+  it('should publish the given price as a string', () => {
+    const { offers } = buildProductJsonLd(
+      { ...entrada, offer: { price: 45141, available: true } },
+      url,
+    );
 
-    expect(offers.price).toBe('45141');
+    expect(offers?.price).toBe('45141');
+  });
+
+  it('should leave out the offer when there is no ERP price, instead of publishing a stale one', () => {
+    const jsonLd = buildProductJsonLd({ ...entrada, offer: null }, url);
+
+    expect(jsonLd).not.toHaveProperty('offers');
+    expect(jsonLd['@type']).toBe('Product');
   });
 });
 

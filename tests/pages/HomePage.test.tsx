@@ -6,7 +6,7 @@ import type * as EnvModule from '@/lib/env';
 
 // Mock the static product dataset so tests are deterministic and isolated
 // from real catalog data. Includes products with various combinations of
-// `isBestseller` and `isOnSale` so we can assert section partitioning.
+// `isBestseller` so we can assert section partitioning.
 // Las categorías replican la taxonomía real de `products.json`.
 vi.mock('@/data/products.json', () => ({
   default: [
@@ -14,79 +14,63 @@ vi.mock('@/data/products.json', () => ({
       id: 'best-1',
       name: 'Foco Best Uno',
       description: 'Bestseller-only product.',
-      price: 18900,
       images: ['/images/best-1.jpg'],
       category: 'Iluminación Inteligente',
       isBestseller: true,
-      isOnSale: false,
       active: true,
     },
     {
       id: 'best-2',
       name: 'Sensor Best Dos',
       description: 'Bestseller-only product.',
-      price: 9500,
       images: ['/images/best-2.jpg'],
       category: 'Seguridad',
       isBestseller: true,
-      isOnSale: false,
       active: true,
     },
     {
       id: 'sale-1',
       name: 'Tira Oferta Uno',
       description: 'Sale-only product.',
-      price: 28900,
-      promotionalPrice: 22500,
       images: ['/images/sale-1.jpg'],
       category: 'Iluminación Inteligente',
       isBestseller: false,
-      isOnSale: true,
       active: true,
     },
     {
       id: 'sale-2',
       name: 'Camara Oferta Dos',
       description: 'Sale-only product.',
-      price: 38900,
-      promotionalPrice: 32900,
       images: ['/images/sale-2.jpg'],
       category: 'Seguridad',
       isBestseller: false,
-      isOnSale: true,
       active: true,
     },
     {
       id: 'plain-1',
       name: 'Hub Plano',
       description: 'Neither bestseller nor on sale.',
-      price: 48900,
       images: ['/images/plain-1.jpg'],
       category: 'Confort',
       isBestseller: false,
-      isOnSale: false,
       active: true,
     },
     {
       id: 'inactive-1',
       name: 'Termostato Inactivo',
       description: 'Inactive product, must stay hidden everywhere.',
-      price: 25900,
       images: ['/images/inactive-1.jpg'],
       category: 'Hubs',
       isBestseller: true,
-      isOnSale: true,
       active: false,
     },
     {
       id: 'sin-categoria-1',
       name: 'Lámpara Sin Categoría',
       description: 'Active product with no category assigned.',
-      price: 7900,
       images: ['/images/sin-categoria.jpg'],
       category: null,
       isBestseller: false,
-      isOnSale: false,
       active: true,
     },
   ],
@@ -142,20 +126,13 @@ describe('HomePage', () => {
     expect(within(section).queryByText('Hub Plano')).toBeNull();
   });
 
-  it('should render an "Ofertas" section containing only on-sale products', () => {
+  it('should not render an "Ofertas" section: offers are gone, the price comes from the ERP', () => {
     renderHome();
 
-    const heading = screen.getByRole('heading', { name: /^ofertas$/i });
-    const section = heading.closest('section')!;
-    expect(section).not.toBeNull();
-
-    expect(within(section).getByText('Tira Oferta Uno')).toBeInTheDocument();
-    expect(within(section).getByText('Camara Oferta Dos')).toBeInTheDocument();
-    expect(within(section).queryByText('Foco Best Uno')).toBeNull();
-    expect(within(section).queryByText('Hub Plano')).toBeNull();
+    expect(screen.queryByRole('heading', { name: /^ofertas$/i })).toBeNull();
   });
 
-  it('should exclude inactive products from "Más vendidos" and "Ofertas" even when flagged as bestseller/on sale', () => {
+  it('should exclude inactive products from "Más vendidos" even when flagged as bestseller', () => {
     renderHome();
 
     expect(screen.queryByText('Termostato Inactivo')).not.toBeInTheDocument();

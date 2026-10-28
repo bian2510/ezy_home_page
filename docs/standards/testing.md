@@ -37,13 +37,13 @@ en vez de copiar el objeto entero:
 
 ```ts
 const buildProduct = (overrides: Partial<Product> = {}): Product =>
-  buildBaseProduct({ name: 'Smart Bulb RGBW', price: 15000, ...overrides });
+  buildBaseProduct({ name: 'Smart Bulb RGBW', category: 'Seguridad', ...overrides });
 ```
 
 Usar `overrides` solo cuando el test necesita un valor específico:
 
 ```ts
-const saleProduct = buildProduct({ isOnSale: true, promotionalPrice: 9000 });
+const bestseller = buildProduct({ isBestseller: true });
 ```
 
 ---

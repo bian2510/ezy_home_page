@@ -7,24 +7,37 @@
  */
 export interface Product {
   id: string;
+  /** SKU del producto en el ERP. Es la unión con el ERP: precio y stock se
+   *  piden por SKU (ADR-025 del ERP). Tiene que coincidir con el del ERP. */
+  sku: string;
   name: string;
   description: string;
-  /** Precio en ARS (pesos argentinos), entero — sin centavos. */
-  price: number;
   /** Rutas relativas a las imágenes; la primera es la imagen principal. */
   images: string[];
   /** Categoría de catálogo: 'iluminacion' | 'automatizacion' | 'seguridad'. */
   category: string | null;
   isBestseller: boolean;
-  isOnSale: boolean;
   /** Visibilidad en el storefront — `false` oculta el producto (Home, Catálogo,
-   *  Detalle) sin borrarlo del dataset. Útil para productos sin stock. */
+   *  Detalle) sin borrarlo del dataset. */
   active: boolean;
-  /** Precio promocional vigente; definido y usado solo cuando `isOnSale === true`.
-   *  Cuando está presente, `price` pasa a mostrarse tachado como precio de lista. */
-  promotionalPrice?: number;
-  /** Etiqueta de promoción especial (ej. "2x1"). Se muestra como badge en la card y el detalle. */
-  promotionBadge?: string;
+}
+
+/**
+ * Estado de venta de un producto según el ERP.
+ * - `available`: tiene precio y stock, se puede agregar al carrito.
+ * - `out_of_stock`: tiene precio pero no stock.
+ * - `no_price`: el ERP no respondió o no devolvió el SKU: "Consultar precio".
+ * - `loading`: todavía no llegó la respuesta del ERP.
+ */
+export type Availability = 'available' | 'out_of_stock' | 'no_price' | 'loading';
+
+/** Precio de venta de un producto, resuelto contra el ERP. */
+export interface ProductPricing {
+  /** Precio pagando con Mercado Pago; `null` si no hay precio del ERP. */
+  price: number | null;
+  /** Precio con transferencia, solo cuando es menor que `price`. */
+  transferPrice: number | null;
+  availability: Availability;
 }
 
 /**
@@ -70,12 +83,3 @@ export interface Toast {
   message: string;
   type: ToastType;
 }
-
-/**
- * Precio efectivo a cobrar/destacar: `promotionalPrice` cuando el producto está
- * en oferta y lo tiene definido; `price` en cualquier otro caso.
- */
-export const getEffectivePrice = (product: Product): number =>
-  product.isOnSale && product.promotionalPrice !== undefined
-    ? product.promotionalPrice
-    : product.price;

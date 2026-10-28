@@ -1,6 +1,6 @@
 // CartItem — single row inside the cart list.
 //
-// Shows product name, unit price, quantity controls (clamped to min 1), an
+// Shows product name, unit price (from the ERP, via `usePricing`), quantity controls (clamped to min 1), an
 // explicit remove button, and the line subtotal (qty × unit price). All
 // monetary values are formatted in ARS.
 //
@@ -8,9 +8,9 @@
 // Constraints (Carrito persistente). The min-quantity invariant is enforced
 // both here (decrement disabled at 1) and in CartProvider's reducer.
 import type { CartItem as CartItemType } from '@/types';
-import { getEffectivePrice } from '@/types';
 import { formatPrice } from '@/lib/formatPrice';
 import { useToast } from '@/features/toast';
+import { usePricing } from '@/features/pricing';
 
 const MIN_QUANTITY = 1;
 
@@ -24,7 +24,9 @@ interface CartItemProps {
 export default function CartItem({ item, onIncrement, onDecrement, onRemove }: CartItemProps) {
   const { product, quantity } = item;
   const { addToast } = useToast();
-  const lineSubtotal = getEffectivePrice(product) * quantity;
+  // Precio del ERP; sin precio la línea queda en "Consultar precio".
+  const { price } = usePricing().pricingOf(product);
+  const lineSubtotal = price === null ? null : price * quantity;
   const atMinimum = quantity <= MIN_QUANTITY;
 
   const handleRemove = () => {
@@ -37,7 +39,7 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
       <div className="flex flex-1 flex-col gap-1">
         <p className="text-base font-medium text-foreground">{product.name}</p>
         <p className="text-sm text-muted-foreground">
-          {formatPrice(getEffectivePrice(product))} c/u
+          {price === null ? 'Consultar precio' : `${formatPrice(price)} c/u`}
         </p>
       </div>
 
@@ -69,7 +71,7 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
 
       <div className="flex items-center justify-between gap-4 sm:justify-end">
         <p className="font-mono text-base font-semibold text-foreground">
-          {formatPrice(lineSubtotal)}
+          {lineSubtotal === null ? '—' : formatPrice(lineSubtotal)}
         </p>
         <button
           type="button"

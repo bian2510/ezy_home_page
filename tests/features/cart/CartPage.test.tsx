@@ -9,6 +9,19 @@ import { useCart } from '@/features/cart/useCart';
 import { formatPrice } from '@/lib/formatPrice';
 import { buildProduct } from '../../helpers/builders';
 
+// Precio del ERP por id de producto (el producto ya no tiene precio propio).
+const ERP_PRICES: Record<string, number> = { 'p-1': 12500, 'p-2': 8500 };
+vi.mock('@/features/pricing/usePricing', () => ({
+  usePricing: () => ({
+    status: 'ready',
+    pricingOf: (product: { id: string }) => ({
+      price: ERP_PRICES[product.id] ?? null,
+      transferPrice: null,
+      availability: 'available',
+    }),
+  }),
+}));
+
 vi.mock('@/features/toast/useToast', () => ({
   useToast: () => ({ addToast: vi.fn(), removeToast: vi.fn(), toasts: [] }),
 }));
@@ -54,11 +67,8 @@ describe('CartPage', () => {
     const { result } = renderHook(() => useCart(), { wrapper });
 
     act(() => {
-      result.current.addItem(
-        buildProduct({ id: 'p-1', name: 'Foco Inteligente', price: 12500 }),
-        2,
-      );
-      result.current.addItem(buildProduct({ id: 'p-2', name: 'Sensor de Gas', price: 8500 }), 1);
+      result.current.addItem(buildProduct({ id: 'p-1', name: 'Foco Inteligente' }), 2);
+      result.current.addItem(buildProduct({ id: 'p-2', name: 'Sensor de Gas' }), 1);
     });
 
     render(
@@ -89,10 +99,7 @@ describe('CartPage', () => {
     const { result } = renderHook(() => useCart(), { wrapper });
 
     act(() => {
-      result.current.addItem(
-        buildProduct({ id: 'p-1', name: 'Foco Inteligente', price: 12500 }),
-        3,
-      );
+      result.current.addItem(buildProduct({ id: 'p-1', name: 'Foco Inteligente' }), 3);
     });
 
     render(

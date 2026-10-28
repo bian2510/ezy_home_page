@@ -78,10 +78,11 @@ export interface ProductJsonLdInput {
   description: string;
   /** Rutas de imagen tal como están en el catálogo (relativas al sitio). */
   images: string[];
-  /** Precio efectivo en ARS, entero. */
-  price: number;
-  /** `true` si se puede comprar hoy. */
-  available: boolean;
+  /**
+   * Precio del ERP (ARS, entero) y si hay stock. `null` cuando el ERP no dio
+   * precio: el JSON-LD sale sin `offers` antes que con un precio viejo.
+   */
+  offer: { price: number; available: boolean } | null;
 }
 
 /** JSON-LD de schema.org para la ficha de un producto. */
@@ -92,7 +93,7 @@ export interface ProductJsonLd {
   description: string;
   sku: string;
   image?: string[];
-  offers: {
+  offers?: {
     '@type': 'Offer';
     url: string;
     priceCurrency: 'ARS';
@@ -124,14 +125,18 @@ export const buildProductJsonLd = (
     description: truncateForMeta(producto.description, 5000),
     sku: producto.id,
     ...(imagenes.length > 0 ? { image: imagenes } : {}),
-    offers: {
-      '@type': 'Offer',
-      url: canonicalUrl,
-      priceCurrency: 'ARS',
-      price: String(producto.price),
-      availability: producto.available
-        ? 'https://schema.org/InStock'
-        : 'https://schema.org/OutOfStock',
-    },
+    ...(producto.offer === null
+      ? {}
+      : {
+          offers: {
+            '@type': 'Offer' as const,
+            url: canonicalUrl,
+            priceCurrency: 'ARS' as const,
+            price: String(producto.offer.price),
+            availability: producto.offer.available
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+          },
+        }),
   };
 };

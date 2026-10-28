@@ -16,25 +16,12 @@ vi.mock('@/data/products.json', () => ({
   default: [
     {
       id: 'p-1',
+      sku: 'FOCO-NUEVO',
       name: 'Foco Inteligente',
       description: 'Foco LED Wi-Fi 9W',
-      price: 20000,
       images: ['/images/foco-nuevo.jpg'],
       category: 'Iluminación Inteligente',
       isBestseller: false,
-      isOnSale: false,
-      active: true,
-    },
-    {
-      id: 'p-2',
-      name: 'Sensor de Movimiento',
-      description: 'Sensor PIR Zigbee',
-      price: 15000,
-      promotionalPrice: 11000,
-      images: ['/images/sensor.jpg'],
-      category: 'Seguridad',
-      isBestseller: false,
-      isOnSale: true,
       active: true,
     },
   ],
@@ -56,20 +43,12 @@ describe('CartProvider — reconciliación con el catálogo al hidratar', () => 
     window.localStorage.clear();
   });
 
-  it('should refresh a persisted item price from the current catalog', () => {
-    persist([{ product: buildProduct({ id: 'p-1', price: 12500 }), quantity: 1 }]);
+  it('should refresh the persisted SKU from the current catalog, since prices are asked by SKU', () => {
+    persist([{ product: buildProduct({ id: 'p-1', sku: 'FOCO-VIEJO' }), quantity: 1 }]);
 
     const { result } = renderHook(() => useCart(), { wrapper });
 
-    expect(result.current.items[0]?.product.price).toBe(20000);
-  });
-
-  it('should compute the total from catalog prices, not from the persisted snapshot', () => {
-    persist([{ product: buildProduct({ id: 'p-1', price: 12500 }), quantity: 3 }]);
-
-    const { result } = renderHook(() => useCart(), { wrapper });
-
-    expect(result.current.total).toBe(20000 * 3);
+    expect(result.current.items[0]?.product.sku).toBe('FOCO-NUEVO');
   });
 
   it('should preserve the persisted quantity while refreshing the product data', () => {
@@ -80,35 +59,6 @@ describe('CartProvider — reconciliación con el catálogo al hidratar', () => 
     expect(result.current.items).toHaveLength(1);
     expect(result.current.items[0]?.quantity).toBe(4);
     expect(result.current.items[0]?.product.images).toEqual(['/images/foco-nuevo.jpg']);
-  });
-
-  it('should pick up a promotion that started after the cart was persisted', () => {
-    persist([
-      {
-        product: buildProduct({ id: 'p-2', name: 'Sensor de Movimiento', price: 15000 }),
-        quantity: 2,
-      },
-    ]);
-
-    const { result } = renderHook(() => useCart(), { wrapper });
-
-    expect(result.current.items[0]?.product.isOnSale).toBe(true);
-    expect(result.current.items[0]?.product.promotionalPrice).toBe(11000);
-    expect(result.current.total).toBe(11000 * 2);
-  });
-
-  it('should drop a stale promotional price when the product is no longer on sale', () => {
-    persist([
-      {
-        product: buildProduct({ id: 'p-1', isOnSale: true, promotionalPrice: 8000 }),
-        quantity: 1,
-      },
-    ]);
-
-    const { result } = renderHook(() => useCart(), { wrapper });
-
-    expect(result.current.items[0]?.product.isOnSale).toBe(false);
-    expect(result.current.total).toBe(20000);
   });
 
   it('should keep an item whose product is no longer in the catalog', () => {
@@ -123,6 +73,18 @@ describe('CartProvider — reconciliación con el catálogo al hidratar', () => 
     expect(result.current.items).toHaveLength(1);
     expect(result.current.items[0]?.product.name).toBe('Producto viejo');
     expect(result.current.items[0]?.quantity).toBe(2);
+  });
+
+  it('should give an empty SKU to an old snapshot without one, so it shows without price', () => {
+    const { sku: _sku, ...withoutSku } = buildProduct({ id: 'desconocido' });
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify([{ product: withoutSku, quantity: 1 }]),
+    );
+
+    const { result } = renderHook(() => useCart(), { wrapper });
+
+    expect(result.current.items[0]?.product.sku).toBe('');
   });
 
   it('should ignore a persisted entry that is not a valid cart item', () => {

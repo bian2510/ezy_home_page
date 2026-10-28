@@ -19,12 +19,6 @@ const nonBlank = (label: string) =>
     .min(1, `${label} no puede estar vacío`)
     .refine((value) => value.trim().length > 0, `${label} no puede ser solo espacios`);
 
-const wholePesos = (label: string) =>
-  z
-    .number(`${label} debe ser un número`)
-    .int(`${label} debe ser un entero en pesos, sin centavos`)
-    .positive(`${label} debe ser mayor a cero`);
-
 /**
  * Forma de un producto. `strictObject` rechaza campos desconocidos: un typo
  * como `pirce` dejaría el precio real en `undefined` sin que nada se queje.
@@ -32,9 +26,9 @@ const wholePesos = (label: string) =>
 export const ProductSchema = z
   .strictObject({
     id: nonBlank('id'),
+    sku: nonBlank('sku'),
     name: nonBlank('name'),
     description: nonBlank('description'),
-    price: wholePesos('price'),
     images: z
       .array(
         z
@@ -47,30 +41,12 @@ export const ProductSchema = z
       .min(1, 'el producto necesita al menos una imagen'),
     category: nonBlank('category').nullable(),
     isBestseller: z.boolean(),
-    isOnSale: z.boolean(),
     active: z.boolean(),
-    promotionalPrice: wholePesos('promotionalPrice').optional(),
-    promotionBadge: nonBlank('promotionBadge').optional(),
   })
   .superRefine((product, ctx) => {
     const addIssue = (message: string, path: string) => {
       ctx.addIssue({ code: 'custom', message, path: [path] });
     };
-
-    // Una oferta necesita las dos mitades: sin `promotionalPrice` la card
-    // anuncia descuento y cobra el precio de lista.
-    if (product.isOnSale && product.promotionalPrice === undefined) {
-      addIssue('isOnSale es true pero falta promotionalPrice', 'promotionalPrice');
-    }
-    if (!product.isOnSale && product.promotionalPrice !== undefined) {
-      addIssue('tiene promotionalPrice pero isOnSale es false', 'isOnSale');
-    }
-    if (product.promotionalPrice !== undefined && product.promotionalPrice >= product.price) {
-      addIssue(
-        `promotionalPrice (${product.promotionalPrice}) debe ser menor que price (${product.price})`,
-        'promotionalPrice',
-      );
-    }
 
     // Un producto visible sin categoría genera un chip sin etiqueta en el
     // filtro del catálogo.
@@ -81,15 +57,19 @@ export const ProductSchema = z
 
 const normalizeCategory = (category: string): string => category.trim().toLowerCase();
 
+/** El ERP compara los SKU sin mayúsculas ni espacios alrededor. */
+const normalizeSku = (sku: string): string => sku.trim().toLowerCase();
+
 /**
  * El catálogo completo. Valida producto por producto para poder nombrar al
  * culpable por `id` en cada error, y después las reglas que solo existen
- * mirando el conjunto: ids únicos y categorías sin variantes disfrazadas.
+ * mirando el conjunto: ids y SKU únicos, y categorías sin variantes disfrazadas.
  */
 export const CatalogSchema = z
   .array(z.unknown())
   .superRefine((items, ctx) => {
     const seenIds = new Map<string, number>();
+    const seenSkus = new Map<string, number>();
     const seenCategories = new Map<string, string>();
 
     items.forEach((item, index) => {
@@ -120,6 +100,18 @@ export const CatalogSchema = z
         });
       } else {
         seenIds.set(product.id, index);
+      }
+
+      const sku = normalizeSku(product.sku);
+      const previousSku = seenSkus.get(sku);
+      if (previousSku !== undefined) {
+        ctx.addIssue({
+          code: 'custom',
+          path: [index, 'sku'],
+          message: `producto ${label}: SKU "${product.sku}" duplicado, ya lo usa el producto #${previousSku}`,
+        });
+      } else {
+        seenSkus.set(sku, index);
       }
 
       if (product.category !== null) {

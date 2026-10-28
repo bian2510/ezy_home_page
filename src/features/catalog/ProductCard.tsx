@@ -1,9 +1,8 @@
 import type { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '@/types';
-import { getEffectivePrice } from '@/types';
-import { formatPrice } from '@/lib/formatPrice';
 import { useCart } from '@/features/cart';
+import { ConsultLink, ProductPrice, isPurchasable, usePricing } from '@/features/pricing';
 import { useToast } from '@/features/toast';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/cn';
@@ -23,10 +22,10 @@ import { cn } from '@/lib/cn';
  *    event propagation so it never triggers the card navigation. The
  *    button has `min-h-11` (44px) to satisfy the mobile tap-target rule
  *    in BR-008.
- *  - When `isOnSale` and `promotionalPrice` is set, `price` is rendered
- *    struck-through and `promotionalPrice` is the highlighted price shown
- *    (and charged). An "Oferta" badge (warning token) is shown. When
- *    `isBestseller`, a "Más vendido" badge (success token) is shown.
+ *  - Price and stock come from the ERP (`usePricing`), never from the JSON.
+ *    While loading the add button is disabled; without ERP price or stock it
+ *    is replaced by a WhatsApp consult link. When `isBestseller`, a
+ *    "Más vendido" badge (success token) is shown.
  */
 interface ProductCardProps {
   product: Product;
@@ -36,6 +35,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
   const { addItem } = useCart();
   const { addToast } = useToast();
+  const pricing = usePricing().pricingOf(product);
 
   const hasImage = product.images.length > 0;
   const primaryImage = hasImage ? product.images[0] : null;
@@ -84,11 +84,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
 
-          {(product.isOnSale || product.isBestseller || product.promotionBadge) && (
+          {product.isBestseller && (
             <div className="absolute left-2 top-2 flex flex-col gap-1">
-              {product.promotionBadge && <Badge variant="primary">{product.promotionBadge}</Badge>}
-              {product.isOnSale && <Badge variant="warning">Oferta</Badge>}
-              {product.isBestseller && <Badge variant="success">Más vendido</Badge>}
+              <Badge variant="success">Más vendido</Badge>
             </div>
           )}
         </div>
@@ -96,31 +94,28 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="flex flex-1 flex-col gap-2 p-3">
           <h3 className="line-clamp-2 h-10 text-sm font-medium text-foreground">{product.name}</h3>
 
-          <div className="flex items-baseline gap-2">
-            <span className="font-mono text-base font-semibold text-foreground">
-              {formatPrice(getEffectivePrice(product))}
-            </span>
-            {product.isOnSale && product.promotionalPrice !== undefined && (
-              <s className="font-mono text-xs text-muted-foreground">
-                {formatPrice(product.price)}
-              </s>
-            )}
-          </div>
+          <ProductPrice pricing={pricing} />
         </div>
       </button>
 
       <div className="p-3 pt-0">
-        <button
-          type="button"
-          onClick={handleAddToCart}
-          className={cn(
-            'inline-flex min-h-11 w-full items-center justify-center rounded-md',
-            'bg-primary px-3 py-2 text-sm font-medium text-primary-foreground',
-            'transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-          )}
-        >
-          Agregar al carrito
-        </button>
+        {isPurchasable(pricing.availability) || pricing.availability === 'loading' ? (
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={!isPurchasable(pricing.availability)}
+            className={cn(
+              'inline-flex min-h-11 w-full items-center justify-center rounded-md',
+              'bg-primary px-3 py-2 text-sm font-medium text-primary-foreground',
+              'transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              'disabled:cursor-not-allowed disabled:opacity-50',
+            )}
+          >
+            Agregar al carrito
+          </button>
+        ) : (
+          <ConsultLink product={product} className="w-full" />
+        )}
       </div>
     </article>
   );

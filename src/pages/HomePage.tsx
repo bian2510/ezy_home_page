@@ -52,7 +52,6 @@ export default function HomePage() {
   });
 
   const bestsellers = activeProducts.filter((p) => p.isBestseller);
-  const onSale = activeProducts.filter((p) => p.isOnSale);
   const whatsappHref = `https://wa.me/${getWhatsAppNumber()}`;
 
   return (
@@ -63,12 +62,6 @@ export default function HomePage() {
         heading="Más vendidos"
         products={bestsellers}
         emptyMessage="Próximamente sumamos nuestros productos más vendidos."
-      />
-      <ProductGrid
-        id="ofertas"
-        heading="Ofertas"
-        products={onSale}
-        emptyMessage="Por ahora no hay ofertas activas. Volvé pronto."
       />
       <CategoriesSection />
       <WhatsAppCtaSection href={whatsappHref} />

@@ -87,7 +87,7 @@ Los siguientes errores se han observado o son de alto riesgo. Verificar activame
 **Datos:**
 
 - NO modificar `products.json` sin verificar que el resultado sigue respetando la interfaz `Product` en `src/types/index.ts`
-- NO inventar valores para campos opcionales como `promotionBadge` o `manualUrl` — solo agregarlos si son reales
+- NO inventar valores para campos opcionales como `manualUrl` — solo agregarlos si son reales. El `sku` se copia del ERP, nunca se inventa
 
 **Código:**
 

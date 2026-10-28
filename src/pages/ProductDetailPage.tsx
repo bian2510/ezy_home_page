@@ -1,8 +1,9 @@
 // ProductDetailPage — /productos/:id route.
 //
 // Looks up a product in the static dataset by URL param and renders its
-// gallery, description, price (with optional struck-through original price
-// when on sale), a quantity stepper, and an "Agregar al carrito" CTA.
+// gallery, description, price and stock from the ERP (`usePricing`), a
+// quantity stepper, and an "Agregar al carrito" CTA (a WhatsApp consult when
+// the ERP has no price or no stock).
 //
 // Business rules (see DOMAIN.md › Product Core and spec.md BR-003):
 // - URL propia por producto (`/productos/:id`).
@@ -15,14 +16,12 @@ import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { findActiveProductById } from '@/data/catalog';
 import type { Product } from '@/types';
-import { getEffectivePrice } from '@/types';
-import { formatPrice } from '@/lib/formatPrice';
 import { getSiteUrl } from '@/lib/env';
 import { buildCanonical, buildProductJsonLd, truncateForMeta } from '@/lib/seo';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import QuantitySelector from '@/components/ui/QuantitySelector';
-import { Badge } from '@/components/ui/Badge';
 import { useCart } from '@/features/cart';
+import { ConsultLink, ProductPrice, isPurchasable, usePricing } from '@/features/pricing';
 import { useToast } from '@/features/toast';
 
 const MIN_QUANTITY = 1;
@@ -31,6 +30,8 @@ export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const product = useMemo(() => findActiveProductById(id), [id]);
   const path = `/productos/${id ?? ''}`;
+  const { pricingOf } = usePricing();
+  const pricing = product === undefined ? undefined : pricingOf(product);
 
   // El JSON-LD es lo que habilita que Google muestre el precio en el resultado,
   // en vez de solo el título. Si el id no existe, la página es un 404: no se
@@ -53,8 +54,12 @@ export default function ProductDetailPage() {
               name: product.name,
               description: product.description,
               images: product.images,
-              price: getEffectivePrice(product),
-              available: product.active,
+              // Precio y stock del ERP, como en la página. Sin precio del ERP
+              // no se publica oferta (nunca un precio del JSON).
+              offer:
+                pricing?.price === undefined || pricing.price === null
+                  ? null
+                  : { price: pricing.price, available: pricing.availability === 'available' },
             },
             buildCanonical(getSiteUrl(), path),
           ),
@@ -92,6 +97,7 @@ interface ProductDetailProps {
 function ProductDetail({ product }: ProductDetailProps) {
   const { addItem } = useCart();
   const { addToast } = useToast();
+  const pricing = usePricing().pricingOf(product);
   const [quantity, setQuantity] = useState<number>(MIN_QUANTITY);
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
 
@@ -148,38 +154,27 @@ function ProductDetail({ product }: ProductDetailProps) {
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">{product.name}</h1>
-            {product.promotionBadge && (
-              <Badge variant="primary" className="text-sm">
-                {product.promotionBadge}
-              </Badge>
-            )}
-          </div>
+          <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">{product.name}</h1>
 
-          <div className="flex items-baseline gap-3">
-            {product.isOnSale && product.promotionalPrice !== undefined && (
-              <s className="font-mono text-base text-muted-foreground">
-                {formatPrice(product.price)}
-              </s>
-            )}
-            <p className="font-mono text-2xl font-semibold text-foreground">
-              {formatPrice(getEffectivePrice(product))}
-            </p>
-          </div>
+          <ProductPrice pricing={pricing} size="detail" />
 
           <p className="text-base text-foreground/90">{product.description}</p>
 
-          <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <QuantitySelector value={quantity} onChange={setQuantity} min={MIN_QUANTITY} />
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              className="inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            >
-              Agregar al carrito
-            </button>
-          </div>
+          {isPurchasable(pricing.availability) || pricing.availability === 'loading' ? (
+            <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <QuantitySelector value={quantity} onChange={setQuantity} min={MIN_QUANTITY} />
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={!isPurchasable(pricing.availability)}
+                className="inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+          ) : (
+            <ConsultLink product={product} className="mt-2 px-6 sm:self-start" />
+          )}
         </div>
       </div>
     </section>

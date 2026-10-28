@@ -67,11 +67,23 @@ Se configuran en GitHub › Settings › Secrets and variables › Actions:
 | Secret                  | Quién lo usa | Para qué                                  |
 | ----------------------- | ------------ | ----------------------------------------- |
 | `VITE_WHATSAPP_NUMBER`  | job `build`  | Número de checkout, embebido en el bundle |
+| `VITE_STORE_API_KEY`    | job `build`  | Clave de la API del ERP (precio y stock)  |
 | `CLOUDFLARE_API_TOKEN`  | job `deploy` | Autenticación con Cloudflare              |
 | `CLOUDFLARE_ACCOUNT_ID` | job `deploy` | Cuenta destino                            |
 
 Si `VITE_WHATSAPP_NUMBER` falta, el build **no falla**: publica un sitio donde el
 botón de WhatsApp no lleva a ningún lado. Ver [`src/lib/env.ts`](../../src/lib/env.ts).
+
+Si `VITE_STORE_API_KEY` falta, el build tampoco falla, pero **todos los productos
+muestran "Consultar precio"**: el precio y el stock vienen del ERP
+([`actualizar-precios.md`](./actualizar-precios.md)). La clave queda embebida en
+el bundle y cualquiera la puede leer: es de solo lectura y solo devuelve precio y
+stock, que ya son públicos. Si hace falta cambiarla, se genera otra en el ERP, se
+actualiza el secret y se republica. El ERP solo acepta pedidos del navegador
+desde `https://shop.ezyhome.app` (CORS), así que en los previews de
+`*.pages.dev` los productos se ven como "Consultar precio". Para desarrollo local
+(`http://localhost:5173`, permitido por el ERP en dev), `VITE_STORE_API_URL`
+apunta al ERP local.
 
 Hay además una variable **opcional**, `VITE_SITE_URL`: el dominio público del
 sitio. Alimenta las URLs canónicas, el `sitemap.xml` y las og: tags. Sin ella se
@@ -168,6 +180,7 @@ falló; hoy eso es el mail de GitHub Actions.
 | `check:bundle` falla                       | Entró una dependencia al critical path. Ver sección anterior.           |
 | Smoke test falla en el punto 3             | El deploy no se promovió. Revisar el panel de Cloudflare.               |
 | El sitio anda pero el botón de WhatsApp no | Falta el secret `VITE_WHATSAPP_NUMBER`.                                 |
+| Todo dice "Consultar precio"               | Falta `VITE_STORE_API_KEY`, la clave es inválida o el ERP no responde.  |
 
 ---
 

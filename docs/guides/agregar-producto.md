@@ -6,9 +6,11 @@
 
 ## Paso a paso
 
-### 1. Obtener el ID del producto
+### 1. Obtener el ID y el SKU del producto
 
-El `id` es el identificador de MercadoLibre (ej. `MLA2616773126`). Se encuentra en la URL del producto en ML. Este ID se usa como nombre de carpeta para los assets locales.
+El `id` es el identificador de MercadoLibre (ej. `MLA2616773126`). Se encuentra en la URL del producto en ML. Este ID se usa en la URL de la web y como nombre de carpeta para los assets locales.
+
+El `sku` es el **SKU del producto en el ERP**, copiado tal cual (se ve en Productos del ERP). Es lo que une la web con el ERP: el precio y el stock se le piden al ERP por SKU (ver [`actualizar-precios.md`](./actualizar-precios.md)). El producto tiene que existir en el ERP con precio; si no, la web lo muestra como "Consultar precio". Si después cambiás el SKU en el ERP, cambialo también acá.
 
 ### 2. Agregar la entrada en `src/data/products.json`
 
@@ -17,25 +19,17 @@ Copiar esta plantilla y completar todos los campos:
 ```json
 {
   "id": "MLA_________",
+  "sku": "SKU-DEL-ERP",
   "name": "Nombre completo del producto",
   "description": "Descripción detallada.\n\n- Característica 1\n- Característica 2\n\nFicha técnica: ...\n\nMensaje de cierre con EzyHome.",
   "category": "Iluminación Inteligente",
-  "price": 00000,
   "images": ["https://http2.mlstatic.com/..."],
   "isBestseller": false,
-  "isOnSale": false,
   "active": true
 }
 ```
 
-**Campos opcionales** (agregar solo si aplican):
-
-```json
-"promotionalPrice": 00000,
-"promotionBadge": "2x1"
-```
-
-No hay otros campos: la validación rechaza cualquier campo desconocido, para
+No hay otros campos ni ofertas: la validación rechaza cualquier campo desconocido, para
 que un typo como `pirce` no deje el precio real en `undefined`.
 
 ### 3. Categorías válidas
@@ -55,23 +49,11 @@ Escribirla exactamente igual que las existentes. La validación rechaza variante
 solo en mayúsculas o espacios (`"seguridad "` vs `"Seguridad"`), porque generarían dos chips
 para la misma categoría.
 
-### 4. Reglas de precio
+### 4. Precio
 
-| Campo              | Cuándo usarlo                                                    |
-| ------------------ | ---------------------------------------------------------------- |
-| `price`            | Siempre. Precio de lista en ARS (entero, sin centavos).          |
-| `isOnSale`         | `true` cuando hay precio especial.                               |
-| `promotionalPrice` | Solo cuando `isOnSale: true`. Precio efectivo que ve el cliente. |
-| `promotionBadge`   | Solo para promociones especiales como `"2x1"`.                   |
-
-Cuando `isOnSale: true` y `promotionalPrice` está definido, `price` se muestra tachado.
-
-**La validación exige que la oferta esté completa:** `isOnSale: true` sin `promotionalPrice`
-se rechaza (la card anunciaría un descuento y cobraría el precio de lista), igual que un
-`promotionalPrice` mayor o igual al `price`, o presente con `isOnSale: false`.
-
-**Sin centavos:** `price` y `promotionalPrice` son enteros. Con decimales, la card redondea
-para mostrar pero el carrito suma el valor exacto, y al cliente le cierra mal la cuenta.
+El producto **no lleva precio** en este archivo: el precio y el stock vienen del
+ERP por SKU (ver [`actualizar-precios.md`](./actualizar-precios.md)). Un campo
+`price` se rechaza.
 
 ### 5. Agregar imágenes locales (opcional, recomendado para productos propios)
 
@@ -103,22 +85,7 @@ Ver [`docs/guides/agregar-pdf-manual.md`](./agregar-pdf-manual.md).
 
 El producto no aparece en Home, Catálogo ni Detalle, pero persiste en el JSON para reactivarlo cuando vuelva el stock.
 
-### 8. Actualización masiva desde el export de Mercado Libre
-
-Para actualizar precios y stock de todo el catálogo de una vez —la rutina
-mensual—, no se edita el JSON producto por producto: se parte del export de
-Mercado Libre.
-
-```bash
-pnpm precios:informe  "ruta/al/Precios.csv"   # muestra qué cambiaría, no escribe
-pnpm precios:aplicar  "ruta/al/Precios.csv"   # aplica
-```
-
-El procedimiento completo —qué columnas espera el CSV, la regla de precios, qué
-campos no toca y cómo se manejan los productos nuevos— está en
-[`actualizar-precios.md`](./actualizar-precios.md).
-
-### 9. Validar el catálogo
+### 8. Validar el catálogo
 
 ```bash
 pnpm validate:products
@@ -128,18 +95,18 @@ Corre el esquema de [`src/data/productSchema.ts`](../../src/data/productSchema.t
 archivo real y falla nombrando el producto y el campo:
 
 ```
-producto MLA2200632476 › price: price debe ser un entero en pesos, sin centavos
-producto MLA3316416628 › isOnSale: tiene promotionalPrice pero isOnSale es false
+producto MLA2200632476 › images: el producto necesita al menos una imagen
+producto MLA3316416628 › sku: SKU "SNS-001" duplicado, ya lo usa el producto #3
 ```
 
-Valida forma (tipos, campos obligatorios, campos desconocidos), reglas de negocio (precios
-enteros y positivos, ofertas coherentes, categoría obligatoria si el producto está activo) y
-reglas del catálogo completo (ids únicos, categorías sin variantes disfrazadas).
+Valida forma (tipos, campos obligatorios —incluido `sku`—, campos desconocidos), reglas de
+negocio (categoría obligatoria si el producto está activo) y
+reglas del catálogo completo (ids y SKU únicos, categorías sin variantes disfrazadas).
 
 `pnpm typecheck` **no** cubre esto: `products.json` entra a la app con un cast
 (`as Product[]`) que no verifica nada en runtime.
 
-### 10. Quality gate
+### 9. Quality gate
 
 ```bash
 pnpm lint && pnpm typecheck && pnpm format:check && pnpm test

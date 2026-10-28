@@ -71,15 +71,48 @@ describe('metadatos por ruta', () => {
     expect(canonica()).toBe(`${DEFAULT_SITE_URL}/productos/${primerProducto?.id ?? ''}`);
   });
 
-  it('should describe the product as schema.org Product with its price', async () => {
+  it('should describe the product as schema.org Product with the ERP price', async () => {
+    vi.stubEnv('VITE_STORE_API_KEY', 'clave');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            products: [
+              {
+                sku: primerProducto?.sku,
+                price_mp: 54_300,
+                price_transfer: 51_700,
+                stock: 2,
+                available: true,
+              },
+            ],
+          }),
+          { status: 200, headers: { 'content-type': 'application/json' } },
+        ),
+      ),
+    );
     montar(`/productos/${primerProducto?.id ?? ''}`);
 
-    await waitFor(() => expect(jsonLd()).toBeDefined());
+    await waitFor(() => expect(jsonLd()?.offers).toBeDefined());
     const datos = jsonLd();
 
     expect(datos?.['@type']).toBe('Product');
     expect(datos?.name).toBe(primerProducto?.name);
-    expect((datos?.offers as { priceCurrency: string }).priceCurrency).toBe('ARS');
+    expect(datos?.offers).toEqual(
+      expect.objectContaining({ priceCurrency: 'ARS', price: '54300' }),
+    );
+    vi.unstubAllGlobals();
+  });
+
+  it('should describe the product without an offer when the ERP price is not available', async () => {
+    vi.stubEnv('VITE_STORE_API_KEY', '');
+    montar(`/productos/${primerProducto?.id ?? ''}`);
+
+    await waitFor(() => expect(jsonLd()).toBeDefined());
+
+    expect(jsonLd()?.['@type']).toBe('Product');
+    expect(jsonLd()).not.toHaveProperty('offers');
   });
 
   it('should cut the meta description of a long product description down to size', async () => {
