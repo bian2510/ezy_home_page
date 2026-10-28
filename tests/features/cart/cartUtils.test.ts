@@ -8,21 +8,27 @@ const buildProduct = (overrides: Partial<Product> = {}): Product =>
   buildBaseProduct({
     name: 'Smart Bulb RGBW',
     description: 'Foco LED inteligente Wi-Fi 9W RGBW',
-    price: 15000,
     images: ['/images/bulb.jpg'],
     ...overrides,
   });
 
-const buildItem = (productOverrides: Partial<Product> = {}, quantity = 1): CartItem => ({
-  product: buildProduct(productOverrides),
-  quantity,
-});
+// Precio del ERP de cada producto armado con `buildItem`, por id. El producto
+// ya no tiene precio propio: el precio de venta viene del ERP.
+const erpPrices = new Map<string, number>();
+
+const buildItem = (
+  { price = 15000, ...productOverrides }: Partial<Product> & { price?: number } = {},
+  quantity = 1,
+): CartItem => {
+  const product = buildProduct(productOverrides);
+  erpPrices.set(product.id, price);
+  return { product, quantity };
+};
 
 const PHONE_NUMBER = '5491112345678';
 
-// En estos tests el `price` del builder hace de precio del ERP.
 const pricedFromErp = (product: Product): ProductPricing => ({
-  price: product.price,
+  price: erpPrices.get(product.id) ?? null,
   transferPrice: null,
   availability: 'available',
 });
@@ -149,7 +155,7 @@ describe('computeCartTotals', () => {
       buildItem({ id: 'p-2', price: 5000 }, 1),
     ];
     const pricingOf = (product: Product): ProductPricing => ({
-      price: product.price,
+      price: erpPrices.get(product.id) ?? null,
       transferPrice: product.id === 'p-1' ? 20000 : null,
       availability: 'available',
     });

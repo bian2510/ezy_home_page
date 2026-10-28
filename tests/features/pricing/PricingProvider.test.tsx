@@ -6,8 +6,8 @@ import { buildProduct } from '../../helpers/builders';
 
 vi.mock('@/data/catalog', () => ({
   activeProducts: [
-    { id: 'MLA1', sku: 'SNS-001', price: 15_000 },
-    { id: 'MLA2', sku: 'VIEJO-1', price: 9_000 },
+    { id: 'MLA1', sku: 'SNS-001' },
+    { id: 'MLA2', sku: 'VIEJO-1' },
   ],
 }));
 

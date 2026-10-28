@@ -13,7 +13,6 @@ vi.mock('@/data/products.json', () => ({
       id: 'p-1',
       name: 'Foco Inteligente RGBW',
       description: 'Foco LED inteligente con 16 millones de colores.',
-      price: 18900,
       images: ['/images/foco-1.jpg', '/images/foco-2.jpg'],
       category: 'iluminacion',
       isBestseller: true,
@@ -23,7 +22,6 @@ vi.mock('@/data/products.json', () => ({
       id: 'p-2',
       name: 'Tira LED RGB',
       description: 'Tira LED de 5 metros para iluminación ambiental.',
-      price: 28900,
       images: ['/images/tira-led.jpg'],
       category: 'iluminacion',
       isBestseller: false,
@@ -33,7 +31,6 @@ vi.mock('@/data/products.json', () => ({
       id: 'p-3',
       name: 'Sensor Sin Imagen',
       description: 'Producto sin imágenes para probar placeholder.',
-      price: 9500,
       images: [],
       category: 'seguridad',
       isBestseller: false,
@@ -43,7 +40,6 @@ vi.mock('@/data/products.json', () => ({
       id: 'p-4',
       name: 'Cerradura Inactiva',
       description: 'Producto sin stock, oculto del storefront.',
-      price: 15900,
       images: ['/images/cerradura.jpg'],
       category: 'seguridad',
       isBestseller: false,
@@ -67,14 +63,18 @@ vi.mock('@/features/cart/useCart', () => ({
   }),
 }));
 
-// Precio del ERP: por defecto el `price` del JSON mockeado hace de precio del
-// ERP; cada test puede fijar otro.
+// Precio del ERP: por defecto uno fijo por id; cada test puede fijar otro.
+const ERP_PRICES: Record<string, number> = { 'p-1': 18900, 'p-2': 28900, 'p-3': 9500 };
 let erpPricing: ProductPricing | null = null;
 vi.mock('@/features/pricing/usePricing', () => ({
   usePricing: () => ({
     status: 'ready',
-    pricingOf: (product: { price: number }) =>
-      erpPricing ?? { price: product.price, transferPrice: null, availability: 'available' },
+    pricingOf: (product: { id: string }) =>
+      erpPricing ?? {
+        price: ERP_PRICES[product.id] ?? null,
+        transferPrice: null,
+        availability: 'available',
+      },
   }),
 }));
 
@@ -89,6 +89,14 @@ vi.mock('@/features/toast/useToast', () => ({
 const priceText = (amount: number) => {
   const expected = formatPrice(amount).replace(/\s+/g, '');
   return (content: string) => content.replace(/\s+/g, '') === expected;
+};
+
+const offers = () => {
+  const script = document.head.querySelector('script[type="application/ld+json"]');
+  const datos = JSON.parse(script?.textContent ?? '{}') as {
+    offers?: { price: string; availability: string };
+  };
+  return datos.offers;
 };
 
 const renderAt = (path: string) =>
@@ -130,7 +138,7 @@ describe('ProductDetailPage', () => {
     ).toBeInTheDocument();
   });
 
-  it('should show the ERP price and the transfer price instead of the JSON price', () => {
+  it('should show the ERP price and, when lower, the transfer price', () => {
     erpPricing = { price: 31000, transferPrice: 29500, availability: 'available' };
     renderAt('/productos/p-2');
 
@@ -164,6 +172,29 @@ describe('ProductDetailPage', () => {
     expect(screen.getByRole('status', { name: /cargando precio/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /agregar al carrito/i })).toBeDisabled();
   });
+
+  it('should publish the ERP price and stock in the JSON-LD, like the page', () => {
+    erpPricing = { price: 31000, transferPrice: null, availability: 'out_of_stock' };
+    renderAt('/productos/p-2');
+
+    expect(offers()).toEqual(
+      expect.objectContaining({ price: '31000', availability: 'https://schema.org/OutOfStock' }),
+    );
+  });
+
+  it.each([
+    ['no_price', { price: null, transferPrice: null, availability: 'no_price' }],
+    ['loading', { price: null, transferPrice: null, availability: 'loading' }],
+  ] as const)(
+    'should leave the offer out of the JSON-LD when the ERP has no price (%s)',
+    (_, pricing) => {
+      erpPricing = pricing;
+      renderAt('/productos/p-2');
+
+      expect(document.head.querySelector('script[type="application/ld+json"]')).not.toBeNull();
+      expect(offers()).toBeUndefined();
+    },
+  );
 
   it('should render a thumbnail strip when the product has more than one image', () => {
     renderAt('/productos/p-1');

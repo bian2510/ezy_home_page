@@ -11,9 +11,9 @@ import { formatPrice } from '@/lib/formatPrice';
 
 const STORAGE_KEY = 'ezyhome_cart';
 
-// Precio del ERP que fija cada test; por defecto el `price` del builder.
-const pricedFromBuilder = (product: Product): ProductPricing => ({
-  price: product.price,
+// Precio del ERP que fija cada test; por defecto $12.500 para todo.
+const pricedFromBuilder = (_product: Product): ProductPricing => ({
+  price: 12500,
   transferPrice: null,
   availability: 'available',
 });

@@ -4,9 +4,8 @@
 // no en el browser. Acá solo hay funciones puras: reciben los datos ya leídos
 // y devuelven el texto del archivo, así se prueban sin tocar el disco.
 //
-// Por qué generarlo y no mantenerlo a mano: el catálogo cambia todos los meses
-// con `pnpm precios:aplicar`, y un sitemap escrito a mano queda viejo en el
-// primer cambio de stock. Un sitemap que lista páginas que ya devuelven 404 es
+// Por qué generarlo y no mantenerlo a mano: el catálogo cambia (altas, bajas,
+// `active`), y un sitemap escrito a mano queda viejo en el primer cambio. Un sitemap que lista páginas que ya devuelven 404 es
 // peor que no tener sitemap.
 
 /**

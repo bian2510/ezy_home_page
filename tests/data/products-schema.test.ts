@@ -14,7 +14,6 @@ const buildRaw = (overrides: Record<string, unknown> = {}) => ({
   sku: 'FOCO-001',
   name: 'Foco Inteligente',
   description: 'Foco LED Wi-Fi 9W',
-  price: 12500,
   images: ['https://http2.mlstatic.com/foco.webp'],
   category: 'Iluminación Inteligente',
   isBestseller: false,
@@ -50,17 +49,8 @@ describe('ProductSchema — forma de un producto', () => {
     expect(ProductSchema.safeParse(buildRaw()).success).toBe(true);
   });
 
-  it('should reject a price with cents', () => {
-    expect(ProductSchema.safeParse(buildRaw({ price: 94685.26 })).success).toBe(false);
-  });
-
-  it('should reject a price of zero or less', () => {
-    expect(ProductSchema.safeParse(buildRaw({ price: 0 })).success).toBe(false);
-    expect(ProductSchema.safeParse(buildRaw({ price: -100 })).success).toBe(false);
-  });
-
-  it('should reject a price that is not a number', () => {
-    expect(ProductSchema.safeParse(buildRaw({ price: '12500' })).success).toBe(false);
+  it('should reject a price field: the price comes from the ERP, not from this file', () => {
+    expect(ProductSchema.safeParse(buildRaw({ price: 12500 })).success).toBe(false);
   });
 
   it('should reject an empty id or name', () => {
@@ -145,7 +135,7 @@ describe('CatalogSchema — reglas del catálogo completo', () => {
   });
 
   it('should name the offending product in the error message', () => {
-    const result = CatalogSchema.safeParse([buildRaw({ id: 'roto', price: 0 })]);
+    const result = CatalogSchema.safeParse([buildRaw({ id: 'roto', images: [] })]);
 
     expect(result.success).toBe(false);
     if (!result.success) {

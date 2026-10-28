@@ -12,7 +12,6 @@ const sampleProduct: Product = {
   sku: 'BULB-001',
   name: 'Smart Bulb RGBW',
   description: 'Foco LED Wi-Fi 9W',
-  price: 15000,
   images: ['/images/sku-001.jpg'],
   category: 'iluminacion',
   isBestseller: false,

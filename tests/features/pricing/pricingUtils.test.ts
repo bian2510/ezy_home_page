@@ -18,7 +18,7 @@ const quote = (overrides: Partial<StoreQuote> = {}): StoreQuote => ({
   ...overrides,
 });
 
-const product = buildProduct({ sku: 'SNS-001', price: 15_000 });
+const product = buildProduct({ sku: 'SNS-001' });
 
 describe('resolvePricing', () => {
   it('should use the ERP prices when the SKU has a quote', () => {

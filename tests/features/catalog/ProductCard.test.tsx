@@ -87,15 +87,14 @@ describe('ProductCard', () => {
     window.localStorage.clear();
   });
 
-  it('should render the product name and the ERP price, not the JSON price', () => {
+  it('should render the product name and the ERP price', () => {
     currentPricing = { price: 21000, transferPrice: null, availability: 'available' };
-    const product = buildProduct({ name: 'Foco Inteligente RGBW', price: 12500 });
+    const product = buildProduct({ name: 'Foco Inteligente RGBW' });
 
     renderWithProviders(<ProductCard product={product} />);
 
     expect(screen.getByText('Foco Inteligente RGBW')).toBeInTheDocument();
     expect(screen.getByText(matchesPrice(21000))).toBeInTheDocument();
-    expect(screen.queryByText(matchesPrice(12500))).not.toBeInTheDocument();
   });
 
   it('should show the transfer price below when it is lower', () => {
@@ -110,20 +109,20 @@ describe('ProductCard', () => {
   it('should show a skeleton and a disabled add button while the ERP answer is loading', () => {
     currentPricing = { price: null, transferPrice: null, availability: 'loading' };
 
-    renderWithProviders(<ProductCard product={buildProduct({ price: 12500 })} />);
+    renderWithProviders(<ProductCard product={buildProduct()} />);
 
     expect(screen.getByRole('status', { name: /cargando precio/i })).toBeInTheDocument();
-    expect(screen.queryByText(matchesPrice(12500))).not.toBeInTheDocument();
+    expect(screen.queryByText(/\$/)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /agregar al carrito/i })).toBeDisabled();
   });
 
   it('should ask to consult the price by WhatsApp when the ERP has no price for it', () => {
     currentPricing = { price: null, transferPrice: null, availability: 'no_price' };
 
-    renderWithProviders(<ProductCard product={buildProduct({ name: 'Foco', price: 12500 })} />);
+    renderWithProviders(<ProductCard product={buildProduct({ name: 'Foco' })} />);
 
     expect(screen.getByText('Consultar precio')).toBeInTheDocument();
-    expect(screen.queryByText(matchesPrice(12500))).not.toBeInTheDocument();
+    expect(screen.queryByText(/\$/)).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /agregar al carrito/i })).not.toBeInTheDocument();
     const consult = screen.getByRole('link', { name: /consultar por whatsapp/i });
     expect(consult).toHaveAttribute('href', expect.stringContaining('https://wa.me/'));

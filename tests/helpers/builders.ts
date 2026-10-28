@@ -13,7 +13,6 @@ export const buildProduct = (overrides: Partial<Product> = {}): Product => ({
   sku: 'FOCO-001',
   name: 'Foco Inteligente',
   description: 'Foco LED Wi-Fi 9W',
-  price: 12500,
   images: ['/images/foco.jpg'],
   category: 'Iluminación Inteligente',
   isBestseller: false,

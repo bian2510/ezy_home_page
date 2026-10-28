@@ -188,7 +188,6 @@ export const buildProduct = (overrides: Partial<Product> = {}): Product => ({
   sku: 'FOCO-001',
   name: 'Foco Inteligente',
   description: 'Foco LED Wi-Fi 9W',
-  price: 12500,
   images: ['/images/foco.jpg'],
   category: 'Iluminación Inteligente',
   isBestseller: false,
@@ -292,7 +291,7 @@ Reglas que no son negociables:
 Los genera el build, no se editan a mano:
 [`scripts/vite-plugin-seo.ts`](../scripts/vite-plugin-seo.ts) los emite en cada
 `pnpm build` leyendo `products.json` (solo `active: true`) y el índice del blog.
-El catálogo cambia todos los meses con `pnpm precios:aplicar`; un sitemap escrito
+El catálogo cambia (altas, bajas, `active`); un sitemap escrito
 a mano queda viejo en el primer cambio de stock, y un sitemap que lista páginas
 que devuelven 404 es peor que no tener sitemap.
 

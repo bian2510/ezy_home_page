@@ -19,12 +19,6 @@ const nonBlank = (label: string) =>
     .min(1, `${label} no puede estar vacío`)
     .refine((value) => value.trim().length > 0, `${label} no puede ser solo espacios`);
 
-const wholePesos = (label: string) =>
-  z
-    .number(`${label} debe ser un número`)
-    .int(`${label} debe ser un entero en pesos, sin centavos`)
-    .positive(`${label} debe ser mayor a cero`);
-
 /**
  * Forma de un producto. `strictObject` rechaza campos desconocidos: un typo
  * como `pirce` dejaría el precio real en `undefined` sin que nada se queje.
@@ -35,7 +29,6 @@ export const ProductSchema = z
     sku: nonBlank('sku'),
     name: nonBlank('name'),
     description: nonBlank('description'),
-    price: wholePesos('price'),
     images: z
       .array(
         z

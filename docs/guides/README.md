@@ -6,11 +6,11 @@ Instrucciones paso a paso para tareas operativas. Cada guía es autocontenida.
 
 ## Catálogo de productos
 
-| Guía                                               | Cuándo usarla                                                                |
-| -------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [`agregar-producto.md`](./agregar-producto.md)     | Agregar un nuevo producto al catálogo (JSON + imágenes).                     |
-| [`agregar-pdf-manual.md`](./agregar-pdf-manual.md) | Adjuntar el PDF de instrucciones a un producto existente.                    |
-| [`actualizar-precios.md`](./actualizar-precios.md) | Rutina mensual: actualizar precios y stock desde el export de Mercado Libre. |
+| Guía                                               | Cuándo usarla                                                            |
+| -------------------------------------------------- | ------------------------------------------------------------------------ |
+| [`agregar-producto.md`](./agregar-producto.md)     | Agregar un nuevo producto al catálogo (JSON + imágenes).                 |
+| [`agregar-pdf-manual.md`](./agregar-pdf-manual.md) | Adjuntar el PDF de instrucciones a un producto existente.                |
+| [`actualizar-precios.md`](./actualizar-precios.md) | Precios y stock: vienen del ERP por SKU; qué ve el cliente en cada caso. |
 
 ## Código
 

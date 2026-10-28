@@ -23,7 +23,6 @@ Copiar esta plantilla y completar todos los campos:
   "name": "Nombre completo del producto",
   "description": "Descripción detallada.\n\n- Característica 1\n- Característica 2\n\nFicha técnica: ...\n\nMensaje de cierre con EzyHome.",
   "category": "Iluminación Inteligente",
-  "price": 00000,
   "images": ["https://http2.mlstatic.com/..."],
   "isBestseller": false,
   "active": true
@@ -52,9 +51,9 @@ para la misma categoría.
 
 ### 4. Precio
 
-El precio que ve el cliente **viene del ERP**, no de este archivo. `price` es
-obligatorio (entero en pesos, sin centavos) pero solo lo usa el JSON-LD de la
-página de detalle (SEO) y no se mantiene: poné el precio del local del momento.
+El producto **no lleva precio** en este archivo: el precio y el stock vienen del
+ERP por SKU (ver [`actualizar-precios.md`](./actualizar-precios.md)). Un campo
+`price` se rechaza.
 
 ### 5. Agregar imágenes locales (opcional, recomendado para productos propios)
 
@@ -86,22 +85,7 @@ Ver [`docs/guides/agregar-pdf-manual.md`](./agregar-pdf-manual.md).
 
 El producto no aparece en Home, Catálogo ni Detalle, pero persiste en el JSON para reactivarlo cuando vuelva el stock.
 
-### 8. Actualización masiva desde el export de Mercado Libre
-
-Para actualizar precios y stock de todo el catálogo de una vez —la rutina
-mensual—, no se edita el JSON producto por producto: se parte del export de
-Mercado Libre.
-
-```bash
-pnpm precios:informe  "ruta/al/Precios.csv"   # muestra qué cambiaría, no escribe
-pnpm precios:aplicar  "ruta/al/Precios.csv"   # aplica
-```
-
-El procedimiento completo —qué columnas espera el CSV, la regla de precios, qué
-campos no toca y cómo se manejan los productos nuevos— está en
-[`actualizar-precios.md`](./actualizar-precios.md).
-
-### 9. Validar el catálogo
+### 8. Validar el catálogo
 
 ```bash
 pnpm validate:products
@@ -111,18 +95,18 @@ Corre el esquema de [`src/data/productSchema.ts`](../../src/data/productSchema.t
 archivo real y falla nombrando el producto y el campo:
 
 ```
-producto MLA2200632476 › price: price debe ser un entero en pesos, sin centavos
+producto MLA2200632476 › images: el producto necesita al menos una imagen
 producto MLA3316416628 › sku: SKU "SNS-001" duplicado, ya lo usa el producto #3
 ```
 
 Valida forma (tipos, campos obligatorios —incluido `sku`—, campos desconocidos), reglas de
-negocio (precios enteros y positivos, categoría obligatoria si el producto está activo) y
+negocio (categoría obligatoria si el producto está activo) y
 reglas del catálogo completo (ids y SKU únicos, categorías sin variantes disfrazadas).
 
 `pnpm typecheck` **no** cubre esto: `products.json` entra a la app con un cast
 (`as Product[]`) que no verifica nada en runtime.
 
-### 10. Quality gate
+### 9. Quality gate
 
 ```bash
 pnpm lint && pnpm typecheck && pnpm format:check && pnpm test

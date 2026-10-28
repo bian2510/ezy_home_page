@@ -19,7 +19,6 @@ vi.mock('@/data/products.json', () => ({
       sku: 'FOCO-NUEVO',
       name: 'Foco Inteligente',
       description: 'Foco LED Wi-Fi 9W',
-      price: 20000,
       images: ['/images/foco-nuevo.jpg'],
       category: 'Iluminación Inteligente',
       isBestseller: false,

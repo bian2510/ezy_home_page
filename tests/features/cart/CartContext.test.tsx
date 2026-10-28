@@ -116,7 +116,7 @@ describe('CartContext', () => {
   it('should hydrate items from localStorage on initialization', () => {
     const stored = [
       {
-        product: buildProduct({ id: 'p-1', price: 12500 }),
+        product: buildProduct({ id: 'p-1' }),
         quantity: 2,
       },
     ];
