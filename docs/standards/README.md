@@ -15,6 +15,7 @@ Para las reglas de código (TypeScript, Tailwind, testing, nomenclatura) ver [`d
 | [`reglas-componentes.md`](./reglas-componentes.md)               | Cuando un componente tiene muchas props o está creciendo. Límites concretos y árbol de decisión. |
 | [`funciones-utils.md`](./funciones-utils.md)                     | Antes de escribir cualquier función reutilizable. Dónde va y cómo evitar duplicación.            |
 | [`testing.md`](./testing.md)                                     | Patrones de test del repo: builders, wrappers, mocks, timers, userEvent, precios con NBSP.       |
+| [`llamadas-al-backend.md`](./llamadas-al-backend.md)             | Antes de llamar al ERP o a cualquier API. Dónde va el `fetch`, cómo se traduce y qué si falla.   |
 | [`tailwind-tokens.md`](./tailwind-tokens.md)                     | Todos los tokens de diseño EzyHome con su semántica y cuándo usar cada uno.                      |
 
 ## Estado
@@ -41,3 +42,4 @@ Las decisiones tomadas y sus justificaciones viven en [`docs/adrs/`](../adrs/).
 | [`F001-002`](../adrs/F001-002-tailwind-token-remapping.md)  | Tokens de diseño EzyHome en Tailwind                     |
 | [`F001-003`](../adrs/F001-003-blog-static-markdown.md)      | Blog estático con Markdown (no CMS)                      |
 | [`ADR-004`](../adrs/ADR-004-arquitectura-frontend-capas.md) | Arquitectura en capas Feature-Sliced Lite                |
+| [`ADR-005`](../adrs/ADR-005-precio-y-stock-desde-el-erp.md) | Precio y stock desde el ERP (contrato de la API)         |

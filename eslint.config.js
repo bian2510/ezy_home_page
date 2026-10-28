@@ -162,6 +162,40 @@ export default tseslint.config(
       ],
     },
   },
+  // --- Llamadas al backend (docs/standards/llamadas-al-backend.md, ADR-005) ---
+  //
+  // `fetch` solo en los archivos `<recurso>Api.ts` de cada feature: ahí se
+  // traduce y valida la respuesta. Componentes, hooks y Providers usan esas
+  // funciones, nunca la red directo.
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/**/*Api.ts'],
+    rules: {
+      'no-restricted-globals': [
+        'error',
+        {
+          name: 'fetch',
+          message:
+            'La red solo se usa desde un archivo `<recurso>Api.ts` de la feature (docs/standards/llamadas-al-backend.md).',
+        },
+      ],
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'window',
+          property: 'fetch',
+          message:
+            'La red solo se usa desde un archivo `<recurso>Api.ts` de la feature (docs/standards/llamadas-al-backend.md).',
+        },
+        {
+          object: 'globalThis',
+          property: 'fetch',
+          message:
+            'La red solo se usa desde un archivo `<recurso>Api.ts` de la feature (docs/standards/llamadas-al-backend.md).',
+        },
+      ],
+    },
+  },
   {
     files: ['src/types/**/*.{ts,tsx}'],
     rules: {

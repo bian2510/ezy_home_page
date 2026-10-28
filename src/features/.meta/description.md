@@ -1,28 +1,33 @@
 # src/features/
 
 **Purpose:** Vertical slices of the storefront. Each slice owns its own
-components, hooks, types, and (later) API calls so it can evolve
-independently.
+components, hooks, state and backend calls so it can evolve independently.
 
 ## Key Components
 
-- `catalog/` — product discovery, listing, filtering, detail (placeholder)
-- `cart/` — cart state and checkout entry (placeholder)
+- `catalog/` — listado, filtro por categoría y card de producto
+- `cart/` — carrito persistido en `localStorage` y cierre por WhatsApp
+- `pricing/` — precio y stock desde el ERP por SKU (ADR-005)
+- `blog/` — posts estáticos en Markdown
+- `toast/` — avisos efímeros
 
 ## Dependencies
 
 - Shared primitives from `@/components/ui`
 - Shared helpers from `@/lib`
 - Shared hooks from `@/hooks`
+- Catálogo estático desde `@/data/catalog`
 
 ## Patterns
 
 - One directory per bounded slice; new slices require an entry here and a `.meta/description.md`
-- Each slice can expose a public `index.ts` barrel; internals stay private
-- Slice-local components live under `<slice>/components/`, hooks under `<slice>/hooks/`, types under `<slice>/types.ts`
+- Each slice exposes a public `index.ts` barrel; internals stay private
+- Flat layout by default; `components/` and `hooks/` subfolders only past ~6 files (`docs/standards/modulos-feature.md`)
+- Backend calls only in a `<recurso>Api.ts` file inside the slice (`docs/standards/llamadas-al-backend.md`)
 
 ## Constraints
 
-- No cross-feature imports (`catalog` may not import from `cart` directly) — go through `src/lib`, `src/hooks`, or lifted state
+- A slice imports another only through its `index.ts` (enforced by ESLint)
+- `fetch` outside `*Api.ts` fails `pnpm lint`
 - Slices must be testable in isolation (no implicit dependency on a parent layout)
 - New slice = new `.meta/description.md` at slice root
