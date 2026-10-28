@@ -97,13 +97,26 @@ describe('ProductCard', () => {
     expect(screen.getByText(matchesPrice(21000))).toBeInTheDocument();
   });
 
-  it('should show the transfer price below when it is lower', () => {
+  it('should show the transfer price as the main price and Mercado Pago below when it is lower', () => {
     currentPricing = { price: 21000, transferPrice: 20000, availability: 'available' };
 
     renderWithProviders(<ProductCard product={buildProduct()} />);
 
-    expect(screen.getByText(matchesPrice(20000))).toBeInTheDocument();
-    expect(screen.getByText(/con transferencia/i)).toBeInTheDocument();
+    expect(screen.getByTestId('main-price')).toHaveTextContent(/con transferencia/i);
+    expect(screen.getByTestId('main-price')).toHaveTextContent(normalizePrice(formatPrice(20000)));
+    expect(screen.getByTestId('secondary-price')).toHaveTextContent(/con mercado pago/i);
+    expect(screen.getByTestId('secondary-price')).toHaveTextContent(
+      normalizePrice(formatPrice(21000)),
+    );
+  });
+
+  it('should show a single price without labels when transfer is not cheaper', () => {
+    currentPricing = { price: 21000, transferPrice: null, availability: 'available' };
+
+    renderWithProviders(<ProductCard product={buildProduct()} />);
+
+    expect(screen.getByTestId('main-price')).toHaveTextContent(normalizePrice(formatPrice(21000)));
+    expect(screen.queryByTestId('secondary-price')).not.toBeInTheDocument();
   });
 
   it('should show a skeleton and a disabled add button while the ERP answer is loading', () => {

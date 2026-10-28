@@ -1,8 +1,9 @@
 // ProductPrice — precio de venta del ERP para la card y el detalle.
 //
 // - Cargando: skeleton (nunca el precio del JSON).
-// - Con precio: precio con Mercado Pago y, si es menor, el de transferencia;
-//   "Sin stock" si el ERP no tiene unidades.
+// - Con precio: si la transferencia es más barata, ese precio grande y el de
+//   Mercado Pago abajo; si no, un solo precio. "Sin stock" si el ERP no tiene
+//   unidades.
 // - Sin precio del ERP: "Consultar precio".
 import type { ProductPricing } from '@/types';
 import { formatPrice } from '@/lib/formatPrice';
@@ -36,22 +37,30 @@ export default function ProductPrice({ pricing, size = 'card' }: ProductPricePro
     );
   }
 
+  // Con transferencia más barata, ese es el precio grande y el de Mercado
+  // Pago va abajo, chico (usuario, 2026-10-28).
+  const hasTransfer = pricing.transferPrice !== null;
+  const mainPrice = pricing.transferPrice ?? pricing.price;
+
   return (
     <div className="flex flex-col gap-1">
       <div className="flex flex-wrap items-center gap-2">
-        <span
-          className={cn(
-            'font-mono font-semibold text-foreground',
-            isDetail ? 'text-2xl' : 'text-base',
+        <span data-testid="main-price" className="text-foreground">
+          <span className={cn('font-mono font-semibold', isDetail ? 'text-2xl' : 'text-base')}>
+            {formatPrice(mainPrice)}
+          </span>
+          {hasTransfer && (
+            <span className={cn('ml-1', isDetail ? 'text-sm' : 'text-xs')}>con transferencia</span>
           )}
-        >
-          {formatPrice(pricing.price)}
         </span>
         {pricing.availability === 'out_of_stock' && <Badge>Sin stock</Badge>}
       </div>
-      {pricing.transferPrice !== null && (
-        <span className={cn('text-muted-foreground', isDetail ? 'text-sm' : 'text-xs')}>
-          <span className="font-mono">{formatPrice(pricing.transferPrice)}</span> con transferencia
+      {hasTransfer && (
+        <span
+          data-testid="secondary-price"
+          className={cn('text-muted-foreground', isDetail ? 'text-sm' : 'text-xs')}
+        >
+          <span className="font-mono">{formatPrice(pricing.price)}</span> con Mercado Pago
         </span>
       )}
     </div>
