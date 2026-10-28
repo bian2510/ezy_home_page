@@ -19,7 +19,8 @@ feature que lo usa (`features/pricing/storeApi.ts`). Es el **único** lugar con
 Lo aplica `eslint.config.js` (`no-restricted-globals` y
 `no-restricted-properties` para `fetch`, `window.fetch` y `globalThis.fetch` en
 `src/**`, con excepción para `src/**/*Api.ts`): un `fetch` fuera de esos
-archivos falla `pnpm lint`.
+archivos falla `pnpm lint`. `tests/unit/eslint-fetch-rule.test.ts` verifica
+que la regla siga activa.
 
 ### 2. El archivo `Api` traduce y valida
 
