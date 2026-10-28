@@ -86,6 +86,7 @@ jobs:
           # Clave de solo lectura de la API de la tienda en el ERP (precio y stock
           # por SKU). Va en el bundle: es pública a propósito.
           VITE_STORE_API_KEY: ${{ secrets.VITE_STORE_API_KEY }}
+          VITE_MERCADOPAGO_ENABLED: ${{ vars.VITE_MERCADOPAGO_ENABLED }}
       - name: Presupuesto de peso del critical path
         run: pnpm check:bundle
       - uses: actions/upload-artifact@v4

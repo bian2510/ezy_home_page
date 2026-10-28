@@ -16,6 +16,8 @@ interface ImportMetaEnv {
   readonly VITE_STORE_API_URL?: string;
   /** Clave de solo lectura de la API de la tienda en el ERP (pública: va en el bundle). */
   readonly VITE_STORE_API_KEY?: string;
+  /** `true` cuando el cobro con Mercado Pago está activo; si no, un solo precio (transferencia). */
+  readonly VITE_MERCADOPAGO_ENABLED?: string;
 }
 
 interface ImportMeta {
