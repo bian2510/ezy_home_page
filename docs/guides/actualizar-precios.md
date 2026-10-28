@@ -30,8 +30,9 @@ de precios ni ofertas.
 | El ERP no responde / sin clave      | "Consultar precio" en todos los productos               |
 | Todavía cargando                    | Un skeleton en lugar del precio; el botón deshabilitado |
 
-**El `price` del JSON no se muestra nunca y no se mantiene.** Solo lo usa el
-JSON-LD de la página de detalle (SEO), así que puede estar desactualizado.
+**El `price` del JSON no se muestra nunca y no se mantiene.** El JSON-LD de la
+página de detalle (lo que lee Google) usa el precio y el stock del ERP, igual que
+la página; el `price` del JSON solo entra ahí si el ERP no dio precio.
 
 ## Si cambiás un SKU en el ERP
 

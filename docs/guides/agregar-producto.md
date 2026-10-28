@@ -53,8 +53,8 @@ para la misma categoría.
 ### 4. Precio
 
 El precio que ve el cliente **viene del ERP**, no de este archivo. `price` es
-obligatorio (entero en pesos, sin centavos) pero solo lo usa el JSON-LD de la
-página de detalle (SEO) y no se mantiene: poné el precio del local del momento.
+obligatorio (entero en pesos, sin centavos) pero no se mantiene: solo va al
+JSON-LD (SEO) cuando el ERP no da precio. Poné el precio del local del momento.
 
 ### 5. Agregar imágenes locales (opcional, recomendado para productos propios)
 
