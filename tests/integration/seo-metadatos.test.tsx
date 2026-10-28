@@ -100,7 +100,8 @@ describe('metadatos por ruta', () => {
     expect(datos?.['@type']).toBe('Product');
     expect(datos?.name).toBe(primerProducto?.name);
     expect(datos?.offers).toEqual(
-      expect.objectContaining({ priceCurrency: 'ARS', price: '54300' }),
+      // Sin Mercado Pago activo, el único precio es el de transferencia.
+      expect.objectContaining({ priceCurrency: 'ARS', price: '51700' }),
     );
     vi.unstubAllGlobals();
   });

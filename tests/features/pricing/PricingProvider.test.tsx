@@ -40,7 +40,21 @@ describe('PricingProvider', () => {
     warnSpy.mockRestore();
   });
 
+  it('should show only the transfer price while Mercado Pago is not enabled', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(okResponse()));
+
+    const { result } = renderHook(() => usePricing(), { wrapper });
+
+    await waitFor(() => expect(result.current.status).toBe('ready'));
+    expect(result.current.pricingOf(buildProduct({ sku: 'SNS-001' }))).toEqual({
+      price: 20_000,
+      transferPrice: null,
+      availability: 'available',
+    });
+  });
+
   it('should ask the ERP once for every active SKU and expose its prices', async () => {
+    vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
     const fetchMock = vi.fn().mockResolvedValue(okResponse());
     vi.stubGlobal('fetch', fetchMock);
 

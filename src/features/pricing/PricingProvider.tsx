@@ -6,7 +6,7 @@
 // 2026-10-28).
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { activeProducts } from '@/data/catalog';
-import { getStoreApiKey, getStoreApiUrl } from '@/lib/env';
+import { getStoreApiKey, getStoreApiUrl, isMercadoPagoEnabled } from '@/lib/env';
 import type { Product } from '@/types';
 import { PricingContext, type PricingContextValue } from './PricingContext';
 import { fetchStoreQuotes } from './storeApi';
@@ -59,9 +59,11 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  const mercadoPagoEnabled = isMercadoPagoEnabled();
   const pricingOf = useCallback(
-    (product: Product) => resolvePricing(product, state.status, state.quotes),
-    [state],
+    (product: Product) =>
+      resolvePricing(product, state.status, state.quotes, { mercadoPagoEnabled }),
+    [state, mercadoPagoEnabled],
   );
 
   const value = useMemo<PricingContextValue>(

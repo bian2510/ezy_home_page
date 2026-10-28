@@ -21,11 +21,13 @@ const LOADING: ProductPricing = { price: null, transferPrice: null, availability
 /**
  * Precio de venta de un producto. Nunca usa el `price` del JSON: si el ERP no
  * respondió o no devolvió el SKU, el producto queda en "Consultar precio".
+ * Con `mercadoPagoEnabled: false` el único precio es el de transferencia.
  */
 export const resolvePricing = (
   product: Product,
   status: PricingStatus,
   quotes: QuoteIndex,
+  { mercadoPagoEnabled = true }: { mercadoPagoEnabled?: boolean } = {},
 ): ProductPricing => {
   if (status === 'loading') return LOADING;
   if (status === 'unavailable') return NO_PRICE;
@@ -33,10 +35,15 @@ export const resolvePricing = (
   const quote = quotes.get(normalizeSku(product.sku));
   if (quote === undefined) return NO_PRICE;
 
+  const availability = quote.available ? 'available' : 'out_of_stock';
+  // Sin Mercado Pago activo se cobra por transferencia o efectivo al retirar:
+  // un solo precio, el de transferencia (usuario, 2026-10-28).
+  if (!mercadoPagoEnabled) return { price: quote.priceTransfer, transferPrice: null, availability };
+
   return {
     price: quote.priceMp,
     transferPrice: quote.priceTransfer < quote.priceMp ? quote.priceTransfer : null,
-    availability: quote.available ? 'available' : 'out_of_stock',
+    availability,
   };
 };
 
