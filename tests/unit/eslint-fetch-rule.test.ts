@@ -9,7 +9,11 @@ const eslint = new ESLint({ cwd: process.cwd() });
 
 const fetchErrors = async (code: string, filePath: string): Promise<string[]> => {
   const [result] = await eslint.lintText(code, { filePath });
-  return (result?.messages ?? [])
+  const messages = result?.messages ?? [];
+  // Un error de parseo deja la lista de reglas vacía y el test pasaría por la
+  // razón equivocada: que falle mostrando el motivo.
+  expect(messages.filter((message) => message.fatal).map((message) => message.message)).toEqual([]);
+  return messages
     .filter((message) =>
       ['no-restricted-globals', 'no-restricted-properties'].includes(message.ruleId ?? ''),
     )
