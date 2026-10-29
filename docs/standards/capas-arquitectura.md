@@ -27,8 +27,13 @@ src/features/
   catalog/    CatalogPage, ProductCard, ProductGrid, CategoryFilter, useCatalog
   cart/       CartProvider, CartDrawer, CartItem, useCart, cartUtils
   blog/       BlogListPage, BlogCard, BlogPostPage, useBlogPost
+  pricing/    PricingProvider, usePricing, ProductPrice, storeApi (precio y stock del ERP)
   toast/      ToastProvider, ToastContext, useToast
 ```
+
+Las llamadas al backend viven en un archivo `<recurso>Api.ts` de la feature
+(`pricing/storeApi.ts`), único lugar con `fetch`: ver
+[`llamadas-al-backend.md`](./llamadas-al-backend.md).
 
 Cada feature expone su API por `index.ts`. El hook consumidor del contexto vive
 dentro de la feature (`useCart`, `useToast`), nunca en `hooks/`.
@@ -142,7 +147,9 @@ interno, así que la regla de capas sigue valiendo dentro del split.
 
 Estas reglas no son honor system: `eslint.config.js` las aplica con
 `@typescript-eslint/no-restricted-imports` por capa. Un import que cruce una
-frontera falla `pnpm lint` con el mensaje de la capa correspondiente.
+frontera falla `pnpm lint` con el mensaje de la capa correspondiente. Un
+`fetch` fuera de un archivo `*Api.ts` también falla
+([`llamadas-al-backend.md`](./llamadas-al-backend.md)).
 
 ---
 

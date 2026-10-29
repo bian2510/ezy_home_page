@@ -8,6 +8,9 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import prettier from 'eslint-config-prettier';
 
+const NETWORK_MESSAGE =
+  'La red solo se usa desde un archivo `<recurso>Api.ts` de la feature (docs/standards/llamadas-al-backend.md).';
+
 export default tseslint.config(
   { ignores: ['dist', 'coverage', 'node_modules', '*.config.js', '*.config.ts'] },
   {
@@ -159,6 +162,38 @@ export default tseslint.config(
             },
           ],
         },
+      ],
+    },
+  },
+  // --- Llamadas al backend (docs/standards/llamadas-al-backend.md, ADR-005) ---
+  //
+  // La red solo se usa desde los archivos `<recurso>Api.ts` de cada feature:
+  // ahí se traduce y valida la respuesta. Componentes, hooks y Providers usan
+  // esas funciones, nunca la red directo. Cubre `fetch` (también como
+  // `window.fetch`, `self.fetch`, `globalThis.fetch` y con corchetes),
+  // `XMLHttpRequest`, `EventSource`, `WebSocket` y `navigator.sendBeacon`.
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    // Solo un `*Api.ts` en la raíz de una feature queda libre (no en lib/, pages/, …).
+    ignores: ['src/features/*/*Api.ts'],
+    rules: {
+      'no-restricted-globals': [
+        'error',
+        ...['fetch', 'XMLHttpRequest', 'EventSource', 'WebSocket'].map((name) => ({
+          name,
+          message: NETWORK_MESSAGE,
+        })),
+      ],
+      'no-restricted-properties': [
+        'error',
+        ...['window', 'self', 'globalThis'].flatMap((object) =>
+          ['fetch', 'XMLHttpRequest', 'EventSource', 'WebSocket'].map((property) => ({
+            object,
+            property,
+            message: NETWORK_MESSAGE,
+          })),
+        ),
+        { object: 'navigator', property: 'sendBeacon', message: NETWORK_MESSAGE },
       ],
     },
   },

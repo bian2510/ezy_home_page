@@ -16,6 +16,7 @@ src/features/<nombre>/
   <Nombre>Provider.tsx← estado + efectos (si hay estado global)
   use<Nombre>.ts      ← hook consumidor con error guard (si hay contexto)
   <nombre>Utils.ts    ← funciones puras del dominio
+  <recurso>Api.ts     ← llamada al backend, único archivo con `fetch` (si hay)
   index.ts            ← API pública del módulo ← OBLIGATORIO
 ```
 
@@ -107,3 +108,7 @@ Ver el paso a paso en [`docs/guides/agregar-feature.md`](../guides/agregar-featu
 ## Gestión de estado dentro de una feature
 
 Ver [`docs/standards/gestion-estado.md`](./gestion-estado.md) para el patrón completo Context → Provider → hook y la decisión de cuándo migrar a Zustand.
+
+Si la feature trae datos del backend, el Provider llama al archivo
+`<recurso>Api.ts` y guarda el estado de la llamada: ver
+[`llamadas-al-backend.md`](./llamadas-al-backend.md).

@@ -1,25 +1,28 @@
 # src/features/cart/
 
-**Purpose:** Shopping cart slice — line items, totals, persistence, and the
-entry point to checkout. Currently a placeholder.
+**Purpose:** Carrito de compras: líneas, cantidades, totales y cierre de la
+compra por WhatsApp.
 
 ## Key Components
 
-- None yet (`.gitkeep` placeholder)
+- `CartProvider.tsx` + `CartContext.tsx` + `useCart.ts` — estado del carrito, persistido en `localStorage`; un producto que ya no está en el catálogo se descarta al rehidratar
+- `cartUtils.ts` — totales con los precios del ERP (Mercado Pago y transferencia) y armado del mensaje de WhatsApp
+- `CartDrawer.tsx`, `CartPage.tsx`, `CartContents.tsx`, `CartItem.tsx` — UI del carrito
 
 ## Dependencies
 
-- Future: `@/types` for shared `Money`, `ProductRef` types
-- Future: browser `localStorage` (wrapped) for cart persistence
+- `@/features/pricing` — `usePricing` para el precio de cada línea y los totales
+- `@/features/toast` — avisos
+- `@/data/catalog` — reconciliar un carrito guardado
+- `@/lib/env` — número de WhatsApp
 
 ## Patterns
 
-- Planned: cart state via React context + reducer; selectors exposed via hooks
-- Planned: optimistic line-item updates with rollback on API failure
-- Planned: persistence layer behind a `CartStorage` interface so it can swap to a backend session later
+- Context → Provider → hook (`docs/standards/gestion-estado.md`, ADR F001-001)
+- El carrito guarda productos, no precios: el precio siempre se lee del ERP al mostrar
 
 ## Constraints
 
-- Cart actions must remain idempotent (safe to retry on flaky networks)
-- No imports from `src/features/catalog/`
-- Persisted shape requires a version field so schema migrations stay safe
+- El carrito no se pierde entre sesiones sin acción del usuario (DOMAIN.md)
+- Las líneas sin precio del ERP dicen "consultar precio" y no suman al total
+- No llama al backend
