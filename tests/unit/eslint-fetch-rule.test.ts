@@ -5,6 +5,11 @@
 import { ESLint } from 'eslint';
 import { describe, expect, it } from 'vitest';
 
+// Con `CI=true`, typescript-eslint pasa a "single run" y parsea el archivo del
+// disco en vez del texto de `lintText`: el test vería el código real, sin
+// `fetch`, y pasaría o fallaría por la razón equivocada.
+process.env.TSESTREE_SINGLE_RUN = 'false';
+
 const eslint = new ESLint({ cwd: process.cwd() });
 
 const fetchErrors = async (code: string, filePath: string): Promise<string[]> => {
