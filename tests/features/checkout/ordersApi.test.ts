@@ -38,7 +38,7 @@ const erpOrder = (overrides: Record<string, unknown> = {}) => ({
 });
 
 const REQUEST: OrderRequest = {
-  idempotencyKey: 'intento-abc12345',
+  idempotencyKey: 'intento-de-prueba',
   buyer: { name: 'Ana Pérez', phone: '1155554444', email: 'ana@mail.com', document: '' },
   items: [{ sku: 'SKU-AUTO-43091', quantity: 2 }],
   acceptedPrivacy: true,
@@ -80,7 +80,7 @@ describe('createOrder', () => {
       'content-type': 'application/json',
     });
     expect(JSON.parse(init.body as string)).toEqual({
-      idempotency_key: 'intento-abc12345',
+      idempotency_key: 'intento-de-prueba',
       payment_method: 'transfer',
       accepted_privacy: true,
       buyer: { name: 'Ana Pérez', phone: '1155554444', email: 'ana@mail.com' },
