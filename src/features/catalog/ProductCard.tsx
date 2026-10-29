@@ -2,7 +2,14 @@ import type { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '@/types';
 import { useCart } from '@/features/cart';
-import { ConsultLink, ProductPrice, isPurchasable, usePricing } from '@/features/pricing';
+import {
+  ConsultLink,
+  ProductPrice,
+  STOCK_LIMIT_MESSAGE,
+  isPurchasable,
+  reachedStockLimit,
+  usePricing,
+} from '@/features/pricing';
 import { useToast } from '@/features/toast';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/cn';
@@ -24,7 +31,9 @@ import { cn } from '@/lib/cn';
  *    in BR-008.
  *  - Price and stock come from the ERP (`usePricing`), never from the JSON.
  *    While loading the add button is disabled; without ERP price or stock it
- *    is replaced by a WhatsApp consult link. When `isBestseller`, a
+ *    is replaced by a WhatsApp consult link. With all the ERP stock already in
+ *    the cart the button is disabled with a friendly notice (no "Quedan N").
+ *    When `isBestseller`, a
  *    "Más vendido" badge (success token) is shown.
  */
 interface ProductCardProps {
@@ -33,9 +42,11 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
-  const { addItem } = useCart();
+  const { addItem, items } = useCart();
   const { addToast } = useToast();
   const pricing = usePricing().pricingOf(product);
+  const inCart = items.find((item) => item.product.id === product.id)?.quantity ?? 0;
+  const atStockLimit = reachedStockLimit(pricing, inCart);
 
   const hasImage = product.images.length > 0;
   const primaryImage = hasImage ? product.images[0] : null;
@@ -100,19 +111,26 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       <div className="p-3 pt-0">
         {isPurchasable(pricing.availability) || pricing.availability === 'loading' ? (
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            disabled={!isPurchasable(pricing.availability)}
-            className={cn(
-              'inline-flex min-h-11 w-full items-center justify-center rounded-md',
-              'bg-primary px-3 py-2 text-sm font-medium text-primary-foreground',
-              'transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-              'disabled:cursor-not-allowed disabled:opacity-50',
+          <>
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              disabled={!isPurchasable(pricing.availability) || atStockLimit}
+              className={cn(
+                'inline-flex min-h-11 w-full items-center justify-center rounded-md',
+                'bg-primary px-3 py-2 text-sm font-medium text-primary-foreground',
+                'transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                'disabled:cursor-not-allowed disabled:opacity-50',
+              )}
+            >
+              Agregar al carrito
+            </button>
+            {atStockLimit && (
+              <p role="status" className="mt-2 text-xs text-muted-foreground">
+                {STOCK_LIMIT_MESSAGE}
+              </p>
             )}
-          >
-            Agregar al carrito
-          </button>
+          </>
         ) : (
           <ConsultLink product={product} className="w-full" />
         )}

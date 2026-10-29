@@ -112,4 +112,23 @@ describe('Checkout por WhatsApp', () => {
 
     expect(screen.getAllByText(/consultar precio/i).length).toBeGreaterThan(0);
   });
+
+  it('should offer buying with transfer and pickup in the store', () => {
+    renderCart();
+
+    expect(
+      screen.getByRole('link', { name: /comprar con transferencia y retiro/i }),
+    ).toHaveAttribute('href', '/checkout');
+    expect(screen.getByText(/envíos: coordinamos por whatsapp/i)).toBeInTheDocument();
+  });
+
+  it('should not offer the transfer checkout while a product has no price', () => {
+    pricingOf = () => ({ price: null, transferPrice: null, availability: 'no_price' });
+    renderCart();
+
+    expect(
+      screen.queryByRole('link', { name: /comprar con transferencia y retiro/i }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /comprar por whatsapp/i })).toBeEnabled();
+  });
 });

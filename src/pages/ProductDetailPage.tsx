@@ -21,7 +21,13 @@ import { buildCanonical, buildProductJsonLd, truncateForMeta } from '@/lib/seo';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import QuantitySelector from '@/components/ui/QuantitySelector';
 import { useCart } from '@/features/cart';
-import { ConsultLink, ProductPrice, isPurchasable, usePricing } from '@/features/pricing';
+import {
+  ConsultLink,
+  ProductPrice,
+  STOCK_LIMIT_MESSAGE,
+  isPurchasable,
+  usePricing,
+} from '@/features/pricing';
 import { useToast } from '@/features/toast';
 
 const MIN_QUANTITY = 1;
@@ -95,10 +101,16 @@ interface ProductDetailProps {
 }
 
 function ProductDetail({ product }: ProductDetailProps) {
-  const { addItem } = useCart();
+  const { addItem, items } = useCart();
   const { addToast } = useToast();
   const pricing = usePricing().pricingOf(product);
-  const [quantity, setQuantity] = useState<number>(MIN_QUANTITY);
+  const [selected, setSelected] = useState<number>(MIN_QUANTITY);
+  // Tope: el stock del ERP menos lo que ya está en el carrito (sin "Quedan N").
+  const inCart = items.find((item) => item.product.id === product.id)?.quantity ?? 0;
+  const remaining = pricing.stock === undefined ? undefined : pricing.stock - inCart;
+  const quantity = remaining === undefined ? selected : Math.min(selected, Math.max(remaining, 1));
+  const noneLeft = remaining !== undefined && remaining <= 0;
+  const atStockLimit = remaining !== undefined && quantity >= remaining;
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
 
   const handleAddToCart = () => {
@@ -162,15 +174,25 @@ function ProductDetail({ product }: ProductDetailProps) {
 
           {isPurchasable(pricing.availability) || pricing.availability === 'loading' ? (
             <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <QuantitySelector value={quantity} onChange={setQuantity} min={MIN_QUANTITY} />
+              <QuantitySelector
+                value={quantity}
+                onChange={setSelected}
+                min={MIN_QUANTITY}
+                max={remaining === undefined ? undefined : Math.max(remaining, MIN_QUANTITY)}
+              />
               <button
                 type="button"
                 onClick={handleAddToCart}
-                disabled={!isPurchasable(pricing.availability)}
+                disabled={!isPurchasable(pricing.availability) || noneLeft}
                 className="inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Agregar al carrito
               </button>
+              {atStockLimit && pricing.availability === 'available' && (
+                <p role="status" className="text-sm text-muted-foreground">
+                  {STOCK_LIMIT_MESSAGE}
+                </p>
+              )}
             </div>
           ) : (
             <ConsultLink product={product} className="mt-2 px-6 sm:self-start" />

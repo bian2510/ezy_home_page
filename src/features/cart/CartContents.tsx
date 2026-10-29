@@ -1,10 +1,12 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from './useCart';
 import CartItem from './CartItem';
 import { buildWhatsAppMessage, computeCartTotals } from './cartUtils';
 import { formatPrice } from '@/lib/formatPrice';
+import { cn } from '@/lib/cn';
 import { getWhatsAppNumber } from '@/lib/env';
-import { usePricing } from '@/features/pricing';
+import { clampToStock, isPurchasable, reachedStockLimit, usePricing } from '@/features/pricing';
 
 interface CartContentsProps {
   /** Called after a successful checkout tap — used by the drawer to close itself. */
@@ -17,10 +19,24 @@ export default function CartContents({ onClose }: CartContentsProps) {
   const { total, transferTotal, hasUnpriced } = computeCartTotals(items, pricingOf);
 
   const isEmpty = items.length === 0;
+  // Compra por transferencia con retiro: solo si todo tiene precio y stock del
+  // ERP. Si no, se consulta por WhatsApp como siempre.
+  const canCheckout =
+    !isEmpty && items.every((item) => isPurchasable(pricingOf(item.product).availability));
+
+  // Si el stock del ERP bajó desde que se armó el carrito, la cantidad se
+  // ajusta al cargar (sin reserva de stock, ADR-025 del ERP §6).
+  useEffect(() => {
+    items.forEach((item) => {
+      const allowed = clampToStock(pricingOf(item.product), item.quantity);
+      if (allowed < item.quantity) updateQuantity(item.product.id, allowed);
+    });
+  }, [items, pricingOf, updateQuantity]);
 
   const handleIncrement = (productId: string) => {
     const current = items.find((item) => item.product.id === productId);
     if (current === undefined) return;
+    if (reachedStockLimit(pricingOf(current.product), current.quantity)) return;
     updateQuantity(productId, current.quantity + 1);
   };
 
@@ -92,14 +108,31 @@ export default function CartContents({ onClose }: CartContentsProps) {
             </p>
           )}
         </div>
+        {canCheckout && (
+          <Link
+            to="/checkout"
+            onClick={onClose}
+            className="mb-2 inline-flex min-h-11 w-full items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            Comprar con transferencia y retiro en el local
+          </Link>
+        )}
         <button
           type="button"
           onClick={handleCheckout}
           disabled={isEmpty}
-          className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+          className={cn(
+            'inline-flex min-h-11 w-full items-center justify-center rounded-md px-6 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50',
+            canCheckout
+              ? 'border border-primary bg-card text-primary hover:bg-muted'
+              : 'bg-primary text-primary-foreground hover:bg-primary/90',
+          )}
         >
           Comprar por WhatsApp
         </button>
+        <p className="mt-2 text-center text-xs text-muted-foreground">
+          Envíos: coordinamos por WhatsApp.
+        </p>
       </div>
     </div>
   );

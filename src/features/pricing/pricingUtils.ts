@@ -38,14 +38,32 @@ export const resolvePricing = (
   const availability = quote.available ? 'available' : 'out_of_stock';
   // Sin Mercado Pago activo se cobra por transferencia o efectivo al retirar:
   // un solo precio, el de transferencia (usuario, 2026-10-28).
-  if (!mercadoPagoEnabled) return { price: quote.priceTransfer, transferPrice: null, availability };
+  const stock = Math.max(quote.stock, 0);
+  if (!mercadoPagoEnabled) {
+    return { price: quote.priceTransfer, transferPrice: null, availability, stock };
+  }
 
   return {
     price: quote.priceMp,
     transferPrice: quote.priceTransfer < quote.priceMp ? quote.priceTransfer : null,
     availability,
+    stock,
   };
 };
+
+/** Aviso al llegar al tope de stock: sin "Quedan N" (usuario, 2026-10-28). */
+export const STOCK_LIMIT_MESSAGE = 'Llegaste al máximo de unidades disponibles';
+
+/** `true` si no se pueden sumar más unidades: ya hay tantas como stock del ERP. */
+export const reachedStockLimit = (pricing: ProductPricing, quantity: number): boolean =>
+  pricing.stock !== undefined && quantity >= pricing.stock;
+
+/**
+ * Cantidad ajustada al stock del ERP. Sin dato de stock o con stock 0 no se
+ * toca: sin stock el producto ya se muestra agotado y no se puede comprar.
+ */
+export const clampToStock = (pricing: ProductPricing, quantity: number): number =>
+  pricing.stock !== undefined && pricing.stock > 0 ? Math.min(quantity, pricing.stock) : quantity;
 
 /** Solo se agrega al carrito lo que el ERP confirma con precio y stock. */
 export const isPurchasable = (availability: Availability): boolean => availability === 'available';

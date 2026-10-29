@@ -6,8 +6,9 @@ components, hooks, state and backend calls so it can evolve independently.
 ## Key Components
 
 - `catalog/` — listado, filtro por categoría y card de producto
-- `cart/` — carrito persistido en `localStorage` y cierre por WhatsApp
+- `cart/` — carrito persistido en `localStorage`, tope por stock del ERP, cierre por WhatsApp o paso al checkout
 - `pricing/` — precio y stock desde el ERP por SKU (ADR-005)
+- `checkout/` — compra por transferencia con retiro: pedido en el ERP y página del pedido (ADR-006)
 - `blog/` — posts estáticos en Markdown
 - `toast/` — avisos efímeros
 

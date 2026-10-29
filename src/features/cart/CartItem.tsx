@@ -6,11 +6,12 @@
 //
 // See DOMAIN.md › Product Core (Carrito) and Operational & Regulatory
 // Constraints (Carrito persistente). The min-quantity invariant is enforced
-// both here (decrement disabled at 1) and in CartProvider's reducer.
+// both here (decrement disabled at 1) and in CartProvider's reducer. The
+// increment stops at the ERP stock with a friendly notice (no "Quedan N").
 import type { CartItem as CartItemType } from '@/types';
 import { formatPrice } from '@/lib/formatPrice';
 import { useToast } from '@/features/toast';
-import { usePricing } from '@/features/pricing';
+import { STOCK_LIMIT_MESSAGE, reachedStockLimit, usePricing } from '@/features/pricing';
 
 const MIN_QUANTITY = 1;
 
@@ -25,9 +26,11 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
   const { product, quantity } = item;
   const { addToast } = useToast();
   // Precio del ERP; sin precio la línea queda en "Consultar precio".
-  const { price } = usePricing().pricingOf(product);
+  const pricing = usePricing().pricingOf(product);
+  const { price } = pricing;
   const lineSubtotal = price === null ? null : price * quantity;
   const atMinimum = quantity <= MIN_QUANTITY;
+  const atMaximum = reachedStockLimit(pricing, quantity);
 
   const handleRemove = () => {
     onRemove(product.id);
@@ -41,6 +44,11 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
         <p className="text-sm text-muted-foreground">
           {price === null ? 'Consultar precio' : `${formatPrice(price)} c/u`}
         </p>
+        {atMaximum && (
+          <p role="status" className="text-xs text-muted-foreground">
+            {STOCK_LIMIT_MESSAGE}
+          </p>
+        )}
       </div>
 
       <div className="flex items-center gap-2">
@@ -63,7 +71,8 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
           type="button"
           aria-label="Aumentar cantidad"
           onClick={() => onIncrement(product.id)}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          disabled={atMaximum}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
         >
           +
         </button>

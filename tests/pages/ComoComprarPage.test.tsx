@@ -43,4 +43,10 @@ describe('ComoComprarPage', () => {
     );
     expect(screen.getByRole('link', { name: /ver carrito/i })).toHaveAttribute('href', '/carrito');
   });
+
+  it('should explain that pickup orders can be paid by transfer without WhatsApp', () => {
+    renderPage();
+
+    expect(screen.getByText(/comprar con transferencia y retiro en el local/i)).toBeInTheDocument();
+  });
 });

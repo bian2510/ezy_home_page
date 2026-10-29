@@ -38,6 +38,15 @@ export interface ProductPricing {
   /** Precio con transferencia, solo cuando es menor que `price`. */
   transferPrice: number | null;
   availability: Availability;
+  /** Unidades que tiene el ERP. Solo viene con precio del ERP; sin dato, no
+   *  hay tope de cantidad. */
+  stock?: number;
+}
+
+/** Base URL y clave de la API de la tienda en el ERP (de `lib/env`). */
+export interface StoreApiConfig {
+  baseUrl: string;
+  apiKey: string;
 }
 
 /**

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import type * as RRD from 'react-router-dom';
 import type { ReactElement } from 'react';
-import type { Product, ProductPricing } from '@/types';
+import type { CartItem, Product, ProductPricing } from '@/types';
 import { formatPrice } from '@/lib/formatPrice';
 import ProductCard from '@/features/catalog/ProductCard';
 import { CartProvider } from '@/features/cart/CartProvider';
@@ -43,9 +43,10 @@ vi.mock('react-router-dom', async () => {
 // useCart: replace with a spy on addItem so we can assert the click handler
 // invokes the cart contract without rendering the real provider tree.
 const addItemMock = vi.fn();
+let cartItems: CartItem[] = [];
 vi.mock('@/features/cart/useCart', () => ({
   useCart: () => ({
-    items: [],
+    items: cartItems,
     addItem: addItemMock,
     removeItem: vi.fn(),
     updateQuantity: vi.fn(),
@@ -84,7 +85,31 @@ describe('ProductCard', () => {
     addItemMock.mockReset();
     addToastMock.mockReset();
     currentPricing = AVAILABLE;
+    cartItems = [];
     window.localStorage.clear();
+  });
+
+  it('should block adding more units once the cart has all the ERP stock', () => {
+    const product = buildProduct();
+    currentPricing = { ...AVAILABLE, stock: 2 };
+    cartItems = [{ product, quantity: 2 }];
+
+    renderWithProviders(<ProductCard product={product} />);
+
+    expect(screen.getByRole('button', { name: /agregar al carrito/i })).toBeDisabled();
+    expect(screen.getByText(/llegaste al máximo de unidades disponibles/i)).toBeInTheDocument();
+    expect(screen.queryByText(/quedan/i)).not.toBeInTheDocument();
+  });
+
+  it('should still let the visitor add while the cart is under the ERP stock', () => {
+    const product = buildProduct();
+    currentPricing = { ...AVAILABLE, stock: 2 };
+    cartItems = [{ product, quantity: 1 }];
+
+    renderWithProviders(<ProductCard product={product} />);
+
+    expect(screen.getByRole('button', { name: /agregar al carrito/i })).toBeEnabled();
+    expect(screen.queryByText(/llegaste al máximo/i)).not.toBeInTheDocument();
   });
 
   it('should render the product name and the ERP price', () => {
