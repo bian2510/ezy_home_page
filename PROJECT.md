@@ -44,7 +44,7 @@
 | How to add a new feature module                 | `docs/guides/agregar-feature.md`                    |
 | Cómo se publica el sitio (CI, deploy, rollback) | `docs/guides/deploy-y-ci.md`                        |
 | Actualizar precios y stock desde ML             | `docs/guides/actualizar-precios.md`                 |
-| Scripts de operación (precios, bundle, smoke)   | `scripts/`                                          |
+| Scripts de operación (bundle, smoke)            | `scripts/`                                          |
 | All operational guides (index)                  | `docs/guides/README.md`                             |
 | Feature specs (ETC harness)                     | `.etc_sdlc/features/`                               |
 | App source                                      | `src/`                                              |
@@ -65,8 +65,9 @@ business or the system, that claim must cite `DOMAIN.md` or a file in
 - **Linting/Formatting:** ESLint + Prettier — `eslint.config.js`, `.prettierrc.json`
 - **CI:** GitHub Actions — `.github/workflows/ci.yml`
 - **Local dev:** `pnpm install && pnpm dev` (Node 20+, pnpm 9)
-- **Hosting:** Cloudflare Pages (proyecto `ezyhome-storefront`), estático, publicado por el CI en cada push a `main` — `docs/guides/deploy-y-ci.md`
-- **Scripts de operación:** `scripts/` (precios, presupuesto de bundle, smoke test)
+- **Hosting:** Cloudflare Pages (proyecto `ezyhome-storefront`), estático, publicado por el CI en cada push a `main` — `docs/guides/deploy-y-ci.md`. En runtime lee precio y stock del ERP (`https://ezyhome.app/api/store/products`), ver ADR-005.
+- **Backend:** ERP EzyHome (repo `bian2510/ezy_home_app`). La red solo se usa desde `src/features/<feature>/*Api.ts` (lo exige ESLint), ver `docs/standards/llamadas-al-backend.md`
+- **Scripts de operación:** `scripts/` (presupuesto de bundle, smoke test)
 - **Email (futuro):** Resend — ya disponible en app existente del dueño
 
 **Key ADRs to read before touching architecture:**
@@ -75,6 +76,7 @@ business or the system, that claim must cite `DOMAIN.md` or a file in
 - [`F001-001`](docs/adrs/F001-001-cart-state-react-context.md) — React Context para carrito (no Zustand)
 - [`F001-002`](docs/adrs/F001-002-tailwind-token-remapping.md) — Tokens de diseño EzyHome
 - [`F001-003`](docs/adrs/F001-003-blog-static-markdown.md) — Blog estático con Markdown
+- [`ADR-005`](docs/adrs/ADR-005-precio-y-stock-desde-el-erp.md) — Precio y stock desde el ERP (contrato de la API, qué se muestra si falla)
 
 ---
 
