@@ -68,6 +68,24 @@ describe('regla de ESLint: la red solo en *Api.ts', () => {
     expect(lines).toEqual(NETWORK_CALL_LINES);
   }, 60_000);
 
+  // Por ruta, sin parsear: el lint con tipos no acepta archivos inexistentes.
+  it.each([
+    ['src/lib/storeApi.ts', true],
+    ['src/pages/fooApi.ts', true],
+    ['src/features/pricing/nested/storeApi.ts', true],
+    ['src/features/pricing/storeApi.tsx', true],
+    ['src/features/pricing/notAnApiClient.ts', true],
+    ['src/features/pricing/storeApi.ts', false],
+    ['src/features/cart/cartApi.ts', false],
+  ])('should apply the rule to %s: %s', async (filePath, restricted) => {
+    const config = (await eslint.calculateConfigForFile(filePath)) as {
+      rules: Record<string, unknown[]>;
+    };
+    const severity = config.rules['no-restricted-globals']?.[0];
+
+    expect(severity === 2 || severity === 'error').toBe(restricted);
+  });
+
   it('should allow the network inside an Api file', async () => {
     const lines = await networkErrorLines(NETWORK_CALLS, API_FILE);
 

@@ -174,7 +174,8 @@ export default tseslint.config(
   // `XMLHttpRequest`, `EventSource`, `WebSocket` y `navigator.sendBeacon`.
   {
     files: ['src/**/*.{ts,tsx}'],
-    ignores: ['src/**/*Api.ts'],
+    // Solo un `*Api.ts` en la raíz de una feature queda libre (no en lib/, pages/, …).
+    ignores: ['src/features/*/*Api.ts'],
     rules: {
       'no-restricted-globals': [
         'error',
