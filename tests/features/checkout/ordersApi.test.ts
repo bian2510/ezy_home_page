@@ -39,7 +39,7 @@ const erpOrder = (overrides: Record<string, unknown> = {}) => ({
 
 const REQUEST: OrderRequest = {
   idempotencyKey: 'intento-de-prueba',
-  buyer: { name: 'Ana Pérez', phone: '1155554444', email: 'ana@mail.com', document: '' },
+  buyer: { name: 'Ana Pérez', phone: '1155554444', email: 'ana@mail.com', document: '30111222' },
   items: [{ sku: 'SKU-AUTO-43091', quantity: 2 }],
   acceptedPrivacy: true,
 };
@@ -83,16 +83,21 @@ describe('createOrder', () => {
       idempotency_key: 'intento-de-prueba',
       payment_method: 'transfer',
       accepted_privacy: true,
-      buyer: { name: 'Ana Pérez', phone: '1155554444', email: 'ana@mail.com' },
+      buyer: {
+        name: 'Ana Pérez',
+        phone: '1155554444',
+        email: 'ana@mail.com',
+        document: '30111222',
+      },
       items: [{ sku: 'SKU-AUTO-43091', quantity: 2 }],
     });
   });
 
-  it('should send the DNI only when the buyer gave one', async () => {
+  it('should always send the DNI, without surrounding spaces', async () => {
     const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder() }, 201));
     vi.stubGlobal('fetch', fetchMock);
 
-    await createOrder({ ...REQUEST, buyer: { ...REQUEST.buyer, document: '30123456' } }, CONFIG);
+    await createOrder({ ...REQUEST, buyer: { ...REQUEST.buyer, document: ' 30123456 ' } }, CONFIG);
 
     const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     const sent = JSON.parse(init.body as string) as { buyer: { document?: string } };

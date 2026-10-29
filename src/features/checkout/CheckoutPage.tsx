@@ -187,7 +187,7 @@ export default function CheckoutPage() {
             />
             <TextField
               field="document"
-              label="DNI (opcional)"
+              label="DNI"
               autoComplete="off"
               value={form.document}
               error={errors.document}
@@ -205,10 +205,11 @@ export default function CheckoutPage() {
                 <span>Acepto que EzyHome use mis datos para gestionar este pedido.</span>
               </label>
               <p className="text-xs text-muted-foreground">
-                Usamos tu nombre, WhatsApp, email y DNI solo para este pedido y para avisarte de su
-                estado. Podés pedir verlos, corregirlos o borrarlos escribiéndonos por WhatsApp (Ley
-                25.326 de Protección de Datos Personales). La Agencia de Acceso a la Información
-                Pública es el órgano de control.
+                Usamos tu nombre, WhatsApp, email y DNI solo para este pedido: para avisarte de su
+                estado, hacer la factura si la pedís y saber quién retira. Podés pedir verlos,
+                corregirlos o borrarlos escribiéndonos por WhatsApp (Ley 25.326 de Protección de
+                Datos Personales). La Agencia de Acceso a la Información Pública es el órgano de
+                control.
               </p>
               {errors.acceptedPrivacy !== undefined && (
                 <p className="text-sm text-destructive">{errors.acceptedPrivacy}</p>

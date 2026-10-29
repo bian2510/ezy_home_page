@@ -4,7 +4,7 @@
 // docs/standards/llamadas-al-backend.md y ADR-005.
 import type { StoreApiConfig } from '@/types';
 
-/** Comprador del pedido. El DNI es opcional: vacío no se manda. */
+/** Comprador del pedido. El DNI es obligatorio (lo valida también el ERP). */
 export interface OrderBuyer {
   name: string;
   phone: string;
@@ -165,21 +165,18 @@ const readOrder = async (response: Response): Promise<StoreOrder> => {
   return toOrder(isRecord(body) ? body.order : undefined);
 };
 
-const toRequestBody = (request: OrderRequest) => {
-  const document = request.buyer.document.trim();
-  return {
-    idempotency_key: request.idempotencyKey,
-    payment_method: PAYMENT_METHOD,
-    accepted_privacy: request.acceptedPrivacy,
-    buyer: {
-      name: request.buyer.name,
-      phone: request.buyer.phone,
-      email: request.buyer.email,
-      ...(document === '' ? {} : { document }),
-    },
-    items: request.items.map(({ sku, quantity }) => ({ sku, quantity })),
-  };
-};
+const toRequestBody = (request: OrderRequest) => ({
+  idempotency_key: request.idempotencyKey,
+  payment_method: PAYMENT_METHOD,
+  accepted_privacy: request.acceptedPrivacy,
+  buyer: {
+    name: request.buyer.name,
+    phone: request.buyer.phone,
+    email: request.buyer.email,
+    document: request.buyer.document.trim(),
+  },
+  items: request.items.map(({ sku, quantity }) => ({ sku, quantity })),
+});
 
 /**
  * Crea el pedido por transferencia con retiro. Tira `OrderApiError` si el ERP
