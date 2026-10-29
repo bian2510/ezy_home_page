@@ -105,10 +105,13 @@ WhatsApp y registra pedidos en su app interna).
 
 - No es una tienda generalista de electrónica — foco exclusivo en domótica.
 - No procesa pagos directamente en v1 — el checkout cierra vía WhatsApp +
-  transferencia manual.
+  transferencia manual. El cobro con Mercado Pago lo va a hacer el ERP
+  (ADR-025 del ERP, etapa 3); el sitio no maneja credenciales de pago.
 - No tiene sistema de cuentas de usuario ni login en v1.
-- No tiene panel de administración de productos en v1 (catálogo estático o
-  gestionado externamente).
+- No tiene panel de administración de productos: la vitrina (nombre, fotos,
+  descripción, categoría) es estática en `products.json` y el precio y el stock
+  vienen del ERP de EzyHome por SKU (ADR-005). El sitio solo lee del ERP; no
+  escribe.
 - No es una plataforma de publicación multi-autor — solo el dueño publica
   contenido en el blog.
 - No soporta múltiples idiomas — español argentino únicamente.
