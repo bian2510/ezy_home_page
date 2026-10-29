@@ -16,11 +16,14 @@ Cada recurso del backend tiene **un** archivo `<recurso>Api.ts` dentro de la
 feature que lo usa (`features/pricing/storeApi.ts`). Es el **único** lugar con
 `fetch`. Ningún componente, hook, Provider ni util llama `fetch`.
 
-Lo aplica `eslint.config.js` (`no-restricted-globals` y
-`no-restricted-properties` para `fetch`, `window.fetch` y `globalThis.fetch` en
-`src/**`, con excepción para `src/**/*Api.ts`): un `fetch` fuera de esos
-archivos falla `pnpm lint`. `tests/unit/eslint-fetch-rule.test.ts` verifica
-que la regla siga activa.
+Lo aplica `eslint.config.js` en `src/**`, con excepción para `src/**/*Api.ts`:
+`fetch` (también `window.fetch`, `self.fetch`, `globalThis.fetch` y con
+corchetes), `XMLHttpRequest`, `EventSource`, `WebSocket` y
+`navigator.sendBeacon` fallan `pnpm lint`. `tests/unit/eslint-fetch-rule.test.ts`
+verifica cada forma en un `.ts` y en un `.tsx`.
+
+La excepción es por nombre: el sufijo `Api.ts` queda reservado para clientes
+del backend. Un archivo que no es cliente no se llama `...Api.ts`.
 
 ### 2. El archivo `Api` traduce y valida
 

@@ -8,6 +8,9 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import prettier from 'eslint-config-prettier';
 
+const NETWORK_MESSAGE =
+  'La red solo se usa desde un archivo `<recurso>Api.ts` de la feature (docs/standards/llamadas-al-backend.md).';
+
 export default tseslint.config(
   { ignores: ['dist', 'coverage', 'node_modules', '*.config.js', '*.config.ts'] },
   {
@@ -164,35 +167,32 @@ export default tseslint.config(
   },
   // --- Llamadas al backend (docs/standards/llamadas-al-backend.md, ADR-005) ---
   //
-  // `fetch` solo en los archivos `<recurso>Api.ts` de cada feature: ahí se
-  // traduce y valida la respuesta. Componentes, hooks y Providers usan esas
-  // funciones, nunca la red directo.
+  // La red solo se usa desde los archivos `<recurso>Api.ts` de cada feature:
+  // ahí se traduce y valida la respuesta. Componentes, hooks y Providers usan
+  // esas funciones, nunca la red directo. Cubre `fetch` (también como
+  // `window.fetch`, `self.fetch`, `globalThis.fetch` y con corchetes),
+  // `XMLHttpRequest`, `EventSource`, `WebSocket` y `navigator.sendBeacon`.
   {
     files: ['src/**/*.{ts,tsx}'],
     ignores: ['src/**/*Api.ts'],
     rules: {
       'no-restricted-globals': [
         'error',
-        {
-          name: 'fetch',
-          message:
-            'La red solo se usa desde un archivo `<recurso>Api.ts` de la feature (docs/standards/llamadas-al-backend.md).',
-        },
+        ...['fetch', 'XMLHttpRequest', 'EventSource', 'WebSocket'].map((name) => ({
+          name,
+          message: NETWORK_MESSAGE,
+        })),
       ],
       'no-restricted-properties': [
         'error',
-        {
-          object: 'window',
-          property: 'fetch',
-          message:
-            'La red solo se usa desde un archivo `<recurso>Api.ts` de la feature (docs/standards/llamadas-al-backend.md).',
-        },
-        {
-          object: 'globalThis',
-          property: 'fetch',
-          message:
-            'La red solo se usa desde un archivo `<recurso>Api.ts` de la feature (docs/standards/llamadas-al-backend.md).',
-        },
+        ...['window', 'self', 'globalThis'].flatMap((object) =>
+          ['fetch', 'XMLHttpRequest', 'EventSource', 'WebSocket'].map((property) => ({
+            object,
+            property,
+            message: NETWORK_MESSAGE,
+          })),
+        ),
+        { object: 'navigator', property: 'sendBeacon', message: NETWORK_MESSAGE },
       ],
     },
   },

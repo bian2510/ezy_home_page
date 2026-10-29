@@ -1,7 +1,7 @@
 # ADR-005: Precio y stock desde el ERP
 
 **Fecha:** 2026-10-28
-**Estado:** Aceptado (usuario, 2026-10-28)
+**Estado:** Propuesto. Registra decisiones que el usuario tomó el 2026-10-28 (camino 1, unión por SKU, "Consultar precio" en vez del precio del JSON, JSON-LD sin precio, un solo precio sin Mercado Pago); falta su revisión de este documento.
 
 ---
 
@@ -88,9 +88,9 @@ amplía con esos campos y la unión por SKU deja de ser un dato a mantener a man
 
 ## Alternativas rechazadas
 
-| Alternativa                                  | Razón de rechazo                                                          |
-| -------------------------------------------- | ------------------------------------------------------------------------- |
-| Seguir copiando precios de ML al JSON        | El precio de la tienda es el del local, no el de ML; sin stock real       |
-| Unir por id de Mercado Libre                 | Obliga a publicar en ML todo lo que se vende en la tienda                 |
-| Mostrar el `price` del JSON si el ERP falla  | El usuario no lo mantiene: mostraría precios viejos (usuario, 2026-10-28) |
-| Precios en el build (sin llamada en runtime) | Stock y precio quedarían viejos hasta el próximo deploy                   |
+| Alternativa                                  | Razón de rechazo                                                               |
+| -------------------------------------------- | ------------------------------------------------------------------------------ |
+| Seguir copiando precios de ML al JSON        | El precio de la tienda es el del local, no el de ML; sin stock real            |
+| Unir por id de Mercado Libre                 | Obliga a publicar en ML todo lo que se vende en la tienda                      |
+| Mostrar el `price` del JSON si el ERP falla  | El usuario dijo que no lo va a mantener: mostraría precios viejos (2026-10-28) |
+| Precios en el build (sin llamada en runtime) | Stock y precio quedarían viejos hasta el próximo deploy                        |
