@@ -1,0 +1,5 @@
+# Falsos positivos revisados de gitleaks (fingerprint: commit:archivo:regla:línea).
+# 3a249f7: clave de intento de ejemplo ("intento-abc12345") en un test, no es un
+# secreto; el commit b769834 la cambió por un texto que gitleaks no marca.
+3a249f78090a8fd51159b77d9d6a1f4be38e1ded:tests/features/checkout/ordersApi.test.ts:generic-api-key:41
+3a249f78090a8fd51159b77d9d6a1f4be38e1ded:tests/features/checkout/ordersApi.test.ts:generic-api-key:83
