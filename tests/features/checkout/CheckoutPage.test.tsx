@@ -68,6 +68,7 @@ const fillForm = async (user: ReturnType<typeof userEvent.setup>) => {
   await user.type(screen.getByLabelText(/nombre y apellido/i), 'Ana Pérez');
   await user.type(screen.getByLabelText(/whatsapp/i), '11 5555-4444');
   await user.type(screen.getByLabelText(/^email/i), 'ana@mail.com');
+  await user.type(screen.getByLabelText(/^dni$/i), '30111222');
   await user.click(screen.getByRole('checkbox', { name: /acepto/i }));
 };
 
@@ -95,6 +96,15 @@ describe('CheckoutPage', () => {
     expect(screen.getByText(/ley 25\.326/i)).toBeInTheDocument();
   });
 
+  it('should ask for the DNI as a required field and say what it is for', () => {
+    renderCheckout();
+
+    expect(screen.getByLabelText(/^dni$/i)).toBeInTheDocument();
+    expect(screen.queryByText(/opcional/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/factura/i)).toBeInTheDocument();
+    expect(screen.getByText(/quién retira/i)).toBeInTheDocument();
+  });
+
   it('should create the order, empty the cart and go to the order page', async () => {
     const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder }, 201));
     vi.stubGlobal('fetch', fetchMock);
@@ -108,7 +118,12 @@ describe('CheckoutPage', () => {
     const body = sentBody(fetchMock.mock.calls[0]);
     expect(body).toMatchObject({
       payment_method: 'transfer',
-      buyer: { name: 'Ana Pérez', phone: '11 5555-4444', email: 'ana@mail.com' },
+      buyer: {
+        name: 'Ana Pérez',
+        phone: '11 5555-4444',
+        email: 'ana@mail.com',
+        document: '30111222',
+      },
       items: [{ sku: 'SKU-AUTO-43091', quantity: 2 }],
     });
     expect(body.idempotency_key).toMatch(/^[A-Za-z0-9_-]{8,100}$/);

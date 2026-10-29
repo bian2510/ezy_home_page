@@ -11,7 +11,7 @@ export interface BuyerForm {
   /** WhatsApp, con o sin espacios ni guiones: el ERP se queda con los dígitos. */
   phone: string;
   email: string;
-  /** DNI opcional. */
+  /** DNI, obligatorio: para facturar y saber quién retira (usuario, 2026-10-29). */
   document: string;
   acceptedPrivacy: boolean;
 }
@@ -45,7 +45,9 @@ export const validateBuyerForm = (form: BuyerForm): BuyerErrors => {
     errors.phone = 'El WhatsApp debe tener de 8 a 20 números';
   }
   if (!EMAIL_PATTERN.test(form.email.trim())) errors.email = 'Poné un email válido';
-  if (form.document.trim() !== '' && !/^\d{7,8}$/.test(document)) {
+  if (document === '') {
+    errors.document = 'Poné tu DNI';
+  } else if (!/^\d{7,8}$/.test(document)) {
     errors.document = 'El DNI debe tener 7 u 8 números';
   }
   if (!form.acceptedPrivacy) errors.acceptedPrivacy = 'Tenés que aceptar el aviso de privacidad';

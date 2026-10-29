@@ -29,7 +29,7 @@ const VALID_FORM = {
   name: 'Ana Pérez',
   phone: '11 5555-4444',
   email: 'ana@mail.com',
-  document: '',
+  document: '30.111.222',
   acceptedPrivacy: true,
 };
 
@@ -38,13 +38,19 @@ describe('validateBuyerForm', () => {
     expect(validateBuyerForm(VALID_FORM)).toEqual({});
   });
 
-  it('should ask for name, WhatsApp, email and the privacy notice', () => {
+  it('should ask for name, WhatsApp, email, DNI and the privacy notice', () => {
     expect(Object.keys(validateBuyerForm(EMPTY_BUYER_FORM)).sort()).toEqual([
       'acceptedPrivacy',
+      'document',
       'email',
       'name',
       'phone',
     ]);
+  });
+
+  // El DNI es obligatorio (usuario, 2026-10-29): para facturar y saber quién retira.
+  it('should ask for the DNI when it is blank', () => {
+    expect(validateBuyerForm({ ...VALID_FORM, document: '  ' }).document).toMatch(/dni/i);
   });
 
   it('should reject a short phone, a bad email and a bad DNI', () => {
