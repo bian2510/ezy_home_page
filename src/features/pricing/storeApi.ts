@@ -1,6 +1,9 @@
 // Cliente de la API de la tienda en el ERP: precio y stock por SKU
 // (ADR-025 del ERP, `GET /api/store/products`). Único lugar del sitio que
 // conoce la forma de esa respuesta.
+import type { StoreApiConfig } from '@/types';
+
+export type { StoreApiConfig };
 
 /** Precio y stock de un SKU según el ERP. */
 export interface StoreQuote {
@@ -11,11 +14,6 @@ export interface StoreQuote {
   priceTransfer: number;
   stock: number;
   available: boolean;
-}
-
-export interface StoreApiConfig {
-  baseUrl: string;
-  apiKey: string;
 }
 
 /** El ERP rechaza más de 200 SKU por pedido. */

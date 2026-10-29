@@ -111,6 +111,13 @@ describe('construirRobots', () => {
   it('should keep the cart out of the crawl', () => {
     expect(construirRobots('https://ezyhome.com')).toContain('Disallow: /carrito');
   });
+
+  it('should keep the checkout and the order pages out of the crawl', () => {
+    const robots = construirRobots('https://ezyhome.com');
+
+    expect(robots).toContain('Disallow: /checkout');
+    expect(robots).toContain('Disallow: /pedido/');
+  });
 });
 
 describe('site URL por defecto', () => {

@@ -50,6 +50,7 @@ describe('PricingProvider', () => {
       price: 20_000,
       transferPrice: null,
       availability: 'available',
+      stock: 3,
     });
   });
 
@@ -66,6 +67,7 @@ describe('PricingProvider', () => {
       price: 21_000,
       transferPrice: 20_000,
       availability: 'available',
+      stock: 3,
     });
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0]?.[0]).toBe(

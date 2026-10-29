@@ -4,7 +4,8 @@
 **Ver también:** [`capas-arquitectura.md`](./capas-arquitectura.md), [`gestion-estado.md`](./gestion-estado.md), [`testing.md`](./testing.md)
 
 Implementación de referencia: `src/features/pricing/` (`storeApi.ts` →
-`PricingProvider.tsx` → `usePricing.ts`).
+`PricingProvider.tsx` → `usePricing.ts`) y, para envíos con errores por
+campo, `src/features/checkout/` (`ordersApi.ts` → `useCreateOrder.ts`).
 
 ---
 
@@ -56,6 +57,12 @@ La llamada se hace en un Provider de la feature (patrón de
 [`gestion-estado.md`](./gestion-estado.md)) y los componentes leen por el hook
 (`usePricing`). El estado es explícito: `loading`, `ready` o `unavailable`.
 Las reglas de qué mostrar en cada estado son funciones puras (`pricingUtils.ts`).
+
+Una llamada que dispara el visitante (enviar un pedido) o que es de una sola
+página (leer un pedido por su token) no necesita Provider: vive en un hook de la
+feature (`checkout/useCreateOrder.ts`, `checkout/useOrder.ts`) con su estado
+explícito (`idle` / `submitting` / `failed`; `loading` / `ready` / `not_found` /
+`unavailable`). Igual llama al archivo `Api`, nunca a `fetch`.
 
 ### 6. Si falla, la UI no inventa datos
 

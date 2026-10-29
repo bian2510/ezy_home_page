@@ -49,10 +49,11 @@ vi.mock('@/data/products.json', () => ({
 }));
 
 const addItemMock = vi.fn();
+let cartItems: { product: { id: string }; quantity: number }[] = [];
 
 vi.mock('@/features/cart/useCart', () => ({
   useCart: () => ({
-    items: [],
+    items: cartItems,
     addItem: addItemMock,
     removeItem: vi.fn(),
     updateQuantity: vi.fn(),
@@ -117,8 +118,31 @@ describe('ProductDetailPage', () => {
   });
 
   afterEach(() => {
+    cartItems = [];
     window.localStorage.clear();
     erpPricing = null;
+  });
+
+  it('should not let the quantity go above the ERP stock left for the cart', async () => {
+    erpPricing = { price: 18900, transferPrice: null, availability: 'available', stock: 3 };
+    cartItems = [{ product: { id: 'p-1' }, quantity: 1 }];
+    const user = userEvent.setup();
+    renderAt('/productos/p-1');
+
+    const increase = screen.getByRole('button', { name: /aumentar cantidad/i });
+    await user.click(increase);
+
+    expect(increase).toBeDisabled();
+    expect(screen.getByText(/llegaste al máximo de unidades disponibles/i)).toBeInTheDocument();
+  });
+
+  it('should block adding when the cart already has all the ERP stock', () => {
+    erpPricing = { price: 18900, transferPrice: null, availability: 'available', stock: 2 };
+    cartItems = [{ product: { id: 'p-1' }, quantity: 2 }];
+    renderAt('/productos/p-1');
+
+    expect(screen.getByRole('button', { name: /agregar al carrito/i })).toBeDisabled();
+    expect(screen.getByText(/llegaste al máximo de unidades disponibles/i)).toBeInTheDocument();
   });
 
   it('should render the product name and price for a valid id', () => {

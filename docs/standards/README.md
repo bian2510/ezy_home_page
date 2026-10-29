@@ -36,10 +36,11 @@ Para las reglas de código (TypeScript, Tailwind, testing, nomenclatura) ver [`d
 
 Las decisiones tomadas y sus justificaciones viven en [`docs/adrs/`](../adrs/).
 
-| ADR                                                         | Tema                                                     |
-| ----------------------------------------------------------- | -------------------------------------------------------- |
-| [`F001-001`](../adrs/F001-001-cart-state-react-context.md)  | Por qué React Context para el carrito (no Zustand/Redux) |
-| [`F001-002`](../adrs/F001-002-tailwind-token-remapping.md)  | Tokens de diseño EzyHome en Tailwind                     |
-| [`F001-003`](../adrs/F001-003-blog-static-markdown.md)      | Blog estático con Markdown (no CMS)                      |
-| [`ADR-004`](../adrs/ADR-004-arquitectura-frontend-capas.md) | Arquitectura en capas Feature-Sliced Lite                |
-| [`ADR-005`](../adrs/ADR-005-precio-y-stock-desde-el-erp.md) | Precio y stock desde el ERP (contrato de la API)         |
+| ADR                                                                 | Tema                                                                                 |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| [`F001-001`](../adrs/F001-001-cart-state-react-context.md)          | Por qué React Context para el carrito (no Zustand/Redux)                             |
+| [`F001-002`](../adrs/F001-002-tailwind-token-remapping.md)          | Tokens de diseño EzyHome en Tailwind                                                 |
+| [`F001-003`](../adrs/F001-003-blog-static-markdown.md)              | Blog estático con Markdown (no CMS)                                                  |
+| [`ADR-004`](../adrs/ADR-004-arquitectura-frontend-capas.md)         | Arquitectura en capas Feature-Sliced Lite                                            |
+| [`ADR-005`](../adrs/ADR-005-precio-y-stock-desde-el-erp.md)         | Precio y stock desde el ERP (contrato de la API)                                     |
+| [`ADR-006`](../adrs/ADR-006-pedido-por-transferencia-con-retiro.md) | Pedido por transferencia con retiro: contrato de pedidos, reintentos, tope por stock |

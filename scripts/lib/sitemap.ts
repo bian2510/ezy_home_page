@@ -108,6 +108,8 @@ export const construirRobots = (sitio: string): string => {
     'User-agent: *',
     'Allow: /',
     'Disallow: /carrito',
+    'Disallow: /checkout',
+    'Disallow: /pedido/',
     '',
     `Sitemap: ${base}/sitemap.xml`,
     '',

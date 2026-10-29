@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
+  clampToStock,
   findMissingSkus,
+  reachedStockLimit,
   indexQuotes,
   isPurchasable,
   resolvePricing,
@@ -8,6 +10,7 @@ import {
 } from '@/features/pricing/pricingUtils';
 import type { StoreQuote } from '@/features/pricing/storeApi';
 import { buildProduct } from '../../helpers/builders';
+import type { ProductPricing } from '@/types';
 
 const quote = (overrides: Partial<StoreQuote> = {}): StoreQuote => ({
   sku: 'SNS-001',
@@ -26,13 +29,23 @@ describe('resolvePricing', () => {
       mercadoPagoEnabled: false,
     });
 
-    expect(pricing).toEqual({ price: 20_000, transferPrice: null, availability: 'available' });
+    expect(pricing).toEqual({
+      price: 20_000,
+      transferPrice: null,
+      availability: 'available',
+      stock: 3,
+    });
   });
 
   it('should use the ERP prices when the SKU has a quote', () => {
     const pricing = resolvePricing(product, 'ready', indexQuotes([quote()]));
 
-    expect(pricing).toEqual({ price: 21_000, transferPrice: 20_000, availability: 'available' });
+    expect(pricing).toEqual({
+      price: 21_000,
+      transferPrice: 20_000,
+      availability: 'available',
+      stock: 3,
+    });
   });
 
   it('should match the SKU ignoring case and surrounding spaces, like the ERP', () => {
@@ -108,5 +121,34 @@ describe('findMissingSkus', () => {
     const products = [buildProduct({ sku: 'SNS-001' }), buildProduct({ sku: 'VIEJO-1' })];
 
     expect(findMissingSkus(products, indexQuotes([quote()]))).toEqual(['VIEJO-1']);
+  });
+});
+
+describe('stock limit', () => {
+  const pricing = (stock?: number): ProductPricing => ({
+    price: 1000,
+    transferPrice: null,
+    availability: stock === 0 ? 'out_of_stock' : 'available',
+    ...(stock === undefined ? {} : { stock }),
+  });
+
+  it('should reach the limit when the quantity equals the ERP stock', () => {
+    expect(reachedStockLimit(pricing(3), 2)).toBe(false);
+    expect(reachedStockLimit(pricing(3), 3)).toBe(true);
+    expect(reachedStockLimit(pricing(3), 4)).toBe(true);
+  });
+
+  it('should not limit when the ERP did not give a stock', () => {
+    expect(reachedStockLimit(pricing(), 50)).toBe(false);
+  });
+
+  it('should lower a quantity above the stock to the stock', () => {
+    expect(clampToStock(pricing(3), 5)).toBe(3);
+    expect(clampToStock(pricing(3), 2)).toBe(2);
+  });
+
+  it('should keep the quantity when the stock is unknown or zero', () => {
+    expect(clampToStock(pricing(), 5)).toBe(5);
+    expect(clampToStock(pricing(0), 5)).toBe(5);
   });
 });

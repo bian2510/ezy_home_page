@@ -9,6 +9,8 @@
 //   /catalogo          → CatalogPage        (grilla + filtro por categoría)
 //   /productos/:id     → ProductDetailPage  (galería + agregar al carrito)
 //   /carrito           → CartPage           (carrito + checkout WhatsApp)
+//   /checkout          → CheckoutPage       (compra por transferencia con retiro)
+//   /pedido/:token     → OrderPage          (pedido: a qué cuenta transferir)
 //   /blog              → BlogListPage       (listado de artículos)
 //   /blog/:slug        → BlogPostPage       (artículo individual)
 //   *                  → NotFoundPage       (404 — catch-all)
@@ -26,6 +28,10 @@ const CatalogPage = lazy(() =>
   import('@/features/catalog').then((m) => ({ default: m.CatalogPage })),
 );
 const CartPage = lazy(() => import('@/features/cart').then((m) => ({ default: m.CartPage })));
+const CheckoutPage = lazy(() =>
+  import('@/features/checkout').then((m) => ({ default: m.CheckoutPage })),
+);
+const OrderPage = lazy(() => import('@/features/checkout').then((m) => ({ default: m.OrderPage })));
 const BlogListPage = lazy(() =>
   import('@/features/blog').then((m) => ({ default: m.BlogListPage })),
 );
@@ -70,6 +76,22 @@ export default function App() {
           element={
             <Suspense fallback={<RouteFallback />}>
               <CartPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <CheckoutPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/pedido/:token"
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <OrderPage />
             </Suspense>
           }
         />

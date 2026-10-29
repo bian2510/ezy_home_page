@@ -11,6 +11,8 @@ import { buildProduct } from '../../helpers/builders';
 
 // Precio del ERP por id de producto (el producto ya no tiene precio propio).
 const ERP_PRICES: Record<string, number> = { 'p-1': 12500, 'p-2': 8500 };
+// Stock del ERP por id; sin entrada, el ERP no dio stock (sin tope).
+let erpStock: Record<string, number> = {};
 vi.mock('@/features/pricing/usePricing', () => ({
   usePricing: () => ({
     status: 'ready',
@@ -18,6 +20,7 @@ vi.mock('@/features/pricing/usePricing', () => ({
       price: ERP_PRICES[product.id] ?? null,
       transferPrice: null,
       availability: 'available',
+      ...(erpStock[product.id] === undefined ? {} : { stock: erpStock[product.id] }),
     }),
   }),
 }));
@@ -42,6 +45,45 @@ describe('CartPage', () => {
 
   afterEach(() => {
     window.localStorage.clear();
+    erpStock = {};
+  });
+
+  const seedCart = (quantity: number) =>
+    window.localStorage.setItem(
+      'ezyhome_cart',
+      JSON.stringify([
+        { product: buildProduct({ id: 'p-1', name: 'Foco Inteligente' }), quantity },
+      ]),
+    );
+
+  it('should disable adding units at the ERP stock with a friendly notice', () => {
+    erpStock = { 'p-1': 2 };
+    seedCart(2);
+    renderCartPage();
+
+    expect(screen.getByRole('button', { name: /aumentar cantidad/i })).toBeDisabled();
+    expect(screen.getByText(/llegaste al máximo de unidades disponibles/i)).toBeInTheDocument();
+    expect(screen.queryByText(/quedan/i)).not.toBeInTheDocument();
+  });
+
+  it('should lower a quantity above the ERP stock when the cart loads', () => {
+    erpStock = { 'p-1': 2 };
+    seedCart(5);
+    renderCartPage();
+
+    expect(screen.getByLabelText('Cantidad')).toHaveTextContent('2');
+  });
+
+  it('should keep adding units freely while under the ERP stock', async () => {
+    erpStock = { 'p-1': 3 };
+    seedCart(1);
+    const user = userEvent.setup();
+    renderCartPage();
+
+    await user.click(screen.getByRole('button', { name: /aumentar cantidad/i }));
+
+    expect(screen.getByLabelText('Cantidad')).toHaveTextContent('2');
+    expect(screen.queryByText(/llegaste al máximo/i)).not.toBeInTheDocument();
   });
 
   it('should show an empty-cart message and a link to /catalogo when the cart is empty', () => {

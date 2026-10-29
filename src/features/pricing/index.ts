@@ -4,5 +4,11 @@ export { PricingProvider } from './PricingProvider';
 export { usePricing } from './usePricing';
 export { default as ProductPrice } from './ProductPrice';
 export { default as ConsultLink } from './ConsultLink';
-export { isPurchasable, unavailableLabel } from './pricingUtils';
+export {
+  STOCK_LIMIT_MESSAGE,
+  clampToStock,
+  isPurchasable,
+  reachedStockLimit,
+  unavailableLabel,
+} from './pricingUtils';
 export type { PricingContextValue } from './PricingContext';

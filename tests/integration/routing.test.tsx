@@ -40,6 +40,14 @@ describe('rutas cargadas por demanda', () => {
     expect(await screen.findByRole('heading', { name: /mi carrito/i })).toBeInTheDocument();
   });
 
+  it('should load the checkout route on demand', async () => {
+    renderAt('/checkout');
+
+    expect(
+      await screen.findByRole('heading', { name: /finalizar compra/i, level: 1 }),
+    ).toBeInTheDocument();
+  });
+
   it('should load the blog route on demand', async () => {
     renderAt('/blog');
 

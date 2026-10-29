@@ -3,7 +3,8 @@
 // Used by the product detail page (and any future "add to cart" surface) to
 // pick how many units a visitor wants before adding to the cart. The
 // decrement button is disabled once `value === min` so the invariant
-// "quantity >= 1" can never be violated from the UI.
+// "quantity >= 1" can never be violated from the UI. With `max` (stock del
+// ERP que queda para el carrito) the increment is disabled at the top.
 //
 // All buttons satisfy the 44px mobile tap target requirement (`min-h-11`)
 // from DOMAIN.md › Design Implications.
@@ -11,6 +12,8 @@ interface QuantitySelectorProps {
   value: number;
   onChange: (value: number) => void;
   min?: number;
+  /** Tope opcional: el botón de sumar se deshabilita al llegar. */
+  max?: number | undefined;
 }
 
 const DEFAULT_MIN = 1;
@@ -19,8 +22,10 @@ export default function QuantitySelector({
   value,
   onChange,
   min = DEFAULT_MIN,
+  max,
 }: QuantitySelectorProps) {
   const atMinimum = value <= min;
+  const atMaximum = max !== undefined && value >= max;
 
   return (
     <div
@@ -46,7 +51,8 @@ export default function QuantitySelector({
         type="button"
         aria-label="Aumentar cantidad"
         onClick={() => onChange(value + 1)}
-        className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        disabled={atMaximum}
+        className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
       >
         +
       </button>
