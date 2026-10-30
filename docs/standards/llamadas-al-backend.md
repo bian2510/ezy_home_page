@@ -62,7 +62,11 @@ Una llamada que dispara el visitante (enviar un pedido) o que es de una sola
 página (leer un pedido por su token) no necesita Provider: vive en un hook de la
 feature (`checkout/useCreateOrder.ts`, `checkout/useOrder.ts`) con su estado
 explícito (`idle` / `submitting` / `failed`; `loading` / `ready` / `not_found` /
-`unavailable`). Igual llama al archivo `Api`, nunca a `fetch`.
+`unavailable`). Igual llama al archivo `Api`, nunca a `fetch`. Si hay que
+volver a consultar (esperar el link de Mercado Pago), el hook recibe el plan
+(cada cuánto y cuántas veces) de una función pura (`mercadoPagoUtils.ts`) y
+avisa cuándo se terminó (`timedOut`); una consulta que falla en medio no borra
+lo ya leído.
 
 ### 6. Si falla, la UI no inventa datos
 

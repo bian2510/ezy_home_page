@@ -67,7 +67,9 @@ x-api-key: {VITE_STORE_API_KEY}
 - **Mercado Pago:** mientras la variable de repo `VITE_MERCADOPAGO_ENABLED` no
   sea `true` (hasta la etapa 3 del ADR-025), cada producto muestra un solo
   precio: el de transferencia. Con la variable activa, el de transferencia es
-  el grande y "con Mercado Pago" va abajo, chico.
+  el grande y "con Mercado Pago" va abajo, chico, y el checkout ofrece pagar
+  con Mercado Pago (contrato de pedidos en
+  [ADR-006](./ADR-006-pedido-por-transferencia-con-retiro.md#mercado-pago-pr-3e)).
 
 ## Consecuencias
 

@@ -1,11 +1,15 @@
-// OrderPage — `/pedido/:token`: el pedido recién creado (o vuelto a abrir)
-// con los datos para transferir y retirar. Lee el pedido del ERP por su token;
-// el ERP nunca devuelve los datos del comprador.
-import { Link, useParams } from 'react-router-dom';
+// OrderPage — `/pedido/:token`: el pedido recién creado (o vuelto a abrir).
+// Por transferencia, los datos para transferir; con Mercado Pago, el estado
+// del pago (`MercadoPagoStatus`), nunca la cuenta para transferir. Lee el
+// pedido del ERP por su token; el ERP nunca devuelve los datos del comprador.
+import { useCallback } from 'react';
+import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { formatPrice } from '@/lib/formatPrice';
 import { getWhatsAppNumber } from '@/lib/env';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { formatDeadline } from './checkoutUtils';
+import MercadoPagoStatus from './MercadoPagoStatus';
+import { mercadoPagoPollPlan, parseMpResult } from './mercadoPagoUtils';
 import type { StoreOrder } from './ordersApi';
 import { useOrder } from './useOrder';
 
@@ -69,7 +73,15 @@ function StatusMessage({ order }: { order: StoreOrder }) {
 
 export default function OrderPage() {
   const { token = '' } = useParams<{ token: string }>();
-  const state = useOrder(token);
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const result = parseMpResult(searchParams.get('resultado'));
+  const openOnArrival = isOpenMercadoPagoState(location.state);
+  const pollPlanFor = useCallback(
+    (order: StoreOrder) => mercadoPagoPollPlan(order, result),
+    [result],
+  );
+  const state = useOrder(token, pollPlanFor);
 
   useDocumentMeta({
     title: 'Tu pedido',
@@ -123,7 +135,16 @@ export default function OrderPage() {
         <p data-testid="order-total" className="text-lg font-semibold text-foreground">
           Total: <span className="font-mono">{formatPrice(order.total)}</span>
         </p>
-        <StatusMessage order={order} />
+        {order.paymentMethod === 'mercado_pago' ? (
+          <MercadoPagoStatus
+            order={order}
+            result={result}
+            timedOut={state.timedOut}
+            openOnArrival={openOnArrival}
+          />
+        ) : (
+          <StatusMessage order={order} />
+        )}
       </div>
 
       <div className="flex flex-col gap-3 rounded-md border border-border bg-card p-4">
@@ -147,3 +168,9 @@ export default function OrderPage() {
     </section>
   );
 }
+
+/** El checkout llega con `{ openMercadoPago: true }` para abrir MP apenas esté el link. */
+const isOpenMercadoPagoState = (state: unknown): boolean =>
+  typeof state === 'object' &&
+  state !== null &&
+  (state as { openMercadoPago?: unknown }).openMercadoPago === true;

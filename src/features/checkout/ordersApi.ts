@@ -12,6 +12,9 @@ export interface OrderBuyer {
   document: string;
 }
 
+/** Medio de pago del pedido. Mercado Pago solo con `VITE_MERCADOPAGO_ENABLED`. */
+export type PaymentMethod = 'transfer' | 'mercado_pago';
+
 /** Lo que el sitio pide. Nunca lleva precios: los calcula el ERP. */
 export interface OrderRequest {
   /** Una por intento de compra: si se reintenta lo mismo, el ERP no duplica. */
@@ -19,6 +22,8 @@ export interface OrderRequest {
   buyer: OrderBuyer;
   items: { sku: string; quantity: number }[];
   acceptedPrivacy: boolean;
+  /** El ERP pone el precio de ese medio (con Mercado Pago lleva el recargo). */
+  paymentMethod: PaymentMethod;
 }
 
 export interface StoreOrderItem {
@@ -36,10 +41,17 @@ export interface StoreOrder {
   token: string;
   number: number;
   status: StoreOrderStatus;
+  paymentMethod: PaymentMethod;
   total: number;
   /** ISO 8601; `null` si el ERP no fijó vencimiento. */
   expiresAt: string | null;
+  /** Link al checkout de Mercado Pago (solo `https`); `null` mientras el ERP lo crea. */
+  checkoutUrl: string | null;
+  /** `true` si Mercado Pago no pudo crear el cobro: el sitio ofrece transferencia. */
+  checkoutError: boolean;
   items: StoreOrderItem[];
+  /** Datos de la tienda para transferir. El ERP los manda en todo pedido: solo
+   *  se muestran si `paymentMethod` es `transfer`. */
   transfer: {
     alias: string | null;
     cbu: string | null;
@@ -89,7 +101,7 @@ export class OrderApiError extends Error {
   }
 }
 
-const PAYMENT_METHOD = 'transfer';
+const PAYMENT_METHODS: readonly PaymentMethod[] = ['transfer', 'mercado_pago'];
 const STATUSES: readonly StoreOrderStatus[] = ['pending_payment', 'paid', 'expired', 'canceled'];
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -103,6 +115,16 @@ const isStockIssue = (value: unknown): value is StockIssue =>
 
 const textOrNull = (value: unknown): string | null =>
   typeof value === 'string' && value !== '' ? value : null;
+
+/** El link solo sirve si es `https`: el sitio redirige ahí. */
+const checkoutUrlOrNull = (value: unknown): string | null => {
+  if (typeof value !== 'string') return null;
+  try {
+    return new URL(value).protocol === 'https:' ? value : null;
+  } catch {
+    return null;
+  }
+};
 
 const toItem = (value: unknown): StoreOrderItem | null => {
   if (!isRecord(value)) return null;
@@ -121,12 +143,13 @@ const toItem = (value: unknown): StoreOrderItem | null => {
 
 const toOrder = (value: unknown): StoreOrder => {
   if (!isRecord(value)) throw new Error('La respuesta del pedido no tiene la forma esperada');
-  const { token, number, status, total, items } = value;
+  const { token, number, status, total, items, payment_method: paymentMethod } = value;
   if (
     typeof token !== 'string' ||
     typeof number !== 'number' ||
     typeof total !== 'number' ||
     !STATUSES.includes(status as StoreOrderStatus) ||
+    !PAYMENT_METHODS.includes(paymentMethod as PaymentMethod) ||
     !Array.isArray(items)
   ) {
     throw new Error('La respuesta del pedido no tiene la forma esperada');
@@ -137,8 +160,11 @@ const toOrder = (value: unknown): StoreOrder => {
     token,
     number,
     status: status as StoreOrderStatus,
+    paymentMethod: paymentMethod as PaymentMethod,
     total,
     expiresAt: textOrNull(value.expires_at),
+    checkoutUrl: checkoutUrlOrNull(value.checkout_url),
+    checkoutError: value.checkout_error === true,
     items: items.map(toItem).filter((item): item is StoreOrderItem => item !== null),
     transfer: {
       alias: textOrNull(transfer.alias),
@@ -167,7 +193,7 @@ const readOrder = async (response: Response): Promise<StoreOrder> => {
 
 const toRequestBody = (request: OrderRequest) => ({
   idempotency_key: request.idempotencyKey,
-  payment_method: PAYMENT_METHOD,
+  payment_method: request.paymentMethod,
   accepted_privacy: request.acceptedPrivacy,
   buyer: {
     name: request.buyer.name,
@@ -179,7 +205,8 @@ const toRequestBody = (request: OrderRequest) => ({
 });
 
 /**
- * Crea el pedido por transferencia con retiro. Tira `OrderApiError` si el ERP
+ * Crea el pedido con retiro (transferencia o Mercado Pago). Con Mercado Pago
+ * el ERP responde sin `checkoutUrl`: llega después por `fetchOrder`. Tira `OrderApiError` si el ERP
  * responde con error (409 sin stock, 422 datos, 429 límite) y deja pasar la
  * falla de red: quien llama decide qué mostrar.
  */

@@ -1,4 +1,4 @@
-// Reglas puras del checkout por transferencia con retiro. Sin React ni red:
+// Reglas puras del checkout con retiro (transferencia o Mercado Pago). Sin React ni red:
 // los datos del carrito y del ERP llegan por parámetro.
 import type { CartItem, Product, ProductPricing } from '@/types';
 import { OrderApiError, type StockIssue } from './ordersApi';
@@ -60,6 +60,10 @@ export const transferTotal = (items: CartItem[], pricingOf: PricingOf): number =
     const { price, transferPrice } = pricingOf(item.product);
     return sum + (transferPrice ?? price ?? 0) * item.quantity;
   }, 0);
+
+/** Total con Mercado Pago (precio del local + recargo) con los precios del ERP. */
+export const mercadoPagoTotal = (items: CartItem[], pricingOf: PricingOf): number =>
+  items.reduce((sum, item) => sum + (pricingOf(item.product).price ?? 0) * item.quantity, 0);
 
 /**
  * Por qué no se puede comprar por transferencia todavía, o `null` si se puede.
