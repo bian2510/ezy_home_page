@@ -14,6 +14,7 @@ import {
   checkoutBlocker,
   fieldErrorsFromApi,
   mercadoPagoTotal,
+  phoneDigits,
   stockAdjustments,
   transferTotal,
   validateBuyerForm,
@@ -70,7 +71,7 @@ export default function CheckoutPage() {
     const draft: OrderDraft = {
       buyer: {
         name: form.name.trim(),
-        phone: form.phone.trim(),
+        phone: phoneDigits(form.phone),
         email: form.email.trim(),
         document: form.document.trim(),
       },
@@ -132,7 +133,12 @@ export default function CheckoutPage() {
             onSubmit={(event) => void handleSubmit(event)}
             className="flex flex-col gap-4"
           >
-            <BuyerFields form={form} errors={errors} onChange={handleChange} />
+            <BuyerFields
+              form={form}
+              mercadoPagoEnabled={mercadoPagoEnabled}
+              errors={errors}
+              onChange={handleChange}
+            />
 
             {mercadoPagoEnabled && (
               <PaymentMethodField value={chosenMethod} totals={totals} onChange={setChosenMethod} />

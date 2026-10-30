@@ -8,7 +8,7 @@ type PricingOf = (product: Product) => ProductPricing;
 /** Lo que carga el comprador en el formulario. */
 export interface BuyerForm {
   name: string;
-  /** WhatsApp, con o sin espacios ni guiones: el ERP se queda con los dígitos. */
+  /** WhatsApp: código de área + número, 10 dígitos sin 0 ni 15 (usuario, 2026-10-30). */
   phone: string;
   email: string;
   /** DNI, obligatorio: para facturar y saber quién retira (usuario, 2026-10-29). */
@@ -28,6 +28,16 @@ export const EMPTY_BUYER_FORM: BuyerForm = {
 };
 
 const digits = (value: string): string => value.replace(/\D/g, '');
+
+/** El WhatsApp solo con dígitos: se limpia al escribir y al mandar al ERP. */
+export const phoneDigits = digits;
+
+/** Ayuda y error del WhatsApp: el mismo texto guía antes y después de equivocarse. */
+export const PHONE_HINT = 'Ingresá tu número con código de área, sin 0 ni 15 (10 números)';
+
+// 10 dígitos que no empiezan con 0 (prefijo de larga distancia) ni con 15
+// (prefijo de celular, ningún código de área empieza así). +54 / 549 suman dígitos.
+const PHONE_PATTERN = /^(?!0|15)\d{10}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
@@ -41,9 +51,7 @@ export const validateBuyerForm = (form: BuyerForm): BuyerErrors => {
   const document = digits(form.document);
 
   if (name.length < 2 || name.length > 80) errors.name = 'Poné tu nombre (de 2 a 80 letras)';
-  if (phone.length < 8 || phone.length > 20) {
-    errors.phone = 'El WhatsApp debe tener de 8 a 20 números';
-  }
+  if (!PHONE_PATTERN.test(phone)) errors.phone = PHONE_HINT;
   if (!EMAIL_PATTERN.test(form.email.trim())) errors.email = 'Poné un email válido';
   if (document === '') {
     errors.document = 'Poné tu DNI';

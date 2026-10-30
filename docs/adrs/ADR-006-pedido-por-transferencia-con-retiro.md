@@ -25,6 +25,9 @@ había.
 - `/checkout` pide nombre y apellido, WhatsApp y email (obligatorios), DNI
   (opcional) y la aceptación del aviso de privacidad (Ley 25.326). El navegador
   valida igual que el ERP para avisar antes; el ERP vuelve a validar y manda.
+  El WhatsApp es más estricto en el sitio (usuario, 2026-10-30): exactamente 10
+  números (código de área + número, sin 0 ni 15 ni +54); se limpian espacios y
+  guiones al escribir y se mandan los 10 dígitos (el ERP acepta de 8 a 20).
 - El ERP crea el pedido con **sus** precios (el sitio no manda precios) y el
   sitio lleva a `/pedido/:token`, que muestra número, total, a qué cuenta
   transferir (alias, CBU/CVU, titular, banco: lo que la tienda cargó), que ponga
@@ -70,7 +73,9 @@ Con `VITE_MERCADOPAGO_ENABLED=true` (plan de la etapa 3 del ERP §4 y §9, etapa
 - Para eso el sitio guarda el comprador y los ítems del pedido de MP en
   `sessionStorage` de la pestaña (el ERP no devuelve el comprador y el carrito ya
   se vació). Se borra al cambiar a transferencia, cuando el pedido se cierra o al
-  cerrar la pestaña. Sin storage no se ofrece el cambio: queda WhatsApp.
+  cerrar la pestaña. Sin storage no se ofrece el cambio: queda WhatsApp. El aviso
+  de privacidad del checkout lo cuenta cuando Mercado Pago está activo (usuario,
+  2026-10-30).
 - **Vuelta de MP** (`/pedido/:token?resultado=…`). El ERP confirma el pago por
   el aviso de MP (etapa 4), no por la vuelta:
   - `ok`: "Recibimos tu pago" y `GET` cada **2 s hasta 30 s**. Si pasa a `paid`:
