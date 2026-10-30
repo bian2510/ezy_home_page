@@ -42,6 +42,7 @@ const REQUEST: OrderRequest = {
   buyer: { name: 'Ana Pérez', phone: '1155554444', email: 'ana@mail.com', document: '30111222' },
   items: [{ sku: 'SKU-AUTO-43091', quantity: 2 }],
   acceptedPrivacy: true,
+  paymentMethod: 'transfer',
 };
 
 describe('createOrder', () => {
@@ -102,6 +103,25 @@ describe('createOrder', () => {
     const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     const sent = JSON.parse(init.body as string) as { buyer: { document?: string } };
     expect(sent.buyer.document).toBe('30123456');
+  });
+
+  it('should send mercado_pago as the payment method when the buyer chose it', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(
+        jsonResponse({ order: erpOrder({ payment_method: 'mercado_pago' }) }, 201),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { order } = await createOrder({ ...REQUEST, paymentMethod: 'mercado_pago' }, CONFIG);
+
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(JSON.parse(init.body as string)).toMatchObject({ payment_method: 'mercado_pago' });
+    expect(order).toMatchObject({
+      paymentMethod: 'mercado_pago',
+      checkoutUrl: null,
+      checkoutError: false,
+    });
   });
 
   it('should tell apart a repeated attempt (200) from a new order (201)', async () => {
@@ -228,5 +248,66 @@ describe('fetchOrder', () => {
     const error = await fetchOrder('nope', CONFIG).catch((caught: unknown) => caught);
 
     expect(error).toMatchObject({ status: 404 });
+  });
+
+  it('should translate the Mercado Pago link and the payment method', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        jsonResponse({
+          order: erpOrder({
+            payment_method: 'mercado_pago',
+            checkout_url: 'https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=1',
+            checkout_error: false,
+          }),
+        }),
+      ),
+    );
+
+    const order = await fetchOrder('tok-123', CONFIG);
+
+    expect(order).toMatchObject({
+      paymentMethod: 'mercado_pago',
+      checkoutUrl: 'https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=1',
+      checkoutError: false,
+    });
+  });
+
+  it('should say when Mercado Pago could not create the payment', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        jsonResponse({
+          order: erpOrder({ payment_method: 'mercado_pago', checkout_error: true }),
+        }),
+      ),
+    );
+
+    expect((await fetchOrder('tok-123', CONFIG)).checkoutError).toBe(true);
+  });
+
+  it.each([['javascript:alert(1)'], ['http://inseguro.test/pago'], ['no es una url'], [42]])(
+    'should drop a checkout link that is not https (%s)',
+    async (checkoutUrl) => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue(
+          jsonResponse({
+            order: erpOrder({ payment_method: 'mercado_pago', checkout_url: checkoutUrl }),
+          }),
+        ),
+      );
+
+      expect((await fetchOrder('tok-123', CONFIG)).checkoutUrl).toBeNull();
+    },
+  );
+
+  it('should reject an order with an unknown payment method', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder({ payment_method: 'bitcoin' }) })),
+    );
+
+    await expect(fetchOrder('tok-123', CONFIG)).rejects.toThrow(/respuesta/i);
   });
 });

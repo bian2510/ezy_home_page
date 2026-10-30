@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import CheckoutPage from '@/features/checkout/CheckoutPage';
 import { CartProvider } from '@/features/cart/CartProvider';
 import type { Product, ProductPricing } from '@/types';
@@ -52,13 +52,22 @@ interface SentBody {
 const sentBody = (call: unknown): SentBody =>
   JSON.parse((call as [string, RequestInit])[1].body as string) as SentBody;
 
+function OrderPageStub() {
+  const location = useLocation();
+  return (
+    <p>
+      Página del pedido <span data-testid="order-state">{JSON.stringify(location.state)}</span>
+    </p>
+  );
+}
+
 const renderCheckout = () =>
   render(
     <MemoryRouter initialEntries={['/checkout']}>
       <CartProvider>
         <Routes>
           <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/pedido/:token" element={<p>Página del pedido</p>} />
+          <Route path="/pedido/:token" element={<OrderPageStub />} />
         </Routes>
       </CartProvider>
     </MemoryRouter>,
@@ -114,7 +123,7 @@ describe('CheckoutPage', () => {
     await fillForm(user);
     await user.click(screen.getByRole('button', { name: /confirmar pedido/i }));
 
-    expect(await screen.findByText('Página del pedido')).toBeInTheDocument();
+    expect(await screen.findByText(/página del pedido/i)).toBeInTheDocument();
     const body = sentBody(fetchMock.mock.calls[0]);
     expect(body).toMatchObject({
       payment_method: 'transfer',
@@ -157,7 +166,7 @@ describe('CheckoutPage', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(/conexión/i);
     await user.click(screen.getByRole('button', { name: /confirmar pedido/i }));
 
-    await screen.findByText('Página del pedido');
+    await screen.findByText(/página del pedido/i);
     const keys = fetchMock.mock.calls.map((call) => sentBody(call).idempotency_key);
     expect(keys[0]).toBe(keys[1]);
   });
@@ -180,7 +189,7 @@ describe('CheckoutPage', () => {
     expect(screen.queryByText('no es un email válido')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /confirmar pedido/i }));
 
-    await screen.findByText('Página del pedido');
+    await screen.findByText(/página del pedido/i);
     const keys = fetchMock.mock.calls.map((call) => sentBody(call).idempotency_key);
     expect(keys[0]).not.toBe(keys[1]);
   });
@@ -259,6 +268,88 @@ describe('CheckoutPage', () => {
 
     expect(screen.getByRole('button', { name: /enviando/i })).toBeDisabled();
     resolve(jsonResponse({ order: erpOrder }, 201));
-    await waitFor(() => expect(screen.getByText('Página del pedido')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/página del pedido/i)).toBeInTheDocument());
+  });
+
+  it('should not offer Mercado Pago while VITE_MERCADOPAGO_ENABLED is off', () => {
+    renderCheckout();
+
+    expect(screen.queryByRole('radio', { name: /mercado pago/i })).not.toBeInTheDocument();
+    expect(screen.queryByText(/mercado pago/i)).not.toBeInTheDocument();
+  });
+
+  describe('with Mercado Pago enabled', () => {
+    beforeEach(() => {
+      vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
+    });
+
+    it('should offer both methods with their totals and start with transfer', () => {
+      renderCheckout();
+
+      const transfer = screen.getByRole('radio', { name: /transferencia/i });
+      const mercadoPago = screen.getByRole('radio', { name: /mercado pago/i });
+      expect(transfer).toBeChecked();
+      expect(mercadoPago).not.toBeChecked();
+      expect(transfer.closest('label')).toHaveTextContent(/220\.000/);
+      expect(mercadoPago.closest('label')).toHaveTextContent(/231\.000/);
+      expect(screen.getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
+    });
+
+    it('should show the Mercado Pago total when the buyer picks it', async () => {
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await user.click(screen.getByRole('radio', { name: /mercado pago/i }));
+
+      expect(screen.getByTestId('checkout-total')).toHaveTextContent(/231\.000/);
+      expect(screen.getByRole('button', { name: /pagar con mercado pago/i })).toBeInTheDocument();
+    });
+
+    it('should create a Mercado Pago order and open its page to go pay', async () => {
+      const fetchMock = vi
+        .fn()
+        .mockResolvedValue(
+          jsonResponse({ order: { ...erpOrder, payment_method: 'mercado_pago' } }, 201),
+        );
+      vi.stubGlobal('fetch', fetchMock);
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await fillForm(user);
+      await user.click(screen.getByRole('radio', { name: /mercado pago/i }));
+      await user.click(screen.getByRole('button', { name: /pagar con mercado pago/i }));
+
+      expect(await screen.findByText(/página del pedido/i)).toBeInTheDocument();
+      expect(sentBody(fetchMock.mock.calls[0])).toMatchObject({ payment_method: 'mercado_pago' });
+      expect(screen.getByTestId('order-state')).toHaveTextContent('"openMercadoPago":true');
+      expect(JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '[]')).toEqual([]);
+    });
+
+    it('should use a new attempt key when the buyer changes the payment method', async () => {
+      const fetchMock = vi
+        .fn()
+        .mockResolvedValueOnce(
+          jsonResponse({ errors: { detail: 'Mercado Pago no está disponible' } }, 422),
+        )
+        .mockResolvedValueOnce(jsonResponse({ order: erpOrder }, 201));
+      vi.stubGlobal('fetch', fetchMock);
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await fillForm(user);
+      await user.click(screen.getByRole('radio', { name: /mercado pago/i }));
+      await user.click(screen.getByRole('button', { name: /pagar con mercado pago/i }));
+      expect(await screen.findByRole('alert')).toHaveTextContent(
+        /mercado pago no está disponible/i,
+      );
+      await user.click(screen.getByRole('radio', { name: /transferencia/i }));
+      await user.click(screen.getByRole('button', { name: /confirmar pedido/i }));
+
+      await screen.findByText(/página del pedido/i);
+      const [first, second] = fetchMock.mock.calls.map((call) => sentBody(call));
+      expect(second).toMatchObject({ payment_method: 'transfer' });
+      expect(first?.idempotency_key).not.toBe(second?.idempotency_key);
+      expect(screen.getByTestId('order-state')).toHaveTextContent('null');
+    });
   });
 });

@@ -5,6 +5,7 @@ import {
   describeOrderError,
   fieldErrorsFromApi,
   formatDeadline,
+  mercadoPagoTotal,
   stockAdjustments,
   transferTotal,
   validateBuyerForm,
@@ -79,6 +80,14 @@ describe('transferTotal', () => {
     const single = { ...AVAILABLE, price: 20_000, transferPrice: null };
 
     expect(transferTotal(items, priced({ 'p-1': single }))).toBe(20_000);
+  });
+});
+
+describe('mercadoPagoTotal', () => {
+  it('should add the Mercado Pago price of every unit', () => {
+    const items = [buildCartItem({ quantity: 2 })];
+
+    expect(mercadoPagoTotal(items, priced({ 'p-1': AVAILABLE }))).toBe(42_000);
   });
 });
 

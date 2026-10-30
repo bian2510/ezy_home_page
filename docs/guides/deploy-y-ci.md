@@ -64,13 +64,13 @@ resuelve: es una instalación de una sola herramienta, no del proyecto.
 
 Se configuran en GitHub › Settings › Secrets and variables › Actions:
 
-| Secret                                           | Quién lo usa | Para qué                                                                                           |
-| ------------------------------------------------ | ------------ | -------------------------------------------------------------------------------------------------- |
-| `VITE_WHATSAPP_NUMBER`                           | job `build`  | Número de checkout, embebido en el bundle                                                          |
-| `VITE_STORE_API_KEY`                             | job `build`  | Clave de la API del ERP (precio y stock)                                                           |
-| `VITE_MERCADOPAGO_ENABLED` (variable, no secret) | job `build`  | `true` cuando el cobro con Mercado Pago esté activo. Sin ella, un solo precio: el de transferencia |
-| `CLOUDFLARE_API_TOKEN`                           | job `deploy` | Autenticación con Cloudflare                                                                       |
-| `CLOUDFLARE_ACCOUNT_ID`                          | job `deploy` | Cuenta destino                                                                                     |
+| Secret                                           | Quién lo usa | Para qué                                                                                                                                                      |
+| ------------------------------------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VITE_WHATSAPP_NUMBER`                           | job `build`  | Número de checkout, embebido en el bundle                                                                                                                     |
+| `VITE_STORE_API_KEY`                             | job `build`  | Clave de la API del ERP (precio y stock)                                                                                                                      |
+| `VITE_MERCADOPAGO_ENABLED` (variable, no secret) | job `build`  | `true` cuando el cobro con Mercado Pago esté activo: dos precios y Mercado Pago en el checkout. Sin ella, un solo precio (transferencia) y solo transferencia |
+| `CLOUDFLARE_API_TOKEN`                           | job `deploy` | Autenticación con Cloudflare                                                                                                                                  |
+| `CLOUDFLARE_ACCOUNT_ID`                          | job `deploy` | Cuenta destino                                                                                                                                                |
 
 Si `VITE_WHATSAPP_NUMBER` falta, el build **no falla**: publica un sitio donde el
 botón de WhatsApp no lleva a ningún lado. Ver [`src/lib/env.ts`](../../src/lib/env.ts).
