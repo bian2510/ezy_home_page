@@ -6,6 +6,7 @@ import {
   fieldErrorsFromApi,
   formatDeadline,
   mercadoPagoTotal,
+  phoneDigits,
   stockAdjustments,
   transferTotal,
   validateBuyerForm,
@@ -34,6 +35,40 @@ const VALID_FORM = {
   acceptedPrivacy: true,
 };
 
+// WhatsApp: exactamente 10 números, código de área + número, sin 0 ni 15 ni +54
+// (usuario, 2026-10-30).
+describe('validateBuyerForm WhatsApp', () => {
+  const phoneError = (phone: string) => validateBuyerForm({ ...VALID_FORM, phone }).phone;
+  const GUIDE = 'Ingresá tu número con código de área, sin 0 ni 15 (10 números)';
+
+  it.each(['1155554444', '11 5555-4444', '351 555-4444', '2944 55-4444'])(
+    'should accept the 10 digits %s',
+    (phone) => {
+      expect(phoneError(phone)).toBeUndefined();
+    },
+  );
+
+  it.each([
+    ['9 digits', '115555444'],
+    ['11 digits', '11555544441'],
+    ['a leading 0', '01155554444'],
+    ['a leading 0 in 10 digits', '0115555444'],
+    ['the 15 without area code', '1555554444'],
+    ['the area code and 15', '111555554444'],
+    ['+54', '+54 11 5555-4444'],
+    ['+54 9', '+54 9 11 5555-4444'],
+    ['nothing', ''],
+  ])('should reject a phone with %s and explain the format', (_case, phone) => {
+    expect(phoneError(phone)).toBe(GUIDE);
+  });
+});
+
+describe('phoneDigits', () => {
+  it('should keep only the digits', () => {
+    expect(phoneDigits(' 11 5555-4444 ')).toBe('1155554444');
+  });
+});
+
 describe('validateBuyerForm', () => {
   it('should accept a complete form', () => {
     expect(validateBuyerForm(VALID_FORM)).toEqual({});
@@ -54,15 +89,13 @@ describe('validateBuyerForm', () => {
     expect(validateBuyerForm({ ...VALID_FORM, document: '  ' }).document).toMatch(/dni/i);
   });
 
-  it('should reject a short phone, a bad email and a bad DNI', () => {
+  it('should reject a bad email and a bad DNI', () => {
     const errors = validateBuyerForm({
       ...VALID_FORM,
-      phone: '1234',
       email: 'ana@',
       document: '12',
     });
 
-    expect(errors.phone).toMatch(/8 a 20/);
     expect(errors.email).toMatch(/email/i);
     expect(errors.document).toMatch(/7 u 8/);
   });

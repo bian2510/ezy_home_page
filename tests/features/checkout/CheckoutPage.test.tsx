@@ -105,6 +105,47 @@ describe('CheckoutPage', () => {
     expect(screen.getByText(/ley 25\.326/i)).toBeInTheDocument();
   });
 
+  it('should ask for the WhatsApp as 10 numbers and drop spaces and dashes as they type', async () => {
+    const user = userEvent.setup();
+    renderCheckout();
+    const phone = screen.getByLabelText(/whatsapp/i);
+
+    await user.type(phone, '11 5555-4444');
+
+    expect(phone).toHaveValue('1155554444');
+    expect(phone).toHaveAttribute('inputmode', 'numeric');
+    expect(phone).toHaveAccessibleDescription(
+      'Ingresá tu número con código de área, sin 0 ni 15 (10 números)',
+    );
+  });
+
+  it('should not call the ERP with a WhatsApp that has the 15', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    const user = userEvent.setup();
+    renderCheckout();
+
+    await fillForm(user);
+    await user.clear(screen.getByLabelText(/whatsapp/i));
+    await user.type(screen.getByLabelText(/whatsapp/i), '11 15 5555-4444');
+    await user.click(screen.getByRole('button', { name: /confirmar pedido/i }));
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(screen.getByLabelText(/whatsapp/i)).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('should say the tab keeps the order data only to switch to transfer', () => {
+    vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
+    renderCheckout();
+
+    const notice = screen.getByText(/ley 25\.326/i);
+    expect(notice).toHaveTextContent(/esta pestaña/i);
+    expect(notice).toHaveTextContent(/nombre, whatsapp, email, dni y los productos/i);
+    expect(notice).toHaveTextContent(/mercado pago a transferencia/i);
+    expect(notice).toHaveTextContent(/cerrás la pestaña o se cierra el pedido/i);
+    expect(notice).toHaveTextContent(/no los mandamos a ningún otro lado/i);
+  });
+
   it('should ask for the DNI as a required field and say what it is for', () => {
     renderCheckout();
 
@@ -129,7 +170,7 @@ describe('CheckoutPage', () => {
       payment_method: 'transfer',
       buyer: {
         name: 'Ana Pérez',
-        phone: '11 5555-4444',
+        phone: '1155554444',
         email: 'ana@mail.com',
         document: '30111222',
       },
