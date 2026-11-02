@@ -9,60 +9,96 @@ Si un color no existe como token, agregarlo al config — no hardcodearlo.
 
 ## Colores semánticos
 
+Paleta del rediseño "Smart Commerce Slate" (2026-11). Los nombres semánticos de
+antes se mantienen con valores nuevos; se sumaron `primary-container`,
+`primary-fixed`, `tertiary-*` e `inverse-*`.
+
 ### Superficies y texto
 
 | Token              | Clase Tailwind                    | Hex       | Cuándo usarlo                                             |
 | ------------------ | --------------------------------- | --------- | --------------------------------------------------------- |
-| `background`       | `bg-background`                   | `#f4f7f9` | Fondo de página. El `<body>` y las secciones principales. |
-| `foreground`       | `text-foreground`                 | `#1e2433` | Texto principal. Todo texto que no sea secundario.        |
+| `background`       | `bg-background`                   | `#f7faf8` | Fondo de página. El `<body>` y las secciones principales. |
+| `foreground`       | `text-foreground`                 | `#181c1c` | Texto principal. Todo texto que no sea secundario.        |
 | `card`             | `bg-card`                         | `#ffffff` | Fondo de tarjetas, modales, drawers, tooltips.            |
-| `muted`            | `bg-muted`                        | `#eef1f4` | Fondos secundarios: placeholders, skeletons, chips.       |
-| `muted-foreground` | `text-muted-foreground`           | `#6b7280` | Texto secundario: subtítulos, fechas, labels de ayuda.    |
-| `border`           | `border-border` / `divide-border` | `#e2e8ef` | Todos los bordes y separadores.                           |
+| `muted`            | `bg-muted`                        | `#ebefed` | Fondos secundarios: placeholders, skeletons, chips.       |
+| `muted-foreground` | `text-muted-foreground`           | `#466462` | Texto secundario: subtítulos, fechas, labels de ayuda.    |
+| `border`           | `border-border` / `divide-border` | `#e0e3e2` | Todos los bordes y separadores.                           |
 
 ### Marca y acciones
 
-| Token                | Clase Tailwind            | Hex       | Cuándo usarlo                                        |
-| -------------------- | ------------------------- | --------- | ---------------------------------------------------- |
-| `primary`            | `bg-primary`              | `#4a9e96` | CTAs principales, botones de acción, badges activos. |
-| `primary-foreground` | `text-primary-foreground` | `#ffffff` | Texto sobre fondo `primary`.                         |
+| Token                | Clase Tailwind            | Hex       | Cuándo usarlo                                                  |
+| -------------------- | ------------------------- | --------- | -------------------------------------------------------------- |
+| `primary`            | `bg-primary`              | `#006a67` | CTAs principales, botones de acción, chip activo.              |
+| `primary-foreground` | `text-primary-foreground` | `#ffffff` | Texto sobre fondo `primary` o `primary-container`.             |
+| `primary-container`  | `bg-primary-container`    | `#2c8380` | Fondo del header y hover de botones primarios (blanco: 4.5:1). |
+| `primary-fixed`      | `ring-primary-fixed`      | `#9ff1ed` | Anillo de foco sobre fondos `primary` / `primary-container`.   |
+
+### Carteles de precio
+
+| Token                      | Clase Tailwind                  | Hex       | Cuándo usarlo                                         |
+| -------------------------- | ------------------------------- | --------- | ----------------------------------------------------- |
+| `tertiary`                 | `bg-tertiary` / `text-tertiary` | `#8c4d2f` | Acento de ofertas.                                    |
+| `tertiary-soft`            | `bg-tertiary-soft`              | `#ffdbcd` | Fondo del cartel de descuento real por transferencia. |
+| `tertiary-soft-foreground` | `text-tertiary-soft-foreground` | `#70371b` | Texto sobre `tertiary-soft`.                          |
 
 ### Estados
 
-| Token                | Clase Tailwind                        | Hex       | Cuándo usarlo                                    |
-| -------------------- | ------------------------------------- | --------- | ------------------------------------------------ |
-| `success`            | `bg-success` / `text-success`         | `#4caf86` | Confirmaciones, checkmarks, badge "Más vendido". |
-| `warning`            | `bg-warning`                          | `#d4a017` | Alertas no críticas.                             |
-| `warning-foreground` | `text-warning-foreground`             | `#7a5a00` | Texto sobre fondo `warning`.                     |
-| `destructive`        | `bg-destructive` / `text-destructive` | `#e53935` | Errores, acciones irreversibles (eliminar).      |
+| Token                | Clase Tailwind                        | Hex       | Cuándo usarlo                               |
+| -------------------- | ------------------------------------- | --------- | ------------------------------------------- |
+| `success`            | `bg-success` / `text-success`         | `#4caf86` | Confirmaciones, checkmarks.                 |
+| `warning`            | `bg-warning`                          | `#d4a017` | Alertas no críticas.                        |
+| `warning-foreground` | `text-warning-foreground`             | `#7a5a00` | Texto sobre fondo `warning`.                |
+| `destructive`        | `bg-destructive` / `text-destructive` | `#ba1a1a` | Errores, acciones irreversibles (eliminar). |
 
-### Sidebar / navegación
+### Superficie oscura (footer)
 
-| Token                | Clase Tailwind            | Hex       | Cuándo usarlo                                    |
-| -------------------- | ------------------------- | --------- | ------------------------------------------------ |
-| `sidebar`            | `bg-sidebar`              | `#242c3d` | Fondo del `<SiteHeader>` y drawer de navegación. |
-| `sidebar-foreground` | `text-sidebar-foreground` | `#e8ecf0` | Texto dentro del header/sidebar.                 |
-| `sidebar-accent`     | `bg-sidebar-accent`       | `#2e3a50` | Hover y estados activos dentro del sidebar.      |
-| `sidebar-border`     | `border-sidebar-border`   | `#333d54` | Bordes internos del sidebar.                     |
+| Token                | Clase Tailwind            | Hex       | Cuándo usarlo                             |
+| -------------------- | ------------------------- | --------- | ----------------------------------------- |
+| `inverse`            | `bg-inverse`              | `#2d3131` | Fondo del `<SiteFooter>`.                 |
+| `inverse-foreground` | `text-inverse-foreground` | `#eef1f0` | Títulos sobre `inverse`.                  |
+| `inverse-muted`      | `text-inverse-muted`      | `#bec9c7` | Texto secundario y links sobre `inverse`. |
+| `inverse-primary`    | `text-inverse-primary`    | `#83d4d1` | Íconos y hover sobre `inverse`.           |
+| `inverse-border`     | `border-inverse-border`   | `#454b4b` | Separadores sobre `inverse`.              |
+
+`sidebar-*` queda con los mismos valores que `inverse-*` para las secciones
+oscuras que ya lo usan (Home). Para código nuevo, usar `inverse-*`.
 
 ---
 
 ## Tipografía
 
 ```
-font-sans   → Inter, system-ui, sans-serif   (todo el UI)
-font-mono   → Geist Mono, Menlo              (código, precios, IDs técnicos)
+font-sans   → Plus Jakarta Sans (variable, @fontsource-variable), system-ui   (todo el UI)
+font-mono   → Geist Mono, Menlo                                               (código, IDs técnicos)
 ```
 
-**Escalas de texto recomendadas** (clases Tailwind por defecto, no tokens propios):
+Los precios van en `font-sans` con `tabular-nums`. Las fuentes nunca se
+embeben en el CSS (`assetsInlineLimit` en `vite.config.ts`): cada subset se
+baja solo si la página lo usa.
 
-| Uso                    | Clase                                |
-| ---------------------- | ------------------------------------ |
-| Título de página (H1)  | `text-2xl sm:text-3xl font-semibold` |
-| Título de sección (H2) | `text-xl font-semibold`              |
-| Título de tarjeta (H3) | `text-sm font-medium`                |
-| Cuerpo                 | `text-sm` o `text-base`              |
-| Texto secundario       | `text-xs text-muted-foreground`      |
+**Escalas de texto** (además de las de Tailwind):
+
+| Uso                    | Clase                                                        |
+| ---------------------- | ------------------------------------------------------------ |
+| Título de página (H1)  | `text-headline-xl-mobile sm:text-headline-xl font-extrabold` |
+| Precio en card         | `text-headline-md font-extrabold`                            |
+| Título de tarjeta (H3) | `text-headline-sm font-bold`                                 |
+| Cuerpo                 | `text-sm` o `text-base`                                      |
+| Etiqueta / categoría   | `text-label-sm font-bold uppercase`                          |
+| Texto secundario       | `text-xs text-muted-foreground`                              |
+
+## Radios y sombras
+
+| Token               | Valor     | Cuándo usarlo                 |
+| ------------------- | --------- | ----------------------------- |
+| `rounded`           | `0.5rem`  | Botones, inputs.              |
+| `rounded-md`        | `0.75rem` | Contenedores chicos.          |
+| `rounded-lg`        | `1rem`    | Cards de producto, paneles.   |
+| `rounded-xl`        | `1.5rem`  | Bloques grandes.              |
+| `rounded-full`      | pill      | Chips de categoría, carteles. |
+| `shadow-card`       | nivel 1   | Cards en reposo.              |
+| `shadow-card-hover` | nivel 2   | Card con hover.               |
+| `shadow-header`     | nivel 3   | Header sticky.                |
 
 ---
 
@@ -134,5 +170,5 @@ font-mono   → Geist Mono, Menlo              (código, precios, IDs técnicos)
 ### Sección full-bleed con fondo
 
 ```tsx
-<section className="-mx-4 bg-sidebar px-4 py-16 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+<section className="-mx-4 bg-inverse px-4 py-16 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
 ```

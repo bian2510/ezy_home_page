@@ -201,12 +201,33 @@ describe('ProductCard', () => {
     expect(screen.getByText(/sin imagen/i)).toBeInTheDocument();
   });
 
-  it('should show the "Más vendido" badge when isBestseller is true', () => {
-    const product = buildProduct({ isBestseller: true });
+  it('should show the real transfer discount as a badge when transfer is cheaper', () => {
+    currentPricing = { price: 20000, transferPrice: 19000, availability: 'available' };
 
-    renderWithProviders(<ProductCard product={product} />);
+    renderWithProviders(<ProductCard product={buildProduct()} />);
 
-    expect(screen.getByText(/más vendido/i)).toBeInTheDocument();
+    expect(screen.getByText('-5% transferencia')).toBeInTheDocument();
+  });
+
+  it('should not show a discount badge when there is a single price', () => {
+    // Así llega el precio con Mercado Pago apagado: solo el de transferencia.
+    currentPricing = { price: 20000, transferPrice: null, availability: 'available' };
+
+    renderWithProviders(<ProductCard product={buildProduct()} />);
+
+    expect(screen.queryByText(/% transferencia/i)).not.toBeInTheDocument();
+  });
+
+  it('should show the product category above the name', () => {
+    renderWithProviders(<ProductCard product={buildProduct({ category: 'Confort' })} />);
+
+    expect(screen.getByText('Confort')).toBeInTheDocument();
+  });
+
+  it('should not show the "Más vendido" badge anymore (rediseño, 2026-11-02)', () => {
+    renderWithProviders(<ProductCard product={buildProduct({ isBestseller: true })} />);
+
+    expect(screen.queryByText(/más vendido/i)).not.toBeInTheDocument();
   });
 
   it('should navigate to /productos/:id when the card body is clicked', async () => {

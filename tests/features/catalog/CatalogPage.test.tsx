@@ -82,6 +82,9 @@ const renderCatalog = (path = '/catalogo') =>
 
 const filterGroup = () => screen.getByRole('group', { name: /filtrar por categoría/i });
 
+/** Nombre accesible de un chip: la categoría y su cantidad, p. ej. "Confort (1)". */
+const chip = (label: string) => new RegExp(`^${label} \\(\\d+\\)$`);
+
 describe('CatalogPage', () => {
   it('should render all active product cards by default when no category is selected', () => {
     renderCatalog();
@@ -99,19 +102,62 @@ describe('CatalogPage', () => {
     expect(screen.queryByText('Cerradura Inactiva')).not.toBeInTheDocument();
   });
 
-  it('should render the page heading "Catálogo"', () => {
+  it('should render the page heading "Productos"', () => {
     renderCatalog();
 
-    expect(screen.getByRole('heading', { name: /catálogo/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /productos/i, level: 1 })).toBeInTheDocument();
+  });
+
+  it('should show a breadcrumb back to the home page', () => {
+    renderCatalog();
+
+    const breadcrumb = screen.getByRole('navigation', { name: /ruta/i });
+    expect(within(breadcrumb).getByRole('link', { name: /inicio/i })).toHaveAttribute('href', '/');
+  });
+
+  it('should show how many products each chip has', () => {
+    renderCatalog();
+
+    expect(within(filterGroup()).getByRole('button', { name: 'Todos (4)' })).toBeInTheDocument();
+    expect(
+      within(filterGroup()).getByRole('button', { name: 'Seguridad (1)' }),
+    ).toBeInTheDocument();
+  });
+
+  it('should narrow the grid to the ?q= search and say what was searched', () => {
+    renderCatalog('/catalogo?q=sensor');
+
+    expect(screen.getAllByTestId('product-card')).toHaveLength(1);
+    expect(screen.getByText('Sensor Gas')).toBeInTheDocument();
+    expect(screen.getByText(/resultados para/i)).toHaveTextContent('sensor');
+  });
+
+  it('should clear the search with "Ver todos los productos"', async () => {
+    const user = userEvent.setup();
+    renderCatalog('/catalogo?q=sensor');
+
+    await user.click(screen.getByRole('button', { name: /ver todos los productos/i }));
+
+    expect(screen.getAllByTestId('product-card')).toHaveLength(4);
+    expect(screen.queryByText(/resultados para/i)).not.toBeInTheDocument();
+  });
+
+  it('should say so when the search finds nothing', () => {
+    renderCatalog('/catalogo?q=heladera');
+
+    expect(screen.queryByTestId('product-card')).not.toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent(/no encontramos productos/i);
   });
 
   it('should label each chip with the category name exactly as it appears in the data', () => {
     renderCatalog();
 
     expect(
-      within(filterGroup()).getByRole('button', { name: 'Iluminación Inteligente' }),
+      within(filterGroup()).getByRole('button', { name: chip('Iluminación Inteligente') }),
     ).toBeInTheDocument();
-    expect(within(filterGroup()).getByRole('button', { name: 'Confort' })).toBeInTheDocument();
+    expect(
+      within(filterGroup()).getByRole('button', { name: chip('Confort') }),
+    ).toBeInTheDocument();
   });
 
   it('should never render a chip without a visible label', () => {
@@ -130,14 +176,19 @@ describe('CatalogPage', () => {
       .getAllByRole('button')
       .map((chip) => chip.textContent?.trim());
 
-    expect(chipLabels).toEqual(['Todos', 'Iluminación Inteligente', 'Seguridad', 'Confort']);
+    expect(chipLabels).toEqual([
+      'Todos (4)',
+      'Iluminación Inteligente (1)',
+      'Seguridad (1)',
+      'Confort (1)',
+    ]);
   });
 
   it('should filter to a single category when its chip is clicked', async () => {
     const user = userEvent.setup();
     renderCatalog();
 
-    await user.click(screen.getByRole('button', { name: 'Iluminación Inteligente' }));
+    await user.click(screen.getByRole('button', { name: chip('Iluminación Inteligente') }));
 
     const cards = screen.getAllByTestId('product-card');
     expect(cards).toHaveLength(1);
@@ -150,10 +201,10 @@ describe('CatalogPage', () => {
     const user = userEvent.setup();
     renderCatalog();
 
-    await user.click(screen.getByRole('button', { name: 'Iluminación Inteligente' }));
+    await user.click(screen.getByRole('button', { name: chip('Iluminación Inteligente') }));
     expect(screen.getAllByTestId('product-card')).toHaveLength(1);
 
-    await user.click(screen.getByRole('button', { name: 'Todos' }));
+    await user.click(screen.getByRole('button', { name: chip('Todos') }));
 
     expect(screen.getAllByTestId('product-card')).toHaveLength(4);
   });
@@ -163,7 +214,7 @@ describe('CatalogPage', () => {
 
     expect(screen.getAllByTestId('product-card')).toHaveLength(1);
     expect(screen.getByText('Sensor Gas')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Seguridad' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: chip('Seguridad') })).toHaveAttribute(
       'aria-pressed',
       'true',
     );
@@ -173,14 +224,17 @@ describe('CatalogPage', () => {
     renderCatalog('/catalogo?category=Inexistente');
 
     expect(screen.getAllByTestId('product-card')).toHaveLength(4);
-    expect(screen.getByRole('button', { name: 'Todos' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: chip('Todos') })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
   });
 
   it('should display an empty-state message when no products match the selected category', async () => {
     const user = userEvent.setup();
     renderCatalog();
 
-    await user.click(screen.getByRole('button', { name: 'Iluminación Inteligente' }));
+    await user.click(screen.getByRole('button', { name: chip('Iluminación Inteligente') }));
 
     expect(screen.queryByText(/no hay productos en esta categoría/i)).not.toBeInTheDocument();
   });
@@ -310,6 +364,42 @@ describe('useCatalog', () => {
     act(() => {
       result.current.setCategory('Seguridad');
     });
+
+    expect(result.current.filtered).toEqual([]);
+  });
+});
+
+describe('useCatalog — conteos y búsqueda', () => {
+  const products = [
+    buildProduct({ id: '1', name: 'Enchufe WiFi', category: 'Confort' }),
+    buildProduct({ id: '2', name: 'Termostato WiFi', category: 'Confort' }),
+    buildProduct({ id: '3', name: 'Sensor de Gas', category: 'Seguridad' }),
+    buildProduct({ id: '4', name: 'Enchufe Oculto', category: 'Confort', active: false }),
+  ];
+
+  it('should count the active products of each category and in total', () => {
+    const { result } = renderHook(() => useCatalog(products));
+
+    expect(result.current.counts).toEqual({ Confort: 2, Seguridad: 1 });
+    expect(result.current.totalCount).toBe(3);
+  });
+
+  it('should narrow the list and the counts to the search query', () => {
+    const { result } = renderHook(() => useCatalog(products, null, 'wifi'));
+
+    expect(result.current.filtered.map((p) => p.id)).toEqual(['1', '2']);
+    expect(result.current.counts).toEqual({ Confort: 2 });
+    expect(result.current.totalCount).toBe(2);
+  });
+
+  it('should keep every category chip while searching, even with zero results', () => {
+    const { result } = renderHook(() => useCatalog(products, null, 'wifi'));
+
+    expect(result.current.categories).toEqual(['Confort', 'Seguridad']);
+  });
+
+  it('should combine the search query with the selected category', () => {
+    const { result } = renderHook(() => useCatalog(products, 'Seguridad', 'wifi'));
 
     expect(result.current.filtered).toEqual([]);
   });

@@ -37,6 +37,25 @@ export const computeCartTotals = (items: CartItem[], pricingOf: PricingOf): Cart
     { total: 0, transferTotal: 0, hasUnpriced: false },
   );
 
+/** Lo que muestra el botón del carrito en el header. */
+export interface CartHeaderTotal {
+  amount: number;
+  label: 'Con transferencia' | 'Total';
+}
+
+/**
+ * Total para el header: el de transferencia, que es el precio grande de las
+ * cards. `null` si el carrito está vacío o algún producto no tiene precio del
+ * ERP: un total parcial haría creer que eso es lo que se paga.
+ */
+export const cartHeaderTotal = (totals: CartTotals): CartHeaderTotal | null => {
+  if (totals.hasUnpriced || totals.total <= 0) return null;
+  return {
+    amount: totals.transferTotal,
+    label: totals.transferTotal < totals.total ? 'Con transferencia' : 'Total',
+  };
+};
+
 const formatLineItem = (item: CartItem, pricingOf: PricingOf): string => {
   const { price } = pricingOf(item.product);
   const detail = price === null ? 'consultar precio' : `${formatPrice(price)} c/u`;

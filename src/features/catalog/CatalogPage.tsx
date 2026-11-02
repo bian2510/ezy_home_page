@@ -3,22 +3,26 @@ import { useSearchParams } from 'react-router-dom';
 import { allProducts } from '@/data/catalog';
 import ProductCard from './ProductCard';
 import CategoryFilter from './CategoryFilter';
+import CatalogHeading from './CatalogHeading';
+import SearchNotice from './SearchNotice';
+import TrustStrip from './TrustStrip';
 import { useCatalog } from './useCatalog';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
 const CATEGORY_PARAM = 'category';
+const QUERY_PARAM = 'q';
 
 /**
  * Catalog landing page (route `/catalogo`). Reads the static product dataset
- * from `src/data/products.json`, lets the visitor narrow by category, and
- * renders a responsive grid of `ProductCard`s.
+ * from `src/data/products.json`, lets the visitor narrow by category and by
+ * the header search, and renders a responsive grid of `ProductCard`s.
  *
- * Mobile-first: 1 column at 360px, 2 at `sm`, 3 at `md` — see DOMAIN.md
+ * Mobile-first: 1 column at 360px, 2 at `sm`, 3 at `lg` — see DOMAIN.md
  * › Design Implications and PRD F001 BR-008.
  *
- * El filtro vive también en el query string (`/catalogo?category=…`) para que
- * las tarjetas de categoría del Home lleguen filtradas y el filtro sea
- * compartible.
+ * El filtro y la búsqueda viven en el query string (`/catalogo?category=…`,
+ * `?q=…`) para que las tarjetas del Home y el buscador del header lleguen
+ * filtrados y el filtro sea compartible.
  */
 export default function CatalogPage() {
   useDocumentMeta({
@@ -29,9 +33,11 @@ export default function CatalogPage() {
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const { filtered, selectedCategory, setCategory, categories } = useCatalog(
+  const query = searchParams.get(QUERY_PARAM)?.trim() ?? '';
+  const { filtered, selectedCategory, setCategory, categories, counts, totalCount } = useCatalog(
     allProducts,
     searchParams.get(CATEGORY_PARAM),
+    query,
   );
 
   const handleSelectCategory = useCallback(
@@ -48,24 +54,43 @@ export default function CatalogPage() {
     [searchParams, setSearchParams, setCategory],
   );
 
-  return (
-    <section className="mx-auto w-full max-w-content px-4 py-6">
-      <h1 className="mb-4 text-2xl font-semibold text-foreground sm:text-3xl">Catálogo</h1>
+  const handleClearSearch = useCallback(() => {
+    const next = new URLSearchParams(searchParams);
+    next.delete(QUERY_PARAM);
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams]);
 
-      <div className="mb-6">
+  const emptyMessage =
+    query === ''
+      ? 'No hay productos en esta categoría'
+      : 'No encontramos productos para tu búsqueda';
+
+  return (
+    <section className="flex w-full flex-col gap-6">
+      <CatalogHeading />
+
+      <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-3 shadow-card sm:flex-row sm:items-center sm:justify-between sm:p-4">
         <CategoryFilter
           categories={categories}
           selectedCategory={selectedCategory}
           onSelectCategory={handleSelectCategory}
+          counts={counts}
+          totalCount={totalCount}
         />
+        <p className="shrink-0 px-1 text-xs font-medium text-muted-foreground">
+          Mostrando <strong className="font-bold text-foreground">{filtered.length}</strong>{' '}
+          {filtered.length === 1 ? 'producto' : 'productos'}
+        </p>
       </div>
 
+      {query !== '' && <SearchNotice query={query} onClear={handleClearSearch} />}
+
       {filtered.length === 0 ? (
-        <p className="text-muted-foreground" role="status">
-          No hay productos en esta categoría
+        <p className="py-8 text-center text-muted-foreground" role="status">
+          {emptyMessage}
         </p>
       ) : (
-        <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 md:grid-cols-3">
+        <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {filtered.map((product) => (
             <li key={product.id}>
               <ProductCard product={product} />
@@ -73,6 +98,8 @@ export default function CatalogPage() {
           ))}
         </ul>
       )}
+
+      <TrustStrip />
     </section>
   );
 }

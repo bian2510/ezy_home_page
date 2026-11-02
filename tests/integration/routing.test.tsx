@@ -31,7 +31,9 @@ describe('rutas cargadas por demanda', () => {
   it('should load the catalog route on demand', async () => {
     renderAt('/catalogo');
 
-    expect(await screen.findByRole('heading', { name: /catálogo/i, level: 1 })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { name: /productos/i, level: 1 }),
+    ).toBeInTheDocument();
   });
 
   it('should load the cart route on demand', async () => {
@@ -93,6 +95,7 @@ describe('errores de render contenidos', () => {
       },
       findActiveProductById: () => undefined,
       findProductById: () => undefined,
+      listCategories: () => [],
     }));
 
     vi.resetModules();

@@ -23,7 +23,8 @@ servidor, no hay EC2.
 
 ## El pipeline
 
-`.github/workflows/ci.yml` corre en cada push y cada PR contra `main`:
+`.github/workflows/ci.yml` corre en cada push y cada PR contra `main`, y en los
+PR contra `rediseno-ui` (la rama de integración del rediseño, que no publica):
 
 | Job         | Qué hace                                                                  | De qué depende              |
 | ----------- | ------------------------------------------------------------------------- | --------------------------- |

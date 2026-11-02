@@ -46,11 +46,23 @@ export default function ProductPrice({ pricing, size = 'card' }: ProductPricePro
     <div className="flex flex-col gap-1">
       <div className="flex flex-wrap items-center gap-2">
         <span data-testid="main-price" className="text-foreground">
-          <span className={cn('font-mono font-semibold', isDetail ? 'text-2xl' : 'text-base')}>
+          <span
+            className={cn(
+              'font-extrabold tabular-nums tracking-tight',
+              isDetail ? 'text-3xl' : 'text-headline-md',
+            )}
+          >
             {formatPrice(mainPrice)}
           </span>
           {hasTransfer && (
-            <span className={cn('ml-1', isDetail ? 'text-sm' : 'text-xs')}>con transferencia</span>
+            <span
+              className={cn(
+                'ml-1.5 font-semibold text-muted-foreground',
+                isDetail ? 'text-sm' : 'text-xs',
+              )}
+            >
+              con transferencia
+            </span>
           )}
         </span>
         {pricing.availability === 'out_of_stock' && <Badge>Sin stock</Badge>}
@@ -60,7 +72,8 @@ export default function ProductPrice({ pricing, size = 'card' }: ProductPricePro
           data-testid="secondary-price"
           className={cn('text-muted-foreground', isDetail ? 'text-sm' : 'text-xs')}
         >
-          <span className="font-mono">{formatPrice(pricing.price)}</span> con Mercado Pago
+          <span className="font-semibold tabular-nums">{formatPrice(pricing.price)}</span> con
+          Mercado Pago
         </span>
       )}
     </div>

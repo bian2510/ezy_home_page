@@ -6,6 +6,7 @@ import {
   indexQuotes,
   isPurchasable,
   resolvePricing,
+  transferDiscountPercent,
   unavailableLabel,
 } from '@/features/pricing/pricingUtils';
 import type { StoreQuote } from '@/features/pricing/storeApi';
@@ -150,5 +151,35 @@ describe('stock limit', () => {
   it('should keep the quantity when the stock is unknown or zero', () => {
     expect(clampToStock(pricing(), 5)).toBe(5);
     expect(clampToStock(pricing(0), 5)).toBe(5);
+  });
+});
+
+describe('transferDiscountPercent', () => {
+  const priced = (price: number | null, transferPrice: number | null): ProductPricing => ({
+    price,
+    transferPrice,
+    availability: 'available',
+  });
+
+  it('should return the transfer discount over the Mercado Pago price', () => {
+    expect(transferDiscountPercent(priced(20_000, 19_000))).toBe(5);
+  });
+
+  it('should round down so the badge never promises more than the real discount', () => {
+    // 21.000 → 20.000 es un 4,76 %: se muestra 4 %, nunca 5 %.
+    expect(transferDiscountPercent(priced(21_000, 20_000))).toBe(4);
+  });
+
+  it('should return null when there is no cheaper transfer price', () => {
+    // Sin Mercado Pago activo, `resolvePricing` no informa precio de transferencia.
+    expect(transferDiscountPercent(priced(20_000, null))).toBeNull();
+  });
+
+  it('should return null when the ERP has no price', () => {
+    expect(transferDiscountPercent(priced(null, null))).toBeNull();
+  });
+
+  it('should return null when the discount rounds down to zero', () => {
+    expect(transferDiscountPercent(priced(20_000, 19_950))).toBeNull();
   });
 });

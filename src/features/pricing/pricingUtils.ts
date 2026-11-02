@@ -51,6 +51,19 @@ export const resolvePricing = (
   };
 };
 
+/**
+ * Descuento por pagar con transferencia frente a Mercado Pago, en puntos
+ * porcentuales enteros. Se redondea para abajo: el cartel nunca promete más
+ * de lo que el visitante ahorra. `null` si no hay descuento que mostrar (sin
+ * precio del ERP, sin Mercado Pago activo o un descuento menor a 1 %).
+ */
+export const transferDiscountPercent = (pricing: ProductPricing): number | null => {
+  const { price, transferPrice } = pricing;
+  if (price === null || transferPrice === null || price <= 0) return null;
+  const percent = Math.floor(((price - transferPrice) / price) * 100);
+  return percent >= 1 ? percent : null;
+};
+
 /** Aviso al llegar al tope de stock: sin "Quedan N" (usuario, 2026-10-28). */
 export const STOCK_LIMIT_MESSAGE = 'Llegaste al máximo de unidades disponibles';
 
