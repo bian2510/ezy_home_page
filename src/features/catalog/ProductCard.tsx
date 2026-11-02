@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import { useId, type MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '@/types';
 import { useCart } from '@/features/cart';
@@ -44,6 +44,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
+  const labelId = useId();
   const { addItem, items } = useCart();
   const { addToast } = useToast();
   const pricing = usePricing().pricingOf(product);
@@ -75,7 +76,9 @@ export default function ProductCard({ product }: ProductCardProps) {
       <button
         type="button"
         onClick={handleNavigate}
-        aria-label={`Ver detalle de ${product.name}`}
+        // El nombre accesible es "Ver detalle de" + nombre + descuento + precio:
+        // con un `aria-label` fijo, el lector de pantalla no leía el descuento.
+        aria-labelledby={`${labelId}-action ${labelId}-name ${labelId}-offer ${labelId}-price`}
         className={cn(
           'flex flex-1 cursor-pointer flex-col text-left',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
@@ -98,23 +101,28 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
 
-          <TransferDiscountBadge
-            pricing={pricing}
-            className="absolute left-3 top-3 z-10 shadow-sm"
-          />
+          <span id={`${labelId}-offer`} className="absolute left-3 top-3 z-10">
+            <TransferDiscountBadge pricing={pricing} className="shadow-sm" />
+          </span>
         </div>
 
         <div className="flex flex-1 flex-col p-4">
+          <span id={`${labelId}-action`} className="sr-only">
+            Ver detalle de
+          </span>
           {product.category && (
             <p className="mb-1.5 text-label-sm font-bold uppercase tracking-wider text-secondary">
               {product.category}
             </p>
           )}
-          <h3 className="line-clamp-2 min-h-12 text-headline-sm font-bold leading-snug text-on-surface transition-colors group-hover:text-primary">
+          <h3
+            id={`${labelId}-name`}
+            className="line-clamp-2 min-h-12 text-headline-sm font-bold leading-snug text-on-surface transition-colors group-hover:text-primary"
+          >
             {product.name}
           </h3>
 
-          <div className="mt-auto pt-4">
+          <div id={`${labelId}-price`} className="mt-auto pt-4">
             <ProductPrice pricing={pricing} />
           </div>
         </div>

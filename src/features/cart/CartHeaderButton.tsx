@@ -30,7 +30,9 @@ export default function CartHeaderButton({ className }: CartHeaderButtonProps) {
       aria-label={label}
       className={cn(
         'inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-lg bg-surface-container-lowest px-3 text-on-surface shadow-sm',
-        'transition hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed',
+        'transition hover:bg-surface-container-low',
+        // Vive en el header: anillo blanco separado por el color del header.
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-primary focus-visible:ring-offset-2 focus-visible:ring-offset-header',
         className,
       )}
     >

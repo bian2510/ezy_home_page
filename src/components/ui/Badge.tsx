@@ -32,7 +32,7 @@ const variantClasses: Record<BadgeVariant, string> = {
   default: `${pill} bg-muted text-muted-foreground`,
   primary: `${pill} bg-primary text-primary-foreground`,
   offer:
-    'rounded bg-tertiary-container px-2.5 py-1 text-label-sm font-extrabold tracking-wider text-on-tertiary',
+    'rounded bg-tertiary-container px-2.5 py-1 text-label-md font-extrabold tracking-wider text-on-tertiary',
 };
 
 export function Badge({ children, variant = 'default', className }: BadgeProps) {

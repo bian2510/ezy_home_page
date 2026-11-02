@@ -34,15 +34,15 @@ export default function CatalogPage() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get(QUERY_PARAM)?.trim() ?? '';
-  const { filtered, selectedCategory, setCategory, categories, counts, totalCount } = useCatalog(
+  const { filtered, selectedCategory, categories, counts, totalCount } = useCatalog(
     allProducts,
     searchParams.get(CATEGORY_PARAM),
     query,
   );
 
+  // La URL es la única fuente de verdad del filtro: el chip solo la cambia.
   const handleSelectCategory = useCallback(
     (category: string | null) => {
-      setCategory(category);
       const next = new URLSearchParams(searchParams);
       if (category === null) {
         next.delete(CATEGORY_PARAM);
@@ -51,7 +51,7 @@ export default function CatalogPage() {
       }
       setSearchParams(next, { replace: true });
     },
-    [searchParams, setSearchParams, setCategory],
+    [searchParams, setSearchParams],
   );
 
   const handleClearSearch = useCallback(() => {

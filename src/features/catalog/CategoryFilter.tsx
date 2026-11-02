@@ -39,7 +39,9 @@ function Chip({ label, count, isActive, onClick }: ChipProps) {
       aria-pressed={isActive}
       className={cn(chipBase, isActive ? chipActive : chipInactive)}
     >
-      <span>{label}</span> <span className="text-label-sm opacity-60">({count})</span>
+      <span>{label}</span>{' '}
+      {/* Color pleno, sin transparencia: con `opacity-60` el contador no pasaba AA. */}
+      <span className={isActive ? 'text-on-primary' : 'text-on-surface-variant'}>({count})</span>
     </button>
   );
 }

@@ -179,6 +179,28 @@ describe('transferDiscountPercent', () => {
     expect(transferDiscountPercent(priced(null, null))).toBeNull();
   });
 
+  it('should not lose a point to floating point error', () => {
+    // (100 - 71) / 100 * 100 da 28,999… en coma flotante: tiene que ser 29.
+    expect(transferDiscountPercent(priced(100, 71))).toBe(29);
+    expect(transferDiscountPercent(priced(1000, 710))).toBe(29);
+  });
+
+  it('should return null when the transfer price is zero or negative', () => {
+    // Un precio de transferencia en 0 es un dato roto del ERP, no un "-100%".
+    expect(transferDiscountPercent(priced(20_000, 0))).toBeNull();
+    expect(transferDiscountPercent(priced(20_000, -500))).toBeNull();
+  });
+
+  it('should return null when the Mercado Pago price is zero or negative', () => {
+    expect(transferDiscountPercent(priced(0, 0))).toBeNull();
+    expect(transferDiscountPercent(priced(-100, -200))).toBeNull();
+  });
+
+  it('should return null when the transfer price is not cheaper', () => {
+    expect(transferDiscountPercent(priced(20_000, 20_000))).toBeNull();
+    expect(transferDiscountPercent(priced(20_000, 21_000))).toBeNull();
+  });
+
   it('should return null when the discount rounds down to zero', () => {
     expect(transferDiscountPercent(priced(20_000, 19_950))).toBeNull();
   });

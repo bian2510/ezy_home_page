@@ -45,7 +45,8 @@ export default function SearchBox({
         className={cn(
           'h-11 w-full rounded-lg border-0 bg-surface-container-lowest pl-10 pr-4 text-body-sm text-on-surface shadow-sm',
           'placeholder:text-on-surface-variant',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed',
+          // Anillo oscuro con un borde blanco: se ve sobre fondos claros y oscuros.
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-on-primary',
         )}
       />
       <Icon

@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { act, render, renderHook, screen, within } from '@testing-library/react';
+import { render, renderHook, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import type { Product } from '@/types';
 import CatalogPage from '@/features/catalog/CatalogPage';
-import { useCatalog } from '@/features/catalog/useCatalog';
+import { useCatalog, type UseCatalogResult } from '@/features/catalog/useCatalog';
 import { buildProduct as buildBaseProduct } from '../../helpers/builders';
 
 vi.mock('@/features/catalog/ProductCard', () => ({
@@ -254,18 +254,14 @@ describe('useCatalog', () => {
     expect(result.current.filtered).toHaveLength(3);
   });
 
-  it('should return only products in the selected category when setCategory is called', () => {
+  it('should return only products in the category it receives', () => {
     const products = [
       buildProduct({ id: '1', category: 'Iluminación Inteligente' }),
       buildProduct({ id: '2', category: 'Seguridad' }),
       buildProduct({ id: '3', category: 'Iluminación Inteligente' }),
     ];
 
-    const { result } = renderHook(() => useCatalog(products));
-
-    act(() => {
-      result.current.setCategory('Iluminación Inteligente');
-    });
+    const { result } = renderHook(() => useCatalog(products, 'Iluminación Inteligente'));
 
     expect(result.current.selectedCategory).toBe('Iluminación Inteligente');
     expect(result.current.filtered).toHaveLength(2);
@@ -274,23 +270,25 @@ describe('useCatalog', () => {
     );
   });
 
-  it('should return all products again when setCategory is called with null after filtering', () => {
+  it('should follow the category when it changes, with no state of its own', () => {
+    // La categoría vive en la URL: si cambia (un link del footer estando ya en
+    // el catálogo), la grilla tiene que cambiar con ella.
     const products = [
       buildProduct({ id: '1', category: 'Iluminación Inteligente' }),
       buildProduct({ id: '2', category: 'Seguridad' }),
     ];
 
-    const { result } = renderHook(() => useCatalog(products));
-
-    act(() => {
-      result.current.setCategory('Iluminación Inteligente');
-    });
+    const { result, rerender } = renderHook<UseCatalogResult, { category: string | null }>(
+      ({ category }) => useCatalog(products, category),
+      { initialProps: { category: 'Iluminación Inteligente' } },
+    );
     expect(result.current.filtered).toHaveLength(1);
 
-    act(() => {
-      result.current.setCategory(null);
-    });
+    rerender({ category: 'Seguridad' });
+    expect(result.current.selectedCategory).toBe('Seguridad');
+    expect(result.current.filtered.map((p) => p.id)).toEqual(['2']);
 
+    rerender({ category: null });
     expect(result.current.filtered).toHaveLength(2);
   });
 
@@ -356,16 +354,14 @@ describe('useCatalog', () => {
     expect(result.current.categories).toEqual(['Iluminación Inteligente']);
   });
 
-  it('should return an empty filtered list when the selected category matches no products', () => {
+  it('should ignore a category that no active product uses', () => {
+    // Un link viejo no deja el catálogo vacío.
     const products = [buildProduct({ id: '1', category: 'Iluminación Inteligente' })];
 
-    const { result } = renderHook(() => useCatalog(products));
+    const { result } = renderHook(() => useCatalog(products, 'Seguridad'));
 
-    act(() => {
-      result.current.setCategory('Seguridad');
-    });
-
-    expect(result.current.filtered).toEqual([]);
+    expect(result.current.selectedCategory).toBeNull();
+    expect(result.current.filtered).toHaveLength(1);
   });
 });
 

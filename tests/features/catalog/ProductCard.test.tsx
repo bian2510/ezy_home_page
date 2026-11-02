@@ -209,6 +209,16 @@ describe('ProductCard', () => {
     expect(screen.getByText('-5% transferencia')).toBeInTheDocument();
   });
 
+  it('should read the discount to screen readers as part of the card', () => {
+    currentPricing = { price: 20000, transferPrice: 19000, availability: 'available' };
+
+    renderWithProviders(<ProductCard product={buildProduct({ name: 'Foco' })} />);
+
+    const card = screen.getByRole('button', { name: /foco/i });
+    expect(card).toHaveAccessibleName(/-5% transferencia/i);
+    expect(card).toHaveAccessibleName(/con transferencia/i);
+  });
+
   it('should not show a discount badge when there is a single price', () => {
     // Así llega el precio con Mercado Pago apagado: solo el de transferencia.
     currentPricing = { price: 20000, transferPrice: null, availability: 'available' };

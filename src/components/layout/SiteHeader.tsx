@@ -9,6 +9,7 @@ import { CartHeaderButton } from '@/features/cart';
 import SearchBox from '@/components/ui/SearchBox';
 import Icon from '@/components/ui/Icon';
 import { getWhatsAppNumber } from '@/lib/env';
+import { cn } from '@/lib/cn';
 
 interface NavItem {
   to: string;
@@ -24,8 +25,16 @@ const NAV_ITEMS: readonly NavItem[] = [
 const SEARCH_LABEL = 'Buscar productos';
 const SEARCH_PLACEHOLDER = 'Buscar productos (sensores, iluminación, enchufes)…';
 
+// Foco visible sobre el teal del header: anillo blanco (4.5:1) separado del
+// control por 2 px del color del header, así se ve también sobre los botones
+// blancos (buscador, carrito).
+const headerFocus =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-primary focus-visible:ring-offset-2 focus-visible:ring-offset-header';
+
+// Hover: el texto sigue blanco y se subraya. `primary-fixed` sobre el header
+// daba 3.48:1, debajo del mínimo AA.
 const linkClass =
-  'inline-flex min-h-11 w-full items-center rounded px-3 py-2 text-label-md font-semibold text-on-primary transition-colors hover:text-primary-fixed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed';
+  'inline-flex min-h-11 w-full items-center rounded px-3 py-2 text-label-md font-semibold text-on-primary underline-offset-4 hover:underline';
 
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -67,7 +76,7 @@ export default function SiteHeader() {
     <>
       {NAV_ITEMS.map(({ to, label }) => (
         <li key={to}>
-          <Link to={to} onClick={closeMenu} className={linkClass}>
+          <Link to={to} onClick={closeMenu} className={cn(linkClass, headerFocus)}>
             {label}
           </Link>
         </li>
@@ -79,7 +88,7 @@ export default function SiteHeader() {
             href={`https://wa.me/${whatsAppNumber}`}
             target="_blank"
             rel="noopener noreferrer"
-            className={linkClass}
+            className={cn(linkClass, headerFocus)}
           >
             Contactanos
           </a>
@@ -91,11 +100,7 @@ export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 bg-header text-on-primary shadow-header">
       <div className="mx-auto flex max-w-content items-center gap-3 px-4 py-3 sm:px-6 lg:gap-6 lg:px-8">
-        <Link
-          to="/"
-          onClick={closeMenu}
-          className="shrink-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed"
-        >
+        <Link to="/" onClick={closeMenu} className={cn('shrink-0 rounded', headerFocus)}>
           <img
             src="/images/logo/logo.png"
             alt="EzyHome"
@@ -119,7 +124,10 @@ export default function SiteHeader() {
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             onClick={() => setMenuOpen((open) => !open)}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-on-primary hover:text-primary-fixed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed lg:hidden"
+            className={cn(
+              'inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-on-primary hover:bg-on-primary/10 lg:hidden',
+              headerFocus,
+            )}
           >
             <Icon name={menuOpen ? 'close' : 'menu'} className="h-6 w-6" />
           </button>
