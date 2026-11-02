@@ -20,7 +20,8 @@ const trustItems = (mercadoPagoEnabled: boolean): TrustItem[] => [
     title: mercadoPagoEnabled ? 'Transferencia o Mercado Pago' : 'Pago por transferencia',
     detail: mercadoPagoEnabled
       ? 'Elegís cómo pagar al comprar'
-      : 'El mejor precio, pagando por transferencia',
+      : // Lo que muestra la página del pedido (OrderPage): la cuenta a transferir.
+        'Al confirmar ves a qué cuenta transferir',
   },
 ];
 
