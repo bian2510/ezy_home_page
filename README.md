@@ -39,10 +39,17 @@ cp .env.example .env          # set VITE_WHATSAPP_NUMBER (digits only, no +)
 pnpm prepare                  # installs Husky hooks
 ```
 
-| Variable               | Required | Purpose                                                                                                         |
-| ---------------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
-| `VITE_WHATSAPP_NUMBER` | yes      | WhatsApp checkout number, international format, no `+`                                                          |
-| `VITE_SITE_URL`        | no       | Overrides the public site URL used for canonicals, sitemap and og: tags. Defaults to `https://shop.ezyhome.app` |
+| Variable                   | Required | Purpose                                                                                                         |
+| -------------------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
+| `VITE_WHATSAPP_NUMBER`     | yes      | WhatsApp checkout number, international format, no `+`                                                          |
+| `VITE_STORE_API_KEY`       | yes      | Read-only key of the ERP store API (price and stock). Without it every product shows "Consultar precio"         |
+| `VITE_STORE_API_URL`       | no       | ERP base URL. Defaults to `https://ezyhome.app`; `http://localhost:4000` for a local ERP                        |
+| `VITE_MERCADOPAGO_ENABLED` | no       | `true` shows both prices and offers Mercado Pago in the checkout. Anything else: transfer only                  |
+| `VITE_SITE_URL`            | no       | Overrides the public site URL used for canonicals, sitemap and og: tags. Defaults to `https://shop.ezyhome.app` |
+
+Each variable is explained in `.env.example`. In production they come from GitHub secrets and
+variables, not from a file: see [`docs/guides/deploy-y-ci.md`](docs/guides/deploy-y-ci.md). Testing
+against a local ERP: [`docs/guides/probar-checkout-con-erp-local.md`](docs/guides/probar-checkout-con-erp-local.md).
 
 ## Run (local dev)
 
