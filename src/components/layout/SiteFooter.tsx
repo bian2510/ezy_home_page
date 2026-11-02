@@ -1,11 +1,13 @@
 // SiteFooter — footer global: la marca, la navegación secundaria, las
 // categorías del catálogo y el contacto.
 //
-// Solo datos reales: las categorías salen de los productos visibles y el
-// contacto es el WhatsApp configurado (`VITE_WHATSAPP_NUMBER`). Sin número, no
-// se muestra un link que no lleva a ningún lado.
+// Solo datos reales: las categorías salen de los productos visibles, el
+// email, teléfono y ubicación de `data/siteContact.ts`, y el WhatsApp del
+// número configurado (`VITE_WHATSAPP_NUMBER`). Sin número, no se muestra un
+// link que no lleva a ningún lado.
 import { Link } from 'react-router-dom';
 import { activeProducts, listCategories } from '@/data/catalog';
+import { SITE_CONTACT } from '@/data/siteContact';
 import Icon from '@/components/ui/Icon';
 import { getWhatsAppNumber } from '@/lib/env';
 import { cn } from '@/lib/cn';
@@ -36,9 +38,12 @@ const footerCategories = (): string[] => {
   }
 };
 
-const headingClass = 'text-sm font-bold uppercase tracking-wider text-inverse-foreground';
+// Clases del mock: `bg-inverse-surface text-inverse-on-surface`, texto
+// `text-surface-variant`, íconos `text-inverse-primary`, borde `border-outline/20`.
+const headingClass =
+  'mb-2 text-label-lg font-bold uppercase tracking-wider text-inverse-on-surface';
 const linkClass =
-  'inline-flex min-h-11 items-center text-sm text-inverse-muted transition hover:text-inverse-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inverse-primary sm:min-h-9';
+  'inline-flex min-h-11 items-center text-body-sm text-surface-variant transition-colors hover:text-inverse-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inverse-primary sm:min-h-9';
 
 export default function SiteFooter() {
   const year = new Date().getFullYear();
@@ -46,16 +51,16 @@ export default function SiteFooter() {
   const categories = footerCategories();
 
   return (
-    <footer className="mt-12 bg-inverse text-inverse-foreground">
-      <div className="mx-auto grid max-w-content grid-cols-1 gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
-        <div className="flex flex-col gap-3 sm:col-span-2 lg:col-span-1">
-          <p className="flex items-center gap-2 text-headline-sm font-extrabold">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
+    <footer className="mt-12 bg-inverse-surface text-inverse-on-surface">
+      <div className="mx-auto grid max-w-content grid-cols-1 gap-8 border-b border-outline/20 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+        <div className="flex flex-col gap-4 sm:col-span-2 lg:col-span-1 lg:pr-8">
+          <p className="flex items-center gap-2 text-headline-sm font-extrabold text-inverse-on-surface">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-on-primary">
               <Icon name="home" />
             </span>
             EzyHome
           </p>
-          <p className="text-sm text-inverse-muted">
+          <p className="text-body-md text-surface-variant">
             Hacemos que la domótica sea accesible para todos: tecnología simple para vivir de forma
             más cómoda, segura y eficiente.
           </p>
@@ -94,6 +99,14 @@ export default function SiteFooter() {
 
         <div className="flex flex-col gap-2">
           <h2 className={headingClass}>Contacto</h2>
+          <a href={`mailto:${SITE_CONTACT.email}`} className={cn(linkClass, 'gap-2')}>
+            <Icon name="mail" className="text-inverse-primary" />
+            {SITE_CONTACT.email}
+          </a>
+          <a href={`tel:${SITE_CONTACT.phoneHref}`} className={cn(linkClass, 'gap-2')}>
+            <Icon name="phone" className="text-inverse-primary" />
+            {SITE_CONTACT.phone}
+          </a>
           {whatsAppNumber !== '' && (
             <a
               href={`https://wa.me/${whatsAppNumber}`}
@@ -105,15 +118,19 @@ export default function SiteFooter() {
               Escribinos por WhatsApp
             </a>
           )}
-          <p className="flex items-center gap-2 text-sm text-inverse-muted">
+          <p className="flex items-center gap-2 text-body-sm text-surface-variant">
             <Icon name="store" className="text-inverse-primary" />
             Retiro en el local
+          </p>
+          <p className="flex min-h-11 items-center gap-2 text-body-sm text-surface-variant sm:min-h-9">
+            <Icon name="pin" className="text-inverse-primary" />
+            {SITE_CONTACT.location}
           </p>
         </div>
       </div>
 
-      <div className="border-t border-inverse-border">
-        <p className="mx-auto max-w-content px-4 py-5 text-xs text-inverse-muted sm:px-6 lg:px-8">
+      <div>
+        <p className="mx-auto max-w-content px-4 py-6 text-body-sm text-surface-variant sm:px-6 lg:px-8">
           &copy; {year} EzyHome. Todos los derechos reservados.
         </p>
       </div>

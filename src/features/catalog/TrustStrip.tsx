@@ -28,14 +28,14 @@ export default function TrustStrip() {
       {trustItems(isMercadoPagoEnabled()).map(({ icon, title, detail }) => (
         <li
           key={title}
-          className="flex items-center gap-3 rounded-lg border border-border bg-card p-4 shadow-card"
+          className="flex items-center gap-3 rounded-xl bg-surface-container-lowest p-4 shadow-sm"
         >
-          <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded bg-muted text-primary">
+          <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface-container text-primary">
             <Icon name={icon} />
           </span>
           <span className="flex flex-col">
-            <span className="text-sm font-semibold text-foreground">{title}</span>
-            <span className="text-xs text-muted-foreground">{detail}</span>
+            <span className="text-label-md font-semibold text-on-surface">{title}</span>
+            <span className="text-body-sm text-secondary">{detail}</span>
           </span>
         </li>
       ))}

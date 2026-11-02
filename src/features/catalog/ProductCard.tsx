@@ -66,8 +66,10 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <article
       className={cn(
-        'group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card text-foreground',
-        'shadow-card transition duration-200 hover:-translate-y-0.5 hover:shadow-card-hover',
+        // Clases del mock: `bg-surface-container-lowest rounded-xl shadow-sm`,
+        // sin borde, y al pasar `hover:shadow-xl hover:-translate-y-1`.
+        'group relative flex h-full flex-col overflow-hidden rounded-xl bg-surface-container-lowest text-on-surface',
+        'shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
       )}
     >
       <button
@@ -79,37 +81,40 @@ export default function ProductCard({ product }: ProductCardProps) {
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
         )}
       >
-        <div className="relative aspect-square w-full overflow-hidden bg-card p-4">
+        <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden bg-surface-container-low p-6">
           {primaryImage ? (
             <img
               src={primaryImage}
               alt={product.name}
               loading="lazy"
-              className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
+              className="h-full w-full object-contain object-center transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
             <div
               aria-hidden="true"
-              className="flex h-full w-full items-center justify-center rounded bg-muted text-sm text-muted-foreground"
+              className="flex h-full w-full items-center justify-center rounded-lg bg-surface-container text-body-md text-secondary"
             >
               Sin imagen
             </div>
           )}
 
-          <TransferDiscountBadge pricing={pricing} className="absolute left-3 top-3 shadow-card" />
+          <TransferDiscountBadge
+            pricing={pricing}
+            className="absolute left-3 top-3 z-10 shadow-sm"
+          />
         </div>
 
-        <div className="flex flex-1 flex-col gap-1.5 border-t border-border p-4">
+        <div className="flex flex-1 flex-col p-4">
           {product.category && (
-            <p className="text-label-sm font-bold uppercase text-muted-foreground">
+            <p className="mb-1.5 text-label-sm font-bold uppercase tracking-wider text-secondary">
               {product.category}
             </p>
           )}
-          <h3 className="line-clamp-2 min-h-12 text-headline-sm font-bold text-foreground transition-colors group-hover:text-primary">
+          <h3 className="line-clamp-2 min-h-12 text-headline-sm font-bold leading-snug text-on-surface transition-colors group-hover:text-primary">
             {product.name}
           </h3>
 
-          <div className="mt-auto pt-2">
+          <div className="mt-auto pt-4">
             <ProductPrice pricing={pricing} />
           </div>
         </div>
@@ -123,9 +128,9 @@ export default function ProductCard({ product }: ProductCardProps) {
               onClick={handleAddToCart}
               disabled={!isPurchasable(pricing.availability) || atStockLimit}
               className={cn(
-                'inline-flex min-h-11 w-full items-center justify-center gap-2 rounded',
-                'bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-card',
-                'transition hover:bg-primary-container active:scale-[0.99]',
+                'inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg',
+                'bg-primary px-4 text-label-lg font-bold text-on-primary shadow-sm',
+                'transition-all duration-200 hover:bg-primary-container active:scale-[0.98]',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
                 'disabled:cursor-not-allowed disabled:opacity-50',
               )}

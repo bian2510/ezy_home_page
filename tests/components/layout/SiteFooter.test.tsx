@@ -95,4 +95,18 @@ describe('SiteFooter', () => {
 
     expect(screen.queryByRole('link', { name: /whatsapp/i })).toBeNull();
   });
+
+  it('should show the store email, phone and location', () => {
+    renderFooter();
+
+    expect(screen.getByRole('link', { name: 'contacto.ezyhome@gmail.com' })).toHaveAttribute(
+      'href',
+      'mailto:contacto.ezyhome@gmail.com',
+    );
+    expect(screen.getByRole('link', { name: '+54 9 11 24741036' })).toHaveAttribute(
+      'href',
+      'tel:+5491124741036',
+    );
+    expect(screen.getByText('CABA, Argentina')).toBeInTheDocument();
+  });
 });

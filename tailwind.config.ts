@@ -2,52 +2,44 @@ import type { Config } from 'tailwindcss';
 
 // EzyHome design system tokens. Mobile-first breakpoints.
 //
-// Paleta, tipografía y radios del rediseño "Smart Commerce Slate" (2026-11):
-// verde azulado mineral como color de acción, superficies verde muy claro y
-// un gris oscuro para el footer. Los nombres semánticos de siempre
-// (`primary`, `muted`, `card`…) se conservan con los valores nuevos, así el
-// resto del sitio toma la paleta sin tocar cada componente.
+// Paleta, tipografía y radios del rediseño (2026-11), tomados del mock del
+// catálogo (`code.html` + `screen.png` del export de Stitch), que es la fuente
+// de verdad: donde el DESIGN.md del export dice otra cosa, manda el mock.
+//
+// Dos juegos de nombres con los mismos valores:
+// - Los semánticos de siempre (`primary`, `muted`, `card`…), para que el resto
+//   del sitio tome la paleta sin tocar cada componente.
+// - Los del mock (`surface-container`, `on-primary`, `inverse-surface`…), que
+//   usan las pantallas rediseñadas para calcar las clases del diseño.
 // Guía de uso: docs/standards/tailwind-tokens.md.
 const config: Config = {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        background: '#f7faf8',
-        foreground: '#181c1c',
+        // --- Semánticos ---
+        background: '#f8f9ff',
+        foreground: '#0b1c30',
         card: '#ffffff',
         muted: {
-          DEFAULT: '#ebefed',
-          foreground: '#466462',
+          DEFAULT: '#e5eeff',
+          foreground: '#545f73',
         },
-        border: '#e0e3e2',
+        border: '#d3e4fe',
         primary: {
-          DEFAULT: '#006a67',
+          DEFAULT: '#056765',
           foreground: '#ffffff',
-          // Fondo del header. Texto blanco encima: contraste 4.5:1, el mínimo AA.
-          container: '#2c8380',
-          fixed: '#9ff1ed',
+          container: '#2f807e',
+          fixed: '#a3f0ed',
         },
-        // Carteles de precio (descuento por transferencia).
-        tertiary: {
-          DEFAULT: '#8c4d2f',
-          foreground: '#ffffff',
-          soft: '#ffdbcd',
-          'soft-foreground': '#70371b',
-        },
-        // Superficie oscura del footer.
-        inverse: {
-          DEFAULT: '#2d3131',
-          foreground: '#eef1f0',
-          muted: '#bec9c7',
-          primary: '#83d4d1',
-          border: '#454b4b',
-        },
+        // Fondo del header (el mock lo pinta aparte del `primary-container`).
+        // Texto blanco encima: contraste 4.5:1, el mínimo AA.
+        header: '#2c8380',
         sidebar: {
-          DEFAULT: '#2d3131',
-          foreground: '#eef1f0',
-          accent: '#3a3f3f',
-          border: '#454b4b',
+          DEFAULT: '#213145',
+          foreground: '#eaf1ff',
+          accent: '#2c3e55',
+          border: '#3b4c63',
         },
         success: '#4caf86',
         warning: {
@@ -55,6 +47,35 @@ const config: Config = {
           foreground: '#7a5a00',
         },
         destructive: '#ba1a1a',
+
+        // --- Nombres del mock ---
+        surface: {
+          DEFAULT: '#f8f9ff',
+          'container-lowest': '#ffffff',
+          'container-low': '#eff4ff',
+          container: '#e5eeff',
+          'container-high': '#dce9ff',
+          'container-highest': '#d3e4fe',
+          variant: '#d3e4fe',
+        },
+        'on-surface': {
+          DEFAULT: '#0b1c30',
+          variant: '#3f4948',
+        },
+        'on-primary': '#ffffff',
+        secondary: '#545f73',
+        tertiary: {
+          DEFAULT: '#8d4b00',
+          container: '#b15f00',
+        },
+        'on-tertiary': '#ffffff',
+        outline: {
+          DEFAULT: '#6f7978',
+          variant: '#bec9c7',
+        },
+        'inverse-surface': '#213145',
+        'inverse-on-surface': '#eaf1ff',
+        'inverse-primary': '#87d4d1',
       },
       fontFamily: {
         sans: ['"Plus Jakarta Sans Variable"', 'system-ui', 'sans-serif'],
@@ -64,20 +85,21 @@ const config: Config = {
         'headline-xl': ['2.5rem', { lineHeight: '3rem', letterSpacing: '-0.02em' }],
         'headline-xl-mobile': ['1.875rem', { lineHeight: '2.375rem', letterSpacing: '-0.01em' }],
         'headline-md': ['1.375rem', { lineHeight: '1.75rem', letterSpacing: '-0.01em' }],
-        'headline-sm': ['1.125rem', { lineHeight: '1.5rem' }],
+        'headline-sm': ['1.125rem', { lineHeight: '1.5rem', fontWeight: '600' }],
+        'label-lg': ['0.875rem', { lineHeight: '1.25rem', fontWeight: '600' }],
+        'label-md': ['0.75rem', { lineHeight: '1rem', fontWeight: '600' }],
         'label-sm': ['0.625rem', { lineHeight: '0.75rem', letterSpacing: '0.05em' }],
+        'body-lg': ['1rem', { lineHeight: '1.5rem' }],
+        'body-md': ['0.875rem', { lineHeight: '1.25rem' }],
+        'body-sm': ['0.75rem', { lineHeight: '1rem' }],
       },
+      // Radios del mock: más chicos que los de Tailwind por defecto.
       borderRadius: {
-        sm: '0.25rem',
-        DEFAULT: '0.5rem',
-        md: '0.75rem',
-        lg: '1rem',
-        xl: '1.5rem',
+        DEFAULT: '0.25rem',
+        lg: '0.5rem',
+        xl: '0.75rem',
       },
       boxShadow: {
-        card: '0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05)',
-        'card-hover':
-          '0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04)',
         header: '0 4px 12px 0 rgba(15, 23, 42, 0.12)',
       },
       spacing: {

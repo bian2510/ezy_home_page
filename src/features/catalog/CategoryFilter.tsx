@@ -16,10 +16,13 @@ interface CategoryFilterProps {
   totalCount: number;
 }
 
+// Clases del mock: inactivo `bg-surface-container text-secondary`, activo
+// `bg-primary text-on-primary shadow-sm`.
 const chipBase =
-  'inline-flex min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
-const chipActive = 'bg-primary text-primary-foreground shadow-card';
-const chipInactive = 'bg-muted text-muted-foreground hover:bg-border hover:text-foreground';
+  'inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full px-4 py-2 text-label-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
+const chipActive = 'bg-primary text-on-primary shadow-sm';
+const chipInactive =
+  'bg-surface-container text-secondary hover:bg-surface-container-high hover:text-on-surface';
 
 interface ChipProps {
   label: string;
@@ -36,7 +39,7 @@ function Chip({ label, count, isActive, onClick }: ChipProps) {
       aria-pressed={isActive}
       className={cn(chipBase, isActive ? chipActive : chipInactive)}
     >
-      <span>{label}</span> <span className="font-medium opacity-75">({count})</span>
+      <span>{label}</span> <span className="text-label-sm opacity-60">({count})</span>
     </button>
   );
 }

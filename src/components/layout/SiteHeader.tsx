@@ -25,7 +25,7 @@ const SEARCH_LABEL = 'Buscar productos';
 const SEARCH_PLACEHOLDER = 'Buscar productos (sensores, iluminación, enchufes)…';
 
 const linkClass =
-  'inline-flex min-h-11 w-full items-center rounded px-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed';
+  'inline-flex min-h-11 w-full items-center rounded px-3 py-2 text-label-md font-semibold text-on-primary transition-colors hover:text-primary-fixed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed';
 
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -82,7 +82,7 @@ export default function SiteHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-50 bg-primary-container text-primary-foreground shadow-header">
+    <header className="sticky top-0 z-50 bg-header text-on-primary shadow-header">
       <div className="mx-auto flex max-w-content items-center gap-3 px-4 py-3 sm:px-6 lg:gap-6 lg:px-8">
         <Link
           to="/"
@@ -94,7 +94,7 @@ export default function SiteHeader() {
             alt="EzyHome"
             width={48}
             height={48}
-            className="h-11 w-11 rounded bg-card object-contain p-0.5 lg:h-12 lg:w-12"
+            className="h-11 w-11 rounded-lg bg-surface-container-lowest object-contain p-0.5 lg:h-12 lg:w-12"
           />
         </Link>
 
@@ -112,7 +112,7 @@ export default function SiteHeader() {
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             onClick={() => setMenuOpen((open) => !open)}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded text-primary-foreground hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed lg:hidden"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-on-primary hover:text-primary-fixed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed lg:hidden"
           >
             <Icon name={menuOpen ? 'close' : 'menu'} className="h-6 w-6" />
           </button>
@@ -125,7 +125,7 @@ export default function SiteHeader() {
         <nav
           id="mobile-menu"
           aria-label="Menú móvil"
-          className="border-t border-primary bg-primary-container lg:hidden"
+          className="border-t border-on-primary/20 bg-header lg:hidden"
         >
           <ul className="mx-auto flex max-w-content flex-col px-2 py-2 sm:px-4">{navLinks}</ul>
         </nav>

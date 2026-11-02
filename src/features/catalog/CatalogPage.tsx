@@ -69,7 +69,7 @@ export default function CatalogPage() {
     <section className="flex w-full flex-col gap-6">
       <CatalogHeading />
 
-      <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-3 shadow-card sm:flex-row sm:items-center sm:justify-between sm:p-4">
+      <div className="flex flex-col gap-3 rounded-xl bg-surface-container-lowest p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between">
         <CategoryFilter
           categories={categories}
           selectedCategory={selectedCategory}
@@ -77,8 +77,8 @@ export default function CatalogPage() {
           counts={counts}
           totalCount={totalCount}
         />
-        <p className="shrink-0 px-1 text-xs font-medium text-muted-foreground">
-          Mostrando <strong className="font-bold text-foreground">{filtered.length}</strong>{' '}
+        <p className="shrink-0 px-1 text-body-sm font-medium text-secondary">
+          Mostrando <strong className="font-bold text-on-surface">{filtered.length}</strong>{' '}
           {filtered.length === 1 ? 'producto' : 'productos'}
         </p>
       </div>
@@ -90,7 +90,7 @@ export default function CatalogPage() {
           {emptyMessage}
         </p>
       ) : (
-        <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        <ul className="grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((product) => (
             <li key={product.id}>
               <ProductCard product={product} />

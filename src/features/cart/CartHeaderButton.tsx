@@ -29,8 +29,8 @@ export default function CartHeaderButton({ className }: CartHeaderButtonProps) {
       onClick={openCart}
       aria-label={label}
       className={cn(
-        'inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded bg-card px-3 text-foreground shadow-card',
-        'transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed',
+        'inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-lg bg-surface-container-lowest px-3 text-on-surface shadow-sm',
+        'transition hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed',
         className,
       )}
     >
@@ -40,7 +40,7 @@ export default function CartHeaderButton({ className }: CartHeaderButtonProps) {
           <span
             data-testid="cart-badge"
             aria-hidden="true"
-            className="absolute -right-2 -top-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-label-sm font-bold text-primary-foreground"
+            className="absolute -right-2 -top-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-label-sm font-bold text-on-primary shadow-sm"
           >
             {itemCount}
           </span>
@@ -52,8 +52,8 @@ export default function CartHeaderButton({ className }: CartHeaderButtonProps) {
           aria-hidden="true"
           className="hidden flex-col text-left leading-none sm:flex"
         >
-          <span className="text-label-sm font-medium text-muted-foreground">{summary.label}</span>
-          <span className="mt-0.5 text-xs font-bold tabular-nums">
+          <span className="text-label-sm font-medium text-on-surface-variant">{summary.label}</span>
+          <span className="mt-0.5 text-label-md font-bold tabular-nums">
             {formatPrice(summary.amount)}
           </span>
         </span>

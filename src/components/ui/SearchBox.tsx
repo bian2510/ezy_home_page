@@ -43,14 +43,14 @@ export default function SearchBox({
         placeholder={placeholder}
         enterKeyHint="search"
         className={cn(
-          'h-11 w-full rounded border-0 bg-card pl-10 pr-4 text-sm text-foreground shadow-card',
-          'placeholder:text-muted-foreground',
+          'h-11 w-full rounded-lg border-0 bg-surface-container-lowest pl-10 pr-4 text-body-sm text-on-surface shadow-sm',
+          'placeholder:text-on-surface-variant',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed',
         )}
       />
       <Icon
         name="search"
-        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
       />
     </form>
   );
