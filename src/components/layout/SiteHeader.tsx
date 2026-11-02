@@ -38,9 +38,16 @@ export default function SiteHeader() {
 
   const handleSearch = (query: string) => {
     closeMenu();
-    void navigate(
-      query === '' ? '/catalogo' : `/catalogo?${new URLSearchParams({ q: query }).toString()}`,
-    );
+    // Desde el catálogo se conservan los demás filtros (la categoría): la URL
+    // tiene que repetir lo que se ve. Desde otra página se arranca de cero.
+    const params = new URLSearchParams(location.pathname === '/catalogo' ? location.search : '');
+    if (query === '') {
+      params.delete('q');
+    } else {
+      params.set('q', query);
+    }
+    const search = params.toString();
+    void navigate(search === '' ? '/catalogo' : `/catalogo?${search}`);
   };
 
   // La `key` remonta el buscador cuando cambia la búsqueda de la URL, así el

@@ -150,6 +150,35 @@ describe('SiteHeader', () => {
     expect(screen.getByTestId('location')).toHaveTextContent(/^\/catalogo$/);
   });
 
+  it('should keep the selected category when searching from the catalog', async () => {
+    const user = userEvent.setup();
+    renderHeader(0, '/catalogo?category=Confort');
+
+    await user.type(firstSearchbox(), 'wifi{Enter}');
+
+    expect(screen.getByTestId('location')).toHaveTextContent('/catalogo?category=Confort&q=wifi');
+  });
+
+  it('should keep the category and drop the query when the search is cleared', async () => {
+    const user = userEvent.setup();
+    renderHeader(0, '/catalogo?category=Confort&q=sensor');
+
+    const searchbox = firstSearchbox();
+    await user.clear(searchbox);
+    await user.type(searchbox, '{Enter}');
+
+    expect(screen.getByTestId('location')).toHaveTextContent(/^\/catalogo\?category=Confort$/);
+  });
+
+  it('should not carry params from other pages into the catalog search', async () => {
+    const user = userEvent.setup();
+    renderHeader(0, '/blog?category=Confort');
+
+    await user.type(firstSearchbox(), 'wifi{Enter}');
+
+    expect(screen.getByTestId('location')).toHaveTextContent(/^\/catalogo\?q=wifi$/);
+  });
+
   it('should open and close the mobile menu with the hamburger button', () => {
     renderHeader();
 
