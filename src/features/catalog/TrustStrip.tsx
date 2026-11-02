@@ -18,7 +18,9 @@ const trustItems = (mercadoPagoEnabled: boolean): TrustItem[] => [
   {
     icon: 'card',
     title: mercadoPagoEnabled ? 'Transferencia o Mercado Pago' : 'Pago por transferencia',
-    detail: mercadoPagoEnabled ? 'Elegís cómo pagar al comprar' : 'Te pasamos los datos al comprar',
+    detail: mercadoPagoEnabled
+      ? 'Elegís cómo pagar al comprar'
+      : 'El mejor precio, pagando por transferencia',
   },
 ];
 
