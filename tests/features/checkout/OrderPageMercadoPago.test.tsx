@@ -193,9 +193,7 @@ describe('OrderPage with Mercado Pago', () => {
       expectNoTransferData();
 
       await advance(2000);
-      expect(
-        screen.getByText(/pago confirmado\. te mandamos la confirmación por email/i),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/pago aprobado/i)).toBeInTheDocument();
       expect(fetchMock).toHaveBeenCalledTimes(2);
 
       await advance(10_000);
@@ -268,7 +266,7 @@ describe('OrderPage with Mercado Pago', () => {
   });
 
   it.each([
-    ['paid', /pago confirmado/i],
+    ['paid', /pago aprobado/i],
     ['expired', /venció porque no se completó el pago/i],
     ['canceled', /este pedido fue cancelado/i],
   ])('should show the %s Mercado Pago order without transfer data', async (status, text) => {

@@ -1,11 +1,18 @@
 import { describe, expect, it, vi } from 'vitest';
-import { activeProducts, allProducts, findActiveProductById, listCategories } from '@/data/catalog';
+import {
+  activeProducts,
+  allProducts,
+  findActiveProductById,
+  findProductBySku,
+  listCategories,
+} from '@/data/catalog';
 import { buildProduct } from '../helpers/builders';
 
 vi.mock('@/data/products.json', () => ({
   default: [
     {
       id: 'activo-1',
+      sku: 'FOCO-001',
       name: 'Foco Inteligente',
       description: 'Foco LED Wi-Fi 9W',
       images: ['/images/foco.jpg'],
@@ -15,6 +22,7 @@ vi.mock('@/data/products.json', () => ({
     },
     {
       id: 'inactivo-1',
+      sku: 'CERR-001',
       name: 'Cerradura Sin Stock',
       description: 'Cerradura Zigbee',
       images: ['/images/cerradura.jpg'],
@@ -44,6 +52,16 @@ describe('catálogo estático', () => {
 
   it('should return undefined for an unknown id', () => {
     expect(findActiveProductById('no-existe')).toBeUndefined();
+  });
+});
+
+describe('findProductBySku', () => {
+  it('should find a product by SKU ignoring case and spaces, like the ERP', () => {
+    expect(findProductBySku(' foco-001 ')?.id).toBe('activo-1');
+  });
+
+  it('should return undefined for an unknown SKU', () => {
+    expect(findProductBySku('NO-EXISTE')).toBeUndefined();
   });
 });
 

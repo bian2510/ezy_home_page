@@ -4,9 +4,10 @@ import { getWhatsAppNumber } from '@/lib/env';
 import type { MercadoPagoView } from './mercadoPagoUtils';
 import SwitchToTransferButton from './SwitchToTransferButton';
 
-const LINK_CLASS = 'text-sm font-medium text-primary underline-offset-4 hover:underline';
+const LINK_CLASS =
+  'inline-flex min-h-11 items-center rounded text-label-lg font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
 const BUTTON_CLASS =
-  'inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
+  'inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-6 py-2 text-label-lg font-bold text-on-primary shadow-sm transition hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2';
 
 function WhatsAppLink() {
   return (
@@ -22,7 +23,7 @@ function WhatsAppLink() {
 }
 
 function Message({ children }: { children: string }) {
-  return <p className="text-base text-foreground">{children}</p>;
+  return <p className="text-body-md text-on-surface">{children}</p>;
 }
 
 export default function MercadoPagoMessage({
@@ -36,7 +37,7 @@ export default function MercadoPagoMessage({
     case 'opening':
     case 'confirming':
       return (
-        <p role="status" className="text-base text-foreground">
+        <p role="status" className="text-body-md text-on-surface">
           {view.kind === 'opening'
             ? 'Abriendo Mercado Pago…'
             : 'Recibimos tu pago. Lo estamos confirmando con Mercado Pago…'}
@@ -80,7 +81,8 @@ export default function MercadoPagoMessage({
         </Message>
       );
     case 'paid':
-      return <Message>Pago confirmado. Te mandamos la confirmación por email.</Message>;
+      // El "gracias" y el aviso por email van en la cabecera de la página.
+      return <Message>Pago aprobado.</Message>;
     case 'expired':
       return (
         <>
