@@ -9,11 +9,12 @@ import { PricingProvider } from '@/features/pricing';
 
 /**
  * Rutas que arman sus propias franjas de borde a borde (cada una con su
- * `Container` adentro), como los mocks del Home y del detalle de producto. El
- * resto va dentro del contenedor de página.
+ * `Container` adentro), como los mocks del Home, del detalle de producto y del
+ * carrito y checkout (con la franja de los pasos de la compra). El resto va
+ * dentro del contenedor de página.
  */
-const FULL_BLEED_PATHS: ReadonlySet<string> = new Set(['/']);
-const FULL_BLEED_PREFIXES: readonly string[] = ['/productos/'];
+const FULL_BLEED_PATHS: ReadonlySet<string> = new Set(['/', '/carrito', '/checkout']);
+const FULL_BLEED_PREFIXES: readonly string[] = ['/productos/', '/pedido/'];
 
 const isFullBleed = (pathname: string): boolean =>
   FULL_BLEED_PATHS.has(pathname) ||

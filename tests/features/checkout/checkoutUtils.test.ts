@@ -2,12 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   EMPTY_BUYER_FORM,
   checkoutBlocker,
+  checkoutSummaryRows,
   describeOrderError,
   fieldErrorsFromApi,
   formatDeadline,
   mercadoPagoTotal,
   phoneDigits,
   stockAdjustments,
+  totalsDiscountPercent,
   transferTotal,
   validateBuyerForm,
 } from '@/features/checkout/checkoutUtils';
@@ -210,5 +212,51 @@ describe('formatDeadline', () => {
   it('should return null without a valid date', () => {
     expect(formatDeadline(null)).toBeNull();
     expect(formatDeadline('mañana')).toBeNull();
+  });
+});
+
+describe('totalsDiscountPercent', () => {
+  it('should be the real transfer discount over the Mercado Pago total', () => {
+    expect(totalsDiscountPercent({ transfer: 220_000, mercado_pago: 231_000 })).toBe(5);
+  });
+
+  it('should be null without a discount (same totals, or an empty cart)', () => {
+    expect(totalsDiscountPercent({ transfer: 220_000, mercado_pago: 220_000 })).toBeNull();
+    expect(totalsDiscountPercent({ transfer: 0, mercado_pago: 0 })).toBeNull();
+  });
+});
+
+describe('checkoutSummaryRows', () => {
+  const lamp = buildProduct({ id: 'a', name: 'Lámpara', images: ['/a.jpg'] });
+  const sensor = buildProduct({ id: 'b', name: 'Sensor', images: [] });
+  const items = [buildCartItem({ product: lamp, quantity: 2 }), buildCartItem({ product: sensor })];
+  const prices: Record<string, ProductPricing> = {
+    a: { price: 10_500, transferPrice: 10_000, availability: 'available' },
+    b: { price: 5_000, transferPrice: null, availability: 'available' },
+  };
+  const pricingOf = (product: Product) => prices[product.id]!;
+
+  it('should price each line with the transfer price when paying by transfer', () => {
+    expect(checkoutSummaryRows(items, pricingOf, 'transfer')).toEqual([
+      { id: 'a', name: 'Lámpara', quantity: 2, image: '/a.jpg', lineTotal: 20_000 },
+      { id: 'b', name: 'Sensor', quantity: 1, image: null, lineTotal: 5_000 },
+    ]);
+  });
+
+  it('should price each line with the Mercado Pago price when paying with Mercado Pago', () => {
+    expect(
+      checkoutSummaryRows(items, pricingOf, 'mercado_pago').map((row) => row.lineTotal),
+    ).toEqual([21_000, 5_000]);
+  });
+
+  it('should add up to the same totals the checkout charges', () => {
+    const sum = (method: 'transfer' | 'mercado_pago') =>
+      checkoutSummaryRows(items, pricingOf, method).reduce(
+        (total, row) => total + row.lineTotal,
+        0,
+      );
+
+    expect(sum('transfer')).toBe(transferTotal(items, pricingOf));
+    expect(sum('mercado_pago')).toBe(mercadoPagoTotal(items, pricingOf));
   });
 });

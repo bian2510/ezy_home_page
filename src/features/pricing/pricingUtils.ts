@@ -66,8 +66,18 @@ export const resolvePricing = (
 export const transferDiscountPercent = (pricing: ProductPricing): number | null => {
   const { price, transferPrice } = pricing;
   if (price === null || transferPrice === null) return null;
-  if (price <= 0 || transferPrice <= 0 || transferPrice >= price) return null;
-  const percent = Math.round(((price - transferPrice) * 100) / price);
+  return percentOff(price, transferPrice);
+};
+
+/**
+ * Descuento de `discounted` sobre `full`, en puntos porcentuales enteros
+ * redondeados (la regla de `transferDiscountPercent`, también para los totales
+ * del checkout). `null` con montos en cero o negativos, sin descuento, o si
+ * redondeado da 0.
+ */
+export const percentOff = (full: number, discounted: number): number | null => {
+  if (full <= 0 || discounted <= 0 || discounted >= full) return null;
+  const percent = Math.round(((full - discounted) * 100) / full);
   return percent >= 1 ? percent : null;
 };
 

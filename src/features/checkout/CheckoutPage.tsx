@@ -4,10 +4,14 @@
 // precios (el sitio no manda precios) y la página del pedido muestra a qué
 // cuenta transferir o abre Mercado Pago. Los envíos siguen por WhatsApp.
 import { useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/features/cart';
 import { usePricing } from '@/features/pricing';
-import { getWhatsAppNumber, isMercadoPagoEnabled } from '@/lib/env';
+import { isMercadoPagoEnabled } from '@/lib/env';
+import { PURCHASE_STEP, PURCHASE_STEPS, PURCHASE_STEPS_LABEL } from '@/data/purchaseSteps';
+import Icon from '@/components/ui/Icon';
+import SectionBand from '@/components/ui/SectionBand';
+import Stepper from '@/components/ui/Stepper';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import {
   EMPTY_BUYER_FORM,
@@ -18,11 +22,15 @@ import {
   stockAdjustments,
   transferTotal,
   validateBuyerForm,
+  withoutField,
   type BuyerErrors,
   type BuyerField,
   type BuyerForm,
 } from './checkoutUtils';
 import BuyerFields from './BuyerFields';
+import CheckoutBlocked from './CheckoutBlocked';
+import CheckoutSection from './CheckoutSection';
+import DeliveryOptions from './DeliveryOptions';
 import CheckoutSummary from './CheckoutSummary';
 import OrderErrorAlert from './OrderErrorAlert';
 import PaymentMethodField from './PaymentMethodField';
@@ -103,72 +111,86 @@ export default function CheckoutPage() {
   };
 
   return (
-    <section className="mx-auto w-full max-w-content px-4 py-8 sm:py-12">
-      <h1 className="mb-6 text-2xl font-semibold text-foreground sm:text-3xl">Finalizar compra</h1>
+    <div className="flex flex-col">
+      <SectionBand tone="low" className="py-6">
+        <Stepper
+          label={PURCHASE_STEPS_LABEL}
+          steps={PURCHASE_STEPS}
+          current={PURCHASE_STEP.checkout}
+        />
+      </SectionBand>
 
-      {blocker !== null ? (
-        <div className="flex flex-col items-start gap-4">
-          <p className="text-base text-muted-foreground">{blocker}</p>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              to="/carrito"
-              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+      <SectionBand labelledBy="checkout-heading" tone="surface" className="gap-6 py-8 md:py-12">
+        <h1
+          id="checkout-heading"
+          className="text-headline-xl-mobile font-extrabold text-on-surface"
+        >
+          Finalizar compra
+        </h1>
+
+        {blocker !== null ? (
+          <CheckoutBlocked message={blocker} />
+        ) : (
+          // En el celular el resumen va abajo, como el mock: el total de cada medio
+          // ya se ve en "Medio de pago", junto al botón.
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
+            <form
+              noValidate
+              onSubmit={(event) => void handleSubmit(event)}
+              className="flex flex-col gap-6 lg:col-span-8"
             >
-              Volver al carrito
-            </Link>
-            <a
-              href={`https://wa.me/${getWhatsAppNumber()}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-            >
-              Escribinos por WhatsApp
-            </a>
-          </div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_20rem]">
-          <form
-            noValidate
-            onSubmit={(event) => void handleSubmit(event)}
-            className="flex flex-col gap-4"
-          >
-            <BuyerFields
-              form={form}
-              mercadoPagoEnabled={mercadoPagoEnabled}
-              errors={errors}
-              onChange={handleChange}
+              <CheckoutSection id="contacto-heading" step={1} title="Información de contacto">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <BuyerFields
+                    form={form}
+                    mercadoPagoEnabled={mercadoPagoEnabled}
+                    errors={errors}
+                    onChange={handleChange}
+                  />
+                </div>
+              </CheckoutSection>
+
+              <CheckoutSection id="entrega-heading" step={2} title="Entrega">
+                <DeliveryOptions />
+              </CheckoutSection>
+
+              <CheckoutSection id="pago-heading" step={3} title="Medio de pago">
+                <PaymentMethodField
+                  mercadoPagoEnabled={mercadoPagoEnabled}
+                  value={chosenMethod}
+                  totals={totals}
+                  onChange={setChosenMethod}
+                />
+
+                {failure !== null && (
+                  <OrderErrorAlert
+                    error={failure}
+                    adjustments={adjustments}
+                    onAdjust={applyAdjustments}
+                  />
+                )}
+
+                <button
+                  type="submit"
+                  disabled={state.status === 'submitting'}
+                  className="mt-2 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-label-lg font-bold text-on-primary shadow-md transition-all hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Icon name="lock" className="h-5 w-5" />
+                  {state.status === 'submitting' ? 'Enviando…' : SUBMIT_LABEL[paymentMethod]}
+                </button>
+              </CheckoutSection>
+            </form>
+
+            <CheckoutSummary
+              items={items}
+              pricingOf={pricingOf}
+              total={totals[paymentMethod]}
+              paymentMethod={paymentMethod}
             />
-
-            {mercadoPagoEnabled && (
-              <PaymentMethodField value={chosenMethod} totals={totals} onChange={setChosenMethod} />
-            )}
-
-            {failure !== null && (
-              <OrderErrorAlert
-                error={failure}
-                adjustments={adjustments}
-                onAdjust={applyAdjustments}
-              />
-            )}
-
-            <button
-              type="submit"
-              disabled={state.status === 'submitting'}
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {state.status === 'submitting' ? 'Enviando…' : SUBMIT_LABEL[paymentMethod]}
-            </button>
-          </form>
-
-          <CheckoutSummary
-            items={items}
-            total={totals[paymentMethod]}
-            paymentMethod={paymentMethod}
-          />
-        </div>
-      )}
-    </section>
+          </div>
+        )}
+      </SectionBand>
+    </div>
   );
 }
 
@@ -176,6 +198,3 @@ const SUBMIT_LABEL: Record<PaymentMethod, string> = {
   transfer: 'Confirmar pedido',
   mercado_pago: 'Confirmar y pagar con Mercado Pago',
 };
-
-const withoutField = (errors: BuyerErrors, field: BuyerField): BuyerErrors =>
-  Object.fromEntries(Object.entries(errors).filter(([key]) => key !== field));

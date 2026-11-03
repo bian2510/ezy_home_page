@@ -8,7 +8,8 @@ transferencia con retiro (`/checkout`, feature `checkout`).
 
 - `CartProvider.tsx` + `CartContext.tsx` + `useCart.ts` — estado del carrito, persistido en `localStorage`; un producto que ya no está en el catálogo se descarta al rehidratar
 - `cartUtils.ts` — totales con los precios del ERP (Mercado Pago y transferencia) y armado del mensaje de WhatsApp
-- `CartDrawer.tsx`, `CartPage.tsx`, `CartContents.tsx`, `CartItem.tsx` — UI del carrito; `CartContents` ajusta al cargar una cantidad mayor al stock del ERP y enlaza a `/checkout` cuando todo tiene precio y stock
+- `useCartContents.ts` — lógica que comparten el drawer y la página: totales, si se puede ir a `/checkout` (todo con precio y stock), el ajuste al cargar de una cantidad mayor al stock del ERP y las acciones de cada fila
+- `CartDrawer.tsx` + `CartContents.tsx` (drawer), `CartPage.tsx` (`/carrito`, primer paso de la compra), `CartItemList.tsx`, `CartItem.tsx`, `CartSummary.tsx` (totales, "Comprar con retiro en el local" y WhatsApp) — UI del carrito
 
 ## Dependencies
 

@@ -12,9 +12,9 @@ a qué cuenta transferir o lleva a Mercado Pago, y dónde retirar.
 - `useOrder.ts` — lee el pedido por token (`loading` / `ready` / `not_found` / `unavailable`) y lo vuelve a consultar según un plan (`timedOut` al terminar)
 - `mercadoPagoUtils.ts` — reglas puras de MP: `?resultado=`, plan de consulta (1 s × 15 esperando el link, 2 s × 15 esperando el pago) y qué ver en cada estado
 - `orderDraftStorage.ts` — comprador e ítems del pedido de MP en `sessionStorage`, para pasar a transferencia si MP falla
-- `checkoutUtils.ts` — reglas puras: validación del formulario (igual a la del ERP), total con transferencia, cuándo se puede comprar, errores del ERP a campos y mensajes, ajustes de stock, vencimiento en hora de Argentina
-- `CheckoutPage.tsx` — `/checkout`: arma el pedido y lo envía; `BuyerFields.tsx` (datos y aviso de privacidad, Ley 25.326), `PaymentMethodField.tsx` (transferencia / Mercado Pago con su total), `CheckoutSummary.tsx`, `OrderErrorAlert.tsx`
-- `OrderPage.tsx` — `/pedido/:token`: número, total, retiro y, por transferencia, cuenta, vencimiento y concepto
+- `checkoutUtils.ts` — reglas puras: validación del formulario (igual a la del ERP), totales, descuento real de la transferencia sobre los totales, filas del resumen, cuándo se puede comprar, errores del ERP a campos y mensajes, ajustes de stock, vencimiento en hora de Argentina
+- `CheckoutPage.tsx` — `/checkout` (paso 2): arma el pedido y lo envía; tarjetas numeradas (`CheckoutSection.tsx`): `BuyerFields.tsx` (datos y aviso de privacidad, Ley 25.326), `DeliveryOptions.tsx` (hoy solo retiro en el local; los envíos se suman ahí), `PaymentMethodField.tsx` (Mercado Pago / transferencia con su total y el "-N%"); `CheckoutSummary.tsx` (resumen y ayuda por WhatsApp), `CheckoutBlocked.tsx`, `OrderErrorAlert.tsx`
+- `OrderPage.tsx` + `OrderLayout.tsx` — `/pedido/:token` (paso 3): número, total, retiro y, por transferencia, cuenta, vencimiento y concepto
 - `MercadoPagoStatus.tsx` + `MercadoPagoMessage.tsx` — pedido de MP: abrir MP al llegar el link, vuelta de MP y estados; nunca la cuenta para transferir
 - `SwitchToTransferButton.tsx` — "Pagar por transferencia": pedido nuevo con clave nueva
 
