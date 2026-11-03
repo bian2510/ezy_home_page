@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildWhatsAppMessage,
   cartHeaderTotal,
+  cartLinePrice,
   computeCartTotals,
 } from '@/features/cart/cartUtils';
 import { formatPrice } from '@/lib/formatPrice';
@@ -209,5 +210,45 @@ describe('cartHeaderTotal', () => {
 
   it('should hide the total when the cart is empty', () => {
     expect(cartHeaderTotal({ total: 0, transferTotal: 0, hasUnpriced: false })).toBeNull();
+  });
+});
+
+describe('cartLinePrice', () => {
+  it('should price the row with the transfer price when it is cheaper, with the MP price aside', () => {
+    expect(
+      cartLinePrice({ price: 26_300, transferPrice: 25_000, availability: 'available' }, 2),
+    ).toEqual({ unit: 25_000, line: 50_000, byTransfer: true, mercadoPagoUnit: 26_300 });
+  });
+
+  it('should keep the single price as today without a transfer price (MP off)', () => {
+    expect(
+      cartLinePrice({ price: 25_000, transferPrice: null, availability: 'available' }, 3),
+    ).toEqual({ unit: 25_000, line: 75_000, byTransfer: false, mercadoPagoUnit: null });
+  });
+
+  it('should be null without an ERP price', () => {
+    expect(
+      cartLinePrice({ price: null, transferPrice: null, availability: 'no_price' }, 1),
+    ).toBeNull();
+  });
+
+  it('should add up to the cart transfer total, like the summary', () => {
+    const lamp = buildProduct({ id: 'a' });
+    const sensor = buildProduct({ id: 'b' });
+    const prices: Record<string, ProductPricing> = {
+      a: { price: 26_300, transferPrice: 25_000, availability: 'available' },
+      b: { price: 9_000, transferPrice: null, availability: 'available' },
+    };
+    const pricingOf = (product: Product) => prices[product.id]!;
+    const items: CartItem[] = [
+      { product: lamp, quantity: 2 },
+      { product: sensor, quantity: 1 },
+    ];
+
+    const sum = items.reduce(
+      (total, item) => total + (cartLinePrice(pricingOf(item.product), item.quantity)?.line ?? 0),
+      0,
+    );
+    expect(sum).toBe(computeCartTotals(items, pricingOf).transferTotal);
   });
 });

@@ -194,7 +194,7 @@ describe('OrderPage with Mercado Pago', () => {
 
       await advance(2000);
       expect(
-        screen.getByText(/pago confirmado\. te avisamos por email y whatsapp para el retiro/i),
+        screen.getByText(/pago confirmado\. te mandamos la confirmación por email/i),
       ).toBeInTheDocument();
       expect(fetchMock).toHaveBeenCalledTimes(2);
 

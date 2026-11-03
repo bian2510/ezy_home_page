@@ -80,7 +80,7 @@ export default function MercadoPagoMessage({
         </Message>
       );
     case 'paid':
-      return <Message>Pago confirmado. Te avisamos por email y WhatsApp para el retiro.</Message>;
+      return <Message>Pago confirmado. Te mandamos la confirmación por email.</Message>;
     case 'expired':
       return (
         <>
