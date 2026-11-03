@@ -74,6 +74,11 @@ describe('OrderPage', () => {
     expect(screen.getByText('0000003100012345678901')).toBeInTheDocument();
     expect(screen.getByText('EzyHome SRL')).toBeInTheDocument();
     expect(screen.getByText('Banco Galicia')).toBeInTheDocument();
+    // El aviso del pago acreditado llega por email; WhatsApp no es un canal de avisos.
+    expect(
+      screen.getByText(/te avisamos por email cuando acreditemos el pago/i),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/avisamos por whatsapp/i)).not.toBeInTheDocument();
     expect(screen.getByText(/en el concepto poné "pedido 7"/i)).toBeInTheDocument();
     expect(screen.getByText(/av\. siempreviva 742/i)).toBeInTheDocument();
     expect(screen.getByText(/lun a vie 10 a 18/i)).toBeInTheDocument();

@@ -1,7 +1,9 @@
 // CartItem — single row inside the cart list.
 //
 // Shows product name, unit price (from the ERP, via `usePricing`), quantity controls (clamped to min 1), an
-// explicit remove button, and the line subtotal (qty × unit price). All
+// explicit remove button, and the line subtotal (qty × unit price). Con Mercado
+// Pago activo la fila va con el precio de transferencia, como el total "con
+// transferencia", y el de Mercado Pago chico abajo (`cartLinePrice`). All
 // monetary values are formatted in ARS.
 //
 // See DOMAIN.md › Product Core (Carrito) and Operational & Regulatory
@@ -10,6 +12,7 @@
 // increment stops at the ERP stock with a friendly notice (no "Quedan N").
 import type { CartItem as CartItemType } from '@/types';
 import { formatPrice } from '@/lib/formatPrice';
+import { cartLinePrice } from './cartUtils';
 import { useToast } from '@/features/toast';
 import { STOCK_LIMIT_MESSAGE, reachedStockLimit, usePricing } from '@/features/pricing';
 import QuantitySelector from '@/components/ui/QuantitySelector';
@@ -28,8 +31,7 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
   const { addToast } = useToast();
   // Precio del ERP; sin precio la línea queda en "Consultar precio".
   const pricing = usePricing().pricingOf(product);
-  const { price } = pricing;
-  const lineSubtotal = price === null ? null : price * quantity;
+  const linePrice = cartLinePrice(pricing, quantity);
   const atMaximum = reachedStockLimit(pricing, quantity);
 
   const handleRemove = () => {
@@ -64,8 +66,15 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
           )}
           <p className="text-label-lg font-bold text-on-surface">{product.name}</p>
           <p className="text-body-sm text-secondary">
-            {price === null ? 'Consultar precio' : `${formatPrice(price)} c/u`}
+            {linePrice === null
+              ? 'Consultar precio'
+              : `${formatPrice(linePrice.unit)} c/u${linePrice.byTransfer ? ' con transferencia' : ''}`}
           </p>
+          {linePrice?.mercadoPagoUnit != null && (
+            <p className="text-body-sm text-secondary">
+              {`${formatPrice(linePrice.mercadoPagoUnit)} c/u con Mercado Pago`}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -76,7 +85,7 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
             max={pricing.stock}
           />
           <p className="text-headline-sm font-bold tabular-nums text-on-surface">
-            {lineSubtotal === null ? '—' : formatPrice(lineSubtotal)}
+            {linePrice === null ? '—' : formatPrice(linePrice.line)}
           </p>
         </div>
 

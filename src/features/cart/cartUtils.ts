@@ -37,6 +37,36 @@ export const computeCartTotals = (items: CartItem[], pricingOf: PricingOf): Cart
     { total: 0, transferTotal: 0, hasUnpriced: false },
   );
 
+/** Precio de una fila del carrito. */
+export interface CartLinePrice {
+  /** Precio unitario que se muestra. */
+  unit: number;
+  /** Cantidad × `unit`. */
+  line: number;
+  /** `true` si es el precio con transferencia (más barato que el de Mercado Pago). */
+  byTransfer: boolean;
+  /** Precio unitario con Mercado Pago, para mostrarlo chico; `null` si hay un solo precio. */
+  mercadoPagoUnit: number | null;
+}
+
+/**
+ * Precio de la fila con el mismo criterio que el total "con transferencia"
+ * (`computeCartTotals`): el de transferencia si es más barato, y el de Mercado
+ * Pago al lado. Sin Mercado Pago activo hay un solo precio, como antes. `null`
+ * sin precio del ERP ("Consultar precio").
+ */
+export const cartLinePrice = (pricing: ProductPricing, quantity: number): CartLinePrice | null => {
+  const { price, transferPrice } = pricing;
+  if (price === null) return null;
+  const unit = transferPrice ?? price;
+  return {
+    unit,
+    line: unit * quantity,
+    byTransfer: transferPrice !== null,
+    mercadoPagoUnit: transferPrice === null ? null : price,
+  };
+};
+
 /** Lo que muestra el botón del carrito en el header. */
 export interface CartHeaderTotal {
   amount: number;

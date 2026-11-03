@@ -46,7 +46,7 @@ function TransferDetails({ order }: { order: StoreOrder }) {
         </p>
       )}
       <p className="text-sm text-muted-foreground">
-        Cuando veamos la transferencia te avisamos por WhatsApp.
+        Te avisamos por email cuando acreditemos el pago.
       </p>
     </div>
   );

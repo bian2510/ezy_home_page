@@ -84,6 +84,29 @@ describe('Checkout por WhatsApp', () => {
     expect(message).toContain('2x');
   });
 
+  it('should price each row with the transfer price, like the total, and the MP price below', () => {
+    pricingOf = () => ({ price: 21000, transferPrice: 20000, availability: 'available' });
+    renderCart();
+
+    const row = screen.getByText('Foco Inteligente').closest('li')!;
+    const plain = (text: string | null) => (text ?? '').replace(/\u00A0/g, ' ');
+    expect(plain(row.textContent)).toContain(`${plain(formatPrice(20000))} c/u con transferencia`);
+    expect(plain(row.textContent)).toContain(`${plain(formatPrice(21000))} c/u con Mercado Pago`);
+    // Línea: 2 × 20.000, igual que el total con transferencia.
+    expect(plain(row.textContent)).toContain(plain(formatPrice(40000)));
+  });
+
+  it('should keep a single price per row without Mercado Pago', () => {
+    pricingOf = () => ({ price: 20000, transferPrice: null, availability: 'available' });
+    renderCart();
+
+    const row = screen.getByText('Foco Inteligente').closest('li')!;
+    expect(row).not.toHaveTextContent(/transferencia|mercado pago/i);
+    expect((row.textContent ?? '').replace(/\u00A0/g, ' ')).toContain(
+      `${formatPrice(20000).replace(/\u00A0/g, ' ')} c/u`,
+    );
+  });
+
   it('should show the transfer total and send it in the message when it is lower', async () => {
     pricingOf = () => ({ price: 21000, transferPrice: 20000, availability: 'available' });
     const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
