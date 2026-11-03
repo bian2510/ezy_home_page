@@ -12,7 +12,7 @@ Ensamblan features. **Sin lógica propia.** Un page importa componentes de featu
 
 ```
 src/pages/
-  HomePage.tsx          ← monta HeroSection + ProductGrid del catalog feature
+  HomePage.tsx          ← monta las secciones de features/home
   ProductDetailPage.tsx ← monta galería + cart actions
   ComoComprarPage.tsx
   NotFoundPage.tsx
@@ -25,6 +25,7 @@ Todo lo relacionado a un dominio de negocio. Componentes, hooks, contexto, utils
 ```
 src/features/
   catalog/    CatalogPage, ProductCard, ProductGrid, CategoryFilter, useCatalog
+  home/       secciones de la portada (hero, Nuestros productos, categorías, beneficios)
   cart/       CartProvider, CartDrawer, CartItem, useCart, cartUtils
   blog/       BlogListPage, BlogCard, BlogPostPage, useBlogPost
   pricing/    PricingProvider, usePricing, ProductPrice, storeApi (precio y stock del ERP)
@@ -49,7 +50,6 @@ src/components/ui/
   Badge.tsx           ← recibe variant + children, nada más
   Button.tsx
   Drawer.tsx
-  HeroCarousel.tsx    ← recibe los slides ya armados, no conoce productos
   QuantitySelector.tsx
   Toast.tsx
 ```

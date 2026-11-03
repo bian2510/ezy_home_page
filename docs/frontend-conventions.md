@@ -121,8 +121,9 @@ Ahí `max-w-prose` es correcto — es legibilidad, no layout de página.
 <div className="mx-auto max-w-5xl ...">
 ```
 
-**Usos legítimos de `max-w-prose` (65ch) hoy:** cuerpo del artículo en `BlogPostPage`,
-copy del hero en `HeroCarousel`, texto del CTA de WhatsApp en `HomePage`.
+**Usos legítimos de `max-w-prose` (65ch) hoy:** cuerpo del artículo en `BlogPostPage`.
+El copy del hero del Home (`features/home/HomeHero`) limita su medida con `max-w-2xl`/`max-w-3xl`,
+que es lo mismo: legibilidad dentro de una sección ya contenida.
 
 ### Secciones full-bleed
 
