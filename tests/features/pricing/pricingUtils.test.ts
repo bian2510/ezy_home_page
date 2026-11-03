@@ -165,9 +165,15 @@ describe('transferDiscountPercent', () => {
     expect(transferDiscountPercent(priced(20_000, 19_000))).toBe(5);
   });
 
-  it('should round down so the badge never promises more than the real discount', () => {
-    // 21.000 → 20.000 es un 4,76 %: se muestra 4 %, nunca 5 %.
-    expect(transferDiscountPercent(priced(21_000, 20_000))).toBe(4);
+  it('should round to the nearest whole percent (usuario, 2026-11-03)', () => {
+    // 18.900 → 18.000 es un 4,76 %: se muestra 5 %.
+    expect(transferDiscountPercent(priced(18_900, 18_000))).toBe(5);
+  });
+
+  it('should round up from half a point and down below it', () => {
+    expect(transferDiscountPercent(priced(1_000, 955))).toBe(5); // 4,5 %
+    expect(transferDiscountPercent(priced(1_000, 954))).toBe(5); // 4,6 %
+    expect(transferDiscountPercent(priced(1_000, 956))).toBe(4); // 4,4 %
   });
 
   it('should return null when there is no cheaper transfer price', () => {
@@ -180,7 +186,7 @@ describe('transferDiscountPercent', () => {
   });
 
   it('should not lose a point to floating point error', () => {
-    // (100 - 71) / 100 * 100 da 28,999… en coma flotante: tiene que ser 29.
+    // (100 - 71) / 100 * 100 da 28,999… en coma flotante: tiene que dar 29.
     expect(transferDiscountPercent(priced(100, 71))).toBe(29);
     expect(transferDiscountPercent(priced(1000, 710))).toBe(29);
   });
@@ -201,7 +207,12 @@ describe('transferDiscountPercent', () => {
     expect(transferDiscountPercent(priced(20_000, 21_000))).toBeNull();
   });
 
-  it('should return null when the discount rounds down to zero', () => {
-    expect(transferDiscountPercent(priced(20_000, 19_950))).toBeNull();
+  it('should return null when the discount rounds to zero', () => {
+    expect(transferDiscountPercent(priced(20_000, 19_950))).toBeNull(); // 0,25 %
+    expect(transferDiscountPercent(priced(1_000, 996))).toBeNull(); // 0,4 %
+  });
+
+  it('should show 1% from half a point up', () => {
+    expect(transferDiscountPercent(priced(1_000, 995))).toBe(1); // 0,5 %
   });
 });
