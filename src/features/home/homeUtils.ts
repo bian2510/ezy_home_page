@@ -4,6 +4,12 @@ import type { Availability, Product } from '@/types';
 import { listCategories } from '@/data/catalog';
 import { countByCategory } from '@/features/catalog';
 
+/**
+ * Cuántos productos muestra "Nuestros productos": una fila de 4 en escritorio.
+ * Más que eso y el Home parece el catálogo (usuario, 2026-11-03).
+ */
+export const FEATURED_LIMIT = 4;
+
 /** Clave de agrupación de un producto sin categoría. */
 const NO_CATEGORY = '';
 

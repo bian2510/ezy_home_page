@@ -79,7 +79,7 @@ describe('SiteHeader', () => {
     renderHeader();
 
     const img = screen.getByRole('img', { name: 'EzyHome' });
-    expect(img).toHaveAttribute('src', '/images/logo/logo-black.png');
+    expect(img).toHaveAttribute('src', '/images/logo/logo-white.png');
     // 141×159 px: misma proporción, para que el lugar quede reservado.
     expect(img).toHaveAttribute('width', '43');
     expect(img).toHaveAttribute('height', '48');

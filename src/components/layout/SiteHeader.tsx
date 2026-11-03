@@ -109,7 +109,7 @@ export default function SiteHeader() {
               ancho y el alto siguen la proporción del archivo (141×159), así
               el lugar queda reservado antes de que cargue. */}
           <img
-            src="/images/logo/logo-black.png"
+            src="/images/logo/logo-white.png"
             alt="EzyHome"
             width={43}
             height={48}
