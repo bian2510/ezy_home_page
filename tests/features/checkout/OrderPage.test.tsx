@@ -63,6 +63,12 @@ describe('OrderPage', () => {
 
     expect(await screen.findByRole('heading', { name: /pedido n.º 7/i })).toBeInTheDocument();
     expect(fetchMock.mock.calls[0]?.[0]).toBe('https://erp.test/api/store/orders/tok-123');
+    // Último paso de la compra: carrito y datos ya completados.
+    const steps = screen
+      .getAllByRole('listitem')
+      .filter((item) => /\d\. /.test(item.textContent ?? ''));
+    expect(steps.at(-1)).toHaveAttribute('aria-current', 'step');
+    expect(steps.at(-1)).toHaveTextContent('3. Confirmación');
     expect(screen.getByTestId('order-total')).toHaveTextContent(/220\.000/);
     expect(screen.getByText('ezyhome.tienda')).toBeInTheDocument();
     expect(screen.getByText('0000003100012345678901')).toBeInTheDocument();

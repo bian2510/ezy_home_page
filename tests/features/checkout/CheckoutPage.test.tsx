@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import CheckoutPage from '@/features/checkout/CheckoutPage';
@@ -100,9 +100,82 @@ describe('CheckoutPage', () => {
 
     expect(screen.getByText(/2 × válvula tv05/i)).toBeInTheDocument();
     expect(screen.getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
-    expect(screen.getByText(/retiro en el local/i)).toBeInTheDocument();
+    // En la tarjeta "Entrega" y en el resumen.
+    expect(screen.getAllByText(/retiro en el local/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/transferencia/i, { selector: 'p, li, span, strong' })).toBeTruthy();
     expect(screen.getByText(/ley 25\.326/i)).toBeInTheDocument();
+  });
+
+  describe('rediseño', () => {
+    it('should show the purchase steps with "Datos y pago" as the current one', () => {
+      renderCheckout();
+
+      const steps = within(screen.getByRole('list', { name: /pasos de la compra/i })).getAllByRole(
+        'listitem',
+      );
+      expect(steps[1]).toHaveAttribute('aria-current', 'step');
+      expect(steps[1]).toHaveTextContent('2. Datos y pago');
+      expect(steps[0]).toHaveTextContent(/completado/i);
+    });
+
+    it('should split the form into numbered cards and say pickup is free', () => {
+      renderCheckout();
+
+      expect(screen.getByRole('heading', { name: /información de contacto/i })).toBeInTheDocument();
+      const delivery = screen.getByRole('heading', { name: /^entrega$/i }).closest('section')!;
+      expect(within(delivery).getByText(/retiro en el local/i)).toBeInTheDocument();
+      expect(within(delivery).getByText(/sin cargo/i)).toBeInTheDocument();
+      // La dirección y el horario los manda el ERP con el pedido: se ven al confirmar.
+      expect(within(delivery).getByText(/dirección y el horario/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /medio de pago/i })).toBeInTheDocument();
+    });
+
+    it('should label the phone as "Teléfono (WhatsApp)"', () => {
+      renderCheckout();
+
+      expect(screen.getByLabelText('Teléfono (WhatsApp)')).toHaveAttribute('type', 'tel');
+    });
+
+    it('should list each product with its quantity and line price in the summary', () => {
+      renderCheckout();
+
+      const summary = screen
+        .getByRole('heading', { name: /resumen de tu pedido/i })
+        .closest('aside')!;
+      expect(within(summary).getByText(/2 × válvula tv05/i)).toBeInTheDocument();
+      expect(within(summary).getByText(/retiro en el local/i)).toBeInTheDocument();
+      expect(within(summary).getByText(/sin cargo/i)).toBeInTheDocument();
+      expect(within(summary).getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
+    });
+
+    it('should not offer a coupon nor promise encrypted transactions', () => {
+      renderCheckout();
+
+      expect(screen.queryByText(/cupón/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/cifrad/i)).not.toBeInTheDocument();
+    });
+
+    it('should offer help by WhatsApp only when there is a number', () => {
+      vi.stubEnv('VITE_WHATSAPP_NUMBER', '5491122334455');
+      const { unmount } = renderCheckout();
+      expect(screen.getByRole('link', { name: /chateá por whatsapp/i })).toHaveAttribute(
+        'href',
+        'https://wa.me/5491122334455',
+      );
+      unmount();
+
+      vi.stubEnv('VITE_WHATSAPP_NUMBER', '');
+      renderCheckout();
+      expect(screen.queryByRole('link', { name: /chateá por whatsapp/i })).not.toBeInTheDocument();
+    });
+
+    it('should describe the transfer truthfully, without "Efectivo"', () => {
+      renderCheckout();
+
+      expect(screen.getByText(/al confirmar ves los datos de la cuenta/i)).toBeInTheDocument();
+      expect(screen.queryByText(/efectivo/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/aprobación instantánea/i)).not.toBeInTheDocument();
+    });
   });
 
   it('should ask for the WhatsApp as 10 numbers and drop spaces and dashes as they type', async () => {
@@ -322,6 +395,27 @@ describe('CheckoutPage', () => {
   describe('with Mercado Pago enabled', () => {
     beforeEach(() => {
       vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
+    });
+
+    it('should badge the transfer with the real discount of the totals', () => {
+      renderCheckout();
+
+      // 231.000 con MP contra 220.000 por transferencia: 4,76 % → -5%.
+      expect(
+        screen.getByRole('radio', { name: /transferencia/i }).closest('label'),
+      ).toHaveTextContent('-5%');
+      expect(
+        screen.getByRole('radio', { name: /mercado pago/i }).closest('label'),
+      ).toHaveTextContent(/tarjetas, dinero en cuenta y más/i);
+    });
+
+    it('should not badge the transfer when it costs the same', () => {
+      pricing = { price: 110_000, transferPrice: null, availability: 'available', stock: 5 };
+      renderCheckout();
+
+      expect(
+        screen.getByRole('radio', { name: /transferencia/i }).closest('label'),
+      ).not.toHaveTextContent('%');
     });
 
     it('should offer both methods with their totals and start with transfer', () => {

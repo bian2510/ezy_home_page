@@ -12,6 +12,7 @@ import type { CartItem as CartItemType } from '@/types';
 import { formatPrice } from '@/lib/formatPrice';
 import { useToast } from '@/features/toast';
 import { STOCK_LIMIT_MESSAGE, reachedStockLimit, usePricing } from '@/features/pricing';
+import QuantitySelector from '@/components/ui/QuantitySelector';
 
 const MIN_QUANTITY = 1;
 
@@ -29,7 +30,6 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
   const pricing = usePricing().pricingOf(product);
   const { price } = pricing;
   const lineSubtotal = price === null ? null : price * quantity;
-  const atMinimum = quantity <= MIN_QUANTITY;
   const atMaximum = reachedStockLimit(pricing, quantity);
 
   const handleRemove = () => {
@@ -37,56 +37,60 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
     addToast(`${product.name} eliminado del carrito`, 'info');
   };
 
+  // El selector es el mismo del detalle: sus botones avisan +1 / −1 y acá se
+  // traducen a las acciones del carrito, que vuelven a chequear el stock.
+  const handleQuantity = (next: number) =>
+    next > quantity ? onIncrement(product.id) : onDecrement(product.id);
+
   return (
-    <li className="flex flex-col gap-3 border-b border-border py-4 last:border-b-0 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex flex-1 flex-col gap-1">
-        <p className="text-base font-medium text-foreground">{product.name}</p>
-        <p className="text-sm text-muted-foreground">
-          {price === null ? 'Consultar precio' : `${formatPrice(price)} c/u`}
-        </p>
+    <li className="flex gap-4 py-4 first:pt-0 last:pb-0">
+      <span className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-container-low">
+        {product.images[0] !== undefined && (
+          <img
+            src={product.images[0]}
+            alt=""
+            loading="lazy"
+            className="h-full w-full object-contain"
+          />
+        )}
+      </span>
+
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-0.5">
+          {product.category && (
+            <span className="text-label-sm font-bold uppercase tracking-wider text-secondary">
+              {product.category}
+            </span>
+          )}
+          <p className="text-label-lg font-bold text-on-surface">{product.name}</p>
+          <p className="text-body-sm text-secondary">
+            {price === null ? 'Consultar precio' : `${formatPrice(price)} c/u`}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <QuantitySelector
+            value={quantity}
+            onChange={handleQuantity}
+            min={MIN_QUANTITY}
+            max={pricing.stock}
+          />
+          <p className="text-headline-sm font-bold tabular-nums text-on-surface">
+            {lineSubtotal === null ? '—' : formatPrice(lineSubtotal)}
+          </p>
+        </div>
+
         {atMaximum && (
-          <p role="status" className="text-xs text-muted-foreground">
+          <p role="status" className="text-body-sm text-secondary">
             {STOCK_LIMIT_MESSAGE}
           </p>
         )}
-      </div>
 
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          aria-label="Disminuir cantidad"
-          onClick={() => onDecrement(product.id)}
-          disabled={atMinimum}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          −
-        </button>
-        <span
-          aria-label="Cantidad"
-          className="min-w-[2ch] text-center font-mono text-sm text-foreground"
-        >
-          {quantity}
-        </span>
-        <button
-          type="button"
-          aria-label="Aumentar cantidad"
-          onClick={() => onIncrement(product.id)}
-          disabled={atMaximum}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          +
-        </button>
-      </div>
-
-      <div className="flex items-center justify-between gap-4 sm:justify-end">
-        <p className="font-mono text-base font-semibold text-foreground">
-          {lineSubtotal === null ? '—' : formatPrice(lineSubtotal)}
-        </p>
         <button
           type="button"
           aria-label={`Eliminar ${product.name} del carrito`}
           onClick={handleRemove}
-          className="text-sm text-destructive transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive"
+          className="inline-flex min-h-11 items-center self-start rounded text-label-md font-semibold text-destructive transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive"
         >
           Eliminar
         </button>

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   clampToStock,
   findMissingSkus,
+  percentOff,
   reachedStockLimit,
   indexQuotes,
   isPurchasable,
@@ -247,5 +248,21 @@ describe('transferSavings', () => {
     expect(
       transferSavings({ price: 25000, transferPrice: 26000, availability: 'available' }),
     ).toBeNull();
+  });
+});
+
+describe('percentOff', () => {
+  it('should be the whole-percent discount of the lower amount over the full one', () => {
+    expect(percentOff(231_000, 220_000)).toBe(5);
+    expect(percentOff(20_000, 19_000)).toBe(5);
+  });
+
+  it('should be null when there is no discount or the data is broken', () => {
+    expect(percentOff(20_000, 20_000)).toBeNull();
+    expect(percentOff(20_000, 21_000)).toBeNull();
+    expect(percentOff(0, 0)).toBeNull();
+    expect(percentOff(20_000, 0)).toBeNull();
+    // 0,2 % redondea a 0: no se muestra.
+    expect(percentOff(100_000, 99_800)).toBeNull();
   });
 });

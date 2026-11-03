@@ -9,6 +9,7 @@ export {
   STOCK_LIMIT_MESSAGE,
   clampToStock,
   isPurchasable,
+  percentOff,
   reachedStockLimit,
   transferDiscountPercent,
   transferSavings,

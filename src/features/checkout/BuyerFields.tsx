@@ -10,8 +10,9 @@ import {
   type BuyerForm,
 } from './checkoutUtils';
 
+// Campos del mock: fondo `surface-container-low`, sin borde, blanco al enfocar.
 const INPUT_CLASS =
-  'min-h-11 w-full rounded-md border border-border bg-card px-3 py-2 text-base text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
+  'h-11 w-full rounded-lg border-0 bg-surface-container-low px-4 text-body-lg text-on-surface transition-colors focus:bg-surface-container-lowest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
 
 interface TextFieldProps {
   field: Exclude<BuyerField, 'acceptedPrivacy'>;
@@ -42,7 +43,7 @@ function TextField({
     error !== undefined ? `${id}-error` : hint !== undefined ? `${id}-hint` : undefined;
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm font-medium text-foreground">
+      <label htmlFor={id} className="text-label-md text-on-surface">
         {label}
       </label>
       <input
@@ -54,15 +55,15 @@ function TextField({
         aria-invalid={error !== undefined}
         aria-describedby={describedBy}
         onChange={(event: ChangeEvent<HTMLInputElement>) => onChange(field, event.target.value)}
-        className={cn(INPUT_CLASS, error !== undefined && 'border-destructive')}
+        className={cn(INPUT_CLASS, error !== undefined && 'ring-2 ring-destructive')}
       />
       {error !== undefined && (
-        <p id={`${id}-error`} className="text-sm text-destructive">
+        <p id={`${id}-error`} className="text-body-sm text-destructive">
           {error}
         </p>
       )}
       {error === undefined && hint !== undefined && (
-        <p id={`${id}-hint`} className="text-sm text-muted-foreground">
+        <p id={`${id}-hint`} className="text-body-sm text-secondary">
           {hint}
         </p>
       )}
@@ -103,7 +104,7 @@ export default function BuyerFields({
       />
       <TextField
         field="phone"
-        label="WhatsApp"
+        label="Teléfono (WhatsApp)"
         type="tel"
         inputMode="numeric"
         autoComplete="tel-national"
@@ -130,17 +131,18 @@ export default function BuyerFields({
         onChange={onChange}
       />
 
-      <div className="flex flex-col gap-1 rounded-md border border-border bg-muted/40 p-3">
-        <label className="flex items-start gap-2 text-sm text-foreground">
+      {/* Ocupa las dos columnas de la tarjeta "Información de contacto". */}
+      <div className="flex flex-col gap-1 rounded-xl bg-surface-container-low p-4 md:col-span-2">
+        <label className="flex items-start gap-2 text-body-md text-on-surface">
           <input
             type="checkbox"
             checked={form.acceptedPrivacy}
             onChange={(event) => onChange('acceptedPrivacy', event.target.checked)}
-            className="mt-1 h-4 w-4"
+            className="mt-1 h-4 w-4 accent-primary"
           />
           <span>Acepto que EzyHome use mis datos para gestionar este pedido.</span>
         </label>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-body-sm text-secondary">
           Usamos tu nombre, WhatsApp, email y DNI solo para este pedido: para avisarte de su estado,
           hacer la factura si la pedís y saber quién retira. Podés pedir verlos, corregirlos o
           borrarlos escribiéndonos por WhatsApp (Ley 25.326 de Protección de Datos Personales). La
@@ -148,7 +150,7 @@ export default function BuyerFields({
           {mercadoPagoEnabled && ` ${DRAFT_NOTICE}`}
         </p>
         {errors.acceptedPrivacy !== undefined && (
-          <p className="text-sm text-destructive">{errors.acceptedPrivacy}</p>
+          <p className="text-body-sm text-destructive">{errors.acceptedPrivacy}</p>
         )}
       </div>
     </>

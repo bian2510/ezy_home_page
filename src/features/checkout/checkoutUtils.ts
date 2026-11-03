@@ -1,7 +1,8 @@
 // Reglas puras del checkout con retiro (transferencia o Mercado Pago). Sin React ni red:
 // los datos del carrito y del ERP llegan por parámetro.
 import type { CartItem, Product, ProductPricing } from '@/types';
-import { OrderApiError, type StockIssue } from './ordersApi';
+import { percentOff } from '@/features/pricing';
+import { OrderApiError, type PaymentMethod, type StockIssue } from './ordersApi';
 
 type PricingOf = (product: Product) => ProductPricing;
 
@@ -74,6 +75,46 @@ export const mercadoPagoTotal = (items: CartItem[], pricingOf: PricingOf): numbe
   items.reduce((sum, item) => sum + (pricingOf(item.product).price ?? 0) * item.quantity, 0);
 
 /**
+ * Descuento real de la transferencia sobre el total con Mercado Pago, para el
+ * cartel "-N%" del medio de pago. `null` si no hay descuento que mostrar.
+ */
+export const totalsDiscountPercent = (totals: Record<PaymentMethod, number>): number | null =>
+  percentOff(totals.mercado_pago, totals.transfer);
+
+/** Una fila del "Resumen de tu pedido". */
+export interface CheckoutSummaryRow {
+  id: string;
+  name: string;
+  quantity: number;
+  /** Primera foto del producto; `null` si no tiene. */
+  image: string | null;
+  /** Precio de la línea con el medio elegido (cantidad × precio unitario). */
+  lineTotal: number;
+}
+
+/**
+ * Filas del resumen con el precio del medio elegido: el de transferencia (o el
+ * único, sin Mercado Pago) o el de Mercado Pago. Suman lo mismo que
+ * `transferTotal` / `mercadoPagoTotal`.
+ */
+export const checkoutSummaryRows = (
+  items: CartItem[],
+  pricingOf: PricingOf,
+  method: PaymentMethod,
+): CheckoutSummaryRow[] =>
+  items.map(({ product, quantity }) => {
+    const { price, transferPrice } = pricingOf(product);
+    const unit = method === 'transfer' ? (transferPrice ?? price ?? 0) : (price ?? 0);
+    return {
+      id: product.id,
+      name: product.name,
+      quantity,
+      image: product.images[0] ?? null,
+      lineTotal: unit * quantity,
+    };
+  });
+
+/**
  * Por qué no se puede comprar por transferencia todavía, o `null` si se puede.
  * Un producto sin precio o sin stock del ERP se consulta por WhatsApp.
  */
@@ -86,6 +127,10 @@ export const checkoutBlocker = (items: CartItem[], pricingOf: PricingOf): string
   }
   return null;
 };
+
+/** Los errores sin el de un campo: se borra al volver a escribir en él. */
+export const withoutField = (errors: BuyerErrors, field: BuyerField): BuyerErrors =>
+  Object.fromEntries(Object.entries(errors).filter(([key]) => key !== field));
 
 const API_FIELDS: Record<string, BuyerField> = {
   buyer_name: 'name',

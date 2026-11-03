@@ -113,12 +113,13 @@ describe('Checkout por WhatsApp', () => {
     expect(screen.getAllByText(/consultar precio/i).length).toBeGreaterThan(0);
   });
 
-  it('should offer buying with transfer and pickup in the store', () => {
+  it('should offer buying with pickup in the store', () => {
     renderCart();
 
-    expect(
-      screen.getByRole('link', { name: /comprar con transferencia y retiro/i }),
-    ).toHaveAttribute('href', '/checkout');
+    expect(screen.getByRole('link', { name: /comprar con retiro en el local/i })).toHaveAttribute(
+      'href',
+      '/checkout',
+    );
     expect(screen.getByText(/envíos: coordinamos por whatsapp/i)).toBeInTheDocument();
   });
 
@@ -127,7 +128,7 @@ describe('Checkout por WhatsApp', () => {
     renderCart();
 
     expect(
-      screen.queryByRole('link', { name: /comprar con transferencia y retiro/i }),
+      screen.queryByRole('link', { name: /comprar con retiro en el local/i }),
     ).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /comprar por whatsapp/i })).toBeEnabled();
   });
