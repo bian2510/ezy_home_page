@@ -1,4 +1,4 @@
-// OrderInfoCards — "Retiro en el local" (dirección y horario del ERP, solo si
+// OrderInfoCards — "Retiro en punto pick-up" (dirección y horario del ERP, solo si
 // vienen) y "Medio de pago" (con el estado real del pago).
 import type { ReactNode } from 'react';
 import Icon, { type IconName } from '@/components/ui/Icon';
@@ -34,7 +34,7 @@ function InfoCard({ id, icon, title, children }: InfoCardProps) {
 
 export function PickupCard({ order }: { order: StoreOrder }) {
   return (
-    <InfoCard id="retiro-heading" icon="store" title="Retiro en el local">
+    <InfoCard id="retiro-heading" icon="pin" title="Retiro en punto pick-up">
       {order.pickup.address !== null && (
         <p className="text-label-lg font-bold text-on-surface">{order.pickup.address}</p>
       )}

@@ -15,7 +15,7 @@ export default function CartPage() {
   // El carrito es estado privado del visitante: no hay nada que indexar.
   useDocumentMeta({
     title: 'Carrito',
-    description: 'Revisá los productos que elegiste y cerrá tu compra por WhatsApp.',
+    description: 'Revisá los productos que elegiste y comprá con retiro en punto pick-up.',
     path: '/carrito',
     noIndex: true,
   });

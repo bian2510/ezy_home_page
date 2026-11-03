@@ -101,7 +101,7 @@ describe('CheckoutPage', () => {
     expect(screen.getByText(/2 × válvula tv05/i)).toBeInTheDocument();
     expect(screen.getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
     // En la tarjeta "Entrega" y en el resumen.
-    expect(screen.getAllByText(/retiro en el local/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/retiro en punto pick-up/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/transferencia/i, { selector: 'p, li, span, strong' })).toBeTruthy();
     expect(screen.getByText(/ley 25\.326/i)).toBeInTheDocument();
   });
@@ -123,7 +123,7 @@ describe('CheckoutPage', () => {
 
       expect(screen.getByRole('heading', { name: /información de contacto/i })).toBeInTheDocument();
       const delivery = screen.getByRole('heading', { name: /^entrega$/i }).closest('section')!;
-      expect(within(delivery).getByText(/retiro en el local/i)).toBeInTheDocument();
+      expect(within(delivery).getByText(/retiro en punto pick-up/i)).toBeInTheDocument();
       expect(within(delivery).getByText(/sin cargo/i)).toBeInTheDocument();
       // La dirección y el horario los manda el ERP con el pedido: se ven al confirmar.
       expect(within(delivery).getByText(/dirección y el horario/i)).toBeInTheDocument();
@@ -143,7 +143,7 @@ describe('CheckoutPage', () => {
         .getByRole('heading', { name: /resumen de tu pedido/i })
         .closest('aside')!;
       expect(within(summary).getByText(/2 × válvula tv05/i)).toBeInTheDocument();
-      expect(within(summary).getByText(/retiro en el local/i)).toBeInTheDocument();
+      expect(within(summary).getByText(/retiro en punto pick-up/i)).toBeInTheDocument();
       expect(within(summary).getByText(/sin cargo/i)).toBeInTheDocument();
       expect(within(summary).getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
     });

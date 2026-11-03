@@ -90,7 +90,7 @@ export default function CheckoutSummary({
             <dd className="tabular-nums text-on-surface">{formatPrice(total)}</dd>
           </div>
           <div className="flex justify-between gap-4">
-            <dt className="text-secondary">Retiro en el local</dt>
+            <dt className="text-secondary">Retiro en punto pick-up</dt>
             <dd className="font-bold text-primary">Sin cargo</dd>
           </div>
         </dl>

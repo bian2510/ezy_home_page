@@ -139,10 +139,9 @@ describe('Checkout por WhatsApp', () => {
   it('should offer buying with pickup in the store', () => {
     renderCart();
 
-    expect(screen.getByRole('link', { name: /comprar con retiro en el local/i })).toHaveAttribute(
-      'href',
-      '/checkout',
-    );
+    expect(
+      screen.getByRole('link', { name: /comprar con retiro en punto pick-up/i }),
+    ).toHaveAttribute('href', '/checkout');
     expect(screen.getByText(/envíos: coordinamos por whatsapp/i)).toBeInTheDocument();
   });
 
@@ -151,7 +150,7 @@ describe('Checkout por WhatsApp', () => {
     renderCart();
 
     expect(
-      screen.queryByRole('link', { name: /comprar con retiro en el local/i }),
+      screen.queryByRole('link', { name: /comprar con retiro en punto pick-up/i }),
     ).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /comprar por whatsapp/i })).toBeEnabled();
   });

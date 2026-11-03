@@ -16,7 +16,7 @@ export interface CartContentsState {
   total: number;
   transferTotal: number;
   hasUnpriced: boolean;
-  /** Todo tiene precio y stock del ERP: se puede comprar con retiro en el local. */
+  /** Todo tiene precio y stock del ERP: se puede comprar con retiro en punto pick-up. */
   canCheckout: boolean;
   increment: (productId: string) => void;
   decrement: (productId: string) => void;

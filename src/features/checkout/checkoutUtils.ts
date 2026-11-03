@@ -70,7 +70,7 @@ export const transferTotal = (items: CartItem[], pricingOf: PricingOf): number =
     return sum + (transferPrice ?? price ?? 0) * item.quantity;
   }, 0);
 
-/** Total con Mercado Pago (precio del local + recargo) con los precios del ERP. */
+/** Total con Mercado Pago (precio de lista + recargo) con los precios del ERP. */
 export const mercadoPagoTotal = (items: CartItem[], pricingOf: PricingOf): number =>
   items.reduce((sum, item) => sum + (pricingOf(item.product).price ?? 0) * item.quantity, 0);
 

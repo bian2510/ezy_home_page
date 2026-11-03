@@ -1,4 +1,4 @@
-// CheckoutPage — compra con retiro en el local (plan de la etapa 3 del ERP,
+// CheckoutPage — compra con retiro en punto pick-up (plan de la etapa 3 del ERP,
 // PR 3d y 3e). El comprador deja sus datos y elige transferencia o, con
 // `VITE_MERCADOPAGO_ENABLED=true`, Mercado Pago; el ERP crea el pedido con sus
 // precios (el sitio no manda precios) y la página del pedido muestra a qué
@@ -41,7 +41,7 @@ import { useCreateOrder, type OrderDraft } from './useCreateOrder';
 export default function CheckoutPage() {
   useDocumentMeta({
     title: 'Finalizar compra',
-    description: 'Comprá y retirá en el local.',
+    description: 'Comprá y retirá tu pedido en el punto pick-up.',
     path: '/checkout',
     noIndex: true,
   });
