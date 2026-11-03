@@ -167,9 +167,9 @@ describe('OrderPage', () => {
       );
       renderOrder();
 
-      const pickup = (await screen.findByRole('heading', { name: 'Retiro en el local' })).closest(
-        'section',
-      )!;
+      const pickup = (
+        await screen.findByRole('heading', { name: 'Retiro en punto pick-up' })
+      ).closest('section')!;
       expect(within(pickup).getByText('Lun a vie 10 a 18')).toBeInTheDocument();
       expect(within(pickup).queryByText(/siempreviva/i)).toBeNull();
     });

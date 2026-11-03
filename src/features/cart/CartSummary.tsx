@@ -1,5 +1,5 @@
-// CartSummary — totales del carrito y cómo cerrar la compra: con retiro en el
-// local (checkout) si todo tiene precio y stock, o por WhatsApp. La usan el
+// CartSummary — totales del carrito y cómo cerrar la compra: con retiro en
+// punto pick-up (checkout) si todo tiene precio y stock, o por WhatsApp. La usan el
 // drawer y la página `/carrito`.
 import { Link } from 'react-router-dom';
 import { formatPrice } from '@/lib/formatPrice';
@@ -53,7 +53,7 @@ export default function CartSummary({ cart, onClose }: CartSummaryProps) {
             onClick={onClose}
             className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-primary px-6 py-2 text-label-lg font-bold text-on-primary shadow-md transition-all hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
-            Comprar con retiro en el local
+            Comprar con retiro en punto pick-up
           </Link>
         )}
         <button

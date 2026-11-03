@@ -40,7 +40,7 @@
 | Componente             | Por qué va en `ui/`                                          |
 | ---------------------- | ------------------------------------------------------------ |
 | `Badge.tsx`            | Recibe `variant` y `children`. No sabe qué es un producto.   |
-| `Button.tsx`           | Primitivo genérico. Podría estar en cualquier app.           |
+| `Container.tsx`        | Ancho de página y márgenes. Podría estar en cualquier app.   |
 | `QuantitySelector.tsx` | Recibe `value`, `onChange`, `min`. Sin semántica de carrito. |
 | `Drawer.tsx`           | Overlay genérico. No sabe qué pone adentro.                  |
 

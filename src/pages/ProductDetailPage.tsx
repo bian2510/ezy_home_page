@@ -78,7 +78,10 @@ export default function ProductDetailPage() {
     return <ProductNotFound />;
   }
 
-  return <ProductDetail product={product} />;
+  // La `key` remonta el detalle al cambiar de producto: sin ella, la cantidad
+  // elegida, la foto activa y la barra fija seguían al ir a otro producto
+  // (por ejemplo desde "Mirá más productos").
+  return <ProductDetail key={product.id} product={product} />;
 }
 
 function ProductNotFound() {

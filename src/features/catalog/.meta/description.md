@@ -6,7 +6,7 @@ producto.
 ## Key Components
 
 - `CatalogPage.tsx` — página del catálogo
-- `ProductGrid.tsx`, `ProductCard.tsx` — grilla y card (precio, "Sin stock", agregar al carrito o consultar)
+- `ProductCard.tsx` — card de producto (precio, "Sin stock", agregar al carrito o consultar), la que usan el catálogo, el Home y el detalle
 - `CategoryFilter.tsx` + `useCatalog.ts` — filtro por categoría derivado de los productos
 
 ## Dependencies

@@ -1,8 +1,8 @@
 // DeliveryOptions — formas de entrega del checkout. Hoy hay una sola, el
-// retiro en el local (usuario, 2026-11-03); los envíos se van a sumar más
+// retiro en punto pick-up (usuario, 2026-11-03); los envíos se van a sumar más
 // adelante como otra entrada de `DELIVERY_OPTIONS`.
 //
-// La dirección y el horario del local los manda el ERP con el pedido creado
+// La dirección y el horario del punto pick-up los manda el ERP con el pedido creado
 // (`pickup` en `ordersApi`): acá no se inventan, se muestran al confirmar.
 import Icon, { type IconName } from '@/components/ui/Icon';
 
@@ -17,8 +17,8 @@ interface DeliveryOption {
 const DELIVERY_OPTIONS: readonly DeliveryOption[] = [
   {
     id: 'pickup',
-    icon: 'store',
-    title: 'Retiro en el local',
+    icon: 'pin',
+    title: 'Retiro en punto pick-up',
     price: 'Sin cargo',
     detail: 'Te mostramos la dirección y el horario al confirmar el pedido.',
   },

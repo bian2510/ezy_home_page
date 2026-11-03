@@ -24,7 +24,7 @@ Todo lo relacionado a un dominio de negocio. Componentes, hooks, contexto, utils
 
 ```
 src/features/
-  catalog/    CatalogPage, ProductCard, ProductGrid, CategoryFilter, useCatalog
+  catalog/    CatalogPage, ProductCard, CategoryFilter, useCatalog
   home/       secciones de la portada (hero, Nuestros productos, categorías, beneficios)
   product/    piezas del detalle de producto (galería, panel de compra, relacionados)
   cart/       CartProvider, CartDrawer, CartItem, useCart, cartUtils
@@ -49,7 +49,6 @@ Primitivos visuales **ciegos al dominio**. No saben que existe `Product`, `Cart`
 ```
 src/components/ui/
   Badge.tsx           ← recibe variant + children, nada más
-  Button.tsx
   Container.tsx       ← ancho de página (`max-w-content`) y márgenes laterales del mock
   SectionBand.tsx     ← franja de borde a borde con su fondo y un Container adentro
   Drawer.tsx

@@ -1,6 +1,6 @@
 // TrustStrip — franja con lo que la tienda ofrece hoy, debajo de la grilla.
 //
-// Solo afirmaciones verdaderas: el retiro en el local (checkout con retiro),
+// Solo afirmaciones verdaderas: el retiro en punto pick-up (checkout con retiro),
 // el asesoramiento por WhatsApp y los medios de pago activos. Mercado Pago
 // aparece solo si está habilitado (`VITE_MERCADOPAGO_ENABLED`).
 import Icon, { type IconName } from '@/components/ui/Icon';
@@ -13,7 +13,7 @@ interface TrustItem {
 }
 
 const trustItems = (mercadoPagoEnabled: boolean): TrustItem[] => [
-  { icon: 'store', title: 'Retiro en el local', detail: 'Comprá online y retirá tu pedido' },
+  { icon: 'pin', title: 'Retiro en punto pick-up', detail: 'Comprá online y retirá tu pedido' },
   { icon: 'chat', title: 'Asesoramiento por WhatsApp', detail: 'Te ayudamos a elegir' },
   {
     icon: 'card',

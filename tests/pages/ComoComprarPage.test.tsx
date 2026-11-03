@@ -47,6 +47,6 @@ describe('ComoComprarPage', () => {
   it('should explain that pickup orders can be paid by transfer without WhatsApp', () => {
     renderPage();
 
-    expect(screen.getByText(/comprar con retiro en el local/i)).toBeInTheDocument();
+    expect(screen.getByText(/comprar con retiro en punto pick-up/i)).toBeInTheDocument();
   });
 });

@@ -7,6 +7,7 @@ footer, and (later) global banners or skip links.
 
 - `SiteHeader.tsx` — brand link + primary nav, sticky-friendly border, max-content container
 - `SiteFooter.tsx` — copyright line, future legal/contact links
+- `ScrollToTop.tsx` — sube al principio al cambiar de ruta (solo `pathname`, no query ni hash; no en atrás/adelante)
 
 ## Dependencies
 

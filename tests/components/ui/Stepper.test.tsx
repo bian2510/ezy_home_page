@@ -36,4 +36,18 @@ describe('Stepper', () => {
     expect(items.filter((item) => /completado/i.test(item.textContent ?? ''))).toHaveLength(2);
     expect(items[2]).toHaveAttribute('aria-current', 'step');
   });
+
+  it('should show every label, also on phones, and mark each step state', () => {
+    render(<Stepper label="Pasos de la compra" steps={STEPS} current={1} />);
+
+    // Antes en el celular solo se veía el paso actual; ahora van todos abajo del círculo.
+    for (const label of ['1. Carrito', '2. Datos y pago', '3. Confirmación']) {
+      expect(screen.getByText(label)).not.toHaveClass('sr-only');
+    }
+    expect(screen.getAllByRole('listitem').map((item) => item.dataset.state)).toEqual([
+      'done',
+      'current',
+      'upcoming',
+    ]);
+  });
 });

@@ -120,8 +120,8 @@ export default function SiteFooter() {
             </a>
           )}
           <p className="flex items-center gap-2 text-body-sm text-surface-variant">
-            <Icon name="store" className="text-inverse-primary" />
-            Retiro en el local
+            <Icon name="cube" className="text-inverse-primary" />
+            Retiro en punto pick-up
           </p>
           <p className="flex min-h-11 items-center gap-2 text-body-sm text-surface-variant sm:min-h-9">
             <Icon name="pin" className="text-inverse-primary" />

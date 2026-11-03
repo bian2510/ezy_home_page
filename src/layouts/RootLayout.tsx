@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import SiteHeader from '@/components/layout/SiteHeader';
 import SiteFooter from '@/components/layout/SiteFooter';
+import ScrollToTop from '@/components/layout/ScrollToTop';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import Container from '@/components/ui/Container';
 import { CartProvider, CartDrawer } from '@/features/cart';
@@ -37,6 +38,7 @@ export default function RootLayout() {
       {/* Precio y stock del ERP: afuera del carrito, que lo usa para sus totales. */}
       <PricingProvider>
         <CartProvider>
+          <ScrollToTop />
           <div className="flex min-h-dvh flex-col">
             <SiteHeader />
             <main className="w-full flex-1">

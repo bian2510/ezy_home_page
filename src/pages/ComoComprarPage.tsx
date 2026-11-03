@@ -20,7 +20,7 @@ const PASOS = [
     numero: 3,
     titulo: 'Enviá tu pedido por WhatsApp',
     descripcion:
-      'Cuando estés listo, ingresá al carrito y hacé clic en "Comprar por WhatsApp". Se pre-compone un mensaje con el detalle de tu pedido — solo tenés que enviarlo. Si retirás en el local, también podés tocar "Comprar con retiro en el local": dejás tus datos y, si pagás por transferencia, te mostramos a qué cuenta transferir, sin esperar respuesta.',
+      'Cuando estés listo, ingresá al carrito y hacé clic en "Comprar por WhatsApp". Se pre-compone un mensaje con el detalle de tu pedido — solo tenés que enviarlo. Si retirás en nuestro punto pick-up, también podés tocar "Comprar con retiro en punto pick-up": dejás tus datos y, si pagás por transferencia, te mostramos a qué cuenta transferir, sin esperar respuesta.',
     cta: { label: 'Ver carrito', to: '/carrito' },
   },
   {
