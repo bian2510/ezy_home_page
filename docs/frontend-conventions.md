@@ -108,8 +108,9 @@ El token `max-w-content` (1280px, el `max-w-7xl` de los mocks, definido en `tail
 es el **único ancho permitido** para el contenedor que centra una página o sección. No usar
 `max-w-3xl`, `max-w-5xl`, ni anchos arbitrarios para ese wrapper.
 
-El contenedor se arma con **`components/ui/Container`**: `max-w-content` más los márgenes laterales
-del mock (`px-gutter-mobile sm:px-gutter md:px-margin`: 16, 24 y 48 px). Lo usan el header, el
+El contenedor se arma con **`components/ui/Container`**, igual que el mock: los márgenes laterales
+(`px-gutter-mobile sm:px-gutter md:px-margin`: 16, 24 y 48 px) van por fuera y el contenido mide
+hasta `max-w-content` adentro, así en pantallas anchas ocupa los 1280 px completos. Lo usan el header, el
 footer y el `<main>` de `RootLayout`, así todo queda alineado. No repetir esas clases a mano.
 
 **Qué NO cuenta como wrapper de página:** limitar la medida de línea de un bloque de texto
