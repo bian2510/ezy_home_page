@@ -24,6 +24,8 @@ const PATHS = {
   menu: 'M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5',
   close: 'M6 18 18 6M6 6l12 12',
   check: 'm4.5 12.75 6 6 9-13.5',
+  clock: 'M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+  info: 'm11.25 11.25.04-.02a.75.75 0 0 1 1.06.85l-.7 2.84a.75.75 0 0 0 1.06.85l.04-.02M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.01v.01H12V8.25Z',
   lock: 'M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z',
   arrowRight: 'M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3',
   lightBulb:
@@ -52,6 +54,12 @@ interface IconProps {
   className?: string;
 }
 
+// `cn` no resuelve conflictos de clases: si el que llama pasa un tamaño, el
+// tamaño por defecto no se agrega (en el CSS `h-5` va después de `h-4` y de
+// `h-10`, y ganaba siempre).
+const DEFAULT_SIZE = 'h-5 w-5';
+const SETS_SIZE = /(^|\s)(h|w|size)-/;
+
 export default function Icon({ name, className }: IconProps) {
   return (
     <svg
@@ -63,7 +71,11 @@ export default function Icon({ name, className }: IconProps) {
       strokeWidth={1.75}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn('h-5 w-5 shrink-0', className)}
+      className={cn(
+        className !== undefined && SETS_SIZE.test(className) ? undefined : DEFAULT_SIZE,
+        'shrink-0',
+        className,
+      )}
     >
       <path d={PATHS[name]} />
     </svg>

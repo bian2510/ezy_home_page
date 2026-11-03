@@ -22,6 +22,16 @@ export const findProductById = (id: string): Product | undefined =>
   allProducts.find((product) => product.id === id);
 
 /**
+ * Producto por SKU, comparando sin mayúsculas ni espacios alrededor como el
+ * ERP. Sin filtrar por visibilidad: lo usa la página del pedido para poner la
+ * foto de lo que ya se compró.
+ */
+export const findProductBySku = (sku: string): Product | undefined => {
+  const wanted = sku.trim().toLowerCase();
+  return allProducts.find((product) => product.sku.trim().toLowerCase() === wanted);
+};
+
+/**
  * Categorías de una lista de productos, sin repetir y en el orden en que
  * aparecen. Un producto sin categoría (o con una en blanco) no aporta ninguna:
  * antes generaba un filtro con etiqueta vacía.

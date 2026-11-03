@@ -14,7 +14,8 @@ a qué cuenta transferir o lleva a Mercado Pago, y dónde retirar.
 - `orderDraftStorage.ts` — comprador e ítems del pedido de MP en `sessionStorage`, para pasar a transferencia si MP falla
 - `checkoutUtils.ts` — reglas puras: validación del formulario (igual a la del ERP), totales, descuento real de la transferencia sobre los totales, filas del resumen, cuándo se puede comprar, errores del ERP a campos y mensajes, ajustes de stock, vencimiento en hora de Argentina
 - `CheckoutPage.tsx` — `/checkout` (paso 2): arma el pedido y lo envía; tarjetas numeradas (`CheckoutSection.tsx`): `BuyerFields.tsx` (datos y aviso de privacidad, Ley 25.326), `DeliveryOptions.tsx` (hoy solo retiro en el local; los envíos se suman ahí), `PaymentMethodField.tsx` (Mercado Pago / transferencia con su total y el "-N%"); `CheckoutSummary.tsx` (resumen y ayuda por WhatsApp), `CheckoutBlocked.tsx`, `OrderErrorAlert.tsx`
-- `OrderPage.tsx` + `OrderLayout.tsx` — `/pedido/:token` (paso 3): número, total, retiro y, por transferencia, cuenta, vencimiento y concepto
+- `OrderPage.tsx` + `OrderLayout.tsx` — `/pedido/:token` (paso 3): tarjeta centrada con `OrderHero.tsx` (cabecera por estado), `OrderInfoCards.tsx` (retiro y medio de pago), `TransferDetails.tsx` (cuenta, vencimiento y concepto), `OrderItems.tsx` (productos y total) y `SmartHomeTip.tsx`
+- `orderViewUtils.ts` — reglas puras de presentación del pedido: cabecera por estado, nombre y estado del medio de pago, cuándo va el consejo y si el mensaje de MP ya ofrece WhatsApp
 - `MercadoPagoStatus.tsx` + `MercadoPagoMessage.tsx` — pedido de MP: abrir MP al llegar el link, vuelta de MP y estados; nunca la cuenta para transferir
 - `SwitchToTransferButton.tsx` — "Pagar por transferencia": pedido nuevo con clave nueva
 

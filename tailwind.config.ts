@@ -117,6 +117,8 @@ const config: Config = {
         // Ancho del contenido en todo el sitio: el `max-w-7xl` (1280 px) de
         // los mocks del rediseño. Lo aplica `components/ui/Container.tsx`.
         content: '80rem',
+        // Tarjeta centrada de la confirmación del pedido (`max-w-4xl` del mock).
+        card: '56rem',
       },
       aspectRatio: {
         // Imagen principal del detalle de producto desde `md` (`aspect-[4/3]` del mock).

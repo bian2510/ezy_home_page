@@ -2,74 +2,55 @@
 // Por transferencia, los datos para transferir; con Mercado Pago, el estado
 // del pago (`MercadoPagoStatus`), nunca la cuenta para transferir. Lee el
 // pedido del ERP por su token; el ERP nunca devuelve los datos del comprador.
+//
+// Rediseño (2026-11, mock de la confirmación): tarjeta centrada con la
+// cabecera del estado (`orderHero`), retiro y medio de pago, la cuenta para
+// transferir, los productos, el consejo de Smart Life y la vuelta al catálogo.
+// Solo cambió la presentación: el estado, la consulta y Mercado Pago siguen
+// igual (`useOrder`, `mercadoPagoView`, `MercadoPagoStatus`).
+
+const CARD =
+  'mx-auto flex w-full max-w-card flex-col rounded-xl bg-surface-container-lowest px-4 py-8 shadow-md sm:p-6 md:p-10';
+const LINK =
+  'inline-flex min-h-11 items-center rounded text-label-lg font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
 import { useCallback } from 'react';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
-import { formatPrice } from '@/lib/formatPrice';
+import Icon from '@/components/ui/Icon';
 import { getWhatsAppNumber } from '@/lib/env';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
-import { formatDeadline } from './checkoutUtils';
 import MercadoPagoStatus from './MercadoPagoStatus';
+import OrderHero from './OrderHero';
+import { PaymentCard, PickupCard } from './OrderInfoCards';
+import OrderItems from './OrderItems';
 import OrderLayout from './OrderLayout';
+import SmartHomeTip from './SmartHomeTip';
+import TransferDetails from './TransferDetails';
+import {
+  orderHero,
+  showsSmartHomeTip,
+  statusOffersWhatsApp,
+  transferStatusLabel,
+} from './orderViewUtils';
 import { mercadoPagoPollPlan, parseMpResult } from './mercadoPagoUtils';
 import type { StoreOrder } from './ordersApi';
 import { useOrder } from './useOrder';
 
-function TransferDetails({ order }: { order: StoreOrder }) {
-  const { alias, cbu, holder, bank } = order.transfer;
-  const rows: [string, string | null][] = [
-    ['Alias', alias],
-    ['CBU/CVU', cbu],
-    ['Titular', holder],
-    ['Banco', bank],
-  ];
-  const deadline = formatDeadline(order.expiresAt);
-
-  return (
-    <div className="flex flex-col gap-3 rounded-xl bg-surface-container-low p-4">
-      <h2 className="text-headline-sm font-bold text-on-surface">Transferí a esta cuenta</h2>
-      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-        {rows
-          .filter((row): row is [string, string] => row[1] !== null)
-          .map(([label, value]) => (
-            <div key={label} className="contents">
-              <dt className="text-muted-foreground">{label}</dt>
-              <dd className="break-all font-mono text-foreground">{value}</dd>
-            </div>
-          ))}
-      </dl>
-      <p className="text-sm text-foreground">
-        En el concepto poné &quot;Pedido {order.number}&quot;.
-      </p>
-      {deadline !== null && (
-        <p className="text-sm text-muted-foreground">
-          Transferí antes del {deadline} (hora de Argentina). Si no, el pedido vence.
-        </p>
-      )}
-      <p className="text-sm text-muted-foreground">
-        Te avisamos por email cuando acreditemos el pago.
-      </p>
-    </div>
-  );
-}
-
-function StatusMessage({ order }: { order: StoreOrder }) {
-  switch (order.status) {
-    case 'pending_payment':
-      return <TransferDetails order={order} />;
-    case 'paid':
-      return (
-        <p className="text-base text-foreground">Recibimos tu pago. ¡Gracias por tu compra!</p>
-      );
-    case 'expired':
-      return (
-        <p className="text-base text-foreground">
-          Este pedido venció porque no recibimos la transferencia a tiempo. Si ya transferiste,
-          escribinos por WhatsApp.
-        </p>
-      );
-    case 'canceled':
-      return <p className="text-base text-foreground">Este pedido fue cancelado.</p>;
+/**
+ * Estado del pago por transferencia en "Medio de pago": "Pago aprobado" o
+ * "Esperando la transferencia"; vencido o cancelado, el mensaje de siempre.
+ */
+function TransferStatus({ order }: { order: StoreOrder }) {
+  const label = transferStatusLabel(order);
+  if (label !== null) {
+    return <p className="text-body-sm font-semibold text-primary">{label}</p>;
   }
+  return (
+    <p className="text-body-md text-on-surface">
+      {order.status === 'expired'
+        ? 'Este pedido venció porque no recibimos la transferencia a tiempo. Si ya transferiste, escribinos por WhatsApp.'
+        : 'Este pedido fue cancelado.'}
+    </p>
+  );
 }
 
 export default function OrderPage() {
@@ -94,7 +75,7 @@ export default function OrderPage() {
   if (state.status === 'loading') {
     return (
       <OrderLayout>
-        <p role="status" className="py-16 text-center text-muted-foreground">
+        <p role="status" className="py-16 text-center text-secondary">
           Cargando tu pedido…
         </p>
       </OrderLayout>
@@ -104,8 +85,8 @@ export default function OrderPage() {
   if (state.status !== 'ready') {
     return (
       <OrderLayout>
-        <div className="flex flex-col items-start gap-4">
-          <p className="text-base text-foreground">
+        <div className={`${CARD} items-center gap-4 text-center`}>
+          <p className="text-body-lg text-on-surface">
             {state.status === 'not_found'
               ? 'No encontramos este pedido.'
               : 'No pudimos cargar tu pedido. Probá de nuevo en un rato.'}
@@ -114,7 +95,7 @@ export default function OrderPage() {
             href={`https://wa.me/${getWhatsAppNumber()}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+            className={LINK}
           >
             Escribinos por WhatsApp
           </a>
@@ -124,55 +105,58 @@ export default function OrderPage() {
   }
 
   const { order } = state;
+  const whatsAppNumber = getWhatsAppNumber();
+  const offersHelp = whatsAppNumber !== '' && !statusOffersWhatsApp(order, result, state.timedOut);
+  const pendingTransfer = order.paymentMethod === 'transfer' && order.status === 'pending_payment';
+
   return (
     <OrderLayout>
-      <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2">
-        <div className="flex flex-col gap-4 rounded-xl bg-surface-container-lowest p-6 shadow-sm md:p-8">
-          <h1 className="text-headline-xl-mobile font-extrabold text-on-surface">
-            Pedido N.º {order.number}
-          </h1>
-          <ul className="flex flex-col gap-1 text-sm text-foreground">
-            {order.items.map((item) => (
-              <li key={item.sku}>
-                {item.quantity} × {item.name}
-              </li>
-            ))}
-          </ul>
-          <p data-testid="order-total" className="text-label-lg font-bold text-on-surface">
-            Total:{' '}
-            <span className="text-headline-md font-extrabold tabular-nums text-primary">
-              {formatPrice(order.total)}
-            </span>
-          </p>
-          {order.paymentMethod === 'mercado_pago' ? (
-            <MercadoPagoStatus
-              order={order}
-              result={result}
-              timedOut={state.timedOut}
-              openOnArrival={openOnArrival}
-            />
-          ) : (
-            <StatusMessage order={order} />
-          )}
+      <div className={`${CARD} gap-8`}>
+        <OrderHero hero={orderHero(order)} />
+
+        <div className="flex w-full flex-col gap-4 rounded-xl bg-surface-container-low p-2 text-left sm:p-4 md:p-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <PickupCard order={order} />
+            <PaymentCard order={order}>
+              {order.paymentMethod === 'mercado_pago' ? (
+                <MercadoPagoStatus
+                  order={order}
+                  result={result}
+                  timedOut={state.timedOut}
+                  openOnArrival={openOnArrival}
+                />
+              ) : (
+                <TransferStatus order={order} />
+              )}
+            </PaymentCard>
+          </div>
+          {pendingTransfer && <TransferDetails order={order} />}
+          <OrderItems order={order} />
         </div>
 
-        <div className="flex flex-col gap-3 rounded-xl bg-surface-container-lowest p-6 shadow-sm">
-          <h2 className="text-headline-sm font-bold text-on-surface">Retiro en el local</h2>
-          {order.pickup.address !== null && (
-            <p className="text-sm text-foreground">{order.pickup.address}</p>
-          )}
-          {order.pickup.hours !== null && (
-            <p className="text-sm text-muted-foreground">{order.pickup.hours}</p>
-          )}
-          <p className="text-sm text-muted-foreground">
-            Traé el número de pedido. Guardá esta página para volver a verla.
-          </p>
+        {showsSmartHomeTip(order) && <SmartHomeTip />}
+
+        <div className="flex w-full flex-col items-center gap-3">
           <Link
             to="/catalogo"
-            className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+            className="inline-flex min-h-12 w-full max-w-md items-center justify-center gap-2 rounded-lg bg-primary px-6 text-label-lg font-bold text-on-primary shadow-md transition-all hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
-            Seguir mirando productos
+            <Icon name="store" />
+            Seguir explorando productos
           </Link>
+          {offersHelp && (
+            <p className="text-body-sm text-on-surface-variant">
+              ¿Tenés preguntas sobre tu pedido?{' '}
+              <a
+                href={`https://wa.me/${whatsAppNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={LINK}
+              >
+                Escribinos por WhatsApp
+              </a>
+            </p>
+          )}
         </div>
       </div>
     </OrderLayout>

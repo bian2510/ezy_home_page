@@ -122,6 +122,7 @@ y `shadow-header` para el header sticky.
 | ------------- | --------------- | ------ | ----------------------------------------------------- |
 | `max-content` | `max-w-content` | 1280px | **Único ancho permitido** para contenedores de página |
 | `max-prose`   | `max-w-prose`   | 65ch   | Solo para cuerpo de artículos de blog                 |
+| `max-card`    | `max-w-card`    | 56rem  | Tarjeta centrada de la confirmación del pedido        |
 
 Es el `max-w-7xl` de los mocks. El contenedor se arma con `components/ui/Container`, que suma los
 márgenes laterales (ver "Espaciado especial"); no se repiten las clases a mano.
