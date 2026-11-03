@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import ProductDetailPage from '@/pages/ProductDetailPage';
 import { CartProvider } from '@/features/cart/CartProvider';
 import { formatPrice } from '@/lib/formatPrice';
@@ -462,6 +462,39 @@ describe('ProductDetailPage', () => {
     expect(screen.getByText(/404/i)).toBeInTheDocument();
     const link = screen.getByRole('link', { name: /volver al catálogo/i });
     expect(link).toHaveAttribute('href', '/catalogo');
+  });
+
+  it('should start again at 1 when navigating to another product', async () => {
+    // Antes la cantidad elegida seguía al ir a otro producto (por ejemplo desde
+    // "Mirá más productos"): la página no se remontaba.
+    function GoToOther() {
+      const navigate = useNavigate();
+      return (
+        <button type="button" onClick={() => void navigate('/productos/p-2')}>
+          ir a otro producto
+        </button>
+      );
+    }
+    const user = userEvent.setup();
+    render(
+      <MemoryRouter initialEntries={['/productos/p-1']}>
+        <CartProvider>
+          <GoToOther />
+          <Routes>
+            <Route path="/productos/:id" element={<ProductDetailPage />} />
+          </Routes>
+        </CartProvider>
+      </MemoryRouter>,
+    );
+    const increase = screen.getByRole('button', { name: /aumentar cantidad/i });
+    await user.click(increase);
+    await user.click(increase);
+    expect(screen.getByLabelText('Cantidad')).toHaveTextContent('3');
+
+    await user.click(screen.getByRole('button', { name: 'ir a otro producto' }));
+
+    expect(screen.getByRole('heading', { level: 1, name: 'Tira LED RGB' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Cantidad')).toHaveTextContent('1');
   });
 
   it('should start the QuantitySelector at 1 with the decrement button disabled', () => {

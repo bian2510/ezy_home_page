@@ -8,11 +8,6 @@
 // transferir, los productos, el consejo de Smart Life y la vuelta al catálogo.
 // Solo cambió la presentación: el estado, la consulta y Mercado Pago siguen
 // igual (`useOrder`, `mercadoPagoView`, `MercadoPagoStatus`).
-
-const CARD =
-  'mx-auto flex w-full max-w-card flex-col rounded-xl bg-surface-container-lowest px-4 py-8 shadow-md sm:p-6 md:p-10';
-const LINK =
-  'inline-flex min-h-11 items-center rounded text-label-lg font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
 import { useCallback } from 'react';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import Icon from '@/components/ui/Icon';
@@ -34,6 +29,11 @@ import {
 import { mercadoPagoPollPlan, parseMpResult } from './mercadoPagoUtils';
 import type { StoreOrder } from './ordersApi';
 import { useOrder } from './useOrder';
+
+const CARD =
+  'mx-auto flex w-full max-w-card flex-col rounded-xl bg-surface-container-lowest px-4 py-8 shadow-md sm:p-6 md:p-10';
+const LINK =
+  'inline-flex min-h-11 items-center rounded text-label-lg font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
 
 /**
  * Estado del pago por transferencia en "Medio de pago": "Pago aprobado" o

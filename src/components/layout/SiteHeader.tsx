@@ -123,10 +123,10 @@ export default function SiteHeader() {
           menú con sus 44 px de toque. */}
       <Container className="flex items-center gap-2 py-3 sm:gap-3 lg:gap-6">
         <Link to="/" onClick={closeMenu} className={cn('shrink-0 rounded', headerFocus)}>
-          {/* Logo negro directo sobre el teal del header, sin caja blanca
-              (usuario, 2026-11-03): negro sobre `header` da ~4.9:1. El
-              ancho y el alto siguen la proporción del archivo (141×159), así
-              el lugar queda reservado antes de que cargue. */}
+          {/* Logo blanco directo sobre el teal del header, sin caja (usuario,
+              2026-11-03): blanco sobre `header` da 4.5:1. El ancho y el alto
+              siguen la proporción del archivo, así el lugar queda reservado
+              antes de que cargue. */}
           <img
             src="/images/logo/logo-white.png"
             alt="EzyHome"

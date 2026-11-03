@@ -5,11 +5,12 @@ building blocks consumed by every other component.
 
 ## Key Components
 
-- `Button.tsx` — `<button>` wrapper with `primary | secondary | ghost` variants, 44px min tap target, focus ring tied to brand colour
+- `Container.tsx` / `SectionBand.tsx` — page width (`max-w-content`) with the mock gutters, and full-bleed bands
+- `Icon.tsx`, `Badge.tsx`, `QuantitySelector.tsx`, `Stepper.tsx`, `Pagination.tsx`, `SearchBox.tsx`, `Drawer.tsx`, `Toast.tsx`, `ErrorBoundary.tsx` — domain-blind primitives
 
 ## Dependencies
 
-- `react` types only (`ButtonHTMLAttributes`, `ReactNode`)
+- `react` types (`ReactNode`, …) and `@/lib` (`cn`)
 - Tailwind utility classes for variant styling
 
 ## Patterns
