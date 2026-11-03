@@ -217,7 +217,8 @@ describe('HomePage', () => {
       renderHome();
 
       const section = sectionOf(/cómo funciona ezyhome en tu día a día/i);
-      expect(within(section).getAllByRole('heading', { level: 3 })).toHaveLength(3);
+      // Los pasos son la lista; la rutina "Modo Cine" va aparte en la misma sección.
+      expect(within(section).getAllByRole('listitem')).toHaveLength(3);
       expect(within(section).getByText(/smart life o tuya smart/i)).toBeInTheDocument();
       expect(within(section).getByText(/wi-fi 2\.4 ghz, zigbee y bluetooth/i)).toBeInTheDocument();
     });

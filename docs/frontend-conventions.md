@@ -104,17 +104,21 @@ const total = useMemo(() => items.reduce(...), [items])
 
 ### Ancho de contenido
 
-El token `max-w-content` (1200px, definido en `tailwind.config.ts`) es el **único ancho permitido**
-para el contenedor que centra una página o sección. No usar `max-w-3xl`, `max-w-5xl`, ni anchos
-arbitrarios para ese wrapper.
+El token `max-w-content` (1280px, el `max-w-7xl` de los mocks, definido en `tailwind.config.ts`)
+es el **único ancho permitido** para el contenedor que centra una página o sección. No usar
+`max-w-3xl`, `max-w-5xl`, ni anchos arbitrarios para ese wrapper.
+
+El contenedor se arma con **`components/ui/Container`**: `max-w-content` más los márgenes laterales
+del mock (`px-gutter-mobile sm:px-gutter md:px-margin`: 16, 24 y 48 px). Lo usan el header, el
+footer y el `<main>` de `RootLayout`, así todo queda alineado. No repetir esas clases a mano.
 
 **Qué NO cuenta como wrapper de página:** limitar la medida de línea de un bloque de texto
 _dentro_ de una sección ya contenida (copy de un hero, párrafo de un CTA, cuerpo de un artículo).
 Ahí `max-w-prose` es correcto — es legibilidad, no layout de página.
 
 ```tsx
-// ✅ CORRECTO — dentro del <main> de RootLayout
-<section className="mx-auto w-full max-w-content px-4 py-8 sm:px-6 lg:px-8">
+// ✅ CORRECTO
+<Container className="py-8">…</Container>
 
 // ❌ MAL — ancho arbitrario
 <div className="mx-auto max-w-prose flex flex-col gap-10">
@@ -125,14 +129,21 @@ Ahí `max-w-prose` es correcto — es legibilidad, no layout de página.
 El copy del hero del Home (`features/home/HomeHero`) limita su medida con `max-w-2xl`/`max-w-3xl`,
 que es lo mismo: legibilidad dentro de una sección ya contenida.
 
-### Secciones full-bleed
+### Páginas de borde a borde
 
-Para secciones que necesiten fondo de color o gradiente de borde a borde (ej. hero, CTA),
-agregar `-mx-4 sm:-mx-6 lg:-mx-8` para romper el padding del contenedor padre:
+Una página hecha de franjas con fondo propio de borde a borde (el Home) se agrega a
+`FULL_BLEED_PATHS` en `RootLayout`: el `<main>` no la mete en el contenedor y cada franja lleva el
+suyo adentro (`features/home/SectionBand`):
 
 ```tsx
-<section className="-mx-4 bg-sidebar px-4 py-16 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+<section className="w-full bg-surface-container-low">
+  <Container className="py-16">…</Container>
+</section>
 ```
+
+Dentro de una página contenida, una sección que necesita fondo de borde a borde puede romper el
+padding con márgenes negativos iguales a los del contenedor
+(`-mx-gutter-mobile sm:-mx-gutter md:-mx-margin`).
 
 ---
 

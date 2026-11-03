@@ -100,3 +100,20 @@ public/
 ```
 
 Estos no siguen la estructura por producto — son del sitio en general.
+
+### Foto del hero del Home
+
+```
+public/
+  images/
+    hero/
+      inicio-640.webp     ← 20 kB
+      inicio-1024.webp    ← 41 kB
+      inicio-1376.webp    ← 63 kB (ancho original)
+```
+
+WebP a tres anchos para el `srcset` (`sizes="100vw"`), sacados del PNG original, que no se
+commitea. Es el LCP del Home: `fetchpriority="high"`, sin `loading="lazy"`, y precargada desde
+`index.html` solo en `/`. Las rutas viven en `src/features/home/homeHeroImage.ts`; un test verifica
+que el preload use las mismas. Al reemplazar la foto, regenerar los tres anchos y que la más grande
+no pase de ~150 kB.

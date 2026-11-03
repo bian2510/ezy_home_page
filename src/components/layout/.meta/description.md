@@ -15,7 +15,7 @@ footer, and (later) global banners or skip links.
 
 ## Patterns
 
-- Centered max-width container (`max-w-content`) shared with `RootLayout`
+- Centered max-width container (`components/ui/Container`, `max-w-content`) shared with `RootLayout`
 - Semantic landmarks: `<header>`, `<nav aria-label="...">`, `<footer>`
 - Spanish copy by default
 

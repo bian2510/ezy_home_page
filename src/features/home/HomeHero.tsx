@@ -1,18 +1,28 @@
 // HomeHero — portada del Home: H1, bajada, las dos acciones y dos datos
-// destacados.
+// destacados. Franja oscura de borde a borde en todos los tamaños, como el
+// mock; el contenido va en el `Container` del sitio.
 //
-// Fondo oscuro con un degradé de tokens, sin foto: el mock usa una imagen que
-// no es nuestra, y la única foto propia (`smart-bulb.jpg`) es un producto
-// sobre blanco. Sin imagen, lo más grande de la primera pantalla es el H1 y el
-// LCP no espera ninguna descarga.
-//
-// En el celular y la tablet va de borde a borde (rompe el padding del
-// `<main>`, docs/frontend-conventions.md §6); en escritorio es una tarjeta
-// dentro del ancho de contenido.
+// Foto de fondo (`homeHeroImage.ts`): es el LCP, así que es decorativa
+// (`alt=""`), se pide primero (`fetchpriority="high"`, `loading="eager"`, y
+// precargada en `index.html` solo en `/`) y dos velos de `inverse-surface`
+// mantienen el contraste AA del texto. En el celular se encuadra en la vista a
+// la ciudad (`object-hero`). Con `image={null}` queda el degradé de tokens.
 import { Link } from 'react-router-dom';
+import Container from '@/components/ui/Container';
 import Icon, { type IconName } from '@/components/ui/Icon';
 import { getWhatsAppNumber } from '@/lib/env';
 import { cn } from '@/lib/cn';
+
+import { HOME_HERO_IMAGE, type HeroImage } from './homeHeroImage';
+
+interface HomeHeroProps {
+  /** Foto de fondo; `null` deja solo el degradé. */
+  image?: HeroImage | null;
+}
+
+interface HeroBackgroundProps {
+  image: HeroImage | null;
+}
 
 interface Highlight {
   icon: IconName;
@@ -29,27 +39,49 @@ const HIGHLIGHTS: readonly Highlight[] = [
 const actionBase =
   'inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-6 py-3 text-label-lg font-bold transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed focus-visible:ring-offset-2 focus-visible:ring-offset-inverse-surface';
 
-export default function HomeHero() {
+// React 18 no conoce `fetchPriority` en camelCase (avisa en consola); en
+// minúscula pasa tal cual al HTML.
+const HIGH_PRIORITY = { fetchpriority: 'high' } as Record<string, string>;
+
+function HeroBackground({ image }: HeroBackgroundProps) {
+  if (image === null) {
+    return (
+      <div aria-hidden="true" className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-inverse-surface via-inverse-surface to-primary-container/60" />
+        <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary-container/30 blur-3xl" />
+      </div>
+    );
+  }
+  return (
+    <div aria-hidden="true" className="absolute inset-0">
+      <img
+        src={image.src}
+        srcSet={image.srcSet}
+        sizes="100vw"
+        alt=""
+        loading="eager"
+        decoding="async"
+        {...HIGH_PRIORITY}
+        className="h-full w-full object-cover object-hero opacity-60 md:object-center"
+      />
+      {/* Velos del mock: oscurecen a la izquierda (texto) y abajo (datos). */}
+      <div className="absolute inset-0 bg-gradient-to-r from-inverse-surface via-inverse-surface/85 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface via-inverse-surface/60 to-transparent" />
+    </div>
+  );
+}
+
+export default function HomeHero({ image = HOME_HERO_IMAGE }: HomeHeroProps) {
   const whatsAppNumber = getWhatsAppNumber();
 
   return (
     <section
       aria-labelledby="home-hero-heading"
-      className={cn(
-        'relative -mx-4 -mt-6 overflow-hidden bg-inverse-surface text-inverse-on-surface sm:-mx-6 lg:mx-0 lg:mt-0 lg:rounded-2xl',
-      )}
+      className="relative w-full overflow-hidden bg-inverse-surface text-inverse-on-surface"
     >
-      {/* Brillo teal decorativo, solo con tokens de color. */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-br from-inverse-surface via-inverse-surface to-primary-container/60"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary-container/30 blur-3xl"
-      />
+      <HeroBackground image={image} />
 
-      <div className="relative flex flex-col gap-10 px-4 pb-12 pt-12 sm:px-8 sm:pb-16 sm:pt-16 lg:px-12 lg:pb-20 lg:pt-20">
+      <Container className="relative flex flex-col justify-between gap-12 pb-16 pt-12 md:min-h-hero md:pb-28 md:pt-20">
         <div className="flex max-w-3xl flex-col gap-5">
           <h1
             id="home-hero-heading"
@@ -91,7 +123,7 @@ export default function HomeHero() {
           </div>
         </div>
 
-        <ul className="grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 lg:max-w-2xl">
+        <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-3">
           {HIGHLIGHTS.map(({ icon, title, detail }) => (
             <li
               key={title}
@@ -107,7 +139,7 @@ export default function HomeHero() {
             </li>
           ))}
         </ul>
-      </div>
+      </Container>
     </section>
   );
 }

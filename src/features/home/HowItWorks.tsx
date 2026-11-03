@@ -1,6 +1,9 @@
 // HowItWorks — "¿Cómo funciona EzyHome en tu día a día?": los tres pasos,
-// desde recibir el producto hasta usarlo con rutinas.
+// desde recibir el producto hasta usarlo con rutinas, y al pie el ejemplo de
+// rutina "Modo Cine" (como en el mock, dentro de la misma sección).
 import Icon, { type IconName } from '@/components/ui/Icon';
+import SectionBand from './SectionBand';
+import RoutineBanner from './RoutineBanner';
 
 interface Step {
   number: string;
@@ -39,7 +42,7 @@ const HEADING_ID = 'como-funciona-heading';
 
 export default function HowItWorks() {
   return (
-    <section aria-labelledby={HEADING_ID} className="flex flex-col gap-10">
+    <SectionBand labelledBy={HEADING_ID} tone="low" className="gap-10 pb-16 pt-2 md:pb-24">
       <div className="mx-auto flex max-w-2xl flex-col gap-2 text-center">
         <span className="text-label-sm font-bold uppercase tracking-wider text-primary">
           Simple de verdad
@@ -82,6 +85,8 @@ export default function HowItWorks() {
           </li>
         ))}
       </ol>
-    </section>
+
+      <RoutineBanner />
+    </SectionBand>
   );
 }

@@ -10,6 +10,7 @@ import { activeProducts, listCategories } from '@/data/catalog';
 import { CategoryFilter, ProductCard, countByCategory } from '@/features/catalog';
 import Icon from '@/components/ui/Icon';
 import SectionHeader from './SectionHeader';
+import SectionBand from './SectionBand';
 import { selectFeaturedProducts } from './homeUtils';
 
 /** Dos filas de 4 en escritorio. */
@@ -30,7 +31,7 @@ export default function FeaturedProducts() {
   if (featured.length === 0) return null;
 
   return (
-    <section aria-labelledby={HEADING_ID} className="flex flex-col gap-8">
+    <SectionBand labelledBy={HEADING_ID} tone="surface" className="gap-8 py-16 md:py-24">
       <SectionHeader id={HEADING_ID} title="Nuestros productos">
         <Link
           to="/catalogo"
@@ -58,6 +59,6 @@ export default function FeaturedProducts() {
           </li>
         ))}
       </ul>
-    </section>
+    </SectionBand>
   );
 }

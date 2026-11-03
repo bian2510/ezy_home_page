@@ -8,6 +8,7 @@ import { activeProducts } from '@/data/catalog';
 import { CATEGORY_DESCRIPTIONS } from '@/data/categoryDescriptions';
 import Icon, { type IconName } from '@/components/ui/Icon';
 import SectionHeader from './SectionHeader';
+import SectionBand from './SectionBand';
 import { buildCategoryCards, productCountLabel } from './homeUtils';
 
 const HEADING_ID = 'categorias-heading';
@@ -29,7 +30,7 @@ export default function CategoryCards() {
   if (cards.length === 0) return null;
 
   return (
-    <section aria-labelledby={HEADING_ID} className="flex flex-col gap-8">
+    <SectionBand labelledBy={HEADING_ID} tone="surface" className="gap-8 pb-16 md:pb-20">
       <SectionHeader id={HEADING_ID} title="Soluciones para cada rincón de tu casa">
         <p className="max-w-md text-body-md text-secondary">
           Dispositivos Wi-Fi, Zigbee y Bluetooth que se instalan sin reformas.
@@ -60,6 +61,6 @@ export default function CategoryCards() {
           </li>
         ))}
       </ul>
-    </section>
+    </SectionBand>
   );
 }

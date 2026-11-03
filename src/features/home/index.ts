@@ -5,4 +5,3 @@ export { default as FeaturedProducts } from './FeaturedProducts';
 export { default as CategoryCards } from './CategoryCards';
 export { default as BenefitCards } from './BenefitCards';
 export { default as HowItWorks } from './HowItWorks';
-export { default as RoutineBanner } from './RoutineBanner';

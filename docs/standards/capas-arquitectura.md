@@ -49,6 +49,7 @@ Primitivos visuales **ciegos al dominio**. No saben que existe `Product`, `Cart`
 src/components/ui/
   Badge.tsx           ← recibe variant + children, nada más
   Button.tsx
+  Container.tsx       ← ancho de página (`max-w-content`) y márgenes laterales del mock
   Drawer.tsx
   QuantitySelector.tsx
   Toast.tsx

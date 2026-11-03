@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { activeProducts, listCategories } from '@/data/catalog';
 import { SITE_CONTACT } from '@/data/siteContact';
 import Icon from '@/components/ui/Icon';
+import Container from '@/components/ui/Container';
 import { getWhatsAppNumber } from '@/lib/env';
 import { cn } from '@/lib/cn';
 
@@ -52,7 +53,7 @@ export default function SiteFooter() {
 
   return (
     <footer className="mt-12 bg-inverse-surface text-inverse-on-surface">
-      <div className="mx-auto grid max-w-content grid-cols-1 gap-8 border-b border-outline/20 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+      <Container className="grid grid-cols-1 gap-8 border-b border-outline/20 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div className="flex flex-col gap-4 sm:col-span-2 lg:col-span-1 lg:pr-8">
           <p className="flex items-center gap-2 text-headline-sm font-extrabold text-inverse-on-surface">
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-on-primary">
@@ -127,13 +128,13 @@ export default function SiteFooter() {
             {SITE_CONTACT.location}
           </p>
         </div>
-      </div>
+      </Container>
 
-      <div>
-        <p className="mx-auto max-w-content px-4 py-6 text-body-sm text-surface-variant sm:px-6 lg:px-8">
+      <Container className="py-6">
+        <p className="text-body-sm text-surface-variant">
           &copy; {year} EzyHome. Todos los derechos reservados.
         </p>
-      </div>
+      </Container>
     </footer>
   );
 }

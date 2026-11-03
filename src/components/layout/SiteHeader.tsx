@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CartHeaderButton } from '@/features/cart';
 import SearchBox from '@/components/ui/SearchBox';
 import Icon from '@/components/ui/Icon';
+import Container from '@/components/ui/Container';
 import { getWhatsAppNumber } from '@/lib/env';
 import { cn } from '@/lib/cn';
 
@@ -101,7 +102,7 @@ export default function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 bg-header text-on-primary shadow-header">
-      <div className="mx-auto flex max-w-content items-center gap-3 px-4 py-3 sm:px-6 lg:gap-6 lg:px-8">
+      <Container className="flex items-center gap-3 py-3 lg:gap-6">
         <Link to="/" onClick={closeMenu} className={cn('shrink-0 rounded', headerFocus)}>
           <img
             src="/images/logo/logo.png"
@@ -134,9 +135,9 @@ export default function SiteHeader() {
             <Icon name={menuOpen ? 'close' : 'menu'} className="h-6 w-6" />
           </button>
         </div>
-      </div>
+      </Container>
 
-      <div className="px-4 pb-3 sm:px-6 md:hidden">{search('block')}</div>
+      <Container className="pb-3 md:hidden">{search('block')}</Container>
 
       {menuOpen && (
         <nav
@@ -144,7 +145,9 @@ export default function SiteHeader() {
           aria-label="Menú móvil"
           className="border-t border-on-primary/20 bg-header lg:hidden"
         >
-          <ul className="mx-auto flex max-w-content flex-col px-2 py-2 sm:px-4">{navLinks}</ul>
+          <Container>
+            <ul className="flex flex-col py-2">{navLinks}</ul>
+          </Container>
         </nav>
       )}
     </header>

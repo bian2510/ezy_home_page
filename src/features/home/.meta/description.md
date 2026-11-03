@@ -10,6 +10,7 @@ arma y pone los metadatos.
 - `CategoryCards.tsx` — una tarjeta por categoría real con su cantidad de productos
 - `BenefitCards.tsx`, `HowItWorks.tsx`, `RoutineBanner.tsx` — contenido fijo
 - `homeUtils.ts` — `selectFeaturedProducts`, `buildCategoryCards`, `productCountLabel`
+- `SectionBand.tsx` — franja de borde a borde con su fondo y el `Container` del sitio adentro (el Home es ruta full-bleed en `RootLayout`)
 
 ## Dependencies
 
@@ -24,5 +25,5 @@ arma y pone los metadatos.
 
 ## Constraints
 
-- Va en el bundle inicial (la landing no es lazy): nada de imágenes ni librerías nuevas en la primera pantalla
+- Va en el bundle inicial (la landing no es lazy): sin librerías nuevas. La única imagen de la primera pantalla es la foto del hero (`homeHeroImage.ts`, WebP ≤ 63 kB, precargada en `index.html` solo en `/`)
 - No llama al backend: precio y stock llegan por la card del catálogo (`pricing`)
