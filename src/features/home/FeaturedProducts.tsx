@@ -18,10 +18,8 @@ import { usePricing } from '@/features/pricing';
 import Icon from '@/components/ui/Icon';
 import SectionHeader from './SectionHeader';
 import SectionBand from './SectionBand';
-import { outOfStockLast, selectFeaturedProducts } from './homeUtils';
+import { FEATURED_LIMIT, outOfStockLast, selectFeaturedProducts } from './homeUtils';
 
-/** Dos filas de 4 en escritorio. */
-const FEATURED_LIMIT = 8;
 const HEADING_ID = 'nuestros-productos-heading';
 
 export default function FeaturedProducts() {

@@ -8,10 +8,10 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from '@/App';
 import { activeProducts } from '@/data/catalog';
-import { selectFeaturedProducts } from '@/features/home/homeUtils';
+import { FEATURED_LIMIT, selectFeaturedProducts } from '@/features/home/homeUtils';
 
-// Mismo corte que el Home: dos filas de 4.
-const featured = selectFeaturedProducts(activeProducts, 8);
+// Mismo corte que el Home: una fila de 4.
+const featured = selectFeaturedProducts(activeProducts, FEATURED_LIMIT);
 const [soldOut] = featured;
 
 const erpResponse = (soldOutSku: string) => ({
@@ -49,6 +49,14 @@ describe('Home — Nuestros productos con el stock del ERP', () => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
     window.localStorage.clear();
+  });
+
+  it('should show a single row of 4 products, not a catalog', () => {
+    vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => undefined)));
+
+    renderHome();
+
+    expect(featuredNames()).toHaveLength(4);
   });
 
   it('should move a product without stock to the end once the ERP answers', async () => {
