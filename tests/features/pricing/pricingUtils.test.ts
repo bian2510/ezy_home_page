@@ -6,6 +6,7 @@ import {
   indexQuotes,
   isPurchasable,
   resolvePricing,
+  transferDiscountPercent,
   unavailableLabel,
 } from '@/features/pricing/pricingUtils';
 import type { StoreQuote } from '@/features/pricing/storeApi';
@@ -150,5 +151,68 @@ describe('stock limit', () => {
   it('should keep the quantity when the stock is unknown or zero', () => {
     expect(clampToStock(pricing(), 5)).toBe(5);
     expect(clampToStock(pricing(0), 5)).toBe(5);
+  });
+});
+
+describe('transferDiscountPercent', () => {
+  const priced = (price: number | null, transferPrice: number | null): ProductPricing => ({
+    price,
+    transferPrice,
+    availability: 'available',
+  });
+
+  it('should return the transfer discount over the Mercado Pago price', () => {
+    expect(transferDiscountPercent(priced(20_000, 19_000))).toBe(5);
+  });
+
+  it('should round to the nearest whole percent (usuario, 2026-11-03)', () => {
+    // 18.900 → 18.000 es un 4,76 %: se muestra 5 %.
+    expect(transferDiscountPercent(priced(18_900, 18_000))).toBe(5);
+  });
+
+  it('should round up from half a point and down below it', () => {
+    expect(transferDiscountPercent(priced(1_000, 955))).toBe(5); // 4,5 %
+    expect(transferDiscountPercent(priced(1_000, 954))).toBe(5); // 4,6 %
+    expect(transferDiscountPercent(priced(1_000, 956))).toBe(4); // 4,4 %
+  });
+
+  it('should return null when there is no cheaper transfer price', () => {
+    // Sin Mercado Pago activo, `resolvePricing` no informa precio de transferencia.
+    expect(transferDiscountPercent(priced(20_000, null))).toBeNull();
+  });
+
+  it('should return null when the ERP has no price', () => {
+    expect(transferDiscountPercent(priced(null, null))).toBeNull();
+  });
+
+  it('should not lose a point to floating point error', () => {
+    // (100 - 71) / 100 * 100 da 28,999… en coma flotante: tiene que dar 29.
+    expect(transferDiscountPercent(priced(100, 71))).toBe(29);
+    expect(transferDiscountPercent(priced(1000, 710))).toBe(29);
+  });
+
+  it('should return null when the transfer price is zero or negative', () => {
+    // Un precio de transferencia en 0 es un dato roto del ERP, no un "-100%".
+    expect(transferDiscountPercent(priced(20_000, 0))).toBeNull();
+    expect(transferDiscountPercent(priced(20_000, -500))).toBeNull();
+  });
+
+  it('should return null when the Mercado Pago price is zero or negative', () => {
+    expect(transferDiscountPercent(priced(0, 0))).toBeNull();
+    expect(transferDiscountPercent(priced(-100, -200))).toBeNull();
+  });
+
+  it('should return null when the transfer price is not cheaper', () => {
+    expect(transferDiscountPercent(priced(20_000, 20_000))).toBeNull();
+    expect(transferDiscountPercent(priced(20_000, 21_000))).toBeNull();
+  });
+
+  it('should return null when the discount rounds to zero', () => {
+    expect(transferDiscountPercent(priced(20_000, 19_950))).toBeNull(); // 0,25 %
+    expect(transferDiscountPercent(priced(1_000, 996))).toBeNull(); // 0,4 %
+  });
+
+  it('should show 1% from half a point up', () => {
+    expect(transferDiscountPercent(priced(1_000, 995))).toBe(1); // 0,5 %
   });
 });

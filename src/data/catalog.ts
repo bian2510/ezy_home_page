@@ -20,3 +20,18 @@ export const findActiveProductById = (id: string | undefined): Product | undefin
 /** Producto por id sin filtrar por visibilidad — para reconciliar un carrito viejo. */
 export const findProductById = (id: string): Product | undefined =>
   allProducts.find((product) => product.id === id);
+
+/**
+ * Categorías de una lista de productos, sin repetir y en el orden en que
+ * aparecen. Un producto sin categoría (o con una en blanco) no aporta ninguna:
+ * antes generaba un filtro con etiqueta vacía.
+ */
+export const listCategories = (products: Product[]): string[] => {
+  const seen = new Set<string>();
+  for (const product of products) {
+    const category = product.category?.trim();
+    if (category === undefined || category === '') continue;
+    seen.add(category);
+  }
+  return Array.from(seen);
+};

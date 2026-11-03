@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { buildWhatsAppMessage, computeCartTotals } from '@/features/cart/cartUtils';
+import {
+  buildWhatsAppMessage,
+  cartHeaderTotal,
+  computeCartTotals,
+} from '@/features/cart/cartUtils';
 import { formatPrice } from '@/lib/formatPrice';
 import type { CartItem, Product, ProductPricing } from '@/types';
 import { buildProduct as buildBaseProduct } from '../../helpers/builders';
@@ -180,5 +184,30 @@ describe('computeCartTotals', () => {
       transferTotal: 0,
       hasUnpriced: true,
     });
+  });
+});
+
+describe('cartHeaderTotal', () => {
+  it('should show the transfer total, labeled, when it is lower than the Mercado Pago one', () => {
+    expect(cartHeaderTotal({ total: 21_000, transferTotal: 20_000, hasUnpriced: false })).toEqual({
+      amount: 20_000,
+      label: 'Con transferencia',
+    });
+  });
+
+  it('should show a plain total when there is a single price', () => {
+    expect(cartHeaderTotal({ total: 20_000, transferTotal: 20_000, hasUnpriced: false })).toEqual({
+      amount: 20_000,
+      label: 'Total',
+    });
+  });
+
+  it('should hide the total when some product has no ERP price', () => {
+    // Un total parcial engaña: el visitante cree que eso es lo que paga.
+    expect(cartHeaderTotal({ total: 20_000, transferTotal: 20_000, hasUnpriced: true })).toBeNull();
+  });
+
+  it('should hide the total when the cart is empty', () => {
+    expect(cartHeaderTotal({ total: 0, transferTotal: 0, hasUnpriced: false })).toBeNull();
   });
 });

@@ -3,6 +3,7 @@
 // See docs/standards/modulos-feature.md.
 export { CartProvider } from './CartProvider';
 export { default as CartDrawer } from './CartDrawer';
+export { default as CartHeaderButton } from './CartHeaderButton';
 export { default as CartPage } from './CartPage';
 export { useCart } from './useCart';
 export type { CartContextValue } from './CartContext';

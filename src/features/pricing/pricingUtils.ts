@@ -51,6 +51,26 @@ export const resolvePricing = (
   };
 };
 
+/**
+ * Descuento por pagar con transferencia frente a Mercado Pago, en puntos
+ * porcentuales enteros, redondeado al más cercano: $ 18.900 contra $ 18.000
+ * (4,76 %) muestra "-5%" (usuario, 2026-11-03). `null` si no hay descuento que
+ * mostrar: sin precio del ERP, sin Mercado Pago activo, precios en cero o
+ * negativos (dato roto, no un "-100%"), transferencia que no es más barata, o
+ * un descuento que redondeado da 0.
+ *
+ * Se multiplica antes de dividir: `(100 - 71) / 100 * 100` da 28,999… en coma
+ * flotante y quedaba al borde del redondeo; `(29 * 100) / 100` da 29 exacto
+ * con precios enteros, que es lo que manda el ERP.
+ */
+export const transferDiscountPercent = (pricing: ProductPricing): number | null => {
+  const { price, transferPrice } = pricing;
+  if (price === null || transferPrice === null) return null;
+  if (price <= 0 || transferPrice <= 0 || transferPrice >= price) return null;
+  const percent = Math.round(((price - transferPrice) * 100) / price);
+  return percent >= 1 ? percent : null;
+};
+
 /** Aviso al llegar al tope de stock: sin "Quedan N" (usuario, 2026-10-28). */
 export const STOCK_LIMIT_MESSAGE = 'Llegaste al máximo de unidades disponibles';
 
