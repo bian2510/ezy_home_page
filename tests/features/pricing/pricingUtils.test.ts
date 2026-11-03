@@ -7,6 +7,7 @@ import {
   isPurchasable,
   resolvePricing,
   transferDiscountPercent,
+  transferSavings,
   unavailableLabel,
 } from '@/features/pricing/pricingUtils';
 import type { StoreQuote } from '@/features/pricing/storeApi';
@@ -214,5 +215,37 @@ describe('transferDiscountPercent', () => {
 
   it('should show 1% from half a point up', () => {
     expect(transferDiscountPercent(priced(1_000, 995))).toBe(1); // 0,5 %
+  });
+});
+
+describe('transferSavings', () => {
+  it('should be the real difference between the Mercado Pago and the transfer price', () => {
+    expect(transferSavings({ price: 26300, transferPrice: 25000, availability: 'available' })).toBe(
+      1300,
+    );
+  });
+
+  it('should be null without a transfer price (Mercado Pago off, or not cheaper)', () => {
+    expect(
+      transferSavings({ price: 25000, transferPrice: null, availability: 'available' }),
+    ).toBeNull();
+  });
+
+  it('should be null without an ERP price', () => {
+    expect(
+      transferSavings({ price: null, transferPrice: null, availability: 'no_price' }),
+    ).toBeNull();
+    expect(
+      transferSavings({ price: null, transferPrice: null, availability: 'loading' }),
+    ).toBeNull();
+  });
+
+  it('should be null when the difference is zero or negative (broken data)', () => {
+    expect(
+      transferSavings({ price: 25000, transferPrice: 25000, availability: 'available' }),
+    ).toBeNull();
+    expect(
+      transferSavings({ price: 25000, transferPrice: 26000, availability: 'available' }),
+    ).toBeNull();
   });
 });

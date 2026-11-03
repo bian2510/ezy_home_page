@@ -1,7 +1,8 @@
 // SiteHeader — header global: logo, buscador, navegación y botón del carrito.
 //
-// Mobile-first: en el celular el buscador baja a una segunda fila y la
-// navegación queda detrás del botón de menú; desde `lg` va todo en una fila.
+// Mobile-first: una sola fila en todos los anchos (usuario, 2026-11-03): logo,
+// buscador (ocupa lo que sobra), carrito y, hasta `lg`, el botón de menú con la
+// navegación. En el celular el placeholder es corto; desde `md`, el largo.
 // El buscador manda a `/catalogo?q=…`, que es donde se filtra.
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -11,6 +12,7 @@ import Icon from '@/components/ui/Icon';
 import Container from '@/components/ui/Container';
 import { getWhatsAppNumber } from '@/lib/env';
 import { cn } from '@/lib/cn';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 interface NavItem {
   to: string;
@@ -25,6 +27,13 @@ const NAV_ITEMS: readonly NavItem[] = [
 
 const SEARCH_LABEL = 'Buscar productos';
 const SEARCH_PLACEHOLDER = 'Buscar productos (sensores, iluminación, enchufes)…';
+// A 390 px el buscador tiene ~200 px: el largo se cortaba a la mitad. A 320 px
+// tiene ~137 px y hasta "Buscar productos" se cortaba. El nombre accesible es
+// siempre el `label` ("Buscar productos"), no el placeholder.
+const SEARCH_PLACEHOLDER_SHORT = 'Buscar productos';
+const SEARCH_PLACEHOLDER_TINY = 'Buscar';
+const MD_UP = '(min-width: 768px)';
+const PHONE_375_UP = '(min-width: 375px)';
 
 // Foco visible sobre el teal del header: anillo blanco (4.5:1) separado del
 // control por 2 px del color del header, así se ve también sobre los botones
@@ -45,6 +54,13 @@ export default function SiteHeader() {
     location.pathname === '/catalogo' ? (new URLSearchParams(location.search).get('q') ?? '') : '';
   const whatsAppNumber = getWhatsAppNumber();
   const closeMenu = () => setMenuOpen(false);
+  const mdUp = useMediaQuery(MD_UP);
+  const phone375Up = useMediaQuery(PHONE_375_UP);
+  const placeholder = mdUp
+    ? SEARCH_PLACEHOLDER
+    : phone375Up
+      ? SEARCH_PLACEHOLDER_SHORT
+      : SEARCH_PLACEHOLDER_TINY;
 
   const handleSearch = (query: string) => {
     closeMenu();
@@ -64,14 +80,15 @@ export default function SiteHeader() {
 
   // La `key` remonta el buscador cuando cambia la búsqueda de la URL, así el
   // campo refleja lo que está filtrando el catálogo.
-  const search = (className: string) => (
+  const search = (
     <SearchBox
       key={currentQuery}
       label={SEARCH_LABEL}
-      placeholder={SEARCH_PLACEHOLDER}
+      placeholder={placeholder}
       defaultValue={currentQuery}
       onSearch={handleSearch}
-      className={className}
+      // `min-w-0`: sin esto el campo no se achica y a 320 px empuja el carrito afuera.
+      className="min-w-0 flex-1 lg:max-w-xl"
     />
   );
 
@@ -102,7 +119,9 @@ export default function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 bg-header text-on-primary shadow-header">
-      <Container className="flex items-center gap-3 py-3 lg:gap-6">
+      {/* Huecos chicos en el celular: a 320 px entran logo, buscador, carrito y
+          menú con sus 44 px de toque. */}
+      <Container className="flex items-center gap-2 py-3 sm:gap-3 lg:gap-6">
         <Link to="/" onClick={closeMenu} className={cn('shrink-0 rounded', headerFocus)}>
           {/* Logo negro directo sobre el teal del header, sin caja blanca
               (usuario, 2026-11-03): negro sobre `header` da ~4.9:1. El
@@ -117,13 +136,13 @@ export default function SiteHeader() {
           />
         </Link>
 
-        {search('hidden flex-1 md:block lg:max-w-xl')}
+        {search}
 
         <nav aria-label="Principal" className="ml-auto hidden lg:block">
           <ul className="flex items-center gap-1">{navLinks}</ul>
         </nav>
 
-        <div className="ml-auto flex items-center gap-2 md:ml-0">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           <CartHeaderButton />
           <button
             type="button"
@@ -140,8 +159,6 @@ export default function SiteHeader() {
           </button>
         </div>
       </Container>
-
-      <Container className="pb-3 md:hidden">{search('block')}</Container>
 
       {menuOpen && (
         <nav

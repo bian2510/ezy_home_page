@@ -10,7 +10,6 @@ arma y pone los metadatos.
 - `CategoryCards.tsx` — una tarjeta por categoría real con su cantidad de productos
 - `BenefitCards.tsx`, `HowItWorks.tsx`, `RoutineBanner.tsx` — contenido fijo
 - `homeUtils.ts` — `selectFeaturedProducts`, `buildCategoryCards`, `productCountLabel`
-- `SectionBand.tsx` — franja de borde a borde con su fondo y el `Container` del sitio adentro (el Home es ruta full-bleed en `RootLayout`)
 
 ## Dependencies
 

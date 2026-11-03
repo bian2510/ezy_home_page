@@ -132,9 +132,10 @@ que es lo mismo: legibilidad dentro de una sección ya contenida.
 
 ### Páginas de borde a borde
 
-Una página hecha de franjas con fondo propio de borde a borde (el Home) se agrega a
-`FULL_BLEED_PATHS` en `RootLayout`: el `<main>` no la mete en el contenedor y cada franja lleva el
-suyo adentro (`features/home/SectionBand`):
+Una página hecha de franjas con fondo propio de borde a borde (el Home, el detalle de producto) se
+agrega a `FULL_BLEED_PATHS` (ruta exacta) o `FULL_BLEED_PREFIXES` (`/productos/…`) en `RootLayout`:
+el `<main>` no la mete en el contenedor y cada franja lleva el suyo adentro
+(`components/ui/SectionBand`):
 
 ```tsx
 <section className="w-full bg-surface-container-low">

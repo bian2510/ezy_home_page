@@ -101,6 +101,8 @@ const config: Config = {
       },
       boxShadow: {
         header: '0 4px 12px 0 rgba(15, 23, 42, 0.12)',
+        // Barra fija de abajo del detalle en el celular (sombra hacia arriba).
+        'sticky-bar': '0 -4px 16px 0 rgba(15, 23, 42, 0.12)',
       },
       spacing: {
         'safe-bottom': 'env(safe-area-inset-bottom)',
@@ -115,6 +117,10 @@ const config: Config = {
         // Ancho del contenido en todo el sitio: el `max-w-7xl` (1280 px) de
         // los mocks del rediseño. Lo aplica `components/ui/Container.tsx`.
         content: '80rem',
+      },
+      aspectRatio: {
+        // Imagen principal del detalle de producto desde `md` (`aspect-[4/3]` del mock).
+        gallery: '4 / 3',
       },
       objectPosition: {
         // Encuadre de la foto del hero en el celular: la vista a la ciudad.

@@ -8,7 +8,7 @@ import { activeProducts } from '@/data/catalog';
 import { CATEGORY_DESCRIPTIONS } from '@/data/categoryDescriptions';
 import Icon, { type IconName } from '@/components/ui/Icon';
 import SectionHeader from './SectionHeader';
-import SectionBand from './SectionBand';
+import SectionBand from '@/components/ui/SectionBand';
 import { buildCategoryCards, productCountLabel } from './homeUtils';
 
 const HEADING_ID = 'categorias-heading';

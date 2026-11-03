@@ -13,12 +13,12 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { activeProducts, listCategories } from '@/data/catalog';
-import { CategoryFilter, ProductCard, countByCategory } from '@/features/catalog';
+import { CategoryFilter, ProductCard, countByCategory, outOfStockLast } from '@/features/catalog';
 import { usePricing } from '@/features/pricing';
 import Icon from '@/components/ui/Icon';
 import SectionHeader from './SectionHeader';
-import SectionBand from './SectionBand';
-import { FEATURED_LIMIT, outOfStockLast, selectFeaturedProducts } from './homeUtils';
+import SectionBand from '@/components/ui/SectionBand';
+import { FEATURED_LIMIT, selectFeaturedProducts } from './homeUtils';
 
 const HEADING_ID = 'nuestros-productos-heading';
 

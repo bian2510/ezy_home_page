@@ -1,7 +1,7 @@
 // BenefitCards — los tres beneficios del Home. Textos confirmados por el
 // dueño (2026-11-03); Siri no va porque los productos no funcionan con ella.
 import Icon, { type IconName } from '@/components/ui/Icon';
-import SectionBand from './SectionBand';
+import SectionBand from '@/components/ui/SectionBand';
 
 interface Benefit {
   icon: IconName;
