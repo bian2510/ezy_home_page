@@ -49,6 +49,27 @@
     <meta property="og:image" content="%SITE_URL%/images/smart-bulb.jpg" />
     <meta property="og:locale" content="es_AR" />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!--
+      Precarga de la foto del hero del Home (el LCP), solo en `/`: es una SPA
+      con un solo HTML, y un preload fijo la bajaría también en el catálogo o
+      en un producto. Mismas variantes que `src/features/home/homeHeroImage.ts`
+      (un test verifica que coincidan).
+    -->
+    <script>
+      if (location.pathname === '/') {
+        var heroPreload = document.createElement('link');
+        heroPreload.rel = 'preload';
+        heroPreload.as = 'image';
+        heroPreload.setAttribute('fetchpriority', 'high');
+        heroPreload.setAttribute('imagesizes', '100vw');
+        heroPreload.setAttribute(
+          'imagesrcset',
+          '/images/hero/inicio-640.webp 640w, /images/hero/inicio-1024.webp 1024w, /images/hero/inicio-1376.webp 1376w',
+        );
+        document.head.appendChild(heroPreload);
+      }
+    </script>
   </head>
   <body class="bg-background text-foreground antialiased">
     <div id="root"></div>

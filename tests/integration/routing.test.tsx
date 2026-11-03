@@ -25,7 +25,9 @@ describe('rutas cargadas por demanda', () => {
   it('should render the landing without waiting for a chunk', () => {
     renderAt('/');
 
-    expect(screen.getByRole('heading', { name: /domótica para tu hogar/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /transformá tu hogar/i, level: 1 }),
+    ).toBeInTheDocument();
   });
 
   it('should load the catalog route on demand', async () => {

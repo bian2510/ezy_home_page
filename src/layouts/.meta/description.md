@@ -17,7 +17,8 @@ nested page.
 ## Patterns
 
 - Flex column with `min-h-dvh` so the footer sits at the viewport bottom on short pages
-- `mx-auto max-w-content` container shared with the header/footer
+- `components/ui/Container` (`max-w-content`, 1280 px, mock gutters) shared with the header/footer
+- Full-bleed routes (`FULL_BLEED_PATHS`, today only `/`) skip the container and render their own bands
 
 ## Constraints
 

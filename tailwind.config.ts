@@ -104,10 +104,25 @@ const config: Config = {
       },
       spacing: {
         'safe-bottom': 'env(safe-area-inset-bottom)',
+        // Márgenes laterales del mock (`px-gutter md:px-margin`). En el celular
+        // el sitio usa 16 px (`gutter-mobile`), la regla de siempre.
+        'gutter-mobile': '1rem',
+        gutter: '1.5rem',
+        margin: '3rem',
       },
       maxWidth: {
         prose: '65ch',
-        content: '1200px',
+        // Ancho del contenido en todo el sitio: el `max-w-7xl` (1280 px) de
+        // los mocks del rediseño. Lo aplica `components/ui/Container.tsx`.
+        content: '80rem',
+      },
+      objectPosition: {
+        // Encuadre de la foto del hero en el celular: la vista a la ciudad.
+        hero: '75% center',
+      },
+      minHeight: {
+        // Alto del hero del Home en escritorio (`min-h-[660px]` del mock).
+        hero: '41.25rem',
       },
       keyframes: {
         'slide-in-up': {

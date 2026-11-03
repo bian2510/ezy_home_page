@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CartHeaderButton } from '@/features/cart';
 import SearchBox from '@/components/ui/SearchBox';
 import Icon from '@/components/ui/Icon';
+import Container from '@/components/ui/Container';
 import { getWhatsAppNumber } from '@/lib/env';
 import { cn } from '@/lib/cn';
 
@@ -101,14 +102,18 @@ export default function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 bg-header text-on-primary shadow-header">
-      <div className="mx-auto flex max-w-content items-center gap-3 px-4 py-3 sm:px-6 lg:gap-6 lg:px-8">
+      <Container className="flex items-center gap-3 py-3 lg:gap-6">
         <Link to="/" onClick={closeMenu} className={cn('shrink-0 rounded', headerFocus)}>
+          {/* Logo negro directo sobre el teal del header, sin caja blanca
+              (usuario, 2026-11-03): negro sobre `header` da ~4.9:1. El
+              ancho y el alto siguen la proporción del archivo (141×159), así
+              el lugar queda reservado antes de que cargue. */}
           <img
-            src="/images/logo/logo.png"
+            src="/images/logo/logo-black.png"
             alt="EzyHome"
-            width={48}
+            width={43}
             height={48}
-            className="h-11 w-11 rounded-lg bg-surface-container-lowest object-contain p-0.5 lg:h-12 lg:w-12"
+            className="h-11 w-auto lg:h-12"
           />
         </Link>
 
@@ -134,9 +139,9 @@ export default function SiteHeader() {
             <Icon name={menuOpen ? 'close' : 'menu'} className="h-6 w-6" />
           </button>
         </div>
-      </div>
+      </Container>
 
-      <div className="px-4 pb-3 sm:px-6 md:hidden">{search('block')}</div>
+      <Container className="pb-3 md:hidden">{search('block')}</Container>
 
       {menuOpen && (
         <nav
@@ -144,7 +149,9 @@ export default function SiteHeader() {
           aria-label="Menú móvil"
           className="border-t border-on-primary/20 bg-header lg:hidden"
         >
-          <ul className="mx-auto flex max-w-content flex-col px-2 py-2 sm:px-4">{navLinks}</ul>
+          <Container>
+            <ul className="flex flex-col py-2">{navLinks}</ul>
+          </Container>
         </nav>
       )}
     </header>

@@ -120,12 +120,15 @@ y `shadow-header` para el header sticky.
 
 | Token         | Clase           | Valor  | Cuándo usarlo                                         |
 | ------------- | --------------- | ------ | ----------------------------------------------------- |
-| `max-content` | `max-w-content` | 1200px | **Único ancho permitido** para contenedores de página |
+| `max-content` | `max-w-content` | 1280px | **Único ancho permitido** para contenedores de página |
 | `max-prose`   | `max-w-prose`   | 65ch   | Solo para cuerpo de artículos de blog                 |
+
+Es el `max-w-7xl` de los mocks. El contenedor se arma con `components/ui/Container`, que suma los
+márgenes laterales (ver "Espaciado especial"); no se repiten las clases a mano.
 
 ```tsx
 // ✅ CORRECTO
-<section className="mx-auto w-full max-w-content px-4 py-8 sm:px-6 lg:px-8">
+<Container className="py-8">…</Container>
 
 // ❌ MAL — ancho arbitrario
 <div className="mx-auto max-w-5xl ...">
@@ -144,9 +147,15 @@ y `shadow-header` para el header sticky.
 
 ## Espaciado especial
 
-| Token         | Clase            | Valor                         | Cuándo usarlo                         |
-| ------------- | ---------------- | ----------------------------- | ------------------------------------- |
-| `safe-bottom` | `pb-safe-bottom` | `env(safe-area-inset-bottom)` | Elementos fijos en el bottom (mobile) |
+| Token           | Clase              | Valor                         | Cuándo usarlo                                          |
+| --------------- | ------------------ | ----------------------------- | ------------------------------------------------------ |
+| `safe-bottom`   | `pb-safe-bottom`   | `env(safe-area-inset-bottom)` | Elementos fijos en el bottom (mobile)                  |
+| `gutter-mobile` | `px-gutter-mobile` | `1rem`                        | Margen lateral del contenedor en el celular (16 px)    |
+| `gutter`        | `sm:px-gutter`     | `1.5rem`                      | Margen lateral desde `sm` (el `px-gutter` del mock)    |
+| `margin`        | `md:px-margin`     | `3rem`                        | Margen lateral desde `md` (el `md:px-margin` del mock) |
+
+Otros tokens de layout: `min-h-hero` (41.25rem, alto del hero del Home en escritorio) y
+`object-hero` (`75% center`, encuadre de la foto del hero en el celular).
 
 ---
 

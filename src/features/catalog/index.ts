@@ -5,4 +5,5 @@ export { default as ProductCard } from './ProductCard';
 export { default as ProductGrid } from './ProductGrid';
 export { default as CategoryFilter } from './CategoryFilter';
 export { useCatalog } from './useCatalog';
+export { countByCategory } from './catalogUtils';
 export type { UseCatalogResult } from './useCatalog';
