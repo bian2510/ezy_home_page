@@ -50,6 +50,8 @@ export default function SiteHeader() {
     // Desde el catálogo se conservan los demás filtros (la categoría): la URL
     // tiene que repetir lo que se ve. Desde otra página se arranca de cero.
     const params = new URLSearchParams(location.pathname === '/catalogo' ? location.search : '');
+    // Otra búsqueda, otra lista: se vuelve a la página 1.
+    params.delete('page');
     if (query === '') {
       params.delete('q');
     } else {

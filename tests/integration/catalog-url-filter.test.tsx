@@ -7,8 +7,11 @@ import { MemoryRouter } from 'react-router-dom';
 import App from '@/App';
 import { activeProducts } from '@/data/catalog';
 
+// La grilla muestra 12 por página: se cuenta lo que entra en la primera.
+const PER_PAGE = 12;
+const firstPage = (count: number) => Math.min(count, PER_PAGE);
 const countIn = (category: string) =>
-  activeProducts.filter((product) => product.category === category).length;
+  firstPage(activeProducts.filter((product) => product.category === category).length);
 
 describe('filtro del catálogo por URL', () => {
   beforeEach(() => {
@@ -23,7 +26,7 @@ describe('filtro del catálogo por URL', () => {
       </MemoryRouter>,
     );
     await screen.findByRole('heading', { name: /productos/i, level: 1 });
-    expect(screen.getAllByRole('article')).toHaveLength(activeProducts.length);
+    expect(screen.getAllByRole('article')).toHaveLength(firstPage(activeProducts.length));
 
     const footerCategories = screen.getByRole('navigation', { name: /categorías/i });
     await user.click(within(footerCategories).getByRole('link', { name: 'Seguridad' }));
