@@ -9,14 +9,19 @@ import { PricingProvider } from '@/features/pricing';
 
 /**
  * Rutas que arman sus propias franjas de borde a borde (cada una con su
- * `Container` adentro), como el Home del mock. El resto va dentro del
- * contenedor de página.
+ * `Container` adentro), como los mocks del Home y del detalle de producto. El
+ * resto va dentro del contenedor de página.
  */
 const FULL_BLEED_PATHS: ReadonlySet<string> = new Set(['/']);
+const FULL_BLEED_PREFIXES: readonly string[] = ['/productos/'];
+
+const isFullBleed = (pathname: string): boolean =>
+  FULL_BLEED_PATHS.has(pathname) ||
+  FULL_BLEED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 
 export default function RootLayout() {
   const location = useLocation();
-  const fullBleed = FULL_BLEED_PATHS.has(location.pathname);
+  const fullBleed = isFullBleed(location.pathname);
   // El boundary envuelve solo el contenido: si una página revienta, el header,
   // el carrito y el footer siguen en pie. La `key` por ruta lo remonta al
   // navegar, así el error no queda pegado.

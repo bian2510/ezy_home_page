@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import ProductDetailPage from '@/pages/ProductDetailPage';
@@ -37,6 +37,15 @@ vi.mock('@/data/products.json', () => ({
       active: true,
     },
     {
+      id: 'p-5',
+      name: 'Lámpara GU10',
+      description: 'Lámpara GU10 regulable.',
+      images: ['/images/gu10.jpg'],
+      category: 'iluminacion',
+      isBestseller: false,
+      active: true,
+    },
+    {
       id: 'p-4',
       name: 'Cerradura Inactiva',
       description: 'Producto sin stock, oculto del storefront.',
@@ -64,20 +73,49 @@ vi.mock('@/features/cart/useCart', () => ({
   }),
 }));
 
-// Precio del ERP: por defecto uno fijo por id; cada test puede fijar otro.
-const ERP_PRICES: Record<string, number> = { 'p-1': 18900, 'p-2': 28900, 'p-3': 9500 };
+// Precio del ERP: por defecto uno fijo por id; cada test puede fijar otro
+// (`erpPricing`, para todos) o dejar productos sin stock (`soldOutIds`).
+const ERP_PRICES: Record<string, number> = {
+  'p-1': 18900,
+  'p-2': 28900,
+  'p-3': 9500,
+  'p-5': 7000,
+};
 let erpPricing: ProductPricing | null = null;
+let soldOutIds: string[] = [];
+const pricingOf = (product: { id: string }): ProductPricing =>
+  erpPricing ?? {
+    price: ERP_PRICES[product.id] ?? null,
+    transferPrice: null,
+    availability: soldOutIds.includes(product.id) ? 'out_of_stock' : 'available',
+  };
 vi.mock('@/features/pricing/usePricing', () => ({
-  usePricing: () => ({
-    status: 'ready',
-    pricingOf: (product: { id: string }) =>
-      erpPricing ?? {
-        price: ERP_PRICES[product.id] ?? null,
-        transferPrice: null,
-        availability: 'available',
-      },
-  }),
+  usePricing: () => ({ status: 'ready', pricingOf }),
 }));
+
+// La card de "Mirá más productos" se prueba en su propio test: acá alcanza con
+// saber qué productos recibe y en qué orden.
+vi.mock('@/features/catalog/ProductCard', () => ({
+  __esModule: true,
+  default: ({ product }: { product: { id: string; name: string } }) => (
+    <div data-testid="related-card">{product.name}</div>
+  ),
+}));
+
+// IntersectionObserver controlable: la barra fija del celular aparece cuando
+// el botón principal de compra sale de la pantalla.
+type ObserverCallback = (entries: { isIntersecting: boolean }[]) => void;
+let observerCallback: ObserverCallback | null = null;
+class FakeObserver {
+  constructor(callback: ObserverCallback) {
+    observerCallback = callback;
+  }
+  observe = vi.fn();
+  disconnect = vi.fn();
+}
+const scrollPastBuyButton = () => act(() => observerCallback?.([{ isIntersecting: false }]));
+const scrollBackToBuyButton = () => act(() => observerCallback?.([{ isIntersecting: true }]));
+const stickyBar = () => screen.queryByRole('complementary', { name: /compra rápida/i });
 
 vi.mock('@/features/toast/useToast', () => ({
   useToast: () => ({ addToast: vi.fn(), removeToast: vi.fn(), toasts: [] }),
@@ -121,6 +159,9 @@ describe('ProductDetailPage', () => {
     cartItems = [];
     window.localStorage.clear();
     erpPricing = null;
+    soldOutIds = [];
+    observerCallback = null;
+    vi.unstubAllGlobals();
   });
 
   it('should not let the quantity go above the ERP stock left for the cart', async () => {
@@ -225,6 +266,180 @@ describe('ProductDetailPage', () => {
 
     const thumbs = screen.getAllByRole('button', { name: /imagen \d/i });
     expect(thumbs.length).toBe(2);
+  });
+
+  it('should show the chosen thumbnail as the main image', async () => {
+    const user = userEvent.setup();
+    renderAt('/productos/p-1');
+
+    expect(screen.getByRole('img', { name: 'Foco Inteligente RGBW' })).toHaveAttribute(
+      'src',
+      '/images/foco-1.jpg',
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Imagen 2' }));
+
+    expect(screen.getByRole('img', { name: 'Foco Inteligente RGBW' })).toHaveAttribute(
+      'src',
+      '/images/foco-2.jpg',
+    );
+    expect(screen.getByRole('button', { name: 'Imagen 2' })).toHaveAttribute(
+      'aria-current',
+      'true',
+    );
+  });
+
+  it('should not render thumbnails when the product has a single image', () => {
+    renderAt('/productos/p-2');
+
+    expect(screen.queryByRole('button', { name: /imagen \d/i })).not.toBeInTheDocument();
+  });
+
+  it('should render the breadcrumb Inicio / Catálogo / category / product', () => {
+    renderAt('/productos/p-1');
+
+    const breadcrumb = screen.getByRole('navigation', { name: /ruta de navegación/i });
+    expect(within(breadcrumb).getByRole('link', { name: /inicio/i })).toHaveAttribute('href', '/');
+    expect(within(breadcrumb).getByRole('link', { name: 'Catálogo' })).toHaveAttribute(
+      'href',
+      '/catalogo',
+    );
+    expect(within(breadcrumb).getByRole('link', { name: 'iluminacion' })).toHaveAttribute(
+      'href',
+      '/catalogo?category=iluminacion',
+    );
+    expect(within(breadcrumb).getByText('Foco Inteligente RGBW')).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+  });
+
+  it('should show the description in its own card', () => {
+    renderAt('/productos/p-1');
+
+    const card = screen.getByRole('heading', { name: 'Descripción' }).closest('section')!;
+    expect(
+      within(card).getByText(/foco led inteligente con 16 millones de colores/i),
+    ).toBeInTheDocument();
+  });
+
+  describe('ahorro por transferencia', () => {
+    it('should show how much the transfer saves and the discount badge', () => {
+      erpPricing = { price: 31000, transferPrice: 29500, availability: 'available' };
+      renderAt('/productos/p-2');
+
+      expect(
+        screen.getByText(
+          (text) => text.replace(/\s+/g, ' ') === 'Ahorrás $ 1.500 pagando por transferencia',
+        ),
+      ).toBeInTheDocument();
+      expect(screen.getByText(/-5% transferencia/i)).toBeInTheDocument();
+    });
+
+    it('should not show any saving without a cheaper transfer price', () => {
+      erpPricing = { price: 31000, transferPrice: null, availability: 'available' };
+      renderAt('/productos/p-2');
+
+      expect(screen.queryByText(/ahorrás/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/% transferencia/i)).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Mirá más productos', () => {
+    const relatedNames = () =>
+      within(screen.getByRole('heading', { name: /mirá más productos/i }).closest('section')!)
+        .getAllByTestId('related-card')
+        .map((card) => card.textContent);
+
+    it('should show other products of the same category first, then the rest', () => {
+      renderAt('/productos/p-1');
+
+      expect(relatedNames()).toEqual(['Tira LED RGB', 'Lámpara GU10', 'Sensor Sin Imagen']);
+    });
+
+    it('should put the products without stock last', () => {
+      soldOutIds = ['p-2'];
+      renderAt('/productos/p-1');
+
+      expect(relatedNames()).toEqual(['Lámpara GU10', 'Sensor Sin Imagen', 'Tira LED RGB']);
+    });
+
+    it('should link to the whole catalog', () => {
+      renderAt('/productos/p-1');
+
+      expect(screen.getByRole('link', { name: /ver todo el catálogo/i })).toHaveAttribute(
+        'href',
+        '/catalogo',
+      );
+    });
+  });
+
+  describe('barra fija del celular', () => {
+    beforeEach(() => {
+      vi.stubGlobal('IntersectionObserver', FakeObserver);
+    });
+
+    it('should appear only once the main buy button scrolls out of view', () => {
+      renderAt('/productos/p-1');
+      expect(stickyBar()).toBeNull();
+
+      scrollPastBuyButton();
+      expect(stickyBar()).not.toBeNull();
+      expect(within(stickyBar()!).getByText('Foco Inteligente RGBW')).toBeInTheDocument();
+      expect(within(stickyBar()!).getByText(priceText(18900))).toBeInTheDocument();
+
+      scrollBackToBuyButton();
+      expect(stickyBar()).toBeNull();
+    });
+
+    it('should show the transfer price when it is cheaper', () => {
+      erpPricing = { price: 31000, transferPrice: 29500, availability: 'available' };
+      renderAt('/productos/p-2');
+      scrollPastBuyButton();
+
+      expect(within(stickyBar()!).getByText(priceText(29500))).toBeInTheDocument();
+    });
+
+    it('should add the same quantity as the main button', async () => {
+      const user = userEvent.setup();
+      renderAt('/productos/p-1');
+      await user.click(screen.getByRole('button', { name: /aumentar cantidad/i }));
+      scrollPastBuyButton();
+
+      await user.click(within(stickyBar()!).getByRole('button', { name: 'Agregar' }));
+
+      expect(addItemMock).toHaveBeenCalledWith(expect.objectContaining({ id: 'p-1' }), 2);
+    });
+
+    it('should disable "Agregar" when the cart already has all the stock', () => {
+      erpPricing = { price: 18900, transferPrice: null, availability: 'available', stock: 1 };
+      cartItems = [{ product: { id: 'p-1' }, quantity: 1 }];
+      renderAt('/productos/p-1');
+      scrollPastBuyButton();
+
+      expect(within(stickyBar()!).getByRole('button', { name: 'Agregar' })).toBeDisabled();
+    });
+
+    it('should offer a WhatsApp consult when the product is out of stock', () => {
+      erpPricing = { price: 31000, transferPrice: null, availability: 'out_of_stock' };
+      renderAt('/productos/p-2');
+      scrollPastBuyButton();
+
+      expect(within(stickyBar()!).queryByRole('button', { name: 'Agregar' })).toBeNull();
+      expect(within(stickyBar()!).getByRole('link', { name: 'Consultar' })).toHaveAttribute(
+        'href',
+        expect.stringContaining('wa.me'),
+      );
+    });
+
+    it('should not show a price while the ERP has none', () => {
+      erpPricing = { price: null, transferPrice: null, availability: 'no_price' };
+      renderAt('/productos/p-2');
+      scrollPastBuyButton();
+
+      expect(within(stickyBar()!).getByText('Consultar precio')).toBeInTheDocument();
+      expect(within(stickyBar()!).getByRole('link', { name: 'Consultar' })).toBeInTheDocument();
+    });
   });
 
   it('should render a placeholder when the product has no images', () => {

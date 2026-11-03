@@ -1,6 +1,8 @@
-// SectionBand — franja del Home de borde a borde, con su fondo, y el
-// contenido centrado en el `Container` del sitio. Calca las secciones del mock
-// (`w-full bg-surface` / `bg-surface-container-low` + `max-w-7xl mx-auto`).
+// SectionBand — franja de borde a borde, con su fondo, y el contenido centrado
+// en el `Container` del sitio. Calca las secciones de los mocks (`w-full
+// bg-surface` / `bg-surface-container-low` + `max-w-7xl mx-auto`). La usan las
+// páginas de borde a borde (`FULL_BLEED` en `RootLayout`): el Home y el
+// detalle de producto.
 import type { ReactNode } from 'react';
 import Container from '@/components/ui/Container';
 import { cn } from '@/lib/cn';

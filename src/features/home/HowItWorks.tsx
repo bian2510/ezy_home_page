@@ -2,7 +2,7 @@
 // desde recibir el producto hasta usarlo con rutinas, y al pie el ejemplo de
 // rutina "Modo Cine" (como en el mock, dentro de la misma sección).
 import Icon, { type IconName } from '@/components/ui/Icon';
-import SectionBand from './SectionBand';
+import SectionBand from '@/components/ui/SectionBand';
 import RoutineBanner from './RoutineBanner';
 
 interface Step {

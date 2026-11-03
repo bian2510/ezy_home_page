@@ -12,6 +12,7 @@ import Container from '@/components/ui/Container';
 import Icon, { type IconName } from '@/components/ui/Icon';
 import { getWhatsAppNumber } from '@/lib/env';
 import { cn } from '@/lib/cn';
+import { HIGH_FETCH_PRIORITY } from '@/lib/fetchPriority';
 
 import { HOME_HERO_IMAGE, type HeroImage } from './homeHeroImage';
 
@@ -39,10 +40,6 @@ const HIGHLIGHTS: readonly Highlight[] = [
 const actionBase =
   'inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-6 py-3 text-label-lg font-bold transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed focus-visible:ring-offset-2 focus-visible:ring-offset-inverse-surface';
 
-// React 18 no conoce `fetchPriority` en camelCase (avisa en consola); en
-// minúscula pasa tal cual al HTML.
-const HIGH_PRIORITY = { fetchpriority: 'high' } as Record<string, string>;
-
 function HeroBackground({ image }: HeroBackgroundProps) {
   if (image === null) {
     return (
@@ -61,7 +58,7 @@ function HeroBackground({ image }: HeroBackgroundProps) {
         alt=""
         loading="eager"
         decoding="async"
-        {...HIGH_PRIORITY}
+        {...HIGH_FETCH_PRIORITY}
         className="h-full w-full object-cover object-hero opacity-60 md:object-center"
       />
       {/* Velos del mock: oscurecen a la izquierda (texto) y abajo (datos). */}

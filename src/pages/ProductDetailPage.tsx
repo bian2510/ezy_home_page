@@ -1,36 +1,38 @@
 // ProductDetailPage — /productos/:id route.
 //
-// Looks up a product in the static dataset by URL param and renders its
-// gallery, description, price and stock from the ERP (`usePricing`), a
-// quantity stepper, and an "Agregar al carrito" CTA (a WhatsApp consult when
-// the ERP has no price or no stock).
+// Busca el producto por el id de la URL y arma el detalle con las piezas de
+// `features/product` (rediseño 2026-11, mock del plafón): ruta de navegación,
+// galería, panel de compra con los dos precios del ERP, descripción, "Mirá
+// más productos" y, en el celular, la barra fija de compra.
 //
-// Business rules (see DOMAIN.md › Product Core and spec.md BR-003):
-// - URL propia por producto (`/productos/:id`).
-// - Galería: cuando hay > 1 imagen mostramos tira de thumbnails; con 0
-//   imágenes mostramos placeholder "Sin imagen".
-// - Selector de cantidad mínima 1; el botón agregar dispara `addItem` con
-//   el producto y la cantidad elegida.
-// - ID inexistente => 404 con link de regreso al catálogo.
-import { useMemo, useState } from 'react';
+// Reglas (DOMAIN.md › Product Core, spec.md BR-003):
+// - URL propia por producto (`/productos/:id`); id inexistente o producto
+//   inactivo => 404 con link al catálogo.
+// - Precio y stock del ERP (`usePricing`), nunca del JSON; el JSON-LD publica
+//   lo mismo que la página.
+//
+// Es una ruta de borde a borde (`FULL_BLEED_PREFIXES` en `RootLayout`): cada
+// franja lleva su `Container`.
+import { useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { findActiveProductById } from '@/data/catalog';
 import type { Product } from '@/types';
 import { getSiteUrl } from '@/lib/env';
 import { buildCanonical, buildProductJsonLd, truncateForMeta } from '@/lib/seo';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
-import QuantitySelector from '@/components/ui/QuantitySelector';
-import { useCart } from '@/features/cart';
+import { useInView } from '@/hooks/useInView';
+import Container from '@/components/ui/Container';
+import SectionBand from '@/components/ui/SectionBand';
+import { usePricing } from '@/features/pricing';
 import {
-  ConsultLink,
-  ProductPrice,
-  STOCK_LIMIT_MESSAGE,
-  isPurchasable,
-  usePricing,
-} from '@/features/pricing';
-import { useToast } from '@/features/toast';
-
-const MIN_QUANTITY = 1;
+  ProductBreadcrumb,
+  ProductDescription,
+  ProductGallery,
+  PurchasePanel,
+  RelatedProducts,
+  StickyPurchaseBar,
+  usePurchase,
+} from '@/features/product';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -81,7 +83,7 @@ export default function ProductDetailPage() {
 
 function ProductNotFound() {
   return (
-    <section className="mx-auto w-full max-w-content space-y-4 px-4 py-12 text-center">
+    <Container className="space-y-4 py-12 text-center">
       <h1 className="text-3xl font-semibold text-foreground">404</h1>
       <p className="text-muted-foreground">
         El producto que buscás no existe o ya no está disponible.
@@ -92,7 +94,7 @@ function ProductNotFound() {
       >
         Volver al catálogo
       </Link>
-    </section>
+    </Container>
   );
 }
 
@@ -101,104 +103,32 @@ interface ProductDetailProps {
 }
 
 function ProductDetail({ product }: ProductDetailProps) {
-  const { addItem, items } = useCart();
-  const { addToast } = useToast();
-  const pricing = usePricing().pricingOf(product);
-  const [selected, setSelected] = useState<number>(MIN_QUANTITY);
-  // Tope: el stock del ERP menos lo que ya está en el carrito (sin "Quedan N").
-  const inCart = items.find((item) => item.product.id === product.id)?.quantity ?? 0;
-  const remaining = pricing.stock === undefined ? undefined : pricing.stock - inCart;
-  const quantity = remaining === undefined ? selected : Math.min(selected, Math.max(remaining, 1));
-  const noneLeft = remaining !== undefined && remaining <= 0;
-  const atStockLimit = remaining !== undefined && quantity >= remaining;
-  const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
-
-  const handleAddToCart = () => {
-    addItem(product, quantity);
-    addToast(`${quantity > 1 ? `${quantity}x ` : ''}${product.name} agregado al carrito`);
-  };
-
-  const hasImages = product.images.length > 0;
-  const hasMultipleImages = product.images.length > 1;
-  const activeImage = hasImages ? product.images[activeImageIndex] : null;
+  const purchase = usePurchase(product);
+  // La barra fija del celular aparece cuando el botón principal sale de pantalla.
+  const actionsRef = useRef<HTMLDivElement>(null);
+  const actionsInView = useInView(actionsRef);
 
   return (
-    <section className="mx-auto w-full max-w-content px-4 py-6 sm:py-10">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        <div className="flex flex-col gap-3">
-          {activeImage !== null ? (
-            <img
-              src={activeImage}
-              alt={product.name}
-              className="aspect-square w-full rounded-md border border-border bg-card object-contain"
-            />
-          ) : (
-            <div
-              role="img"
-              aria-label="Sin imagen"
-              className="flex aspect-square w-full items-center justify-center rounded-md border border-border bg-muted text-sm text-muted-foreground"
-            >
-              Sin imagen
-            </div>
-          )}
+    <div className="flex flex-col">
+      <ProductBreadcrumb product={product} />
 
-          {hasMultipleImages && (
-            <ul className="flex list-none gap-2 overflow-x-auto p-0">
-              {product.images.map((src, index) => (
-                <li key={src}>
-                  <button
-                    type="button"
-                    aria-label={`Imagen ${index + 1}`}
-                    aria-current={index === activeImageIndex}
-                    onClick={() => setActiveImageIndex(index)}
-                    className={`inline-flex h-16 w-16 items-center justify-center overflow-hidden rounded-md border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                      index === activeImageIndex
-                        ? 'border-primary'
-                        : 'border-border hover:border-muted-foreground'
-                    }`}
-                  >
-                    <img src={src} alt="" className="h-full w-full object-cover" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+      <SectionBand label={product.name} tone="surface" className="py-6 md:py-8">
+        {/* En el celular: galería, compra, descripción. Desde `lg`, la compra
+            va a la derecha y ocupa las dos filas. */}
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-7">
+            <ProductGallery product={product} pricing={purchase.pricing} />
+          </div>
+          <PurchasePanel product={product} purchase={purchase} actionsRef={actionsRef} />
+          <div className="lg:col-span-7">
+            <ProductDescription description={product.description} />
+          </div>
         </div>
+      </SectionBand>
 
-        <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">{product.name}</h1>
+      <RelatedProducts product={product} />
 
-          <ProductPrice pricing={pricing} size="detail" />
-
-          <p className="text-base text-foreground/90">{product.description}</p>
-
-          {isPurchasable(pricing.availability) || pricing.availability === 'loading' ? (
-            <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <QuantitySelector
-                value={quantity}
-                onChange={setSelected}
-                min={MIN_QUANTITY}
-                max={remaining === undefined ? undefined : Math.max(remaining, MIN_QUANTITY)}
-              />
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                disabled={!isPurchasable(pricing.availability) || noneLeft}
-                className="inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                Agregar al carrito
-              </button>
-              {atStockLimit && pricing.availability === 'available' && (
-                <p role="status" className="text-sm text-muted-foreground">
-                  {STOCK_LIMIT_MESSAGE}
-                </p>
-              )}
-            </div>
-          ) : (
-            <ConsultLink product={product} className="mt-2 px-6 sm:self-start" />
-          )}
-        </div>
-      </div>
-    </section>
+      {!actionsInView && <StickyPurchaseBar product={product} purchase={purchase} />}
+    </div>
   );
 }
