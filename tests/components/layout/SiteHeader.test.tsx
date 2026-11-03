@@ -46,13 +46,8 @@ const renderHeader = (initialQuantity = 0, path = '/') =>
     </MemoryRouter>,
   );
 
-// El buscador se dibuja dos veces (fila del celular y fila de escritorio); CSS
-// oculta una según el ancho. Cualquiera de las dos hace lo mismo.
-const firstSearchbox = () => {
-  const [searchbox] = screen.getAllByRole('searchbox', { name: /buscar productos/i });
-  if (searchbox === undefined) throw new Error('No se encontró el buscador');
-  return searchbox;
-};
+// Un solo buscador, en la misma fila que el logo y el carrito en todos los anchos.
+const firstSearchbox = () => screen.getByRole('searchbox', { name: /buscar productos/i });
 
 const NBSP = new RegExp(' ', 'g');
 const plain = (amount: number) => formatPrice(amount).replace(NBSP, ' ');
@@ -83,6 +78,42 @@ describe('SiteHeader', () => {
     // 141×159 px: misma proporción, para que el lugar quede reservado.
     expect(img).toHaveAttribute('width', '43');
     expect(img).toHaveAttribute('height', '48');
+  });
+
+  it('should render a single search box, named by its label and not by the placeholder', () => {
+    renderHeader();
+
+    expect(screen.getAllByRole('searchbox')).toHaveLength(1);
+    expect(firstSearchbox()).toHaveAccessibleName('Buscar productos');
+  });
+
+  it.each([
+    [320, 'Buscar'],
+    [390, 'Buscar productos'],
+    [768, 'Buscar productos (sensores, iluminación, enchufes)…'],
+  ])('should fit the placeholder to the width (%i px)', (width, placeholder) => {
+    vi.stubGlobal(
+      'matchMedia',
+      vi.fn((query: string) => ({
+        matches: width >= Number(/(\d+)px/.exec(query)?.[1] ?? Infinity),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      })),
+    );
+    renderHeader();
+
+    expect(firstSearchbox()).toHaveAttribute('placeholder', placeholder);
+    // El nombre no depende del placeholder.
+    expect(firstSearchbox()).toHaveAccessibleName('Buscar productos');
+    vi.unstubAllGlobals();
+  });
+
+  it('should fall back to the narrow placeholder without matchMedia', () => {
+    vi.stubGlobal('matchMedia', undefined);
+    renderHeader();
+
+    expect(firstSearchbox()).toHaveAttribute('placeholder', 'Buscar');
+    vi.unstubAllGlobals();
   });
 
   it('should render the primary nav links', () => {
