@@ -75,6 +75,16 @@ describe('SiteHeader', () => {
     expect(logo).toHaveAttribute('href', '/');
   });
 
+  it('should draw the black logo straight on the header, with its real proportions (no CLS)', () => {
+    renderHeader();
+
+    const img = screen.getByRole('img', { name: 'EzyHome' });
+    expect(img).toHaveAttribute('src', '/images/logo/logo-black.png');
+    // 141×159 px: misma proporción, para que el lugar quede reservado.
+    expect(img).toHaveAttribute('width', '43');
+    expect(img).toHaveAttribute('height', '48');
+  });
+
   it('should render the primary nav links', () => {
     renderHeader();
 

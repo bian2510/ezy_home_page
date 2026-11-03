@@ -104,12 +104,16 @@ export default function SiteHeader() {
     <header className="sticky top-0 z-50 bg-header text-on-primary shadow-header">
       <Container className="flex items-center gap-3 py-3 lg:gap-6">
         <Link to="/" onClick={closeMenu} className={cn('shrink-0 rounded', headerFocus)}>
+          {/* Logo negro directo sobre el teal del header, sin caja blanca
+              (usuario, 2026-11-03): negro sobre `header` da ~4.9:1. El
+              ancho y el alto siguen la proporción del archivo (141×159), así
+              el lugar queda reservado antes de que cargue. */}
           <img
-            src="/images/logo/logo.png"
+            src="/images/logo/logo-black.png"
             alt="EzyHome"
-            width={48}
+            width={43}
             height={48}
-            className="h-11 w-11 rounded-lg bg-surface-container-lowest object-contain p-0.5 lg:h-12 lg:w-12"
+            className="h-11 w-auto lg:h-12"
           />
         </Link>
 
