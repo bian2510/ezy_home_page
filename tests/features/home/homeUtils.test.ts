@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildCategoryCards,
+  outOfStockLast,
   productCountLabel,
   selectFeaturedProducts,
 } from '@/features/home/homeUtils';
+import type { Availability, Product } from '@/types';
 import { buildProduct } from '../../helpers/builders';
 
 const ids = (products: { id: string }[]) => products.map((product) => product.id);
@@ -91,5 +93,36 @@ describe('productCountLabel', () => {
   it('should use the singular for one product and the plural otherwise', () => {
     expect(productCountLabel(1)).toBe('Ver 1 producto');
     expect(productCountLabel(13)).toBe('Ver 13 productos');
+  });
+});
+
+describe('outOfStockLast', () => {
+  const products = ['a', 'b', 'c', 'd'].map((id) => buildProduct({ id }));
+  const availabilityFrom =
+    (map: Record<string, Availability>) =>
+    (product: Product): Availability =>
+      map[product.id] ?? 'available';
+
+  it('should move the products without stock to the end, keeping the order of both groups', () => {
+    const sorted = outOfStockLast(
+      products,
+      availabilityFrom({ a: 'out_of_stock', c: 'out_of_stock' }),
+    );
+
+    expect(ids(sorted)).toEqual(['b', 'd', 'a', 'c']);
+  });
+
+  it('should keep the order while the ERP has not answered yet', () => {
+    expect(ids(outOfStockLast(products, () => 'loading'))).toEqual(['a', 'b', 'c', 'd']);
+  });
+
+  it('should keep the order when the ERP failed and every product says "Consultar precio"', () => {
+    expect(ids(outOfStockLast(products, () => 'no_price'))).toEqual(['a', 'b', 'c', 'd']);
+  });
+
+  it('should not move a product without price: only "sin stock" goes last', () => {
+    const sorted = outOfStockLast(products, availabilityFrom({ a: 'no_price', b: 'out_of_stock' }));
+
+    expect(ids(sorted)).toEqual(['a', 'c', 'd', 'b']);
   });
 });

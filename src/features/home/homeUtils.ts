@@ -1,6 +1,6 @@
 // Reglas puras del Home: qué productos se muestran en "Nuestros productos" y
 // qué tarjetas de categoría hay. Sin React.
-import type { Product } from '@/types';
+import type { Availability, Product } from '@/types';
 import { listCategories } from '@/data/catalog';
 import { countByCategory } from '@/features/catalog';
 
@@ -39,6 +39,20 @@ export const selectFeaturedProducts = (products: Product[], limit: number): Prod
     selected.push(...picked.slice(0, limit - selected.length));
   }
   return selected;
+};
+
+/**
+ * Los productos sin stock al final, sin cambiar el orden de cada grupo
+ * (usuario, 2026-11-03). Solo cuenta "sin stock" del ERP: mientras carga
+ * (`loading`) o si el ERP falló (`no_price`, "Consultar precio") no se sabe
+ * si hay stock, y el orden queda como está.
+ */
+export const outOfStockLast = (
+  products: Product[],
+  availabilityOf: (product: Product) => Availability,
+): Product[] => {
+  const soldOut = (product: Product) => availabilityOf(product) === 'out_of_stock';
+  return [...products.filter((product) => !soldOut(product)), ...products.filter(soldOut)];
 };
 
 /** Tarjeta de categoría del Home. */

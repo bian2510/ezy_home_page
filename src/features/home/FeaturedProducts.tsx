@@ -4,14 +4,21 @@
 // cartel del descuento por transferencia, sin estrellas ni precios tachados.
 //
 // No es "Más vendidos": todavía no hay datos de ventas (usuario, 2026-11-03).
+//
+// Los productos sin stock van al final (`outOfStockLast`). El stock llega del
+// ERP después del primer render: hasta entonces se ve el orden de la
+// selección y, cuando responde, los sin stock bajan al final. La selección y
+// los chips no cambian, solo el orden, y las cards miden lo mismo mientras
+// cargan, así que la grilla no cambia de alto.
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { activeProducts, listCategories } from '@/data/catalog';
 import { CategoryFilter, ProductCard, countByCategory } from '@/features/catalog';
+import { usePricing } from '@/features/pricing';
 import Icon from '@/components/ui/Icon';
 import SectionHeader from './SectionHeader';
 import SectionBand from './SectionBand';
-import { selectFeaturedProducts } from './homeUtils';
+import { outOfStockLast, selectFeaturedProducts } from './homeUtils';
 
 /** Dos filas de 4 en escritorio. */
 const FEATURED_LIMIT = 8;
@@ -21,12 +28,17 @@ export default function FeaturedProducts() {
   const featured = useMemo(() => selectFeaturedProducts(activeProducts, FEATURED_LIMIT), []);
   const categories = useMemo(() => listCategories(featured), [featured]);
   const counts = useMemo(() => countByCategory(featured), [featured]);
+  const { pricingOf } = usePricing();
+  const ordered = useMemo(
+    () => outOfStockLast(featured, (product) => pricingOf(product).availability),
+    [featured, pricingOf],
+  );
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const visible =
     selectedCategory === null
-      ? featured
-      : featured.filter((product) => product.category === selectedCategory);
+      ? ordered
+      : ordered.filter((product) => product.category === selectedCategory);
 
   if (featured.length === 0) return null;
 

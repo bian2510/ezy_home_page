@@ -76,6 +76,15 @@ vi.mock('@/features/catalog/ProductCard', () => ({
   ),
 }));
 
+// Precio y stock del ERP: todos con stock. El orden por stock se prueba en
+// `homeUtils.test.ts` y en `tests/integration/home-featured-stock.test.tsx`.
+vi.mock('@/features/pricing/usePricing', () => ({
+  usePricing: () => ({
+    status: 'ready',
+    pricingOf: () => ({ price: 26300, transferPrice: 25000, availability: 'available', stock: 5 }),
+  }),
+}));
+
 // Mock parcial: solo el número de WhatsApp; el resto de `lib/env` queda real.
 vi.mock('@/lib/env', async (importOriginal) => ({
   ...(await importOriginal<typeof EnvModule>()),
