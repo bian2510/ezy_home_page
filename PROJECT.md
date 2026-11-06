@@ -1,6 +1,6 @@
 # EzyHome — Project Orientation
 
-**What this is:** Tienda online de domótica con blog informativo — catálogo de productos, carrito persistente, checkout vía WhatsApp.
+**What this is:** Tienda online de domótica con blog informativo — catálogo de productos con precio y stock del ERP, carrito persistente, compra con retiro en el local (transferencia o Mercado Pago, pedido creado en el ERP) y WhatsApp para envíos y consultas.
 
 **Read order for new agents:**
 
@@ -13,7 +13,12 @@
 
 ## Current Phase
 
-**MVP build — scaffolding técnico completo. Implementando tienda online: catálogo, carrito, checkout WhatsApp, y blog informativo.**
+**En producción.** Catálogo, carrito, blog, precio y stock desde el ERP (ADR-005) y checkout con pedido en el ERP: transferencia con retiro y Mercado Pago (ADR-006, etapas 3d y 3e) están en `main`.
+
+**En curso:**
+
+- **Rediseño de la UI** en la rama `rediseno-ui`: los PRs del rediseño se mergean ahí y todavía no pasaron a `main`.
+- **SEO:** metadatos, sitemap y JSON-LD hechos; faltan Search Console y el prerender (`docs/plans/2026-09-22-seo-organico.md`).
 
 ---
 
@@ -43,7 +48,9 @@
 | How to add a PDF manual                         | `docs/guides/agregar-pdf-manual.md`                 |
 | How to add a new feature module                 | `docs/guides/agregar-feature.md`                    |
 | Cómo se publica el sitio (CI, deploy, rollback) | `docs/guides/deploy-y-ci.md`                        |
-| Actualizar precios y stock desde ML             | `docs/guides/actualizar-precios.md`                 |
+| Precios y stock (vienen del ERP por SKU)        | `docs/guides/actualizar-precios.md`                 |
+| Llamadas al ERP (`fetch` solo en `*Api.ts`)     | `docs/standards/llamadas-al-backend.md`             |
+| Probar el checkout contra el ERP local          | `docs/guides/probar-checkout-con-erp-local.md`      |
 | Scripts de operación (bundle, smoke)            | `scripts/`                                          |
 | All operational guides (index)                  | `docs/guides/README.md`                             |
 | Feature specs (ETC harness)                     | `.etc_sdlc/features/`                               |
@@ -65,7 +72,8 @@ business or the system, that claim must cite `DOMAIN.md` or a file in
 - **Linting/Formatting:** ESLint + Prettier — `eslint.config.js`, `.prettierrc.json`
 - **CI:** GitHub Actions — `.github/workflows/ci.yml`
 - **Local dev:** `pnpm install && pnpm dev` (Node 20+, pnpm 9)
-- **Hosting:** Cloudflare Pages (proyecto `ezyhome-storefront`), estático, publicado por el CI en cada push a `main` — `docs/guides/deploy-y-ci.md`. En runtime lee precio y stock del ERP (`https://ezyhome.app/api/store/products`), ver ADR-005.
+- **Hosting:** Cloudflare Pages (proyecto `ezyhome-storefront`), estático, publicado por el CI en cada push a `main` — `docs/guides/deploy-y-ci.md`. En runtime lee precio y stock del ERP (`https://ezyhome.app/api/store/products`, ADR-005) y crea y consulta pedidos (`/api/store/orders`, ADR-006).
+- **Variables de entorno:** `.env.example` y la tabla del README; en producción salen de los secrets de GitHub. Mercado Pago se prende con `VITE_MERCADOPAGO_ENABLED`.
 - **Backend:** ERP EzyHome (repo `bian2510/ezy_home_app`). La red solo se usa desde `src/features/<feature>/*Api.ts` (lo exige ESLint), ver `docs/standards/llamadas-al-backend.md`
 - **Scripts de operación:** `scripts/` (presupuesto de bundle, smoke test)
 - **Email (futuro):** Resend — ya disponible en app existente del dueño
@@ -77,6 +85,7 @@ business or the system, that claim must cite `DOMAIN.md` or a file in
 - [`F001-002`](docs/adrs/F001-002-tailwind-token-remapping.md) — Tokens de diseño EzyHome
 - [`F001-003`](docs/adrs/F001-003-blog-static-markdown.md) — Blog estático con Markdown
 - [`ADR-005`](docs/adrs/ADR-005-precio-y-stock-desde-el-erp.md) — Precio y stock desde el ERP (contrato de la API, qué se muestra si falla)
+- [`ADR-006`](docs/adrs/ADR-006-pedido-por-transferencia-con-retiro.md) — Pedido en el ERP: transferencia con retiro, Mercado Pago, tope por stock
 
 ---
 
