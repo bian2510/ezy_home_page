@@ -51,3 +51,10 @@ export const getStoreApiKey = (): string => import.meta.env.VITE_STORE_API_KEY ?
  */
 export const isMercadoPagoEnabled = (): boolean =>
   import.meta.env.VITE_MERCADOPAGO_ENABLED === 'true';
+
+/**
+ * `true` en `pnpm dev` y `false` en el build de producción. Sirve para ver en
+ * local contenido que todavía no se publica (por ejemplo la franja de proyectos
+ * de `/contacto`).
+ */
+export const isDevelopment = (): boolean => import.meta.env.DEV;

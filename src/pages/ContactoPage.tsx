@@ -2,16 +2,18 @@
 // Instagram, calcados del mock "Contáctanos".
 //
 // Sin horarios de atención: viven en el ERP y todavía no hay endpoint para
-// leerlos. Sin la franja de "proyectos inmobiliarios" del mock: el dueño no
-// ofrece ese servicio todavía (2026-11-06).
+// leerlos. La franja de "proyectos inmobiliarios" del mock solo se ve en local:
+// el dueño no ofrece ese servicio todavía y lo decide antes del deploy
+// (2026-11-06).
 import { Link } from 'react-router-dom';
 import Container from '@/components/ui/Container';
 import ContactCard from '@/components/ui/ContactCard';
+import ContactProjectsBand from '@/components/ui/ContactProjectsBand';
 import Icon from '@/components/ui/Icon';
 import { SITE_CONTACT } from '@/data/siteContact';
 import { useToast } from '@/features/toast';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
-import { getWhatsAppNumber } from '@/lib/env';
+import { getWhatsAppNumber, isDevelopment } from '@/lib/env';
 import { cn } from '@/lib/cn';
 
 const focusRing = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
@@ -157,6 +159,14 @@ export default function ContactoPage() {
             {SITE_CONTACT.instagram.handle}
           </ContactCard>
         </ul>
+
+        {isDevelopment() && (
+          <div className="mt-12 md:mt-16">
+            <ContactProjectsBand
+              whatsAppHref={whatsAppNumber === '' ? null : `https://wa.me/${whatsAppNumber}`}
+            />
+          </div>
+        )}
       </Container>
     </>
   );

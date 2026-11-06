@@ -8,6 +8,7 @@ building blocks consumed by every other component.
 - `Container.tsx` / `SectionBand.tsx` — page width (`max-w-content`) with the mock gutters, and full-bleed bands
 - `Icon.tsx`, `Badge.tsx`, `QuantitySelector.tsx`, `Stepper.tsx`, `Pagination.tsx`, `SearchBox.tsx`, `Drawer.tsx`, `Toast.tsx`, `ErrorBoundary.tsx` — domain-blind primitives
 - `ContactCard.tsx` — card of a contact channel (icon, title, value box, action), rendered as an `<li>`
+- `ContactProjectsBand.tsx` — green "automatizá tu vivienda o proyecto inmobiliario" band of `/contacto`; only rendered in local dev (`isDevelopment`) until the owner decides to offer it
 
 ## Dependencies
 
