@@ -45,6 +45,33 @@ hacía así antes de #42. Falta decidir cuál debe ver Google.
 
 ---
 
+## Previews de Cloudflare Pages en blanco
+
+**Anotado:** 2026-11-06 · **Prioridad:** media
+
+Las vistas previas por rama (por ejemplo
+`https://rediseno-ui.ezyhome-storefront.pages.dev`) se ven en blanco. Las arma
+la integración de Cloudflare Pages con GitHub, que publica el repo sin
+compilar: el HTML pide `/src/main.tsx`, Cloudflare lo sirve como
+`application/octet-stream` y el navegador no lo ejecuta. Producción no está
+afectada: la publica el CI (job `deploy`) con su propio `pnpm build`
+(`docs/guides/deploy-y-ci.md`).
+
+**Arreglo:** en el panel de Cloudflare Pages (proyecto `ezyhome-storefront`,
+Settings › Builds), poner build command `pnpm build` y output directory
+`dist`, con las mismas variables `VITE_*` que el CI. La otra opción es apagar
+las previews automáticas y que el CI publique las ramas.
+
+**Aun arreglado, la preview no muestra precios:** el ERP solo acepta el
+origen `https://shop.ezyhome.app` y `http://localhost:5173` (ADR-005), así
+que todo sale "Consultar precio". Para ver precios en la preview, el ERP
+tendría que aceptar también `*.ezyhome-storefront.pages.dev`.
+
+**Se vuelve urgente si:** hay que mostrar el rediseño a alguien que no puede
+correrlo en local.
+
+---
+
 ## Limpieza pendiente
 
 - **`.env.example`:** sacar `VITE_MERCADOPAGO_ENABLED` (líneas 28-32); ya no lo
