@@ -1,34 +1,45 @@
 // CartContents — el carrito dentro del drawer: aviso si no se puede guardar,
-// la lista (o "Tu carrito está vacío") y, abajo, los totales y cómo comprar.
-// La lógica vive en `useCartContents`, compartida con la página `/carrito`.
+// las filas compactas (o "Tu carrito está vacío") y, abajo, los totales y cómo
+// comprar. La lógica vive en `useCartContents`, compartida con la página
+// `/carrito`, que tiene su propio diseño de filas y resumen.
 import { Link } from 'react-router-dom';
-import CartItemList from './CartItemList';
-import CartSummary from './CartSummary';
+import CartDrawerItem from './CartDrawerItem';
+import CartDrawerSummary from './CartDrawerSummary';
 import { useCartContents } from './useCartContents';
 
 interface CartContentsProps {
-  /** Called after a successful checkout tap — used by the drawer to close itself. */
-  onClose?: () => void;
+  /** Cierra el drawer: al ir al checkout, a WhatsApp, al catálogo o al seguir comprando. */
+  onClose: () => void;
 }
 
 export default function CartContents({ onClose }: CartContentsProps) {
   const cart = useCartContents();
+  const actions = {
+    onIncrement: cart.increment,
+    onDecrement: cart.decrement,
+    onRemove: cart.remove,
+  };
 
   return (
-    <div className="flex h-full flex-col px-4 py-4 sm:px-6">
+    <div className="flex h-full flex-col p-4">
       {!cart.storageAvailable && <StorageNotice />}
 
       {cart.isEmpty ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 py-8 text-center">
           <EmptyCartMessage onNavigate={onClose} />
         </div>
       ) : (
-        <CartItemList cart={cart} />
+        <>
+          <ul className="divide-y divide-outline/10">
+            {cart.items.map((item) => (
+              <CartDrawerItem key={item.product.id} item={item} actions={actions} />
+            ))}
+          </ul>
+          <div className="mt-auto pt-4">
+            <CartDrawerSummary cart={cart} onClose={onClose} />
+          </div>
+        </>
       )}
-
-      <div className="mt-auto border-t border-border pt-4">
-        <CartSummary cart={cart} onClose={onClose} />
-      </div>
     </div>
   );
 }
