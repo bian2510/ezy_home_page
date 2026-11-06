@@ -138,9 +138,26 @@ describe('ContactoPage', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('should not offer whole-home automation projects', () => {
+  // La franja de proyectos todavía no es una oferta: el dueño la decide antes
+  // del deploy (2026-11-06). Se ve en local (`pnpm dev`) y no en producción.
+  it('should not offer whole-home automation projects in production', () => {
+    vi.stubEnv('DEV', false);
     renderPage();
 
     expect(screen.queryByText(/proyecto inmobiliario/i)).toBeNull();
+  });
+
+  it('should preview the projects band in local development', () => {
+    vi.stubEnv('DEV', true);
+    renderPage();
+
+    expect(
+      screen.getByRole('heading', { name: /proyecto inmobiliario/i, level: 2 }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/constructoras, arquitectos/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^escribinos$/i })).toHaveAttribute(
+      'href',
+      'https://wa.me/5491124741036',
+    );
   });
 });
