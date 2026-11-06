@@ -28,6 +28,7 @@ export const RUTAS_ESTATICAS = [
   '/blog',
   '/quienes-somos',
   '/como-comprar',
+  '/contacto',
 ] as const;
 
 export interface EntradaSitemap {

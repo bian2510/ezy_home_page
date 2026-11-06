@@ -58,6 +58,14 @@ describe('rutas cargadas por demanda', () => {
     expect(await screen.findByRole('heading', { level: 1 })).toBeInTheDocument();
   });
 
+  it('should load the contact route on demand', async () => {
+    renderAt('/contacto');
+
+    expect(
+      await screen.findByRole('heading', { name: /estamos acá para ayudarte/i, level: 1 }),
+    ).toBeInTheDocument();
+  });
+
   it('should keep the header and footer visible while a route chunk loads', () => {
     renderAt('/catalogo');
 

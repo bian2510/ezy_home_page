@@ -131,13 +131,36 @@ describe('SiteHeader', () => {
     );
   });
 
-  it('should send "Contactanos" to the store WhatsApp', () => {
+  it('should link "Contactanos" to the contact page', () => {
+    renderHeader();
+
+    const nav = screen.getByRole('navigation', { name: /principal/i });
+    const contact = within(nav).getByRole('link', { name: /contactanos/i });
+    expect(contact).toHaveAttribute('href', '/contacto');
+    expect(contact).not.toHaveAttribute('target');
+  });
+
+  it('should link "Contactanos" to the contact page when the WhatsApp number is not configured', () => {
+    vi.stubEnv('VITE_WHATSAPP_NUMBER', '');
     renderHeader();
 
     const nav = screen.getByRole('navigation', { name: /principal/i });
     expect(within(nav).getByRole('link', { name: /contactanos/i })).toHaveAttribute(
       'href',
-      'https://wa.me/5491100000000',
+      '/contacto',
+    );
+  });
+
+  it('should link "Contactanos" to the contact page from the mobile menu', async () => {
+    const user = userEvent.setup();
+    renderHeader();
+
+    await user.click(screen.getByRole('button', { name: /abrir menú/i }));
+
+    const menu = screen.getByRole('navigation', { name: /menú móvil/i });
+    expect(within(menu).getByRole('link', { name: /contactanos/i })).toHaveAttribute(
+      'href',
+      '/contacto',
     );
   });
 

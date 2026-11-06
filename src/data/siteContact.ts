@@ -8,4 +8,9 @@ export const SITE_CONTACT = {
   /** Para el `tel:`, sin espacios. */
   phoneHref: '+5491124741036',
   location: 'CABA, Argentina',
+  /** Instagram de la tienda, confirmado por el dueño (2026-11-06). */
+  instagram: {
+    handle: '@ezyhome.ar',
+    url: 'https://www.instagram.com/ezyhome.ar/',
+  },
 } as const;

@@ -18,7 +18,7 @@ nested page.
 
 - Flex column with `min-h-dvh` so the footer sits at the viewport bottom on short pages
 - `components/ui/Container` (`max-w-content`, 1280 px, mock gutters) shared with the header/footer
-- Full-bleed routes (`FULL_BLEED_PATHS` = `/`, `FULL_BLEED_PREFIXES` = `/productos/`) skip the container and render their own bands (`components/ui/SectionBand`)
+- Full-bleed routes (`FULL_BLEED_PATHS` = `/`, `/carrito`, `/checkout`, `/contacto`; `FULL_BLEED_PREFIXES` = `/productos/`, `/pedido/`) skip the container and render their own bands (`components/ui/SectionBand`)
 
 ## Constraints
 
