@@ -9,7 +9,10 @@ transferencia con retiro (`/checkout`, feature `checkout`).
 - `CartProvider.tsx` + `CartContext.tsx` + `useCart.ts` — estado del carrito, persistido en `localStorage`; un producto que ya no está en el catálogo se descarta al rehidratar
 - `cartUtils.ts` — totales con los precios del ERP (Mercado Pago y transferencia) y armado del mensaje de WhatsApp
 - `useCartContents.ts` — lógica que comparten el drawer y la página: totales, si se puede ir a `/checkout` (todo con precio y stock), el ajuste al cargar de una cantidad mayor al stock del ERP y las acciones de cada fila
-- `CartDrawer.tsx` + `CartContents.tsx` (drawer), `CartPage.tsx` (`/carrito`, primer paso de la compra), `CartItemList.tsx`, `CartItem.tsx`, `CartSummary.tsx` (totales, "Comprar con retiro en punto pick-up" y WhatsApp) — UI del carrito
+- `useCartLine.ts` — lo de cada fila, compartido por las dos filas: precio de la línea (transferencia), tope por stock y las acciones de cantidad y quitar (con su toast)
+- `CartDrawer.tsx` + `CartContents.tsx` — el carrito desplegado del header: card flotante bajo el header en `sm` y arriba, panel de alto completo en el celular (`Drawer` variante `floating`), título "Tu carrito (N)" con las unidades
+- `CartDrawerItem.tsx` (fila compacta: foto, nombre, cantidad, tacho y total de la línea) y `CartDrawerSummary.tsx` (subtotal, envío por WhatsApp, total con transferencia y Mercado Pago, "Iniciar compra", WhatsApp y "Seguir comprando") — solo del drawer
+- `CartPage.tsx` (`/carrito`, primer paso de la compra), `CartItemList.tsx`, `CartItem.tsx`, `CartSummary.tsx` (totales, "Comprar con retiro en punto pick-up" y WhatsApp) — UI de la página
 
 ## Dependencies
 

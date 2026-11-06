@@ -12,10 +12,9 @@
 // increment stops at the ERP stock with a friendly notice (no "Quedan N").
 import type { CartItem as CartItemType } from '@/types';
 import { formatPrice } from '@/lib/formatPrice';
-import { cartLinePrice } from './cartUtils';
-import { useToast } from '@/features/toast';
-import { STOCK_LIMIT_MESSAGE, reachedStockLimit, usePricing } from '@/features/pricing';
+import { STOCK_LIMIT_MESSAGE } from '@/features/pricing';
 import QuantitySelector from '@/components/ui/QuantitySelector';
+import { useCartLine } from './useCartLine';
 
 const MIN_QUANTITY = 1;
 
@@ -28,21 +27,13 @@ interface CartItemProps {
 
 export default function CartItem({ item, onIncrement, onDecrement, onRemove }: CartItemProps) {
   const { product, quantity } = item;
-  const { addToast } = useToast();
-  // Precio del ERP; sin precio la línea queda en "Consultar precio".
-  const pricing = usePricing().pricingOf(product);
-  const linePrice = cartLinePrice(pricing, quantity);
-  const atMaximum = reachedStockLimit(pricing, quantity);
-
-  const handleRemove = () => {
-    onRemove(product.id);
-    addToast(`${product.name} eliminado del carrito`, 'info');
-  };
-
-  // El selector es el mismo del detalle: sus botones avisan +1 / −1 y acá se
-  // traducen a las acciones del carrito, que vuelven a chequear el stock.
-  const handleQuantity = (next: number) =>
-    next > quantity ? onIncrement(product.id) : onDecrement(product.id);
+  // Precio del ERP; sin precio la línea queda en "Consultar precio". El
+  // selector es el mismo del detalle.
+  const { linePrice, stock, atMaximum, changeQuantity, remove } = useCartLine(item, {
+    onIncrement,
+    onDecrement,
+    onRemove,
+  });
 
   return (
     <li className="flex gap-4 py-4 first:pt-0 last:pb-0">
@@ -80,9 +71,9 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
         <div className="flex flex-wrap items-center justify-between gap-3">
           <QuantitySelector
             value={quantity}
-            onChange={handleQuantity}
+            onChange={changeQuantity}
             min={MIN_QUANTITY}
-            max={pricing.stock}
+            max={stock}
           />
           <p className="text-headline-sm font-bold tabular-nums text-on-surface">
             {linePrice === null ? '—' : formatPrice(linePrice.line)}
@@ -98,7 +89,7 @@ export default function CartItem({ item, onIncrement, onDecrement, onRemove }: C
         <button
           type="button"
           aria-label={`Eliminar ${product.name} del carrito`}
-          onClick={handleRemove}
+          onClick={remove}
           className="inline-flex min-h-11 items-center self-start rounded text-label-md font-semibold text-destructive transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive"
         >
           Eliminar

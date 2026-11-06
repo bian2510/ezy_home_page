@@ -11,6 +11,8 @@ import type { CartItem } from '@/types';
 
 export interface CartContentsState {
   items: CartItem[];
+  /** Unidades en total (Σ cantidades), las del título y el subtotal del drawer. */
+  itemCount: number;
   isEmpty: boolean;
   storageAvailable: boolean;
   total: number;
@@ -26,7 +28,7 @@ export interface CartContentsState {
 }
 
 export function useCartContents(): CartContentsState {
-  const { items, updateQuantity, removeItem, storageAvailable } = useCart();
+  const { items, itemCount, updateQuantity, removeItem, storageAvailable } = useCart();
   const { pricingOf } = usePricing();
   const { total, transferTotal, hasUnpriced } = computeCartTotals(items, pricingOf);
 
@@ -66,6 +68,7 @@ export function useCartContents(): CartContentsState {
 
   return {
     items,
+    itemCount,
     isEmpty,
     storageAvailable,
     total,
