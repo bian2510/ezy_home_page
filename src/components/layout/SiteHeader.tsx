@@ -10,7 +10,6 @@ import { CartHeaderButton } from '@/features/cart';
 import SearchBox from '@/components/ui/SearchBox';
 import Icon from '@/components/ui/Icon';
 import Container from '@/components/ui/Container';
-import { getWhatsAppNumber } from '@/lib/env';
 import { cn } from '@/lib/cn';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
@@ -23,6 +22,8 @@ const NAV_ITEMS: readonly NavItem[] = [
   { to: '/catalogo', label: 'Productos' },
   { to: '/blog', label: 'Blog' },
   { to: '/como-comprar', label: 'Cómo Comprar' },
+  // Antes abría WhatsApp directo; ahora lleva a la página con todos los canales.
+  { to: '/contacto', label: 'Contactanos' },
 ];
 
 const SEARCH_LABEL = 'Buscar productos';
@@ -52,7 +53,6 @@ export default function SiteHeader() {
   const location = useLocation();
   const currentQuery =
     location.pathname === '/catalogo' ? (new URLSearchParams(location.search).get('q') ?? '') : '';
-  const whatsAppNumber = getWhatsAppNumber();
   const closeMenu = () => setMenuOpen(false);
   const mdUp = useMediaQuery(MD_UP);
   const phone375Up = useMediaQuery(PHONE_375_UP);
@@ -92,30 +92,13 @@ export default function SiteHeader() {
     />
   );
 
-  const navLinks = (
-    <>
-      {NAV_ITEMS.map(({ to, label }) => (
-        <li key={to}>
-          <Link to={to} onClick={closeMenu} className={cn(linkClass, headerFocus)}>
-            {label}
-          </Link>
-        </li>
-      ))}
-      {/* Sin número configurado el link no lleva a ningún lado: no se muestra. */}
-      {whatsAppNumber !== '' && (
-        <li>
-          <a
-            href={`https://wa.me/${whatsAppNumber}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(linkClass, headerFocus)}
-          >
-            Contactanos
-          </a>
-        </li>
-      )}
-    </>
-  );
+  const navLinks = NAV_ITEMS.map(({ to, label }) => (
+    <li key={to}>
+      <Link to={to} onClick={closeMenu} className={cn(linkClass, headerFocus)}>
+        {label}
+      </Link>
+    </li>
+  ));
 
   return (
     <header className="sticky top-0 z-50 bg-header text-on-primary shadow-header">

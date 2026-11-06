@@ -13,6 +13,9 @@
 //   /pedido/:token     → OrderPage          (pedido: a qué cuenta transferir)
 //   /blog              → BlogListPage       (listado de artículos)
 //   /blog/:slug        → BlogPostPage       (artículo individual)
+//   /quienes-somos     → QuienesSomosPage   (la tienda)
+//   /como-comprar      → ComoComprarPage    (pasos de la compra)
+//   /contacto          → ContactoPage       (WhatsApp, email e Instagram)
 //   *                  → NotFoundPage       (404 — catch-all)
 //
 // Solo la landing y el 404 viajan en el bundle inicial: son la primera pantalla
@@ -41,6 +44,7 @@ const BlogPostPage = lazy(() =>
 const ProductDetailPage = lazy(() => import('@/pages/ProductDetailPage'));
 const QuienesSomosPage = lazy(() => import('@/pages/QuienesSomosPage'));
 const ComoComprarPage = lazy(() => import('@/pages/ComoComprarPage'));
+const ContactoPage = lazy(() => import('@/pages/ContactoPage'));
 
 function RouteFallback() {
   return (
@@ -124,6 +128,14 @@ export default function App() {
           element={
             <Suspense fallback={<RouteFallback />}>
               <ComoComprarPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/contacto"
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <ContactoPage />
             </Suspense>
           }
         />
