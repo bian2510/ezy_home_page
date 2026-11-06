@@ -1,5 +1,5 @@
-// Página de contacto: WhatsApp, email (con copiar) e Instagram. Sin horarios:
-// viven en el ERP y todavía no hay endpoint para leerlos.
+// Página de contacto: WhatsApp (con el horario de atención), email (con
+// copiar) e Instagram.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -76,10 +76,11 @@ describe('ContactoPage', () => {
     expect(screen.queryByRole('link', { name: /escribinos por whatsapp/i })).toBeNull();
   });
 
-  it('should not show business hours when rendering the WhatsApp card', () => {
+  it('should show the business hours in the WhatsApp card', () => {
     renderPage();
 
-    expect(screen.queryByText(/lun|sáb|\d{1,2}:\d{2}/i)).toBeNull();
+    const card = screen.getByRole('heading', { name: 'WhatsApp' }).closest('li');
+    expect(card).toHaveTextContent('Lunes a viernes de 10 a 18 h');
   });
 
   it('should link "Enviar un email" to a mailto with the store email', () => {

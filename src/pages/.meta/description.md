@@ -7,7 +7,7 @@ composes layout shells, feature slices, and primitives into a full screen.
 
 - `HomePage.tsx` — landing page placeholder (welcome headline + intro copy)
 - `NotFoundPage.tsx` — 404 fallback with link back to `/`
-- `ContactoPage.tsx` — `/contacto`: WhatsApp, email (copy to clipboard + toast) and Instagram cards from `data/siteContact.ts`. No business hours (they live in the ERP, no endpoint yet). The projects band (`ContactProjectsBand`) only shows in `pnpm dev`, not in the production build
+- `ContactoPage.tsx` — `/contacto`: WhatsApp, email (copy to clipboard + toast) and Instagram cards from `data/siteContact.ts`. Business hours are hardcoded in `SITE_CONTACT.hours` (the ERP only returns them inside an order). The projects band (`ContactProjectsBand`) only shows in `pnpm dev`, not in the production build
 
 ## Dependencies
 

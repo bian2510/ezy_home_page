@@ -1,8 +1,8 @@
 // ContactoPage — los canales de contacto de la tienda: WhatsApp, email e
 // Instagram, calcados del mock "Contáctanos".
 //
-// Sin horarios de atención: viven en el ERP y todavía no hay endpoint para
-// leerlos. La franja de "proyectos inmobiliarios" del mock solo se ve en local:
+// El horario de atención va fijo en `SITE_CONTACT` (el del ERP solo llega dentro
+// de un pedido). La franja de "proyectos inmobiliarios" del mock solo se ve en local:
 // el dueño no ofrece ese servicio todavía y lo decide antes del deploy
 // (2026-11-06).
 import { Link } from 'react-router-dom';
@@ -114,7 +114,10 @@ export default function ContactoPage() {
               )
             }
           >
-            {SITE_CONTACT.phone}
+            <span>{SITE_CONTACT.phone}</span>
+            <span className="text-right text-label-sm font-semibold text-on-surface-variant">
+              {SITE_CONTACT.hours}
+            </span>
           </ContactCard>
           <ContactCard
             icon="mail"
