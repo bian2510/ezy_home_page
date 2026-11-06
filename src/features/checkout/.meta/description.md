@@ -1,7 +1,7 @@
 # src/features/checkout/
 
-**Purpose:** Compra con retiro en el local, por transferencia o, con
-`VITE_MERCADOPAGO_ENABLED=true`, con Mercado Pago (ADR-006). El visitante deja
+**Purpose:** Compra con retiro en el local, por transferencia o con
+Mercado Pago (ADR-006). El visitante deja
 sus datos, el ERP crea el pedido con sus precios y la página del pedido muestra
 a qué cuenta transferir o lleva a Mercado Pago, y dónde retirar.
 
@@ -22,7 +22,7 @@ a qué cuenta transferir o lleva a Mercado Pago, y dónde retirar.
 
 - `@/features/cart` — ítems del carrito, vaciarlo y ajustarlo
 - `@/features/pricing` — precio y disponibilidad del ERP
-- `@/lib/env` — `getStoreApiUrl`, `getStoreApiKey`, `getWhatsAppNumber`, `isMercadoPagoEnabled`
+- `@/lib/env` — `getStoreApiUrl`, `getStoreApiKey`, `getWhatsAppNumber`
 - `@/lib/redirect` — `goToExternalUrl` (salida a Mercado Pago, reemplazable en tests)
 - ERP (`bian2510/ezy_home_app`, plan de la etapa 3) por HTTP
 
@@ -34,6 +34,6 @@ a qué cuenta transferir o lleva a Mercado Pago, y dónde retirar.
 ## Constraints
 
 - El sitio nunca manda precios: el pedido lleva SKU y cantidades
-- Mercado Pago solo con `VITE_MERCADOPAGO_ENABLED=true`; el link de MP solo se sigue si es `https`
+- El link de MP solo se sigue si es `https`
 - La vuelta de MP (`?resultado=ok`) no confirma nada: confirma el ERP con el aviso de MP
 - `cart` no importa de `checkout` (evita el ciclo): el carrito solo enlaza a `/checkout`

@@ -1,13 +1,13 @@
 // CheckoutPage — compra con retiro en el local (plan de la etapa 3 del ERP,
-// PR 3d y 3e). El comprador deja sus datos y elige transferencia o, con
-// `VITE_MERCADOPAGO_ENABLED=true`, Mercado Pago; el ERP crea el pedido con sus
+// PR 3d y 3e). El comprador deja sus datos y elige transferencia o Mercado
+// Pago; el ERP crea el pedido con sus
 // precios (el sitio no manda precios) y la página del pedido muestra a qué
 // cuenta transferir o abre Mercado Pago. Los envíos siguen por WhatsApp.
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '@/features/cart';
 import { usePricing } from '@/features/pricing';
-import { getWhatsAppNumber, isMercadoPagoEnabled } from '@/lib/env';
+import { getWhatsAppNumber } from '@/lib/env';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import {
   EMPTY_BUYER_FORM,
@@ -44,9 +44,7 @@ export default function CheckoutPage() {
   const { state, submit } = useCreateOrder();
   const [form, setForm] = useState<BuyerForm>(EMPTY_BUYER_FORM);
   const [errors, setErrors] = useState<BuyerErrors>({});
-  const [chosenMethod, setChosenMethod] = useState<PaymentMethod>('transfer');
-  const mercadoPagoEnabled = isMercadoPagoEnabled();
-  const paymentMethod: PaymentMethod = mercadoPagoEnabled ? chosenMethod : 'transfer';
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('transfer');
   const totals: Record<PaymentMethod, number> = {
     transfer: transferTotal(items, pricingOf),
     mercado_pago: mercadoPagoTotal(items, pricingOf),
@@ -133,16 +131,9 @@ export default function CheckoutPage() {
             onSubmit={(event) => void handleSubmit(event)}
             className="flex flex-col gap-4"
           >
-            <BuyerFields
-              form={form}
-              mercadoPagoEnabled={mercadoPagoEnabled}
-              errors={errors}
-              onChange={handleChange}
-            />
+            <BuyerFields form={form} errors={errors} onChange={handleChange} />
 
-            {mercadoPagoEnabled && (
-              <PaymentMethodField value={chosenMethod} totals={totals} onChange={setChosenMethod} />
-            )}
+            <PaymentMethodField value={paymentMethod} totals={totals} onChange={setPaymentMethod} />
 
             {failure !== null && (
               <OrderErrorAlert

@@ -24,19 +24,6 @@ const quote = (overrides: Partial<StoreQuote> = {}): StoreQuote => ({
 const product = buildProduct({ sku: 'SNS-001' });
 
 describe('resolvePricing', () => {
-  it('should show only the transfer price while Mercado Pago is not enabled', () => {
-    const pricing = resolvePricing(product, 'ready', indexQuotes([quote()]), {
-      mercadoPagoEnabled: false,
-    });
-
-    expect(pricing).toEqual({
-      price: 20_000,
-      transferPrice: null,
-      availability: 'available',
-      stock: 3,
-    });
-  });
-
   it('should use the ERP prices when the SKU has a quote', () => {
     const pricing = resolvePricing(product, 'ready', indexQuotes([quote()]));
 

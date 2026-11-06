@@ -64,12 +64,14 @@ x-api-key: {VITE_STORE_API_KEY}
 - **`available: false`:** "Sin stock" y consulta por WhatsApp.
 - **JSON-LD:** con precio del ERP publica `offers` (precio y disponibilidad);
   sin precio del ERP, el producto sale **sin** `offers`.
-- **Mercado Pago:** mientras la variable de repo `VITE_MERCADOPAGO_ENABLED` no
-  sea `true` (hasta la etapa 3 del ADR-025), cada producto muestra un solo
-  precio: el de transferencia. Con la variable activa, el de transferencia es
-  el grande y "con Mercado Pago" va abajo, chico, y el checkout ofrece pagar
-  con Mercado Pago (contrato de pedidos en
+- **Mercado Pago:** el precio de transferencia es el grande y "con Mercado
+  Pago" va abajo, chico, y el checkout ofrece pagar con Mercado Pago (contrato
+  de pedidos en
   [ADR-006](./ADR-006-pedido-por-transferencia-con-retiro.md#mercado-pago-pr-3e)).
+  Hasta la etapa 3 del ADR-025 esto iba detrás de `VITE_MERCADOPAGO_ENABLED`
+  (con un solo precio, el de transferencia, mientras estuviera apagada). Con
+  Mercado Pago cobrando en producción, la variable se sacó (usuario,
+  2026-11-06); el interruptor pasa a ser del ERP.
 
 ## Consecuencias
 

@@ -73,7 +73,7 @@ business or the system, that claim must cite `DOMAIN.md` or a file in
 - **CI:** GitHub Actions — `.github/workflows/ci.yml`
 - **Local dev:** `pnpm install && pnpm dev` (Node 20+, pnpm 9)
 - **Hosting:** Cloudflare Pages (proyecto `ezyhome-storefront`), estático, publicado por el CI en cada push a `main` — `docs/guides/deploy-y-ci.md`. En runtime lee precio y stock del ERP (`https://ezyhome.app/api/store/products`, ADR-005) y crea y consulta pedidos (`/api/store/orders`, ADR-006).
-- **Variables de entorno:** `.env.example` y la tabla del README; en producción salen de los secrets de GitHub. Mercado Pago se prende con `VITE_MERCADOPAGO_ENABLED`.
+- **Variables de entorno:** `.env.example` y la tabla del README; en producción salen de los secrets de GitHub.
 - **Backend:** ERP EzyHome (repo `bian2510/ezy_home_app`). La red solo se usa desde `src/features/<feature>/*Api.ts` (lo exige ESLint), ver `docs/standards/llamadas-al-backend.md`
 - **Scripts de operación:** `scripts/` (presupuesto de bundle, smoke test)
 - **Email (futuro):** Resend — ya disponible en app existente del dueño

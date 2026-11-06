@@ -86,7 +86,7 @@ de retiro y cierra por WhatsApp las ventas con envío) y el ERP de EzyHome (repo
   360px+ es inaceptable.
 - **Medios de pago: transferencia bancaria y Mercado Pago**. El cobro con
   Mercado Pago lo hace el ERP; el sitio solo redirige al link que el ERP genera
-  y está detrás de `VITE_MERCADOPAGO_ENABLED` (ADR-006). No se integran tarjetas
+  (ADR-006). No se integran tarjetas
   ni efectivo directamente en la web.
 - **El ERP manda**: precio, stock y pedidos son del ERP. El sitio nunca muestra
   un precio propio ni manda precios al crear un pedido (ADR-005, ADR-006).

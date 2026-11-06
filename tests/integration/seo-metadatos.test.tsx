@@ -100,8 +100,8 @@ describe('metadatos por ruta', () => {
     expect(datos?.['@type']).toBe('Product');
     expect(datos?.name).toBe(primerProducto?.name);
     expect(datos?.offers).toEqual(
-      // Sin Mercado Pago activo, el único precio es el de transferencia.
-      expect.objectContaining({ priceCurrency: 'ARS', price: '51700' }),
+      // El precio de venta del producto es el del ERP con Mercado Pago.
+      expect.objectContaining({ priceCurrency: 'ARS', price: '54300' }),
     );
     vi.unstubAllGlobals();
   });

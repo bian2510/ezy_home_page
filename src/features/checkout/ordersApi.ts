@@ -12,7 +12,7 @@ export interface OrderBuyer {
   document: string;
 }
 
-/** Medio de pago del pedido. Mercado Pago solo con `VITE_MERCADOPAGO_ENABLED`. */
+/** Medio de pago del pedido. */
 export type PaymentMethod = 'transfer' | 'mercado_pago';
 
 /** Lo que el sitio pide. Nunca lleva precios: los calcula el ERP. */
