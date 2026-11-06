@@ -79,18 +79,11 @@ const DRAFT_NOTICE =
 
 interface BuyerFieldsProps {
   form: BuyerForm;
-  /** Con Mercado Pago el aviso cuenta qué guarda la pestaña. */
-  mercadoPagoEnabled: boolean;
   errors: BuyerErrors;
   onChange: (field: BuyerField, value: string | boolean) => void;
 }
 
-export default function BuyerFields({
-  form,
-  mercadoPagoEnabled,
-  errors,
-  onChange,
-}: BuyerFieldsProps) {
+export default function BuyerFields({ form, errors, onChange }: BuyerFieldsProps) {
   return (
     <>
       <TextField
@@ -145,7 +138,7 @@ export default function BuyerFields({
           hacer la factura si la pedís y saber quién retira. Podés pedir verlos, corregirlos o
           borrarlos escribiéndonos por WhatsApp (Ley 25.326 de Protección de Datos Personales). La
           Agencia de Acceso a la Información Pública es el órgano de control.
-          {mercadoPagoEnabled && ` ${DRAFT_NOTICE}`}
+          {` ${DRAFT_NOTICE}`}
         </p>
         {errors.acceptedPrivacy !== undefined && (
           <p className="text-sm text-destructive">{errors.acceptedPrivacy}</p>

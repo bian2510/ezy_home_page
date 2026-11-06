@@ -223,7 +223,7 @@ screen.getByText(matchesPrice(12500));
 
 Los tests no leen los `.env*` de la raíz: `vitest.config.ts` apunta `envDir` a
 `tests/` y fija en `test.env` las `VITE_*` que cambian el comportamiento (sin
-clave del ERP, Mercado Pago apagado). Así el resultado es el mismo en tu máquina
+clave del ERP). Así el resultado es el mismo en tu máquina
 y en el CI, aunque tengas un `.env.local` con la clave real.
 
 - Un test que necesita otro valor lo pide y lo devuelve:
@@ -231,7 +231,7 @@ y en el CI, aunque tengas un `.env.local` con la clave real.
 ```ts
 afterEach(() => vi.unstubAllEnvs());
 
-vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
+vi.stubEnv('VITE_STORE_API_KEY', 'clave-de-test');
 ```
 
 - `tests/setup.ts` reemplaza `fetch` por uno que rechaza con "Request sin

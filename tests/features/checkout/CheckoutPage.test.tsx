@@ -101,7 +101,7 @@ describe('CheckoutPage', () => {
     expect(screen.getByText(/2 × válvula tv05/i)).toBeInTheDocument();
     expect(screen.getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
     expect(screen.getByText(/retiro en el local/i)).toBeInTheDocument();
-    expect(screen.getByText(/transferencia/i, { selector: 'p, li, span, strong' })).toBeTruthy();
+    expect(screen.getByRole('radio', { name: /transferencia/i })).toBeChecked();
     expect(screen.getByText(/ley 25\.326/i)).toBeInTheDocument();
   });
 
@@ -135,7 +135,6 @@ describe('CheckoutPage', () => {
   });
 
   it('should say the tab keeps the order data only to switch to transfer', () => {
-    vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
     renderCheckout();
 
     const notice = screen.getByText(/ley 25\.326/i);
@@ -312,18 +311,7 @@ describe('CheckoutPage', () => {
     await waitFor(() => expect(screen.getByText(/página del pedido/i)).toBeInTheDocument());
   });
 
-  it('should not offer Mercado Pago while VITE_MERCADOPAGO_ENABLED is off', () => {
-    renderCheckout();
-
-    expect(screen.queryByRole('radio', { name: /mercado pago/i })).not.toBeInTheDocument();
-    expect(screen.queryByText(/mercado pago/i)).not.toBeInTheDocument();
-  });
-
-  describe('with Mercado Pago enabled', () => {
-    beforeEach(() => {
-      vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
-    });
-
+  describe('Mercado Pago', () => {
     it('should offer both methods with their totals and start with transfer', () => {
       renderCheckout();
 

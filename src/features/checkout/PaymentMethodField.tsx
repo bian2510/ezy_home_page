@@ -1,6 +1,5 @@
 // Elección del medio de pago en `/checkout`, cada uno con su total (los precios
-// del ERP: con Mercado Pago lleva el recargo). Solo se muestra con
-// `VITE_MERCADOPAGO_ENABLED=true`; si no, el checkout es solo transferencia.
+// del ERP: con Mercado Pago lleva el recargo).
 import { formatPrice } from '@/lib/formatPrice';
 import type { PaymentMethod } from './ordersApi';
 

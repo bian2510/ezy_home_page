@@ -18,7 +18,6 @@ export default defineConfig({
     env: {
       VITE_STORE_API_KEY: '',
       VITE_STORE_API_URL: '',
-      VITE_MERCADOPAGO_ENABLED: 'false',
       VITE_WHATSAPP_NUMBER: '',
     },
     globals: true,

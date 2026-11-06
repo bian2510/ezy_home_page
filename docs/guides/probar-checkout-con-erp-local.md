@@ -27,7 +27,6 @@ Crear `.env.local` en la raíz (lo ignora git; **nunca** commitearlo):
 ```bash
 VITE_STORE_API_URL=http://localhost:4000
 VITE_STORE_API_KEY=<la clave que dio el ERP local>
-VITE_MERCADOPAGO_ENABLED=true
 VITE_WHATSAPP_NUMBER=5491112345678
 ```
 
