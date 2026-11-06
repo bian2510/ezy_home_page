@@ -81,9 +81,9 @@ describe('errores de render contenidos', () => {
     window.localStorage.clear();
   });
 
-  it('should show the fallback inside the layout when a page throws', async () => {
-    // Un catálogo corrupto es el modo de falla realista: el JSON es editado a
-    // mano y `products.json` se lee en el módulo de la página.
+  // Un catálogo corrupto es el modo de falla realista: el JSON es editado a
+  // mano y `products.json` se lee en el módulo de la página.
+  const renderWithCorruptCatalog = async () => {
     vi.doMock('@/data/catalog', () => ({
       get allProducts(): never {
         throw new Error('catálogo corrupto');
@@ -103,11 +103,31 @@ describe('errores de render contenidos', () => {
         <FreshApp />
       </MemoryRouter>,
     );
+  };
+
+  afterEach(() => {
+    vi.doUnmock('@/data/catalog');
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it('should show the fallback inside the layout when a page throws', async () => {
+    await renderWithCorruptCatalog();
 
     expect(await screen.findByRole('alert')).toHaveTextContent(/algo salió mal/i);
     // El chrome sigue en pie: el visitante puede navegar a otra sección.
     expect(screen.getByRole('banner')).toBeInTheDocument();
+  });
 
-    vi.doUnmock('@/data/catalog');
+  it('should keep the layout up when the catalog breaks with the ERP configured', async () => {
+    // Producción tiene la clave del ERP: el PricingProvider, que está por
+    // encima del ErrorBoundary, también lee el catálogo.
+    vi.stubEnv('VITE_STORE_API_KEY', 'clave-de-test');
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ products: [] })));
+
+    await renderWithCorruptCatalog();
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/algo salió mal/i);
+    expect(screen.getByRole('banner')).toBeInTheDocument();
   });
 });
