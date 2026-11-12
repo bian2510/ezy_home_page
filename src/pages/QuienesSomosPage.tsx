@@ -1,159 +1,233 @@
+// QuienesSomosPage — la tienda, su misión y para quién es. No hay mock de
+// Stitch para esta página (2026-11-12): se arma con las piezas del rediseño
+// (franja clara del título como Contacto, tarjetas como las del Inicio) y el
+// mismo texto de antes, que sale de DOMAIN.md › Domain y Core Problem.
+//
+// Es de borde a borde (`FULL_BLEED_PATHS` en `RootLayout`).
+import { Link } from 'react-router-dom';
+import Breadcrumb from '@/components/ui/Breadcrumb';
+import Container from '@/components/ui/Container';
+import Icon, { type IconName } from '@/components/ui/Icon';
+import SectionBand from '@/components/ui/SectionBand';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
+import { cn } from '@/lib/cn';
 
-const COMPROMISOS = [
-  {
-    titulo: 'Profesionalismo',
-    texto:
-      'Cada producto está seleccionado y verificado. Te acompañamos antes, durante y después de la compra.',
-  },
-  {
-    titulo: 'Accesibilidad',
-    texto:
-      'Precios pensados para el mercado argentino. Sin tecnicismos — si tenés dudas, las resolvemos por WhatsApp.',
-  },
-  {
-    titulo: 'Confianza',
-    texto:
-      'Cerramos cada venta de forma asistida para asegurarnos de que elegiste el producto correcto y que llegue en perfectas condiciones.',
-  },
-] as const;
+interface Card {
+  icon: IconName;
+  title: string;
+  detail: string;
+}
 
-const PERFILES = [
+const PROFILES: readonly Card[] = [
   {
-    icono: '🏠',
-    titulo: 'Querés mejorar tu hogar',
-    texto:
+    icon: 'home',
+    title: 'Querés mejorar tu hogar',
+    detail:
       'Tenés ganas de modernizar tu casa pero no sabés por dónde empezar. Te asesoramos para que el primer paso sea simple y tenga impacto real desde el día uno.',
   },
   {
-    icono: '🔒',
-    titulo: 'La seguridad es prioridad',
-    texto:
+    icon: 'shield',
+    title: 'La seguridad es prioridad',
+    detail:
       'Cámaras, detectores de humo o gas, sensores de movimiento. Soluciones concretas para que tu familia esté protegida sin necesitar instalar sistemas complejos.',
   },
   {
-    icono: '💡',
-    titulo: 'Empezás con algo pequeño',
-    texto:
-      'Una lamparita inteligente o un enchufe automatizado ya cambian la experiencia del hogar. No hace falta renovar todo — te ayudamos a escalar a tu ritmo.',
+    icon: 'lightBulb',
+    title: 'Empezás con algo pequeño',
+    detail:
+      'Una lamparita inteligente o un enchufe automatizado ya cambian la experiencia del hogar. No hace falta renovar todo: te ayudamos a escalar a tu ritmo.',
   },
-] as const;
+];
+
+const COMMITMENTS: readonly Card[] = [
+  {
+    icon: 'check',
+    title: 'Profesionalismo',
+    detail:
+      'Cada producto está seleccionado y verificado. Te acompañamos antes, durante y después de la compra.',
+  },
+  {
+    icon: 'chat',
+    title: 'Accesibilidad',
+    detail:
+      'Precios pensados para el mercado argentino. Sin tecnicismos: si tenés dudas, las resolvemos por WhatsApp.',
+  },
+  {
+    icon: 'lock',
+    title: 'Confianza',
+    detail:
+      'Cerramos cada venta de forma asistida para asegurarnos de que elegiste el producto correcto y que llegue en perfectas condiciones.',
+  },
+];
+
+const actionBase =
+  'inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-6 py-3 text-label-lg font-bold transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed focus-visible:ring-offset-2 focus-visible:ring-offset-inverse-surface';
 
 export default function QuienesSomosPage() {
   useDocumentMeta({
     title: 'Quiénes Somos',
     description:
-      'Somos EzyHome — una tienda argentina de domótica que cree que el hogar inteligente debe estar al alcance de todos, no solo de los expertos.',
+      'Somos EzyHome, una tienda argentina de domótica que cree que el hogar inteligente debe estar al alcance de todos, no solo de los expertos.',
     path: '/quienes-somos',
   });
 
   return (
-    <div className="flex flex-col">
-      {/* Hero */}
+    <>
       <section
         aria-labelledby="quienes-somos-heading"
-        className="bg-gradient-to-br from-sidebar to-sidebar-accent px-4 py-16 text-center sm:px-8 sm:py-24"
+        className="relative w-full overflow-hidden bg-surface-container-low"
       >
-        {/* max-w-3xl es una excepción heredada al estándar de anchos
-            (frontend-conventions.md §6). Se deja como está: cambiarlo altera el
-            ancho visual sin beneficio. No replicar en páginas nuevas. */}
-        <div className="mx-auto max-w-3xl">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl"
+        />
+        <Container className="relative flex flex-col gap-4 pb-12 pt-2 md:pb-16">
+          <Breadcrumb items={[{ label: 'Quiénes Somos' }]} className="mb-4 md:mb-8" />
           <h1
             id="quienes-somos-heading"
-            className="text-4xl font-semibold tracking-tight text-sidebar-foreground sm:text-6xl"
+            className="text-headline-xl-mobile font-extrabold tracking-tight text-on-surface md:text-headline-xl lg:text-5xl lg:leading-tight"
           >
             Quiénes Somos
           </h1>
-          <p className="mt-6 text-lg leading-relaxed text-sidebar-foreground/80 sm:text-xl">
-            Somos EzyHome — una tienda argentina de domótica que cree que el hogar inteligente debe
-            estar al alcance de todos, no solo de los expertos.
+          <p className="max-w-3xl text-body-lg text-on-surface-variant">
+            Somos <span className="font-bold text-primary">EzyHome</span>, una tienda argentina de
+            domótica que cree que el hogar inteligente debe estar al alcance de todos, no solo de
+            los expertos.
           </p>
-        </div>
+        </Container>
       </section>
 
-      <div className="mx-auto w-full max-w-content px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <div className="flex flex-col gap-16">
-          {/* Misión + Problema en 2 columnas en desktop */}
-          <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-            <section aria-labelledby="mision-heading" className="flex flex-col gap-4">
-              <h2 id="mision-heading" className="text-2xl font-semibold text-foreground">
-                Nuestra misión
-              </h2>
-              <p className="leading-relaxed text-muted-foreground">
-                Masificar la domótica haciéndola accesible, simple y confiable para hogares
-                argentinos de todos los perfiles. Creemos que cualquier persona — joven, adulto
-                mayor o cuidador de familia — puede adoptar la tecnología del hogar inteligente sin
-                ser un experto.
-              </p>
-            </section>
-
-            <section
-              aria-labelledby="problema-heading"
-              className="flex flex-col gap-4 rounded-xl border border-border bg-card px-6 py-6"
-            >
-              <h2 id="problema-heading" className="text-2xl font-semibold text-foreground">
-                El problema que resolvemos
-              </h2>
-              <p className="leading-relaxed text-muted-foreground">
-                La domótica en Argentina es percibida como cara, compleja y exclusiva para personas
-                técnicas. La mayoría de los hogares no accede porque no saben cómo empezar o los
-                canales de venta no generan confianza.
-              </p>
-              <p className="leading-relaxed text-muted-foreground">
-                EzyHome existe para cerrar esa brecha: una tienda profesional y accesible que
-                demuestre que la domótica está a tu alcance.
-              </p>
-            </section>
-          </div>
-
-          {/* ¿Para quién? */}
-          <section aria-labelledby="para-quien-heading" className="flex flex-col gap-6">
-            <div>
-              <h2
-                id="para-quien-heading"
-                className="text-2xl font-semibold text-foreground sm:text-3xl"
-              >
-                ¿Para quién es EzyHome?
-              </h2>
-              <p className="mt-2 text-muted-foreground">
-                No hace falta saber de tecnología. Solo hace falta querer mejorar tu hogar.
-              </p>
-            </div>
-            <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-3">
-              {PERFILES.map(({ icono, titulo, texto }) => (
-                <li
-                  key={titulo}
-                  className="flex flex-col gap-3 rounded-xl border border-border bg-card px-6 py-6 shadow-sm"
-                >
-                  <span className="text-3xl" aria-hidden="true">
-                    {icono}
-                  </span>
-                  <span className="font-semibold text-foreground">{titulo}</span>
-                  <span className="text-sm leading-relaxed text-muted-foreground">{texto}</span>
-                </li>
-              ))}
-            </ul>
+      <SectionBand label="Misión de EzyHome" tone="surface" className="py-12 md:py-20">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+          <section
+            aria-labelledby="mision-heading"
+            className="flex flex-col gap-4 rounded-2xl bg-surface-container-lowest p-6 shadow-sm sm:p-8"
+          >
+            <span className="text-label-sm font-bold uppercase tracking-wider text-primary">
+              Lo que nos mueve
+            </span>
+            <h2 id="mision-heading" className="text-headline-md font-bold text-on-surface">
+              Nuestra misión
+            </h2>
+            <p className="text-body-lg text-on-surface-variant">
+              Masificar la domótica haciéndola accesible, simple y confiable para hogares argentinos
+              de todos los perfiles. Creemos que cualquier persona (joven, adulto mayor o cuidador
+              de familia) puede adoptar la tecnología del hogar inteligente sin ser un experto.
+            </p>
           </section>
 
-          {/* Nuestro compromiso */}
-          <section aria-labelledby="valores-heading" className="flex flex-col gap-6">
-            <h2 id="valores-heading" className="text-2xl font-semibold text-foreground sm:text-3xl">
-              Nuestro compromiso
+          <section
+            aria-labelledby="problema-heading"
+            className="flex flex-col gap-4 rounded-2xl bg-inverse-surface p-6 text-inverse-on-surface shadow-sm sm:p-8"
+          >
+            <span className="text-label-sm font-bold uppercase tracking-wider text-primary-fixed">
+              Por qué existimos
+            </span>
+            <h2
+              id="problema-heading"
+              className="text-headline-md font-bold text-inverse-on-surface"
+            >
+              El problema que resolvemos
             </h2>
-            <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-3">
-              {COMPROMISOS.map(({ titulo, texto }) => (
-                <li
-                  key={titulo}
-                  className="flex flex-col gap-2 rounded-xl border-l-4 border-primary bg-card px-6 py-5 shadow-sm"
-                >
-                  <span className="font-semibold text-primary">{titulo}</span>
-                  <span className="text-sm leading-relaxed text-muted-foreground">{texto}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="text-body-lg text-surface-container-highest">
+              La domótica en Argentina es percibida como cara, compleja y exclusiva para personas
+              técnicas. La mayoría de los hogares no accede porque no saben cómo empezar o los
+              canales de venta no generan confianza.
+            </p>
+            <p className="text-body-lg text-surface-container-highest">
+              EzyHome existe para cerrar esa brecha: una tienda profesional y accesible que
+              demuestra que la domótica está a tu alcance.
+            </p>
           </section>
         </div>
-      </div>
-    </div>
+      </SectionBand>
+
+      <SectionBand labelledBy="para-quien-heading" tone="low" className="gap-10 py-12 md:py-20">
+        <div className="mx-auto flex max-w-2xl flex-col gap-2 text-center">
+          <h2
+            id="para-quien-heading"
+            className="text-headline-xl-mobile font-bold text-on-surface md:text-headline-xl"
+          >
+            ¿Para quién es EzyHome?
+          </h2>
+          <p className="text-body-md text-on-surface-variant">
+            No hace falta saber de tecnología. Solo hace falta querer mejorar tu hogar.
+          </p>
+        </div>
+        <ul className="grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-3">
+          {PROFILES.map(({ icon, title, detail }) => (
+            <li
+              key={title}
+              className="flex flex-col gap-3 rounded-2xl bg-surface-container-lowest p-6 shadow-sm sm:p-8"
+            >
+              <span className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Icon name={icon} className="h-6 w-6" />
+              </span>
+              <h3 className="text-headline-sm font-bold text-on-surface">{title}</h3>
+              <p className="text-body-md text-on-surface-variant">{detail}</p>
+            </li>
+          ))}
+        </ul>
+      </SectionBand>
+
+      <SectionBand labelledBy="valores-heading" tone="surface" className="gap-10 py-12 md:py-20">
+        <h2
+          id="valores-heading"
+          className="text-headline-xl-mobile font-bold text-on-surface md:text-headline-xl"
+        >
+          Nuestro compromiso
+        </h2>
+        <ul className="grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-3">
+          {COMMITMENTS.map(({ icon, title, detail }) => (
+            <li
+              key={title}
+              className="flex flex-col gap-3 rounded-xl bg-surface-container-lowest p-6 shadow-sm"
+            >
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-on-primary">
+                <Icon name={icon} className="h-6 w-6" />
+              </span>
+              <h3 className="text-headline-sm font-bold text-on-surface">{title}</h3>
+              <p className="text-body-md text-on-surface-variant">{detail}</p>
+            </li>
+          ))}
+        </ul>
+
+        <aside
+          aria-labelledby="cierre-heading"
+          className="flex flex-col gap-6 rounded-2xl bg-inverse-surface p-6 text-inverse-on-surface md:p-10 lg:flex-row lg:items-center lg:justify-between"
+        >
+          <div className="flex max-w-xl flex-col gap-2">
+            <h2 id="cierre-heading" className="text-headline-md font-bold text-inverse-on-surface">
+              Empezá a transformar tu hogar
+            </h2>
+            <p className="text-body-md text-surface-container-highest">
+              Mirá el catálogo o escribinos: te ayudamos a elegir por dónde empezar.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              to="/catalogo"
+              className={cn(
+                actionBase,
+                'bg-primary text-on-primary shadow-md hover:bg-primary-container',
+              )}
+            >
+              Ver productos
+              <Icon name="arrowRight" className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/contacto"
+              className={cn(
+                actionBase,
+                'bg-surface-container-lowest/10 text-inverse-on-surface hover:bg-surface-container-lowest/20',
+              )}
+            >
+              <Icon name="chat" className="h-4 w-4" />
+              Contactanos
+            </Link>
+          </div>
+        </aside>
+      </SectionBand>
+    </>
   );
 }
