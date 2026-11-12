@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 // Mock the data hook so the page is exercised against its public contract
@@ -119,6 +119,39 @@ describe('BlogPostPage', () => {
     expect(time).toBeInTheDocument();
     expect(time.tagName.toLowerCase()).toBe('time');
     expect(time).toHaveAttribute('dateTime', '2026-05-01');
+  });
+
+  it('should list the article sections in "En este artículo", linked to their headings', () => {
+    mockedUseBlogPost.mockReturnValue({
+      content: 'Intro.\n\n## 1. Primera sección\n\nTexto.\n\n## 2. Segunda sección\n\nMás texto.',
+      meta: { slug: 'test', title: 'Mi Artículo', date: '2026-05-01', image: null },
+      notFound: false,
+      loading: false,
+    });
+
+    renderAt('/blog/test');
+
+    const toc = screen.getByRole('navigation', { name: /en este artículo/i });
+    const link = within(toc).getByRole('link', { name: '1. Primera sección' });
+    expect(link).toHaveAttribute('href', '#primera-seccion');
+    expect(screen.getByRole('heading', { name: '1. Primera sección', level: 2 })).toHaveAttribute(
+      'id',
+      'primera-seccion',
+    );
+  });
+
+  it('should show the reading time and a link back to the blog', () => {
+    mockedUseBlogPost.mockReturnValue({
+      content: 'Un artículo corto.',
+      meta: { slug: 'test', title: 'Mi Artículo', date: '2026-05-01', image: null },
+      notFound: false,
+      loading: false,
+    });
+
+    renderAt('/blog/test');
+
+    expect(screen.getByText(/1 min de lectura/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /volver al blog/i })).toHaveAttribute('href', '/blog');
   });
 
   it('should render a loading indicator while loading is true', () => {

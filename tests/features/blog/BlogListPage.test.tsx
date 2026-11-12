@@ -1,8 +1,6 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import type * as RRD from 'react-router-dom';
 
 // Mock src/data/blog/index.json with deterministic fixtures so the test does
 // not depend on whatever real articles ship in the repo. One article has a
@@ -27,17 +25,6 @@ vi.mock('@/data/blog/index.json', () => ({
   ],
 }));
 
-// Keep MemoryRouter real, replace useNavigate with a spy so the click
-// assertion does not depend on the route table.
-const navigateMock = vi.fn();
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<typeof RRD>('react-router-dom');
-  return {
-    ...actual,
-    useNavigate: () => navigateMock,
-  };
-});
-
 import BlogListPage from '@/features/blog/BlogListPage';
 
 const renderPage = () =>
@@ -48,14 +35,18 @@ const renderPage = () =>
   );
 
 describe('BlogListPage', () => {
-  beforeEach(() => {
-    navigateMock.mockReset();
-  });
-
-  it('should render the page heading "Blog" at level 1', () => {
+  it('should render the page heading at level 1', () => {
     renderPage();
 
-    expect(screen.getByRole('heading', { name: /^blog$/i, level: 1 })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /consejos e ideas para tu smart home/i, level: 1 }),
+    ).toBeInTheDocument();
+  });
+
+  it('should show each article excerpt', () => {
+    renderPage();
+
+    expect(screen.getByText('Resumen del artículo con imagen.')).toBeInTheDocument();
   });
 
   it('should render every article title from index.json', () => {
@@ -96,12 +87,12 @@ describe('BlogListPage', () => {
     expect(screen.getByText(/15 de mayo de 2026/i)).toBeInTheDocument();
   });
 
-  it('should navigate to /blog/:slug when an article card is clicked', async () => {
-    const user = userEvent.setup();
+  it('should link each card to /blog/:slug', () => {
     renderPage();
 
-    await user.click(screen.getByText('Artículo con imagen de portada'));
-
-    expect(navigateMock).toHaveBeenCalledWith('/blog/articulo-con-imagen');
+    expect(screen.getByRole('link', { name: /artículo con imagen de portada/i })).toHaveAttribute(
+      'href',
+      '/blog/articulo-con-imagen',
+    );
   });
 });

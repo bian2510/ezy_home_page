@@ -14,8 +14,15 @@ import { PricingProvider } from '@/features/pricing';
  * carrito y checkout (con la franja de los pasos de la compra) y el de contacto
  * (franja clara del título). El resto va dentro del contenedor de página.
  */
-const FULL_BLEED_PATHS: ReadonlySet<string> = new Set(['/', '/carrito', '/checkout', '/contacto']);
-const FULL_BLEED_PREFIXES: readonly string[] = ['/productos/', '/pedido/'];
+const FULL_BLEED_PATHS: ReadonlySet<string> = new Set([
+  '/',
+  '/carrito',
+  '/checkout',
+  '/contacto',
+  '/como-comprar',
+  '/blog',
+]);
+const FULL_BLEED_PREFIXES: readonly string[] = ['/productos/', '/pedido/', '/blog/'];
 
 const isFullBleed = (pathname: string): boolean =>
   FULL_BLEED_PATHS.has(pathname) ||
