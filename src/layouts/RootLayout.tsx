@@ -21,6 +21,7 @@ const FULL_BLEED_PATHS: ReadonlySet<string> = new Set([
   '/contacto',
   '/como-comprar',
   '/blog',
+  '/quienes-somos',
 ]);
 const FULL_BLEED_PREFIXES: readonly string[] = ['/productos/', '/pedido/', '/blog/'];
 
