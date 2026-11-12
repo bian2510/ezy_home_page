@@ -77,6 +77,8 @@ export interface BlogMeta {
   date: string;
   image: string | null;
   excerpt?: string;
+  /** Etiqueta del artículo en la tarjeta y el encabezado (ej. "Guía técnica"). */
+  category?: string;
 }
 
 /** Severidad visual de una notificación efímera. */

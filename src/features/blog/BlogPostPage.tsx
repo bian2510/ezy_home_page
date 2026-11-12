@@ -1,28 +1,28 @@
-// BlogPostPage — /blog/:slug route.
+// BlogPostPage — `/blog/:slug`, calcado del mock "Artículo" (Stitch,
+// 2026-11-12): ruta de navegación con "Volver al Blog", etiqueta, tiempo de
+// lectura y fecha, el título, la bajada, la portada y, al costado, el índice
+// "En este artículo" armado con los `##` del Markdown.
 //
-// Loads a single blog post by URL slug via `useBlogPost` and renders its
-// title and publication date above the Markdown body. The body is rendered
-// with `react-markdown` + `remark-gfm` for GitHub-flavoured Markdown
-// (tables, task lists, autolinks, strikethrough).
-//
-// Security note: `rehype-raw` is intentionally NOT installed in the pipeline.
-// Raw HTML embedded in `.md` files MUST NOT be parsed or rendered — only
-// the syntactic Markdown subset is honoured. This is the project default for
-// any user/author-supplied Markdown.
-//
-// Business rules (see DOMAIN.md › Product Core › Artículo de blog y
+// Reglas de negocio (DOMAIN.md › Product Core › Artículo de blog y
 // docs/adrs/F001-003-blog-static-markdown.md):
 // - Solo el dueño publica; los visitantes solo leen.
-// - Contenido gestionado como archivos estáticos `.md` (sin CMS en v1).
-// - URL propia por artículo (`/blog/:slug`).
-// - Slug desconocido => 404 con link de regreso al listado del blog.
+// - Contenido en archivos `.md` estáticos (sin CMS en v1).
+// - URL propia por artículo; un slug desconocido es un 404 con link al blog.
+import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { useBlogPost } from './useBlogPost';
+import Breadcrumb from '@/components/ui/Breadcrumb';
+import Container from '@/components/ui/Container';
+import Icon from '@/components/ui/Icon';
 import type { BlogMeta } from '@/types';
 import { truncateForMeta } from '@/lib/seo';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
+import BlogMarkdown from './BlogMarkdown';
+import BlogToc from './BlogToc';
+import { blogImageSrcSet, extractHeadings, formatBlogDate, readingMinutes } from './blogUtils';
+import { useBlogPost } from './useBlogPost';
+
+const backLinkClass =
+  'inline-flex min-h-11 items-center gap-2 rounded-full bg-primary/10 px-4 text-label-md font-bold text-primary transition-colors hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
 
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -50,28 +50,26 @@ export default function BlogPostPage() {
 
 function BlogPostNotFound() {
   return (
-    <section className="mx-auto w-full max-w-content space-y-4 px-4 py-12 text-center">
-      <h1 className="text-3xl font-semibold text-foreground">404</h1>
-      <p className="text-muted-foreground">
+    <Container className="flex flex-col items-center gap-4 py-16 text-center">
+      <h1 className="text-headline-xl font-extrabold text-on-surface">404</h1>
+      <p className="text-body-lg text-on-surface-variant">
         El artículo que buscás no existe o ya no está disponible.
       </p>
-      <Link
-        to="/blog"
-        className="inline-flex min-h-11 items-center justify-center text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-      >
+      <Link to="/blog" className={backLinkClass}>
+        <Icon name="arrowLeft" className="h-4 w-4" />
         Volver al blog
       </Link>
-    </section>
+    </Container>
   );
 }
 
 function BlogPostLoading() {
   return (
-    <section className="mx-auto w-full max-w-content px-4 py-12">
-      <p role="status" aria-live="polite" className="text-center text-muted-foreground">
+    <Container className="py-16">
+      <p role="status" aria-live="polite" className="text-center text-on-surface-variant">
         Cargando…
       </p>
-    </section>
+    </Container>
   );
 }
 
@@ -80,43 +78,63 @@ interface BlogPostArticleProps {
   content: string;
 }
 
-// `meta.date` is `YYYY-MM-DD` (ISO 8601 date only). Parsing it directly with
-// `new Date(string)` would interpret it as UTC midnight and shift the day in
-// negative TZ offsets (e.g. es-AR displayed yesterday in browsers running
-// UTC-3 on a CI box configured to UTC). Split and build with the local-time
-// constructor to keep the displayed day stable across timezones.
-const formatBlogDate = (isoDate: string): string => {
-  const [year, month, day] = isoDate.split('-') as [string, string, string];
-  const date = new Date(Number(year), Number(month) - 1, Number(day));
-  return new Intl.DateTimeFormat('es-AR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(date);
-};
-
 function BlogPostArticle({ meta, content }: BlogPostArticleProps) {
+  const headings = useMemo(() => extractHeadings(content), [content]);
+  const minutes = useMemo(() => readingMinutes(content), [content]);
+
   return (
-    <article className="mx-auto w-full max-w-prose px-4 py-6 sm:py-10">
-      <header className="mb-6 space-y-2">
-        <h1 className="text-3xl font-semibold text-foreground sm:text-4xl">{meta.title}</h1>
-        <time dateTime={meta.date} className="block text-sm text-muted-foreground">
-          {formatBlogDate(meta.date)}
-        </time>
+    <Container className="flex flex-col gap-8 pb-16 pt-2 md:pb-24">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Breadcrumb items={[{ label: 'Blog', to: '/blog' }, { label: meta.title }]} />
+        <Link to="/blog" className={backLinkClass}>
+          <Icon name="arrowLeft" className="h-4 w-4" />
+          Volver al Blog
+        </Link>
+      </div>
+
+      <header className="flex max-w-4xl flex-col gap-4">
+        <p className="flex flex-wrap items-center gap-x-4 gap-y-2 text-label-md text-on-surface-variant">
+          {meta.category !== undefined && (
+            <span className="rounded-md bg-primary px-3 py-1 text-label-sm font-bold uppercase tracking-wider text-on-primary">
+              {meta.category}
+            </span>
+          )}
+          <span className="inline-flex items-center gap-1">
+            <Icon name="clock" className="h-4 w-4" />
+            {minutes} min de lectura
+          </span>
+          <time dateTime={meta.date}>{formatBlogDate(meta.date)}</time>
+        </p>
+        <h1 className="text-headline-xl-mobile font-extrabold tracking-tight text-on-surface md:text-headline-xl lg:text-5xl lg:leading-tight">
+          {meta.title}
+        </h1>
+        {meta.excerpt !== undefined && (
+          <p className="text-body-lg text-on-surface-variant">{meta.excerpt}</p>
+        )}
       </header>
 
-      <div className="prose-content space-y-4 text-base leading-relaxed text-foreground/90">
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            // Keep document outline single-H1: the article title is the only
-            // page-level H1, so author H1s within the body render as H2.
-            h1: ({ children, ...props }) => <h2 {...props}>{children}</h2>,
-          }}
-        >
-          {content}
-        </ReactMarkdown>
+      {meta.image !== null && (
+        <img
+          src={meta.image}
+          srcSet={blogImageSrcSet(meta.image)}
+          sizes="(min-width: 1280px) 1184px, 100vw"
+          alt=""
+          loading="eager"
+          decoding="async"
+          className="aspect-video w-full rounded-2xl bg-surface-container object-cover shadow-md md:aspect-[21/9]"
+        />
+      )}
+
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <article className="max-w-prose lg:col-span-8 lg:max-w-none">
+          <BlogMarkdown content={content} />
+        </article>
+        {headings.length > 0 && (
+          <div className="order-first lg:order-none lg:col-span-4">
+            <BlogToc headings={headings} />
+          </div>
+        )}
       </div>
-    </article>
+    </Container>
   );
 }

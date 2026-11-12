@@ -1,16 +1,26 @@
 [
   {
     "slug": "introduccion-a-la-domotica",
-    "title": "Introducción a la Domótica: ¿Qué es y para qué sirve?",
+    "title": "Introducción a la Domótica: guía paso a paso para transformar tu hogar en inteligente",
     "date": "2026-05-01",
-    "image": "/images/blog/intro-domotica.jpg",
-    "excerpt": "Descubrí qué es la domótica y cómo puede transformar tu hogar en un espacio más seguro, eficiente y cómodo."
+    "image": "/images/blog/introduccion-a-la-domotica-1024.webp",
+    "excerpt": "Qué es la domótica, qué beneficios ofrece y cómo dar tus primeros pasos sin obras ni conocimientos técnicos.",
+    "category": "Primeros pasos"
+  },
+  {
+    "slug": "conectividades-wifi-zigbee-ble",
+    "title": "Conectividades en Domótica: Wi-Fi, Zigbee y BLE, ¿cuál conviene para tu hogar?",
+    "date": "2026-11-12",
+    "image": "/images/blog/conectividades-wifi-zigbee-ble-1024.webp",
+    "excerpt": "Conocé las diferencias entre Wi-Fi, Zigbee y Bluetooth Low Energy para armar una red inteligente que no sature tu router y aproveche al máximo las pilas de tus sensores.",
+    "category": "Tecnología y conectividad"
   },
   {
     "slug": "iluminacion-inteligente-guia",
-    "title": "Guía completa de iluminación inteligente para el hogar",
+    "title": "Guía de Iluminación Inteligente: todo lo que necesitás para ambientar y ahorrar en tu hogar",
     "date": "2026-05-15",
-    "image": "/images/blog/iluminacion-inteligente.jpg",
-    "excerpt": "Todo lo que necesitás saber para empezar con la iluminación inteligente: desde elegir las bombillas hasta automatizar encendido y apagado."
+    "image": "/images/blog/iluminacion-inteligente-guia-1024.webp",
+    "excerpt": "Bombillas, tiras LED y plafones: cómo elegir la luz para cada ambiente, crear rutinas y ahorrar energía.",
+    "category": "Iluminación"
   }
 ]

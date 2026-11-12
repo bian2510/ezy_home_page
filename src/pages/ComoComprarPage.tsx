@@ -1,111 +1,140 @@
+// ComoComprarPage — los tres pasos de la compra, calcados del mock "Cómo
+// comprar" (Stitch, 2026-11-12).
+//
+// El texto del mock se ajustó a lo que el sitio hace hoy: el checkout solo
+// ofrece el retiro en punto pick-up (`DeliveryOptions`, "Sin cargo") y el envío
+// a domicilio se coordina por WhatsApp (DOMAIN.md › How EzyHome Makes Money).
+// Las fotos son las del mock, en `public/images/como-comprar/`.
 import { Link } from 'react-router-dom';
+import Breadcrumb from '@/components/ui/Breadcrumb';
+import Container from '@/components/ui/Container';
+import Icon, { type IconName } from '@/components/ui/Icon';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
-const PASOS = [
+interface Step {
+  number: string;
+  icon: IconName;
+  image: string;
+  title: string;
+  detail: string;
+}
+
+const STEPS: readonly Step[] = [
   {
-    numero: 1,
-    titulo: 'Navegá el catálogo',
-    descripcion:
-      'Explorá nuestros productos organizados por categoría: iluminación, automatización y seguridad. Podés filtrar por tipo para encontrar lo que necesitás más rápido.',
-    cta: { label: 'Ir al catálogo', to: '/catalogo' },
+    number: '01',
+    icon: 'mobile',
+    image: 'paso-1',
+    title: 'Seleccioná tus productos inteligentes',
+    detail:
+      'Explorá nuestro catálogo de iluminación, seguridad, confort y hubs. Agregá al carrito los dispositivos que necesites: tu selección queda guardada aunque cierres el navegador.',
   },
   {
-    numero: 2,
-    titulo: 'Agregá productos al carrito',
-    descripcion:
-      'Hacé clic en "Agregar al carrito" en cada producto que te interese. Tu selección se guarda automáticamente aunque cierres el navegador o apagues el celular.',
-    cta: null,
+    number: '02',
+    icon: 'truck',
+    image: 'paso-2',
+    title: 'Completá tus datos de entrega y facturación',
+    detail:
+      'Elegí el retiro sin cargo en nuestro punto pick-up o coordiná el envío a domicilio por WhatsApp. Dejá tus datos para la factura, si la necesitás.',
   },
   {
-    numero: 3,
-    titulo: 'Enviá tu pedido por WhatsApp',
-    descripcion:
-      'Cuando estés listo, ingresá al carrito y hacé clic en "Comprar por WhatsApp". Se pre-compone un mensaje con el detalle de tu pedido — solo tenés que enviarlo. Si retirás en nuestro punto pick-up, también podés tocar "Comprar con retiro en punto pick-up": dejás tus datos y, si pagás por transferencia, te mostramos a qué cuenta transferir, sin esperar respuesta.',
-    cta: { label: 'Ver carrito', to: '/carrito' },
+    number: '03',
+    icon: 'wallet',
+    image: 'paso-3',
+    title: 'Aboná con transferencia o Mercado Pago',
+    detail:
+      'Transferí a la cuenta que te mostramos al confirmar el pedido o pagá con Mercado Pago, con tarjeta de débito o crédito.',
   },
-  {
-    numero: 4,
-    titulo: 'Recibís la confirmación',
-    descripcion:
-      'EzyHome te responde por WhatsApp con el total final del pedido incluyendo el costo de envío cotizado con Andreani o Correo Argentino según tu ubicación.',
-    cta: null,
-  },
-  {
-    numero: 5,
-    titulo: 'Realizás el pago',
-    descripcion:
-      'Pagás por MercadoPago o transferencia bancaria. Te enviamos el comprobante de compra una vez confirmado el pago.',
-    cta: null,
-  },
-  {
-    numero: 6,
-    titulo: 'Recibís en tu domicilio',
-    descripcion:
-      'Preparamos tu pedido y lo despachamos con Andreani o Correo Argentino. Te compartimos el número de seguimiento para que puedas rastrear tu envío.',
-    cta: null,
-  },
-] as const;
+];
+
+const imageSrcSet = (name: string): string =>
+  `/images/como-comprar/${name}-640.webp 640w, /images/como-comprar/${name}-1024.webp 1024w`;
 
 export default function ComoComprarPage() {
   useDocumentMeta({
     title: 'Cómo Comprar',
     description:
-      'En EzyHome comprás de forma asistida: te acompañamos en cada paso para que llegues al producto correcto sin complicaciones.',
+      'Comprar en EzyHome es simple: elegí tus productos, completá tus datos de entrega y pagá con transferencia o Mercado Pago.',
     path: '/como-comprar',
   });
 
   return (
-    <div className="flex w-full flex-col gap-10">
-      <header>
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-          Cómo Comprar
-        </h1>
-        <p className="mt-3 text-base text-muted-foreground sm:text-lg">
-          En EzyHome comprás de forma asistida — te acompañamos en cada paso para que llegues al
-          producto correcto sin complicaciones.
-        </p>
-      </header>
+    <>
+      <div className="w-full bg-surface-container-low">
+        <Container className="py-2">
+          <Breadcrumb items={[{ label: 'Cómo Comprar' }]} />
+        </Container>
+      </div>
 
-      <ol className="grid grid-cols-1 gap-4 md:grid-cols-2" aria-label="Pasos para comprar">
-        {PASOS.map(({ numero, titulo, descripcion, cta }) => (
-          <li
-            key={numero}
-            className="flex gap-4 rounded-lg border border-border bg-card px-5 py-5 shadow-sm"
+      <section aria-labelledby="como-comprar-heading" className="w-full bg-surface">
+        <Container className="flex flex-col items-center gap-4 py-12 text-center md:py-16">
+          <h1
+            id="como-comprar-heading"
+            className="text-headline-xl-mobile font-extrabold tracking-tight text-on-surface md:text-headline-xl lg:text-5xl lg:leading-tight"
           >
-            <span
-              aria-hidden="true"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground"
-            >
-              {numero}
-            </span>
-            <div className="flex flex-col gap-1">
-              <h2 className="font-semibold text-foreground">{titulo}</h2>
-              <p className="text-sm text-muted-foreground">{descripcion}</p>
-              {cta && (
-                <Link
-                  to={cta.to}
-                  className="mt-2 self-start text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                >
-                  {cta.label} →
-                </Link>
-              )}
-            </div>
-          </li>
-        ))}
-      </ol>
-
-      <section
-        aria-labelledby="dudas-heading"
-        className="rounded-lg bg-primary px-6 py-6 text-primary-foreground"
-      >
-        <h2 id="dudas-heading" className="text-lg font-semibold">
-          ¿Tenés dudas antes de comprar?
-        </h2>
-        <p className="mt-2 text-sm text-primary-foreground/90">
-          Escribinos por WhatsApp y te ayudamos a elegir el producto ideal para tu hogar. Sin
-          compromiso.
-        </p>
+            Cómo Comprar en <span className="text-primary">EzyHome</span>
+          </h1>
+          <p className="max-w-2xl text-body-lg text-on-surface-variant">
+            Transformar tu hogar con tecnología inteligente es fácil y seguro. Seguí estos 3 simples
+            pasos:
+          </p>
+        </Container>
       </section>
-    </div>
+
+      <div className="w-full bg-surface-container-low">
+        <Container className="py-12 md:py-20">
+          <ol
+            aria-label="Pasos para comprar"
+            className="grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-3 md:gap-8"
+          >
+            {STEPS.map(({ number, icon, image, title, detail }, index) => (
+              <li
+                key={number}
+                className="flex flex-col gap-6 rounded-2xl bg-surface-container-lowest p-6 shadow-sm sm:p-8"
+              >
+                <div className="flex items-center justify-between">
+                  <span
+                    aria-hidden="true"
+                    className="text-headline-xl font-extrabold text-primary/20"
+                  >
+                    {number}
+                  </span>
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Icon name={icon} className="h-6 w-6" />
+                  </span>
+                </div>
+
+                <div className="relative overflow-hidden rounded-xl bg-surface-container">
+                  <img
+                    src={`/images/como-comprar/${image}-1024.webp`}
+                    srcSet={imageSrcSet(image)}
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    alt=""
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    width={1024}
+                    height={559}
+                    className="aspect-video h-full w-full object-cover"
+                  />
+                  {index === 0 && (
+                    <Link
+                      to="/catalogo"
+                      className="absolute bottom-3 left-3 inline-flex min-h-11 items-center gap-2 rounded-full bg-inverse-surface/80 px-4 text-label-md font-bold text-inverse-on-surface backdrop-blur transition-colors hover:bg-inverse-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed"
+                    >
+                      <Icon name="cart" className="h-4 w-4" />
+                      Ver el catálogo
+                    </Link>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <h2 className="text-headline-sm font-bold text-on-surface">{title}</h2>
+                  <p className="text-body-md text-on-surface-variant">{detail}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </Container>
+      </div>
+    </>
   );
 }
