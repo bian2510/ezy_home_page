@@ -7,6 +7,8 @@ building blocks consumed by every other component.
 
 - `Container.tsx` / `SectionBand.tsx` — page width (`max-w-content`) with the mock gutters, and full-bleed bands
 - `Icon.tsx`, `Badge.tsx`, `QuantitySelector.tsx`, `Stepper.tsx`, `Pagination.tsx`, `SearchBox.tsx`, `Drawer.tsx`, `Toast.tsx`, `ErrorBoundary.tsx` — domain-blind primitives
+- `PageHeader.tsx` — common page header (breadcrumb, the only `h1`, subtitle) every content page starts with; exports `PAGE_TITLE_CLASS` for pages with their own header (frontend-conventions §6)
+- `Breadcrumb.tsx` — the one breadcrumb (Inicio / … / current page); `NotFoundState.tsx` — 404 built on `PageHeader` with a back link
 - `ContactCard.tsx` — card of a contact channel (icon, title, value box, action), rendered as an `<li>`
 - `ContactProjectsBand.tsx` — green "automatizá tu vivienda o proyecto inmobiliario" band of `/contacto`; only rendered in local dev (`isDevelopment`) until the owner decides to offer it
 
@@ -23,6 +25,6 @@ building blocks consumed by every other component.
 
 ## Constraints
 
-- No router, no data, no global state
+- No data, no global state. `Link` from the router is allowed for navigation (`Breadcrumb`, `NotFoundState`, `ErrorBoundary`)
 - 44x44 minimum touch target (mobile-first requirement)
 - Must remain framework-agnostic enough to be portable to Storybook later
