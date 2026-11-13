@@ -6,7 +6,7 @@ incluido) y las arma.
 
 ## Key Components
 
-- `ProductBreadcrumb.tsx` — Inicio / Catálogo / categoría / producto
+- `ProductBreadcrumb.tsx` — Inicio / Productos / categoría / producto, con el `Breadcrumb` común
 - `ProductGallery.tsx` — imagen grande (LCP), miniaturas y el cartel "-N% transferencia"
 - `PurchasePanel.tsx` — título, precios del ERP, "Ahorrás $ X pagando por transferencia", cantidad y agregar
 - `ProductDescription.tsx` — tarjeta con la descripción de `products.json`

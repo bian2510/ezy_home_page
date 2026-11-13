@@ -73,20 +73,33 @@ El campo es opcional. Si está presente, `ProductDetailPage` muestra un botón "
 
 ## Assets del blog
 
-Las imágenes de posts de blog viven en:
+La portada de cada artículo va en WebP a tres anchos, para el `srcset`:
 
 ```
 public/
-  blog/
-    {slug}/
-      cover.webp      ← imagen de portada del post
+  images/
+    blog/
+      {slug}-640.webp
+      {slug}-1024.webp
+      {slug}-1376.webp
 ```
 
-Referenciados en `src/data/blog/index.json`:
+En `src/data/blog/index.json` se referencia la de 1024; `blogImageSrcSet`
+(`features/blog/blogUtils.ts`) arma el `srcset` con las otras dos a partir de ese nombre:
 
 ```json
-{ "slug": "introduccion-domotica", "image": "/blog/introduccion-domotica/cover.webp" }
+{
+  "slug": "introduccion-a-la-domotica",
+  "image": "/images/blog/introduccion-a-la-domotica-1024.webp"
+}
 ```
+
+Si la imagen no sigue el patrón `-1024.webp`, se muestra igual pero sin `srcset`. Paso a paso en
+[`docs/guides/agregar-articulo-blog.md`](../guides/agregar-articulo-blog.md).
+
+### Fotos de Cómo comprar
+
+`public/images/como-comprar/paso-{1,2,3}-{640,1024}.webp`, las fotos del mock de cada paso.
 
 ---
 
