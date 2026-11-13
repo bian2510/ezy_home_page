@@ -6,9 +6,9 @@
 // a domicilio se coordina por WhatsApp (DOMAIN.md › How EzyHome Makes Money).
 // Las fotos son las del mock, en `public/images/como-comprar/`.
 import { Link } from 'react-router-dom';
-import Breadcrumb from '@/components/ui/Breadcrumb';
 import Container from '@/components/ui/Container';
 import Icon, { type IconName } from '@/components/ui/Icon';
+import PageHeader from '@/components/ui/PageHeader';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
 interface Step {
@@ -59,28 +59,21 @@ export default function ComoComprarPage() {
 
   return (
     <>
-      <div className="w-full bg-surface-container-low">
-        <Container className="py-2">
-          <Breadcrumb items={[{ label: 'Cómo Comprar' }]} />
-        </Container>
-      </div>
-
-      <section aria-labelledby="como-comprar-heading" className="w-full bg-surface">
-        <Container className="flex flex-col items-center gap-4 py-12 text-center md:py-16">
-          <h1
-            id="como-comprar-heading"
-            className="text-headline-xl-mobile font-extrabold tracking-tight text-on-surface md:text-headline-xl lg:text-5xl lg:leading-tight"
-          >
+      <PageHeader
+        id="como-comprar-heading"
+        breadcrumb={[{ label: 'Cómo Comprar' }]}
+        align="center"
+        title={
+          <>
             Cómo Comprar en <span className="text-primary">EzyHome</span>
-          </h1>
-          <p className="max-w-2xl text-body-lg text-on-surface-variant">
-            Transformar tu hogar con tecnología inteligente es fácil y seguro. Seguí estos 3 simples
-            pasos:
-          </p>
-        </Container>
-      </section>
+          </>
+        }
+      >
+        Transformar tu hogar con tecnología inteligente es fácil y seguro. Seguí estos 3 simples
+        pasos:
+      </PageHeader>
 
-      <div className="w-full bg-surface-container-low">
+      <div className="w-full bg-surface">
         <Container className="py-12 md:py-20">
           <ol
             aria-label="Pasos para comprar"

@@ -5,11 +5,11 @@
 // de un pedido). La franja de "proyectos inmobiliarios" del mock solo se ve en local:
 // el dueño no ofrece ese servicio todavía y lo decide antes del deploy
 // (2026-11-06).
-import { Link } from 'react-router-dom';
 import Container from '@/components/ui/Container';
 import ContactCard from '@/components/ui/ContactCard';
 import ContactProjectsBand from '@/components/ui/ContactProjectsBand';
 import Icon from '@/components/ui/Icon';
+import PageHeader from '@/components/ui/PageHeader';
 import { SITE_CONTACT } from '@/data/siteContact';
 import { useToast } from '@/features/toast';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
@@ -50,49 +50,14 @@ export default function ContactoPage() {
 
   return (
     <>
-      <section
-        aria-labelledby="contacto-heading"
-        className="relative w-full overflow-hidden bg-surface-container-low"
+      <PageHeader
+        id="contacto-heading"
+        breadcrumb={[{ label: 'Contactanos' }]}
+        title="Estamos acá para ayudarte a transformar tu hogar"
       >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl"
-        />
-        <Container className="relative flex flex-col gap-4 pb-12 pt-8 md:pb-16 md:pt-12">
-          <nav aria-label="Ruta de navegación">
-            <ol className="flex items-center gap-2 text-label-md text-on-surface-variant">
-              <li>
-                <Link
-                  to="/"
-                  className={cn(
-                    'inline-flex min-h-11 items-center gap-1 rounded hover:text-primary',
-                    focusRing,
-                  )}
-                >
-                  <Icon name="home" className="h-4 w-4" />
-                  Inicio
-                </Link>
-              </li>
-              <li aria-hidden="true" className="font-bold text-outline-variant">
-                /
-              </li>
-              <li aria-current="page" className="font-bold text-primary">
-                Contactanos
-              </li>
-            </ol>
-          </nav>
-          <h1
-            id="contacto-heading"
-            className="text-headline-xl-mobile font-extrabold tracking-tight text-on-surface md:text-headline-xl"
-          >
-            Estamos acá para ayudarte a transformar tu hogar
-          </h1>
-          <p className="max-w-3xl text-body-lg text-on-surface-variant">
-            Si tenés dudas sobre compatibilidad de dispositivos, soporte técnico, cotizaciones o el
-            seguimiento de tu compra, escribinos y te asesoramos.
-          </p>
-        </Container>
-      </section>
+        Si tenés dudas sobre compatibilidad de dispositivos, soporte técnico, cotizaciones o el
+        seguimiento de tu compra, escribinos y te asesoramos.
+      </PageHeader>
 
       <Container className="relative -mt-4 pb-4">
         <ul aria-label="Canales de contacto" className="grid grid-cols-1 gap-6 md:grid-cols-3">

@@ -110,8 +110,8 @@ es el **único ancho permitido** para el contenedor que centra una página o sec
 
 El contenedor se arma con **`components/ui/Container`**, igual que el mock: los márgenes laterales
 (`px-gutter-mobile sm:px-gutter md:px-margin`: 16, 24 y 48 px) van por fuera y el contenido mide
-hasta `max-w-content` adentro, así en pantallas anchas ocupa los 1280 px completos. Lo usan el header, el
-footer y el `<main>` de `RootLayout`, así todo queda alineado. No repetir esas clases a mano.
+hasta `max-w-content` adentro, así en pantallas anchas ocupa los 1280 px completos. Lo usan el
+header, el footer y cada franja de las páginas, así todo queda alineado. No repetir esas clases a mano.
 
 **Qué NO cuenta como wrapper de página:** limitar la medida de línea de un bloque de texto
 _dentro_ de una sección ya contenida (copy de un hero, párrafo de un CTA, cuerpo de un artículo).
@@ -127,15 +127,14 @@ Ahí `max-w-prose` es correcto — es legibilidad, no layout de página.
 ```
 
 **Usos legítimos de `max-w-prose` (65ch) hoy:** cuerpo del artículo en `BlogPostPage`.
-El copy del hero del Home (`features/home/HomeHero`) limita su medida con `max-w-2xl`/`max-w-3xl`,
-que es lo mismo: legibilidad dentro de una sección ya contenida.
+El copy del hero del Home (`features/home/HomeHero`) y la bajada de `PageHeader` limitan su medida
+con `max-w-2xl`/`max-w-3xl`, que es lo mismo: legibilidad dentro de una sección ya contenida.
 
-### Páginas de borde a borde
+### El layout: `RootLayout` + franjas
 
-Una página hecha de franjas con fondo propio de borde a borde (el Home, el detalle de producto) se
-agrega a `FULL_BLEED_PATHS` (ruta exacta) o `FULL_BLEED_PREFIXES` (`/productos/…`) en `RootLayout`:
-el `<main>` no la mete en el contenedor y cada franja lleva el suyo adentro
-(`components/ui/SectionBand`):
+`layouts/RootLayout` es el layout común de **todas** las rutas: header, `<main>` y footer. El
+`<main>` va de borde a borde siempre, sin contenedor: cada página se arma con franjas, cada una con
+su fondo y su `Container` adentro (`components/ui/SectionBand` cuando la franja tiene título):
 
 ```tsx
 <section className="w-full bg-surface-container-low">
@@ -143,9 +142,35 @@ el `<main>` no la mete en el contenedor y cada franja lleva el suyo adentro
 </section>
 ```
 
-Dentro de una página contenida, una sección que necesita fondo de borde a borde puede romper el
-padding con márgenes negativos iguales a los del contenedor
-(`-mx-gutter-mobile sm:-mx-gutter md:-mx-margin`).
+No hay rutas "contenidas" y rutas "de borde a borde": antes existían las dos y cada página
+arrancaba a una altura distinta.
+
+### El encabezado de página: `PageHeader` (obligatorio)
+
+**Toda página de contenido arranca con `components/ui/PageHeader`**: la franja clara con la ruta
+de navegación, el título (el único `h1`) y la bajada. Mide lo mismo en todas, así al navegar la
+ruta y el título no saltan de lugar.
+
+```tsx
+<PageHeader id="blog-heading" breadcrumb={[{ label: 'Blog' }]} title="Consejos e Ideas">
+  Guías prácticas sobre domótica.
+</PageHeader>
+<Container className="py-10">…el contenido…</Container>
+```
+
+| Página                                                | Encabezado                                                               |
+| ----------------------------------------------------- | ------------------------------------------------------------------------ |
+| Catálogo, blog, Cómo comprar, Quiénes somos, Contacto | `PageHeader`                                                             |
+| 404 (ruta, producto o artículo que no existe)         | `NotFoundState` (es un `PageHeader` con un link)                         |
+| Inicio                                                | Su hero (`HomeHero`)                                                     |
+| Detalle de producto, artículo del blog                | Propio: `Breadcrumb` común + título con `PAGE_TITLE_CLASS` o el del mock |
+| Carrito, checkout, pedido                             | Propio, con los pasos de la compra                                       |
+
+- La ruta de navegación es siempre `components/ui/Breadcrumb`. No armar otra a mano.
+- Un título de página fuera de `PageHeader` usa `PAGE_TITLE_CLASS` (exportada por `PageHeader`)
+  salvo que el mock pida otro tamaño, como el título del producto al lado de la galería.
+- `<html>` lleva `scrollbar-gutter: stable` (`styles/global.css`): reserva el lugar de la barra
+  de scroll para que el sitio no se corra al pasar de una página corta a una larga.
 
 ---
 

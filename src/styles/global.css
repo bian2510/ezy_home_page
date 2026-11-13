@@ -7,6 +7,9 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* Reserva el lugar de la barra de scroll: sin esto, al pasar de una página
+       corta (sin barra) a una larga, todo el sitio se corre unos píxeles. */
+    scrollbar-gutter: stable;
   }
 
   body {
