@@ -1,11 +1,12 @@
 import { useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import Container from '@/components/ui/Container';
+import PageHeader from '@/components/ui/PageHeader';
 import { allProducts } from '@/data/catalog';
 import Pagination from '@/components/ui/Pagination';
 import { paginate, parsePage } from '@/lib/pagination';
 import ProductCard from './ProductCard';
 import CategoryFilter from './CategoryFilter';
-import CatalogHeading from './CatalogHeading';
 import SearchNotice from './SearchNotice';
 import TrustStrip from './TrustStrip';
 import { useCatalog } from './useCatalog';
@@ -98,53 +99,58 @@ export default function CatalogPage() {
       : 'No encontramos productos para tu búsqueda';
 
   return (
-    <section className="flex w-full flex-col gap-6">
-      <CatalogHeading />
+    <>
+      <PageHeader id="catalogo-heading" breadcrumb={[{ label: 'Productos' }]} title="Productos">
+        Encontrá las mejores soluciones en domótica e iluminación inteligente para transformar tu
+        hogar.
+      </PageHeader>
 
-      <div className="flex flex-col gap-3 rounded-xl bg-surface-container-lowest p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between">
-        <CategoryFilter
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onSelectCategory={handleSelectCategory}
-          counts={counts}
-          totalCount={totalCount}
-        />
-        <p className="shrink-0 px-1 text-body-sm font-medium text-secondary">
-          {filtered.length === 0 ? (
-            'Mostrando 0 productos'
-          ) : (
-            <>
-              Mostrando{' '}
-              <strong className="font-bold text-on-surface">
-                {start + 1}–{end}
-              </strong>{' '}
-              de <strong className="font-bold text-on-surface">{filtered.length}</strong>
-            </>
-          )}
-        </p>
-      </div>
-
-      {query !== '' && <SearchNotice query={query} onClear={handleClearSearch} />}
-
-      {filtered.length === 0 ? (
-        <p className="py-8 text-center text-muted-foreground" role="status">
-          {emptyMessage}
-        </p>
-      ) : (
-        // `scroll-mt-28`: al subir a la grilla, el header sticky no la tapa.
-        <div ref={gridRef} className="flex scroll-mt-28 flex-col gap-8">
-          <ul className="grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2 lg:grid-cols-3">
-            {filtered.slice(start, end).map((product) => (
-              <li key={product.id}>
-                <ProductCard product={product} />
-              </li>
-            ))}
-          </ul>
-          <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
+      <Container className="flex flex-col gap-6 py-8">
+        <div className="flex flex-col gap-3 rounded-xl bg-surface-container-lowest p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+          <CategoryFilter
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={handleSelectCategory}
+            counts={counts}
+            totalCount={totalCount}
+          />
+          <p className="shrink-0 px-1 text-body-sm font-medium text-secondary">
+            {filtered.length === 0 ? (
+              'Mostrando 0 productos'
+            ) : (
+              <>
+                Mostrando{' '}
+                <strong className="font-bold text-on-surface">
+                  {start + 1}–{end}
+                </strong>{' '}
+                de <strong className="font-bold text-on-surface">{filtered.length}</strong>
+              </>
+            )}
+          </p>
         </div>
-      )}
 
-      <TrustStrip />
-    </section>
+        {query !== '' && <SearchNotice query={query} onClear={handleClearSearch} />}
+
+        {filtered.length === 0 ? (
+          <p className="py-8 text-center text-muted-foreground" role="status">
+            {emptyMessage}
+          </p>
+        ) : (
+          // `scroll-mt-28`: al subir a la grilla, el header sticky no la tapa.
+          <div ref={gridRef} className="flex scroll-mt-28 flex-col gap-8">
+            <ul className="grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2 lg:grid-cols-3">
+              {filtered.slice(start, end).map((product) => (
+                <li key={product.id}>
+                  <ProductCard product={product} />
+                </li>
+              ))}
+            </ul>
+            <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
+          </div>
+        )}
+
+        <TrustStrip />
+      </Container>
+    </>
   );
 }

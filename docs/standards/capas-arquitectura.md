@@ -51,6 +51,8 @@ src/components/ui/
   Badge.tsx           ← recibe variant + children, nada más
   Container.tsx       ← ancho de página (`max-w-content`) y márgenes laterales del mock
   SectionBand.tsx     ← franja de borde a borde con su fondo y un Container adentro
+  PageHeader.tsx      ← encabezado común de página: ruta de navegación, título y bajada
+  Breadcrumb.tsx      ← la ruta de navegación (Inicio / … / página actual)
   Drawer.tsx
   QuantitySelector.tsx
   Toast.tsx

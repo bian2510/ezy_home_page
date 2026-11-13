@@ -12,7 +12,7 @@ import { useDocumentMeta } from '@/hooks/useDocumentMeta';
  * Portada (ruta `/`). Solo arma las secciones de `features/home`; los
  * metadatos son los de siempre (título por defecto y la misma description).
  *
- * Es una ruta de borde a borde (`FULL_BLEED_PATHS` en `RootLayout`): cada
+ * Como todas las páginas, se arma con franjas de borde a borde: cada
  * sección es una franja con su fondo y su propio `Container`, como el mock.
  */
 export default function HomePage() {

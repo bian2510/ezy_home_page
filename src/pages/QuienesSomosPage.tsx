@@ -1,64 +1,14 @@
 // QuienesSomosPage — la tienda, su misión y para quién es. No hay mock de
 // Stitch para esta página (2026-11-12): se arma con las piezas del rediseño
-// (franja clara del título como Contacto, tarjetas como las del Inicio) y el
-// mismo texto de antes, que sale de DOMAIN.md › Domain y Core Problem.
-//
-// Es de borde a borde (`FULL_BLEED_PATHS` en `RootLayout`).
+// (`PageHeader`, tarjetas como las del Inicio) y el mismo texto de antes, que
+// está en `data/aboutUs.ts`.
 import { Link } from 'react-router-dom';
-import Breadcrumb from '@/components/ui/Breadcrumb';
-import Container from '@/components/ui/Container';
-import Icon, { type IconName } from '@/components/ui/Icon';
+import Icon from '@/components/ui/Icon';
+import PageHeader from '@/components/ui/PageHeader';
 import SectionBand from '@/components/ui/SectionBand';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { cn } from '@/lib/cn';
-
-interface Card {
-  icon: IconName;
-  title: string;
-  detail: string;
-}
-
-const PROFILES: readonly Card[] = [
-  {
-    icon: 'home',
-    title: 'Querés mejorar tu hogar',
-    detail:
-      'Tenés ganas de modernizar tu casa pero no sabés por dónde empezar. Te asesoramos para que el primer paso sea simple y tenga impacto real desde el día uno.',
-  },
-  {
-    icon: 'shield',
-    title: 'La seguridad es prioridad',
-    detail:
-      'Cámaras, detectores de humo o gas, sensores de movimiento. Soluciones concretas para que tu familia esté protegida sin necesitar instalar sistemas complejos.',
-  },
-  {
-    icon: 'lightBulb',
-    title: 'Empezás con algo pequeño',
-    detail:
-      'Una lamparita inteligente o un enchufe automatizado ya cambian la experiencia del hogar. No hace falta renovar todo: te ayudamos a escalar a tu ritmo.',
-  },
-];
-
-const COMMITMENTS: readonly Card[] = [
-  {
-    icon: 'check',
-    title: 'Profesionalismo',
-    detail:
-      'Cada producto está seleccionado y verificado. Te acompañamos antes, durante y después de la compra.',
-  },
-  {
-    icon: 'chat',
-    title: 'Accesibilidad',
-    detail:
-      'Precios pensados para el mercado argentino. Sin tecnicismos: si tenés dudas, las resolvemos por WhatsApp.',
-  },
-  {
-    icon: 'lock',
-    title: 'Confianza',
-    detail:
-      'Cerramos cada venta de forma asistida para asegurarnos de que elegiste el producto correcto y que llegue en perfectas condiciones.',
-  },
-];
+import { COMMITMENTS, PROFILES } from '@/data/aboutUs';
 
 const actionBase =
   'inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-6 py-3 text-label-lg font-bold transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-fixed focus-visible:ring-offset-2 focus-visible:ring-offset-inverse-surface';
@@ -73,29 +23,15 @@ export default function QuienesSomosPage() {
 
   return (
     <>
-      <section
-        aria-labelledby="quienes-somos-heading"
-        className="relative w-full overflow-hidden bg-surface-container-low"
+      <PageHeader
+        id="quienes-somos-heading"
+        breadcrumb={[{ label: 'Quiénes Somos' }]}
+        title="Quiénes Somos"
       >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl"
-        />
-        <Container className="relative flex flex-col gap-4 pb-12 pt-2 md:pb-16">
-          <Breadcrumb items={[{ label: 'Quiénes Somos' }]} className="mb-4 md:mb-8" />
-          <h1
-            id="quienes-somos-heading"
-            className="text-headline-xl-mobile font-extrabold tracking-tight text-on-surface md:text-headline-xl lg:text-5xl lg:leading-tight"
-          >
-            Quiénes Somos
-          </h1>
-          <p className="max-w-3xl text-body-lg text-on-surface-variant">
-            Somos <span className="font-bold text-primary">EzyHome</span>, una tienda argentina de
-            domótica que cree que el hogar inteligente debe estar al alcance de todos, no solo de
-            los expertos.
-          </p>
-        </Container>
-      </section>
+        Somos <span className="font-bold text-primary">EzyHome</span>, una tienda argentina de
+        domótica que cree que el hogar inteligente debe estar al alcance de todos, no solo de los
+        expertos.
+      </PageHeader>
 
       <SectionBand label="Misión de EzyHome" tone="surface" className="py-12 md:py-20">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">

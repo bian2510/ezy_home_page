@@ -295,12 +295,12 @@ describe('ProductDetailPage', () => {
     expect(screen.queryByRole('button', { name: /imagen \d/i })).not.toBeInTheDocument();
   });
 
-  it('should render the breadcrumb Inicio / Catálogo / category / product', () => {
+  it('should render the breadcrumb Inicio / Productos (same label as the header and the catalog) / category / product', () => {
     renderAt('/productos/p-1');
 
     const breadcrumb = screen.getByRole('navigation', { name: /ruta de navegación/i });
     expect(within(breadcrumb).getByRole('link', { name: /inicio/i })).toHaveAttribute('href', '/');
-    expect(within(breadcrumb).getByRole('link', { name: 'Catálogo' })).toHaveAttribute(
+    expect(within(breadcrumb).getByRole('link', { name: 'Productos' })).toHaveAttribute(
       'href',
       '/catalogo',
     );

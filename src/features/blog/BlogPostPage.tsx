@@ -13,6 +13,7 @@ import { Link, useParams } from 'react-router-dom';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import Container from '@/components/ui/Container';
 import Icon from '@/components/ui/Icon';
+import NotFoundState from '@/components/ui/NotFoundState';
 import type { BlogMeta } from '@/types';
 import { truncateForMeta } from '@/lib/seo';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
@@ -50,16 +51,11 @@ export default function BlogPostPage() {
 
 function BlogPostNotFound() {
   return (
-    <Container className="flex flex-col items-center gap-4 py-16 text-center">
-      <h1 className="text-headline-xl font-extrabold text-on-surface">404</h1>
-      <p className="text-body-lg text-on-surface-variant">
-        El artículo que buscás no existe o ya no está disponible.
-      </p>
-      <Link to="/blog" className={backLinkClass}>
-        <Icon name="arrowLeft" className="h-4 w-4" />
-        Volver al blog
-      </Link>
-    </Container>
+    <NotFoundState
+      breadcrumb={[{ label: 'Blog', to: '/blog' }, { label: 'Artículo no encontrado' }]}
+      message="El artículo que buscás no existe o ya no está disponible."
+      back={{ to: '/blog', label: 'Volver al blog' }}
+    />
   );
 }
 
@@ -84,7 +80,7 @@ function BlogPostArticle({ meta, content }: BlogPostArticleProps) {
 
   return (
     <Container className="flex flex-col gap-8 pb-16 pt-2 md:pb-24">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-wrap items-start justify-between gap-2">
         <Breadcrumb items={[{ label: 'Blog', to: '/blog' }, { label: meta.title }]} />
         <Link to="/blog" className={backLinkClass}>
           <Icon name="arrowLeft" className="h-4 w-4" />

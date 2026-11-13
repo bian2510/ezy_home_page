@@ -11,17 +11,17 @@
 // - Precio y stock del ERP (`usePricing`), nunca del JSON; el JSON-LD publica
 //   lo mismo que la página.
 //
-// Es una ruta de borde a borde (`FULL_BLEED_PREFIXES` en `RootLayout`): cada
+// Como todas las páginas, se arma con franjas de borde a borde: cada
 // franja lleva su `Container`.
 import { useMemo, useRef } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { findActiveProductById } from '@/data/catalog';
 import type { Product } from '@/types';
 import { getSiteUrl } from '@/lib/env';
 import { buildCanonical, buildProductJsonLd, truncateForMeta } from '@/lib/seo';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { useInView } from '@/hooks/useInView';
-import Container from '@/components/ui/Container';
+import NotFoundState from '@/components/ui/NotFoundState';
 import SectionBand from '@/components/ui/SectionBand';
 import { usePricing } from '@/features/pricing';
 import {
@@ -86,18 +86,11 @@ export default function ProductDetailPage() {
 
 function ProductNotFound() {
   return (
-    <Container className="space-y-4 py-12 text-center">
-      <h1 className="text-3xl font-semibold text-foreground">404</h1>
-      <p className="text-muted-foreground">
-        El producto que buscás no existe o ya no está disponible.
-      </p>
-      <Link
-        to="/catalogo"
-        className="inline-flex min-h-11 items-center justify-center text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-      >
-        Volver al catálogo
-      </Link>
-    </Container>
+    <NotFoundState
+      breadcrumb={[{ label: 'Productos', to: '/catalogo' }, { label: 'Producto no encontrado' }]}
+      message="El producto que buscás no existe o ya no está disponible."
+      back={{ to: '/catalogo', label: 'Volver al catálogo' }}
+    />
   );
 }
 
