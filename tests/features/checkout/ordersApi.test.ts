@@ -50,7 +50,7 @@ const CARRIER_REQUEST: OrderRequest = {
   ...REQUEST,
   delivery: {
     method: 'carrier',
-    quoteToken: '0b6f3a52-7f1e-4c43-9a0c-6a8f2a4d1e10',
+    quoteToken: 'cotizacion-de-prueba',
     address: {
       street: 'Av. Rivadavia',
       streetNumber: '1234',
@@ -120,7 +120,7 @@ describe('createOrder', () => {
     const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(JSON.parse(init.body as string)).toMatchObject({
       delivery: 'carrier',
-      shipping_quote_token: '0b6f3a52-7f1e-4c43-9a0c-6a8f2a4d1e10',
+      shipping_quote_token: 'cotizacion-de-prueba',
       shipping: {
         street: 'Av. Rivadavia',
         street_number: '1234',

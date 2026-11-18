@@ -480,7 +480,7 @@ describe('CheckoutPage', () => {
 
   describe('envío a domicilio', () => {
     const QUOTE_OPTION = {
-      token: '0b6f3a52-7f1e-4c43-9a0c-6a8f2a4d1e10',
+      token: 'cotizacion-de-prueba',
       carrier: 'own_rate',
       service: 'home',
       name: 'Envío a domicilio',
