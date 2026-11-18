@@ -87,7 +87,8 @@ que falta se avisa con `console.warn` con prefijo de la feature (`[precios]`).
 ### 8. El contrato se cambia en los dos repos
 
 Endpoint, parámetros, campos y códigos de error están en el ADR del sitio
-(ADR-005) y en el del ERP (ADR-025). Un cambio se decide y documenta en los
+(ADR-005; pedidos en ADR-006 y envío en ADR-007) y en el del ERP (ADR-025;
+envío en ADR-030). Un cambio se decide y documenta en los
 dos, y el ERP lo despliega antes que el sitio.
 
 ---

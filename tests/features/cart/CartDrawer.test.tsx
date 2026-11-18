@@ -128,11 +128,12 @@ describe('CartDrawer', () => {
     expect(within(dialog).getByText('Subtotal (1 producto)')).toBeInTheDocument();
   });
 
-  it('should say shipping is arranged over WhatsApp', async () => {
+  it('should say shipping is calculated when finishing the purchase', async () => {
     const { dialog } = await renderOpenDrawer();
 
     const shipping = within(dialog).getByText('Envío').parentElement!;
-    expect(shipping).toHaveTextContent('Lo coordinamos por WhatsApp');
+    expect(shipping).toHaveTextContent('Se calcula al finalizar la compra');
+    expect(within(dialog).queryByText(/coordinamos por whatsapp/i)).not.toBeInTheDocument();
   });
 
   it('should show the transfer total big and the Mercado Pago total below when higher', async () => {

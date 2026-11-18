@@ -119,6 +119,31 @@ describe('buildWhatsAppMessage', () => {
   });
 });
 
+describe('buildWhatsAppMessage — con envío a domicilio', () => {
+  const ADDRESS = 'Av. Rivadavia 1234, Ramos Mejía, Buenos Aires (CP 1704)';
+
+  it('should ask to quote the shipping to the address instead of the disclaimer', () => {
+    const items: CartItem[] = [buildItem({ name: 'Smart Bulb RGBW', price: 15000 }, 2)];
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER, pricedFromErp, ADDRESS);
+    const message = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    expect(message).toContain('- 2x Smart Bulb RGBW');
+    expect(message.split('\n').at(-1)).toBe(
+      `Quiero envío a domicilio a: ${ADDRESS}. ¿Me cotizan el envío?`,
+    );
+    expect(message).not.toContain('(Los precios no incluyen envío)');
+  });
+
+  it('should keep the disclaimer without an address', () => {
+    const url = buildWhatsAppMessage([buildItem()], PHONE_NUMBER, pricedFromErp);
+
+    expect(decodeURIComponent(url.split('?text=')[1] ?? '')).toContain(
+      '(Los precios no incluyen envío)',
+    );
+  });
+});
+
 describe('buildWhatsAppMessage — precios del ERP', () => {
   it('should add the transfer total when it is lower than the Mercado Pago total', () => {
     const items: CartItem[] = [buildItem({ price: 21000 }, 2)];

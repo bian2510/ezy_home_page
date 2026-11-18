@@ -213,7 +213,9 @@ describe('CheckoutPage', () => {
 
     const notice = screen.getByText(/ley 25\.326/i);
     expect(notice).toHaveTextContent(/esta pestaña/i);
-    expect(notice).toHaveTextContent(/nombre, whatsapp, email, dni y los productos/i);
+    expect(notice).toHaveTextContent(
+      /nombre, whatsapp, email, dni, los productos del pedido y, con envío a domicilio, tu dirección/i,
+    );
     expect(notice).toHaveTextContent(/mercado pago a transferencia/i);
     expect(notice).toHaveTextContent(/cerrás la pestaña o se cierra el pedido/i);
     expect(notice).toHaveTextContent(/no los mandamos a ningún otro lado/i);
@@ -485,6 +487,252 @@ describe('CheckoutPage', () => {
       expect(second).toMatchObject({ payment_method: 'transfer' });
       expect(first?.idempotency_key).not.toBe(second?.idempotency_key);
       expect(screen.getByTestId('order-state')).toHaveTextContent('null');
+    });
+  });
+
+  describe('envío a domicilio', () => {
+    const QUOTE_OPTION = {
+      token: '0b6f3a52-7f1e-4c43-9a0c-6a8f2a4d1e10',
+      carrier: 'own_rate',
+      service: 'home',
+      name: 'Envío a domicilio',
+      price: 8_500,
+      delivery_time: '3 a 5 días hábiles',
+      expires_at: '2026-11-17T22:00:00Z',
+    };
+
+    const isQuote = (url: unknown) => String(url).endsWith('/api/store/shipping/quotes');
+
+    /** `fetch` del ERP: la cotización responde `quote`, el pedido responde `order`. */
+    const erpFetch = (
+      quote: () => Response = () => jsonResponse({ options: [QUOTE_OPTION] }),
+      order: () => Response = () => jsonResponse({ order: erpOrder }, 201),
+    ) =>
+      vi
+        .fn()
+        .mockImplementation((url: string) => Promise.resolve(isQuote(url) ? quote() : order()));
+
+    const callsTo = (fetchMock: ReturnType<typeof vi.fn>, quotes: boolean) =>
+      fetchMock.mock.calls.filter(([url]) => isQuote(url) === quotes);
+
+    const chooseHomeDelivery = async (user: ReturnType<typeof userEvent.setup>) => {
+      await user.click(screen.getByRole('radio', { name: /envío a domicilio/i }));
+    };
+
+    const fillQuoteInput = async (user: ReturnType<typeof userEvent.setup>) => {
+      await user.selectOptions(screen.getByLabelText('Provincia'), 'B');
+      await user.type(screen.getByLabelText('Código postal'), '1704');
+    };
+
+    const fillAddress = async (user: ReturnType<typeof userEvent.setup>) => {
+      await user.type(screen.getByLabelText('Calle'), 'Av. Rivadavia');
+      await user.type(screen.getByLabelText('Altura'), '1234');
+      await user.type(screen.getByLabelText('Localidad'), 'Ramos Mejía');
+    };
+
+    it('should start with pickup and not quote anything', () => {
+      const fetchMock = erpFetch();
+      vi.stubGlobal('fetch', fetchMock);
+      renderCheckout();
+
+      expect(screen.getByRole('radio', { name: /retiro en punto pick-up/i })).toBeChecked();
+      expect(screen.queryByLabelText('Calle')).not.toBeInTheDocument();
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it('should ask for the province and the postal code before quoting, with the button off', async () => {
+      const fetchMock = erpFetch();
+      vi.stubGlobal('fetch', fetchMock);
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await chooseHomeDelivery(user);
+
+      expect(screen.getByTestId('shipping-quote')).toHaveTextContent(
+        /elegí tu provincia y poné tu código postal/i,
+      );
+      expect(screen.getByRole('button', { name: /confirmar pedido/i })).toBeDisabled();
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it('should quote with the province, the postal code and the cart, and add the price to the total', async () => {
+      const fetchMock = erpFetch();
+      vi.stubGlobal('fetch', fetchMock);
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await chooseHomeDelivery(user);
+      await fillQuoteInput(user);
+
+      const quote = screen.getByTestId('shipping-quote');
+      await waitFor(() => expect(quote).toHaveTextContent(/8\.500/));
+      expect(quote).toHaveTextContent('3 a 5 días hábiles');
+      const [quoteCall] = callsTo(fetchMock, true);
+      expect(sentBody(quoteCall)).toEqual({
+        province: 'B',
+        postal_code: '1704',
+        items: [{ sku: 'SKU-AUTO-43091', quantity: 2 }],
+      });
+      const summary = screen
+        .getByRole('heading', { name: /resumen de tu pedido/i })
+        .closest('aside')!;
+      expect(within(summary).getByText('Envío a domicilio')).toBeInTheDocument();
+      expect(screen.getByTestId('checkout-total')).toHaveTextContent(/228\.500/);
+      expect(screen.getByRole('button', { name: /confirmar pedido/i })).toBeEnabled();
+    });
+
+    it('should create the order with the quote token and the address', async () => {
+      const fetchMock = erpFetch();
+      vi.stubGlobal('fetch', fetchMock);
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await fillForm(user);
+      await chooseHomeDelivery(user);
+      await fillQuoteInput(user);
+      await fillAddress(user);
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: /confirmar pedido/i })).toBeEnabled(),
+      );
+      await user.click(screen.getByRole('button', { name: /confirmar pedido/i }));
+
+      expect(await screen.findByText(/página del pedido/i)).toBeInTheDocument();
+      const [orderCall] = callsTo(fetchMock, false);
+      expect(sentBody(orderCall)).toMatchObject({
+        delivery: 'carrier',
+        shipping_quote_token: QUOTE_OPTION.token,
+        shipping: {
+          street: 'Av. Rivadavia',
+          street_number: '1234',
+          floor_apartment: null,
+          city: 'Ramos Mejía',
+          province: 'B',
+          postal_code: '1704',
+        },
+      });
+    });
+
+    it('should ask for the missing address fields and not create the order', async () => {
+      const fetchMock = erpFetch();
+      vi.stubGlobal('fetch', fetchMock);
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await fillForm(user);
+      await chooseHomeDelivery(user);
+      await fillQuoteInput(user);
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: /confirmar pedido/i })).toBeEnabled(),
+      );
+      await user.click(screen.getByRole('button', { name: /confirmar pedido/i }));
+
+      expect(screen.getByText('Poné la calle')).toBeInTheDocument();
+      expect(screen.getByLabelText('Altura')).toHaveAttribute('aria-invalid', 'true');
+      expect(callsTo(fetchMock, false)).toHaveLength(0);
+    });
+
+    it.each([
+      ['no option', () => jsonResponse({ options: [] })],
+      ['a 404 while the ERP has no shipping yet', () => jsonResponse({}, 404)],
+    ])('should offer WhatsApp and keep the button off with %s', async (_case, quote) => {
+      vi.stubEnv('VITE_WHATSAPP_NUMBER', '5491122334455');
+      vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      vi.stubGlobal('fetch', erpFetch(quote));
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await chooseHomeDelivery(user);
+      await fillQuoteInput(user);
+
+      const status = screen.getByTestId('shipping-quote');
+      await waitFor(() =>
+        expect(status).toHaveTextContent(/todavía no podemos calcular el envío desde la web/i),
+      );
+      expect(status).not.toHaveTextContent(/a tu zona/i);
+      const link = within(status).getByRole('link', { name: /escribinos por whatsapp/i });
+      const href = link.getAttribute('href') ?? '';
+      expect(href.startsWith('https://wa.me/5491122334455?text=')).toBe(true);
+      // El pedido y la dirección ya escritos: no hay que repetir nada en el chat.
+      const message = decodeURIComponent(href.split('?text=')[1] ?? '');
+      expect(message).toContain('2x Válvula TV05');
+      expect(message).toContain('Buenos Aires (CP 1704)');
+      expect(message).toContain('¿Me cotizan el envío?');
+      expect(screen.getByRole('button', { name: /confirmar pedido/i })).toBeDisabled();
+      expect(screen.getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
+    });
+
+    it('should show the ERP message and quote again when the quote expired', async () => {
+      let orders = 0;
+      const fetchMock = erpFetch(undefined, () => {
+        orders += 1;
+        return jsonResponse(
+          { errors: { detail: 'La cotización del envío venció, cotizá de nuevo' } },
+          422,
+        );
+      });
+      vi.stubGlobal('fetch', fetchMock);
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await fillForm(user);
+      await chooseHomeDelivery(user);
+      await fillQuoteInput(user);
+      await fillAddress(user);
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: /confirmar pedido/i })).toBeEnabled(),
+      );
+      await user.click(screen.getByRole('button', { name: /confirmar pedido/i }));
+
+      expect(await screen.findByRole('alert')).toHaveTextContent(/cotizá de nuevo/i);
+      expect(orders).toBe(1);
+      await waitFor(() => expect(callsTo(fetchMock, true)).toHaveLength(2));
+    });
+
+    it('should keep the transfer discount of the products when the shipping is added', async () => {
+      vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
+      vi.stubGlobal(
+        'fetch',
+        erpFetch(() => jsonResponse({ options: [{ ...QUOTE_OPTION, price: 30_000 }] })),
+      );
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await chooseHomeDelivery(user);
+      await fillQuoteInput(user);
+      await waitFor(() =>
+        expect(screen.getByTestId('checkout-total')).toHaveTextContent(/250\.000/),
+      );
+
+      // El envío no tiene descuento: el cartel es el de los productos
+      // (231.000 contra 220.000, -5%), no el del total con envío (261.000
+      // contra 250.000, -4%).
+      const transfer = screen.getByRole('radio', { name: /transferencia/i }).closest('label')!;
+      expect(transfer).toHaveTextContent('-5%');
+      expect(transfer).toHaveTextContent(/250\.000/);
+    });
+
+    it('should go back to free pickup when the buyer changes their mind', async () => {
+      vi.stubGlobal('fetch', erpFetch());
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await chooseHomeDelivery(user);
+      await fillQuoteInput(user);
+      await waitFor(() =>
+        expect(screen.getByTestId('checkout-total')).toHaveTextContent(/228\.500/),
+      );
+      await user.click(screen.getByRole('radio', { name: /retiro en punto pick-up/i }));
+
+      expect(screen.getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
+      expect(screen.queryByLabelText('Calle')).not.toBeInTheDocument();
+    });
+
+    it('should say the address is used only to send the order', () => {
+      renderCheckout();
+
+      expect(screen.getByText(/ley 25\.326/i)).toHaveTextContent(
+        /tu dirección, si pedís envío a domicilio/i,
+      );
     });
   });
 });

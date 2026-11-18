@@ -1,26 +1,25 @@
-// CheckoutPage — compra con retiro en punto pick-up (plan de la etapa 3 del ERP,
-// PR 3d y 3e). El comprador deja sus datos y elige transferencia o, con
-// `VITE_MERCADOPAGO_ENABLED=true`, Mercado Pago; el ERP crea el pedido con sus
-// precios (el sitio no manda precios) y la página del pedido muestra a qué
-// cuenta transferir o abre Mercado Pago. Los envíos siguen por WhatsApp.
-import { useState, type FormEvent } from 'react';
+// CheckoutPage — compra con retiro en punto pick-up o envío a domicilio (plan de
+// la etapa 3 del ERP, PR 3d y 3e; envío en ADR-007). El comprador deja sus
+// datos, elige la entrega (el envío se cotiza con la provincia y el CP antes de
+// pagar) y elige transferencia o, con `VITE_MERCADOPAGO_ENABLED=true`, Mercado
+// Pago; el ERP crea el pedido con sus precios (el sitio no manda precios) y la
+// página del pedido muestra a qué cuenta transferir o abre Mercado Pago.
+import { useMemo, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/features/cart';
 import { usePricing } from '@/features/pricing';
 import { isMercadoPagoEnabled } from '@/lib/env';
 import { PURCHASE_STEP, PURCHASE_STEPS, PURCHASE_STEPS_LABEL } from '@/data/purchaseSteps';
-import Icon from '@/components/ui/Icon';
 import SectionBand from '@/components/ui/SectionBand';
 import Stepper from '@/components/ui/Stepper';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import {
   EMPTY_BUYER_FORM,
   checkoutBlocker,
+  checkoutTotals,
   fieldErrorsFromApi,
-  mercadoPagoTotal,
-  phoneDigits,
+  orderBuyer,
   stockAdjustments,
-  transferTotal,
   validateBuyerForm,
   withoutField,
   type BuyerErrors,
@@ -30,18 +29,20 @@ import {
 import BuyerFields from './BuyerFields';
 import CheckoutBlocked from './CheckoutBlocked';
 import CheckoutSection from './CheckoutSection';
+import CheckoutSubmitButton from './CheckoutSubmitButton';
 import DeliveryOptions from './DeliveryOptions';
 import CheckoutSummary from './CheckoutSummary';
 import OrderErrorAlert from './OrderErrorAlert';
 import PaymentMethodField from './PaymentMethodField';
 import { saveOrderDraft } from './orderDraftStorage';
 import { OrderApiError, type PaymentMethod } from './ordersApi';
+import { useCheckoutDelivery } from './useCheckoutDelivery';
 import { useCreateOrder, type OrderDraft } from './useCreateOrder';
 
 export default function CheckoutPage() {
   useDocumentMeta({
     title: 'Finalizar compra',
-    description: 'Comprá y retirá tu pedido en el punto pick-up.',
+    description: 'Comprá con retiro en el punto pick-up o envío a domicilio.',
     path: '/checkout',
     noIndex: true,
   });
@@ -55,10 +56,14 @@ export default function CheckoutPage() {
   const [chosenMethod, setChosenMethod] = useState<PaymentMethod>('transfer');
   const mercadoPagoEnabled = isMercadoPagoEnabled();
   const paymentMethod: PaymentMethod = mercadoPagoEnabled ? chosenMethod : 'transfer';
-  const totals: Record<PaymentMethod, number> = {
-    transfer: transferTotal(items, pricingOf),
-    mercado_pago: mercadoPagoTotal(items, pricingOf),
-  };
+  const orderItems = useMemo(
+    () => items.map((item) => ({ sku: item.product.sku, quantity: item.quantity })),
+    [items],
+  );
+  const delivery = useCheckoutDelivery(orderItems);
+  const subtotals = checkoutTotals(items, pricingOf, 0);
+  const totals = checkoutTotals(items, pricingOf, delivery.cost ?? 0);
+  const waitingForQuote = delivery.method === 'carrier' && delivery.cost === null;
 
   const blocker = checkoutBlocker(items, pricingOf);
   const failure = state.status === 'failed' ? state.error : null;
@@ -74,18 +79,16 @@ export default function CheckoutPage() {
     event.preventDefault();
     const found = validateBuyerForm(form);
     setErrors(found);
-    if (Object.keys(found).length > 0) return;
+    const deliveryReady = delivery.validate();
+    const orderDelivery = delivery.toOrderDelivery();
+    if (Object.keys(found).length > 0 || !deliveryReady || orderDelivery === null) return;
 
     const draft: OrderDraft = {
-      buyer: {
-        name: form.name.trim(),
-        phone: phoneDigits(form.phone),
-        email: form.email.trim(),
-        document: form.document.trim(),
-      },
-      items: items.map((item) => ({ sku: item.product.sku, quantity: item.quantity })),
+      buyer: orderBuyer(form),
+      items: orderItems,
       acceptedPrivacy: form.acceptedPrivacy,
       paymentMethod,
+      delivery: orderDelivery,
     };
     const result = await submit(draft);
     if ('order' in result) {
@@ -101,6 +104,9 @@ export default function CheckoutPage() {
     } else if (result.error instanceof OrderApiError) {
       // Los errores por campo del ERP (422) van al formulario, como los propios.
       setErrors(fieldErrorsFromApi(result.error.fieldErrors));
+      delivery.showApiErrors(result.error.fieldErrors);
+      // Cotización vencida o que ya no coincide: se pide una nueva.
+      if (orderDelivery.method === 'carrier') delivery.refreshQuote();
     }
   };
 
@@ -151,7 +157,7 @@ export default function CheckoutPage() {
               </CheckoutSection>
 
               <CheckoutSection id="entrega-heading" step={2} title="Entrega">
-                <DeliveryOptions />
+                <DeliveryOptions delivery={delivery} />
               </CheckoutSection>
 
               <CheckoutSection id="pago-heading" step={3} title="Medio de pago">
@@ -159,6 +165,7 @@ export default function CheckoutPage() {
                   mercadoPagoEnabled={mercadoPagoEnabled}
                   value={chosenMethod}
                   totals={totals}
+                  subtotals={subtotals}
                   onChange={setChosenMethod}
                 />
 
@@ -170,22 +177,20 @@ export default function CheckoutPage() {
                   />
                 )}
 
-                <button
-                  type="submit"
-                  disabled={state.status === 'submitting'}
-                  className="mt-2 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-label-lg font-bold text-on-primary shadow-md transition-all hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <Icon name="lock" className="h-5 w-5" />
-                  {state.status === 'submitting' ? 'Enviando…' : SUBMIT_LABEL[paymentMethod]}
-                </button>
+                <CheckoutSubmitButton
+                  paymentMethod={paymentMethod}
+                  submitting={state.status === 'submitting'}
+                  disabled={waitingForQuote}
+                />
               </CheckoutSection>
             </form>
 
             <CheckoutSummary
               items={items}
               pricingOf={pricingOf}
-              total={totals[paymentMethod]}
+              subtotal={subtotals[paymentMethod]}
               paymentMethod={paymentMethod}
+              delivery={{ method: delivery.method, cost: delivery.cost }}
             />
           </div>
         )}
@@ -193,8 +198,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-const SUBMIT_LABEL: Record<PaymentMethod, string> = {
-  transfer: 'Confirmar pedido',
-  mercado_pago: 'Confirmar y pagar con Mercado Pago',
-};

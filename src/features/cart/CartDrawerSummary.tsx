@@ -1,5 +1,5 @@
 // CartDrawerSummary — totales y acciones del carrito desplegado: subtotal por
-// unidades, envío (se coordina por WhatsApp; la web es con retiro), el total
+// unidades, envío (se calcula en el checkout: retiro sin cargo o cotizado), el total
 // con transferencia grande y el de Mercado Pago chico, "Iniciar compra" (si
 // todo tiene precio y stock), WhatsApp y "Seguir comprando". La página
 // `/carrito` usa `CartSummary`, con su propio diseño.
@@ -36,7 +36,9 @@ export default function CartDrawerSummary({ cart, onClose }: CartDrawerSummaryPr
         </p>
         <p className={row}>
           <span>Envío</span>
-          <span className="text-right font-semibold text-primary">Lo coordinamos por WhatsApp</span>
+          <span className="text-right font-semibold text-primary">
+            Se calcula al finalizar la compra
+          </span>
         </p>
         <div aria-hidden="true" className="my-1 h-px bg-outline/20" />
         <p

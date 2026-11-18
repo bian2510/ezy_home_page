@@ -1,5 +1,6 @@
 // Cliente de los pedidos de la tienda en el ERP (plan de la etapa 3 del ERP,
-// `POST /api/store/orders` y `GET /api/store/orders/:token`). Único lugar del
+// `POST /api/store/orders` y `GET /api/store/orders/:token`; envío a domicilio
+// en ADR-007). Único lugar del
 // sitio que conoce la forma de esas respuestas. Ver
 // docs/standards/llamadas-al-backend.md y ADR-005.
 import type { StoreApiConfig } from '@/types';
@@ -15,6 +16,26 @@ export interface OrderBuyer {
 /** Medio de pago del pedido. Mercado Pago solo con `VITE_MERCADOPAGO_ENABLED`. */
 export type PaymentMethod = 'transfer' | 'mercado_pago';
 
+/** Dirección del envío a domicilio, como la cargó el comprador (sin espacios alrededor). */
+export interface ShippingAddress {
+  /** Código de una letra (`shippingProvinces.ts`). */
+  province: string;
+  postalCode: string;
+  street: string;
+  streetNumber: string;
+  /** Vacío si no hay. */
+  floorApartment: string;
+  city: string;
+}
+
+/**
+ * Entrega del pedido (ADR-007). Con envío a domicilio el pedido referencia la
+ * cotización por su token: el precio lo pone el ERP, nunca el sitio.
+ */
+export type OrderDelivery =
+  | { method: 'pickup' }
+  | { method: 'carrier'; quoteToken: string; address: ShippingAddress };
+
 /** Lo que el sitio pide. Nunca lleva precios: los calcula el ERP. */
 export interface OrderRequest {
   /** Una por intento de compra: si se reintenta lo mismo, el ERP no duplica. */
@@ -24,6 +45,7 @@ export interface OrderRequest {
   acceptedPrivacy: boolean;
   /** El ERP pone el precio de ese medio (con Mercado Pago lleva el recargo). */
   paymentMethod: PaymentMethod;
+  delivery: OrderDelivery;
 }
 
 export interface StoreOrderItem {
@@ -34,6 +56,12 @@ export interface StoreOrderItem {
   lineTotal: number;
 }
 
+/** Envío a domicilio del pedido: lo que cobró el ERP y el plazo. */
+export interface StoreOrderShipping {
+  price: number;
+  deliveryTime: string | null;
+}
+
 export type StoreOrderStatus = 'pending_payment' | 'paid' | 'expired' | 'canceled';
 
 /** Pedido según el ERP. Sin datos del comprador: el ERP no los devuelve. */
@@ -42,6 +70,11 @@ export interface StoreOrder {
   number: number;
   status: StoreOrderStatus;
   paymentMethod: PaymentMethod;
+  /** `pickup` si el ERP no lo dice (pedidos de antes del envío a domicilio). */
+  delivery: OrderDelivery['method'];
+  /** Solo con envío a domicilio; `null` con retiro o si el ERP no mandó el precio. */
+  shipping: StoreOrderShipping | null;
+  /** Con el envío incluido. */
   total: number;
   /** ISO 8601; `null` si el ERP no fijó vencimiento. */
   expiresAt: string | null;
@@ -141,6 +174,11 @@ const toItem = (value: unknown): StoreOrderItem | null => {
   return { sku, name, quantity, unitPrice, lineTotal };
 };
 
+const toShipping = (value: unknown): StoreOrderShipping | null =>
+  isRecord(value) && typeof value.price === 'number'
+    ? { price: value.price, deliveryTime: textOrNull(value.delivery_time) }
+    : null;
+
 const toOrder = (value: unknown): StoreOrder => {
   if (!isRecord(value)) throw new Error('La respuesta del pedido no tiene la forma esperada');
   const { token, number, status, total, items, payment_method: paymentMethod } = value;
@@ -156,11 +194,14 @@ const toOrder = (value: unknown): StoreOrder => {
   }
   const transfer = isRecord(value.transfer) ? value.transfer : {};
   const pickup = isRecord(value.pickup) ? value.pickup : {};
+  const delivery = value.delivery === 'carrier' ? 'carrier' : 'pickup';
   return {
     token,
     number,
     status: status as StoreOrderStatus,
     paymentMethod: paymentMethod as PaymentMethod,
+    delivery,
+    shipping: delivery === 'carrier' ? toShipping(value.shipping) : null,
     total,
     expiresAt: textOrNull(value.expires_at),
     checkoutUrl: checkoutUrlOrNull(value.checkout_url),
@@ -191,6 +232,24 @@ const readOrder = async (response: Response): Promise<StoreOrder> => {
   return toOrder(isRecord(body) ? body.order : undefined);
 };
 
+// Con retiro no se manda nada de la entrega: el ERP asume retiro y el pedido
+// queda igual que antes del envío a domicilio.
+const deliveryBody = (delivery: OrderDelivery) =>
+  delivery.method === 'pickup'
+    ? {}
+    : {
+        delivery: 'carrier',
+        shipping_quote_token: delivery.quoteToken,
+        shipping: {
+          street: delivery.address.street,
+          street_number: delivery.address.streetNumber,
+          floor_apartment: delivery.address.floorApartment || null,
+          city: delivery.address.city,
+          province: delivery.address.province,
+          postal_code: delivery.address.postalCode,
+        },
+      };
+
 const toRequestBody = (request: OrderRequest) => ({
   idempotency_key: request.idempotencyKey,
   payment_method: request.paymentMethod,
@@ -202,10 +261,11 @@ const toRequestBody = (request: OrderRequest) => ({
     document: request.buyer.document.trim(),
   },
   items: request.items.map(({ sku, quantity }) => ({ sku, quantity })),
+  ...deliveryBody(request.delivery),
 });
 
 /**
- * Crea el pedido con retiro (transferencia o Mercado Pago). Con Mercado Pago
+ * Crea el pedido con retiro o envío a domicilio (transferencia o Mercado Pago). Con Mercado Pago
  * el ERP responde sin `checkoutUrl`: llega después por `fetchOrder`. Tira `OrderApiError` si el ERP
  * responde con error (409 sin stock, 422 datos, 429 límite) y deja pasar la
  * falla de red: quien llama decide qué mostrar.

@@ -15,7 +15,7 @@ import { getWhatsAppNumber } from '@/lib/env';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import MercadoPagoStatus from './MercadoPagoStatus';
 import OrderHero from './OrderHero';
-import { PaymentCard, PickupCard } from './OrderInfoCards';
+import { DeliveryCard, PaymentCard } from './OrderInfoCards';
 import OrderItems from './OrderItems';
 import OrderLayout from './OrderLayout';
 import SmartHomeTip from './SmartHomeTip';
@@ -116,7 +116,7 @@ export default function OrderPage() {
 
         <div className="flex w-full flex-col gap-4 rounded-xl bg-surface-container-low p-2 text-left sm:p-4 md:p-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <PickupCard order={order} />
+            <DeliveryCard order={order} />
             <PaymentCard order={order}>
               {order.paymentMethod === 'mercado_pago' ? (
                 <MercadoPagoStatus

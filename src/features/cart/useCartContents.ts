@@ -18,7 +18,7 @@ export interface CartContentsState {
   total: number;
   transferTotal: number;
   hasUnpriced: boolean;
-  /** Todo tiene precio y stock del ERP: se puede comprar con retiro en punto pick-up. */
+  /** Todo tiene precio y stock del ERP: se puede comprar en el checkout. */
   canCheckout: boolean;
   increment: (productId: string) => void;
   decrement: (productId: string) => void;
@@ -33,7 +33,7 @@ export function useCartContents(): CartContentsState {
   const { total, transferTotal, hasUnpriced } = computeCartTotals(items, pricingOf);
 
   const isEmpty = items.length === 0;
-  // Compra por transferencia con retiro: solo si todo tiene precio y stock del
+  // Compra en el checkout (retiro o envío): solo si todo tiene precio y stock del
   // ERP. Si no, se consulta por WhatsApp como siempre.
   const canCheckout =
     !isEmpty && items.every((item) => isPurchasable(pricingOf(item.product).availability));

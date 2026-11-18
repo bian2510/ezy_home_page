@@ -39,10 +39,13 @@ describe('ComoComprarPage', () => {
     );
   });
 
-  it('should only promise the delivery the checkout offers: pick-up, and shipping by WhatsApp', () => {
+  it('should promise the delivery the checkout offers: free pick-up or shipping quoted before paying', () => {
     renderPage();
-    expect(screen.getByText(/retiro sin cargo en nuestro punto pick-up/i)).toBeInTheDocument();
-    expect(screen.getByText(/envío a domicilio.*whatsapp/i)).toBeInTheDocument();
+    const step = screen.getByText(/retiro sin cargo en nuestro punto pick-up/i);
+    expect(step).toHaveTextContent(/envío a domicilio/i);
+    expect(step).toHaveTextContent(/código postal/i);
+    expect(step).toHaveTextContent(/antes de pagar/i);
+    expect(screen.queryByText(/coordiná el envío/i)).not.toBeInTheDocument();
   });
 
   it('should show the breadcrumb back to Inicio', () => {

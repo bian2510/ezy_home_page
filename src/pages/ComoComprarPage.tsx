@@ -1,9 +1,9 @@
 // ComoComprarPage — los tres pasos de la compra, calcados del mock "Cómo
 // comprar" (Stitch, 2026-11-12).
 //
-// El texto del mock se ajustó a lo que el sitio hace hoy: el checkout solo
-// ofrece el retiro en punto pick-up (`DeliveryOptions`, "Sin cargo") y el envío
-// a domicilio se coordina por WhatsApp (DOMAIN.md › How EzyHome Makes Money).
+// El texto del mock se ajustó a lo que hace el checkout (`DeliveryOptions`,
+// ADR-007): retiro en punto pick-up sin cargo o envío a domicilio cotizado con
+// el código postal antes de pagar.
 // Las fotos son las del mock, en `public/images/como-comprar/`.
 import { Link } from 'react-router-dom';
 import Container from '@/components/ui/Container';
@@ -34,7 +34,7 @@ const STEPS: readonly Step[] = [
     image: 'paso-2',
     title: 'Completá tus datos de entrega y facturación',
     detail:
-      'Elegí el retiro sin cargo en nuestro punto pick-up o coordiná el envío a domicilio por WhatsApp. Dejá tus datos para la factura, si la necesitás.',
+      'Elegí el retiro sin cargo en nuestro punto pick-up o el envío a domicilio: lo calculamos con tu código postal antes de pagar. Dejá tus datos para la factura, si la necesitás.',
   },
   {
     number: '03',

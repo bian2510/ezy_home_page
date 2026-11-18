@@ -92,7 +92,18 @@ const formatLineItem = (item: CartItem, pricingOf: PricingOf): string => {
   return `- ${item.quantity}x ${item.product.name} → ${detail}`;
 };
 
-const composeMessage = (items: CartItem[], pricingOf: PricingOf): string => {
+// Con la dirección (el checkout no pudo cotizar el envío) el mensaje pide la
+// cotización a esa dirección; sin ella, avisa que los precios no incluyen envío.
+const shippingLine = (shippingTo: string | undefined): string =>
+  shippingTo === undefined
+    ? SHIPPING_DISCLAIMER
+    : `Quiero envío a domicilio a: ${shippingTo}. ¿Me cotizan el envío?`;
+
+const composeMessage = (
+  items: CartItem[],
+  pricingOf: PricingOf,
+  shippingTo: string | undefined,
+): string => {
   const lines = items.map((item) => formatLineItem(item, pricingOf));
   const { total, transferTotal } = computeCartTotals(items, pricingOf);
   const transferLine =
@@ -102,7 +113,7 @@ const composeMessage = (items: CartItem[], pricingOf: PricingOf): string => {
     ...lines,
     `Subtotal: ${formatPrice(total)}`,
     ...transferLine,
-    SHIPPING_DISCLAIMER,
+    shippingLine(shippingTo),
   ].join('\n');
 };
 
@@ -115,12 +126,16 @@ const composeMessage = (items: CartItem[], pricingOf: PricingOf): string => {
  *
  * See DOMAIN.md › Design Implications: el botón de compra debe pre-componer el
  * mensaje en un tap; no puede requerir copiar y pegar manualmente.
+ *
+ * `shippingTo` es la dirección en una línea, cuando el checkout no pudo cotizar
+ * el envío a domicilio (ADR-007): el mensaje pide cotizarlo a esa dirección.
  */
 export const buildWhatsAppMessage = (
   items: CartItem[],
   phoneNumber: string,
   pricingOf: PricingOf,
+  shippingTo?: string,
 ): string => {
-  const message = composeMessage(items, pricingOf);
+  const message = composeMessage(items, pricingOf, shippingTo);
   return `${WHATSAPP_BASE_URL}${phoneNumber}?text=${encodeURIComponent(message)}`;
 };

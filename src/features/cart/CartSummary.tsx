@@ -1,6 +1,6 @@
-// CartSummary — totales del carrito y cómo cerrar la compra: con retiro en
-// punto pick-up (checkout) si todo tiene precio y stock, o por WhatsApp. La usan el
-// drawer y la página `/carrito`.
+// CartSummary — totales del carrito y cómo cerrar la compra: el checkout (retiro
+// en punto pick-up o envío a domicilio cotizado, ADR-007) si todo tiene precio y
+// stock, o por WhatsApp. La usa la página `/carrito`.
 import { Link } from 'react-router-dom';
 import { formatPrice } from '@/lib/formatPrice';
 import { cn } from '@/lib/cn';
@@ -53,7 +53,7 @@ export default function CartSummary({ cart, onClose }: CartSummaryProps) {
             onClick={onClose}
             className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-primary px-6 py-2 text-label-lg font-bold text-on-primary shadow-md transition-all hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
-            Comprar con retiro en punto pick-up
+            Iniciar compra
           </Link>
         )}
         <button
@@ -69,7 +69,9 @@ export default function CartSummary({ cart, onClose }: CartSummaryProps) {
         >
           Comprar por WhatsApp
         </button>
-        <p className="text-center text-body-sm text-secondary">Envíos: coordinamos por WhatsApp.</p>
+        <p className="text-center text-body-sm text-secondary">
+          Retirá sin cargo o calculá el envío a domicilio al finalizar la compra.
+        </p>
       </div>
     </div>
   );
