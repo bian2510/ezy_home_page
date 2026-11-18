@@ -3,3 +3,11 @@
 # secreto; el commit b769834 la cambió por un texto que gitleaks no marca.
 3a249f78090a8fd51159b77d9d6a1f4be38e1ded:tests/features/checkout/ordersApi.test.ts:generic-api-key:41
 3a249f78090a8fd51159b77d9d6a1f4be38e1ded:tests/features/checkout/ordersApi.test.ts:generic-api-key:83
+# d69febd: token de cotización de ejemplo (un UUID inventado) en los tests del
+# envío a domicilio, no es un secreto; el commit siguiente lo cambió por
+# "cotizacion-de-prueba", que gitleaks no marca.
+d69febd536cbeb1e839d655dfa08696d484bdc43:tests/features/checkout/shippingApi.test.ts:generic-api-key:19
+d69febd536cbeb1e839d655dfa08696d484bdc43:tests/features/checkout/shippingApi.test.ts:generic-api-key:59
+d69febd536cbeb1e839d655dfa08696d484bdc43:tests/features/checkout/ordersApi.test.ts:generic-api-key:53
+d69febd536cbeb1e839d655dfa08696d484bdc43:tests/features/checkout/CheckoutPage.test.tsx:generic-api-key:495
+d69febd536cbeb1e839d655dfa08696d484bdc43:tests/features/checkout/ordersApi.test.ts:generic-api-key:123

@@ -16,7 +16,7 @@ const REQUEST: ShippingQuoteRequest = {
 };
 
 const erpOption = (overrides: Record<string, unknown> = {}) => ({
-  token: '0b6f3a52-7f1e-4c43-9a0c-6a8f2a4d1e10',
+  token: 'cotizacion-de-prueba',
   carrier: 'own_rate',
   service: 'home',
   name: 'Envío a domicilio',
@@ -56,7 +56,7 @@ describe('quoteShipping', () => {
 
     expect(await quoteShipping(REQUEST, CONFIG)).toEqual([
       {
-        token: '0b6f3a52-7f1e-4c43-9a0c-6a8f2a4d1e10',
+        token: 'cotizacion-de-prueba',
         name: 'Envío a domicilio',
         price: 8_500,
         deliveryTime: '3 a 5 días hábiles',
