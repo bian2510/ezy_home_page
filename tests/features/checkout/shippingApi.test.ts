@@ -1,5 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { quoteShipping, type ShippingQuoteRequest } from '@/features/checkout/shippingApi';
+import {
+  PostalCodeMismatchError,
+  quoteShipping,
+  type ShippingQuoteRequest,
+} from '@/features/checkout/shippingApi';
 
 const CONFIG = { baseUrl: 'https://erp.test', apiKey: 'clave' };
 
@@ -102,6 +106,20 @@ describe('quoteShipping', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({ errors: {} }, status)));
 
     await expect(quoteShipping(REQUEST, CONFIG)).rejects.toThrow(String(status));
+  });
+
+  // El ERP rechaza un CP que no es de la provincia elegida (422 en postal_code).
+  it('should throw a postal code mismatch when the ERP says the postal code is not from the province', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValue(
+          jsonResponse({ errors: { postal_code: ['no es de esa provincia'] } }, 422),
+        ),
+    );
+
+    await expect(quoteShipping(REQUEST, CONFIG)).rejects.toBeInstanceOf(PostalCodeMismatchError);
   });
 
   it('should pass the abort signal to fetch', async () => {

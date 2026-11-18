@@ -45,8 +45,27 @@ const toOption = (value: unknown): ShippingOption | null => {
 };
 
 /**
- * Cotiza el envío. Devuelve las opciones (puede ser ninguna). Tira si el ERP
- * responde con error (404 sin envíos, 422 productos sin peso o medidas) y deja
+ * El ERP rechazó el código postal porque no es de la provincia elegida (422 con
+ * error en `postal_code`). El checkout le pide al comprador que lo revise.
+ */
+export class PostalCodeMismatchError extends Error {
+  constructor() {
+    super('El código postal no es de esa provincia');
+    this.name = 'PostalCodeMismatchError';
+  }
+}
+
+const isPostalCodeMismatch = async (response: Response): Promise<boolean> => {
+  if (response.status !== 422) return false;
+  const body: unknown = await response.json().catch(() => null);
+  return isRecord(body) && isRecord(body.errors) && Array.isArray(body.errors.postal_code);
+};
+
+/**
+ * Cotiza el envío. Devuelve las opciones (puede ser ninguna). Tira
+ * `PostalCodeMismatchError` si el CP no es de la provincia, y un error común
+ * si el ERP responde con otro error (404 sin envíos, 422 productos sin peso o
+ * medidas); deja
  * pasar la falla de red: en todos los casos el sitio ofrece WhatsApp.
  */
 export const quoteShipping = async (
@@ -68,6 +87,7 @@ export const quoteShipping = async (
     }),
     signal: signal ?? null,
   });
+  if (await isPostalCodeMismatch(response)) throw new PostalCodeMismatchError();
   if (!response.ok) throw new Error(`La cotización del envío respondió ${response.status}`);
   const body: unknown = await response.json();
   const options = isRecord(body) && Array.isArray(body.options) ? body.options : [];

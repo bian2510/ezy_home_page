@@ -650,6 +650,32 @@ describe('CheckoutPage', () => {
       expect(screen.getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
     });
 
+    // Un CP de otra provincia no cotiza: se avisa para que lo corrija, con
+    // WhatsApp por si está bien (usuario, 2026-11-18).
+    it('should say the postal code is not from the province and keep the button off', async () => {
+      vi.stubEnv('VITE_WHATSAPP_NUMBER', '5491122334455');
+      vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      vi.stubGlobal(
+        'fetch',
+        erpFetch(() => jsonResponse({ errors: { postal_code: ['no es de esa provincia'] } }, 422)),
+      );
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await chooseHomeDelivery(user);
+      await fillQuoteInput(user);
+
+      const status = screen.getByTestId('shipping-quote');
+      await waitFor(() =>
+        expect(status).toHaveTextContent(/ese código postal no es de esa provincia/i),
+      );
+      expect(status).not.toHaveTextContent(/todavía no podemos calcular/i);
+      expect(
+        within(status).getByRole('link', { name: /escribinos por whatsapp/i }),
+      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /confirmar pedido/i })).toBeDisabled();
+    });
+
     it('should show the ERP message and quote again when the quote expired', async () => {
       let orders = 0;
       const fetchMock = erpFetch(undefined, () => {
