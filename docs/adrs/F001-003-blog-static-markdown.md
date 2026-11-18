@@ -41,7 +41,7 @@ EzyHome necesita un blog informativo sobre domótica publicado por el dueño. El
 
 ## Consecuencias
 
-- El dueño agrega posts creando un `.md` en `src/data/blog/` y añadiendo la entrada en `index.json`. Requiere rebuild y redeploy (aceptable para v1).
+- El dueño agrega posts creando un `.md` en `src/data/blog/` y añadiendo la entrada en `index.json`. Requiere rebuild y redeploy (aceptable para v1). Paso a paso: [`docs/guides/agregar-articulo-blog.md`](../guides/agregar-articulo-blog.md).
 - Si en v2 se necesita publicación sin deploy, migrar a CMS headless (Contentful free tier o Directus self-hosted en la EC2 existente).
 - `useBlogPost` resuelve el slug al archivo correspondiente; si el slug no existe, `notFound: true` → 404 page.
 - Imágenes del blog deben estar en `public/` — sin URLs externas (restricción de seguridad documentada).

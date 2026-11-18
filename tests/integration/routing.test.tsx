@@ -25,13 +25,17 @@ describe('rutas cargadas por demanda', () => {
   it('should render the landing without waiting for a chunk', () => {
     renderAt('/');
 
-    expect(screen.getByRole('heading', { name: /domótica para tu hogar/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /transformá tu hogar/i, level: 1 }),
+    ).toBeInTheDocument();
   });
 
   it('should load the catalog route on demand', async () => {
     renderAt('/catalogo');
 
-    expect(await screen.findByRole('heading', { name: /catálogo/i, level: 1 })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { name: /productos/i, level: 1 }),
+    ).toBeInTheDocument();
   });
 
   it('should load the cart route on demand', async () => {
@@ -52,6 +56,14 @@ describe('rutas cargadas por demanda', () => {
     renderAt('/blog');
 
     expect(await screen.findByRole('heading', { level: 1 })).toBeInTheDocument();
+  });
+
+  it('should load the contact route on demand', async () => {
+    renderAt('/contacto');
+
+    expect(
+      await screen.findByRole('heading', { name: /estamos acá para ayudarte/i, level: 1 }),
+    ).toBeInTheDocument();
   });
 
   it('should keep the header and footer visible while a route chunk loads', () => {
@@ -93,6 +105,7 @@ describe('errores de render contenidos', () => {
       },
       findActiveProductById: () => undefined,
       findProductById: () => undefined,
+      listCategories: () => [],
     }));
 
     vi.resetModules();

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import QuienesSomosPage from '@/pages/QuienesSomosPage';
 
@@ -46,5 +46,19 @@ describe('QuienesSomosPage', () => {
     expect(screen.getByText('Profesionalismo')).toBeInTheDocument();
     expect(screen.getByText('Accesibilidad')).toBeInTheDocument();
     expect(screen.getByText('Confianza')).toBeInTheDocument();
+  });
+  it('should show the breadcrumb back to Inicio', () => {
+    renderPage();
+    const nav = screen.getByRole('navigation', { name: /ruta de navegación/i });
+    expect(within(nav).getByRole('link', { name: 'Inicio' })).toHaveAttribute('href', '/');
+  });
+
+  it('should close with links to the catalog and to contact', () => {
+    renderPage();
+    expect(screen.getByRole('link', { name: /ver productos/i })).toHaveAttribute(
+      'href',
+      '/catalogo',
+    );
+    expect(screen.getByRole('link', { name: /contactanos/i })).toHaveAttribute('href', '/contacto');
   });
 });

@@ -26,6 +26,10 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       sourcemap: true,
       target: 'es2022',
+      // Las fuentes nunca van embebidas en el CSS: cada subset (latin,
+      // cirílico, vietnamita…) se baja solo si la página lo usa, gracias al
+      // `unicode-range`. Embebidas, todos viajaban en el critical path.
+      assetsInlineLimit: (filePath: string) => (/\.woff2?$/.test(filePath) ? false : undefined),
     },
   };
 });

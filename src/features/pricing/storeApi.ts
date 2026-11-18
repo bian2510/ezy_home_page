@@ -8,9 +8,9 @@ export type { StoreApiConfig };
 /** Precio y stock de un SKU según el ERP. */
 export interface StoreQuote {
   sku: string;
-  /** Precio pagando con Mercado Pago (precio del local + recargo, redondeado). */
+  /** Precio pagando con Mercado Pago (precio de lista + recargo, redondeado). */
   priceMp: number;
-  /** Precio con transferencia (precio del local − descuento). */
+  /** Precio con transferencia (precio de lista − descuento). */
   priceTransfer: number;
   stock: number;
   available: boolean;

@@ -4,7 +4,7 @@
 //   - RootLayout renders the SiteHeader + main + SiteFooter chrome.
 //   - CartProvider is mounted at the layout level, so ProductCard (which
 //     calls `useCart()`) renders without throwing.
-//   - The HomePage hero + WhatsApp CTA sit inside the layout.
+//   - The HomePage hero (H1 + CTA al catálogo) sits inside the layout.
 //
 // `import.meta.glob` for blog Markdown is mocked because BlogPostPage is not
 // rendered on `/`, but jsdom evaluates module-level side effects when the
@@ -39,11 +39,11 @@ describe('HomePage (integration)', () => {
 
     // Page-level H1 from HomePage.
     expect(
-      screen.getByRole('heading', { name: /domótica para tu hogar/i, level: 1 }),
+      screen.getByRole('heading', { name: /transformá tu hogar/i, level: 1 }),
     ).toBeInTheDocument();
 
     // Primary CTA into the catalog.
-    expect(screen.getByRole('link', { name: /ver catálogo/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /ver productos/i })).toHaveAttribute(
       'href',
       '/catalogo',
     );

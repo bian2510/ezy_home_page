@@ -37,13 +37,73 @@ export const computeCartTotals = (items: CartItem[], pricingOf: PricingOf): Cart
     { total: 0, transferTotal: 0, hasUnpriced: false },
   );
 
+/** Precio de una fila del carrito. */
+export interface CartLinePrice {
+  /** Precio unitario que se muestra. */
+  unit: number;
+  /** Cantidad × `unit`. */
+  line: number;
+  /** `true` si es el precio con transferencia (más barato que el de Mercado Pago). */
+  byTransfer: boolean;
+  /** Precio unitario con Mercado Pago, para mostrarlo chico; `null` si hay un solo precio. */
+  mercadoPagoUnit: number | null;
+}
+
+/**
+ * Precio de la fila con el mismo criterio que el total "con transferencia"
+ * (`computeCartTotals`): el de transferencia si es más barato, y el de Mercado
+ * Pago al lado. Sin Mercado Pago activo hay un solo precio, como antes. `null`
+ * sin precio del ERP ("Consultar precio").
+ */
+export const cartLinePrice = (pricing: ProductPricing, quantity: number): CartLinePrice | null => {
+  const { price, transferPrice } = pricing;
+  if (price === null) return null;
+  const unit = transferPrice ?? price;
+  return {
+    unit,
+    line: unit * quantity,
+    byTransfer: transferPrice !== null,
+    mercadoPagoUnit: transferPrice === null ? null : price,
+  };
+};
+
+/** Lo que muestra el botón del carrito en el header. */
+export interface CartHeaderTotal {
+  amount: number;
+  label: 'Con transferencia' | 'Total';
+}
+
+/**
+ * Total para el header: el de transferencia, que es el precio grande de las
+ * cards. `null` si el carrito está vacío o algún producto no tiene precio del
+ * ERP: un total parcial haría creer que eso es lo que se paga.
+ */
+export const cartHeaderTotal = (totals: CartTotals): CartHeaderTotal | null => {
+  if (totals.hasUnpriced || totals.total <= 0) return null;
+  return {
+    amount: totals.transferTotal,
+    label: totals.transferTotal < totals.total ? 'Con transferencia' : 'Total',
+  };
+};
+
 const formatLineItem = (item: CartItem, pricingOf: PricingOf): string => {
   const { price } = pricingOf(item.product);
   const detail = price === null ? 'consultar precio' : `${formatPrice(price)} c/u`;
   return `- ${item.quantity}x ${item.product.name} → ${detail}`;
 };
 
-const composeMessage = (items: CartItem[], pricingOf: PricingOf): string => {
+// Con la dirección (el checkout no pudo cotizar el envío) el mensaje pide la
+// cotización a esa dirección; sin ella, avisa que los precios no incluyen envío.
+const shippingLine = (shippingTo: string | undefined): string =>
+  shippingTo === undefined
+    ? SHIPPING_DISCLAIMER
+    : `Quiero envío a domicilio a: ${shippingTo}. ¿Me cotizan el envío?`;
+
+const composeMessage = (
+  items: CartItem[],
+  pricingOf: PricingOf,
+  shippingTo: string | undefined,
+): string => {
   const lines = items.map((item) => formatLineItem(item, pricingOf));
   const { total, transferTotal } = computeCartTotals(items, pricingOf);
   const transferLine =
@@ -53,7 +113,7 @@ const composeMessage = (items: CartItem[], pricingOf: PricingOf): string => {
     ...lines,
     `Subtotal: ${formatPrice(total)}`,
     ...transferLine,
-    SHIPPING_DISCLAIMER,
+    shippingLine(shippingTo),
   ].join('\n');
 };
 
@@ -66,12 +126,16 @@ const composeMessage = (items: CartItem[], pricingOf: PricingOf): string => {
  *
  * See DOMAIN.md › Design Implications: el botón de compra debe pre-componer el
  * mensaje en un tap; no puede requerir copiar y pegar manualmente.
+ *
+ * `shippingTo` es la dirección en una línea, cuando el checkout no pudo cotizar
+ * el envío a domicilio (ADR-007): el mensaje pide cotizarlo a esa dirección.
  */
 export const buildWhatsAppMessage = (
   items: CartItem[],
   phoneNumber: string,
   pricingOf: PricingOf,
+  shippingTo?: string,
 ): string => {
-  const message = composeMessage(items, pricingOf);
+  const message = composeMessage(items, pricingOf, shippingTo);
   return `${WHATSAPP_BASE_URL}${phoneNumber}?text=${encodeURIComponent(message)}`;
 };

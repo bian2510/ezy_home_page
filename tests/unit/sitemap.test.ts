@@ -50,6 +50,10 @@ describe('RUTAS_ESTATICAS', () => {
     expect(RUTAS_ESTATICAS).toContain('/blog');
   });
 
+  it('should include the contact page', () => {
+    expect(RUTAS_ESTATICAS).toContain('/contacto');
+  });
+
   it('should leave the cart out', () => {
     // El carrito es estado privado del visitante: no hay nada que indexar.
     expect(RUTAS_ESTATICAS).not.toContain('/carrito');

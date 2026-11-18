@@ -58,7 +58,7 @@ Cada feature **debe** tener un `index.ts` que exporta solo lo que otras capas ne
 // features/catalog/index.ts
 export { default as CatalogPage } from './CatalogPage';
 export { default as ProductCard } from './ProductCard';
-export { default as ProductGrid } from './ProductGrid';
+export { countByCategory, outOfStockLast, selectRelatedProducts } from './catalogUtils';
 export { default as CategoryFilter } from './CategoryFilter';
 export { useCatalog } from './useCatalog';
 export type { UseCatalogResult } from './useCatalog';

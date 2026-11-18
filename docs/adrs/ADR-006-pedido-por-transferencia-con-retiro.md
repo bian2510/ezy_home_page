@@ -21,7 +21,8 @@ había.
 - El carrito ofrece **"Comprar con transferencia y retiro en el local"** cuando
   todos los productos tienen precio y stock del ERP. Si alguno no, solo queda
   WhatsApp (como antes). **Los envíos siguen por WhatsApp** hasta que haya
-  cotizador.
+  cotizador (lo suma [ADR-007](./ADR-007-envio-a-domicilio-cotizado.md): envío a
+  domicilio cotizado por el ERP en el checkout).
 - `/checkout` pide nombre y apellido, WhatsApp, email y DNI (obligatorios) y la
   aceptación del aviso de privacidad (Ley 25.326). El DNI es obligatorio desde
   #26 (usuario): hace falta para facturar si la piden y para saber quién

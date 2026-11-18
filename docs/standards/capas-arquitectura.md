@@ -12,8 +12,8 @@ Ensamblan features. **Sin lógica propia.** Un page importa componentes de featu
 
 ```
 src/pages/
-  HomePage.tsx          ← monta HeroSection + ProductGrid del catalog feature
-  ProductDetailPage.tsx ← monta galería + cart actions
+  HomePage.tsx          ← monta las secciones de features/home
+  ProductDetailPage.tsx ← SEO + las piezas de features/product
   ComoComprarPage.tsx
   NotFoundPage.tsx
 ```
@@ -24,7 +24,9 @@ Todo lo relacionado a un dominio de negocio. Componentes, hooks, contexto, utils
 
 ```
 src/features/
-  catalog/    CatalogPage, ProductCard, ProductGrid, CategoryFilter, useCatalog
+  catalog/    CatalogPage, ProductCard, CategoryFilter, useCatalog
+  home/       secciones de la portada (hero, Nuestros productos, categorías, beneficios)
+  product/    piezas del detalle de producto (galería, panel de compra, relacionados)
   cart/       CartProvider, CartDrawer, CartItem, useCart, cartUtils
   blog/       BlogListPage, BlogCard, BlogPostPage, useBlogPost
   pricing/    PricingProvider, usePricing, ProductPrice, storeApi (precio y stock del ERP)
@@ -47,9 +49,11 @@ Primitivos visuales **ciegos al dominio**. No saben que existe `Product`, `Cart`
 ```
 src/components/ui/
   Badge.tsx           ← recibe variant + children, nada más
-  Button.tsx
+  Container.tsx       ← ancho de página (`max-w-content`) y márgenes laterales del mock
+  SectionBand.tsx     ← franja de borde a borde con su fondo y un Container adentro
+  PageHeader.tsx      ← encabezado común de página: ruta de navegación, título y bajada
+  Breadcrumb.tsx      ← la ruta de navegación (Inicio / … / página actual)
   Drawer.tsx
-  HeroCarousel.tsx    ← recibe los slides ya armados, no conoce productos
   QuantitySelector.tsx
   Toast.tsx
 ```

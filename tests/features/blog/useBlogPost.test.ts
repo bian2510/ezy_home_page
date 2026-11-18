@@ -39,7 +39,7 @@ describe('useBlogPost', () => {
     expect(result.current.meta).not.toBeNull();
     expect(result.current.meta?.slug).toBe('introduccion-a-la-domotica');
     expect(result.current.meta?.title).toBe(
-      'Introducción a la Domótica: ¿Qué es y para qué sirve?',
+      'Introducción a la Domótica: guía paso a paso para transformar tu hogar en inteligente',
     );
 
     // Drain the pending dynamic-import promise so React's act() check is

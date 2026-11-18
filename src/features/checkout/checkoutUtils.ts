@@ -1,7 +1,8 @@
 // Reglas puras del checkout con retiro (transferencia o Mercado Pago). Sin React ni red:
 // los datos del carrito y del ERP llegan por parámetro.
 import type { CartItem, Product, ProductPricing } from '@/types';
-import { OrderApiError, type StockIssue } from './ordersApi';
+import { percentOff } from '@/features/pricing';
+import { OrderApiError, type OrderBuyer, type PaymentMethod, type StockIssue } from './ordersApi';
 
 type PricingOf = (product: Product) => ProductPricing;
 
@@ -62,6 +63,14 @@ export const validateBuyerForm = (form: BuyerForm): BuyerErrors => {
   return errors;
 };
 
+/** El comprador como va al ERP: sin espacios alrededor y el WhatsApp solo con dígitos. */
+export const orderBuyer = (form: BuyerForm): OrderBuyer => ({
+  name: form.name.trim(),
+  phone: phoneDigits(form.phone),
+  email: form.email.trim(),
+  document: form.document.trim(),
+});
+
 /** Total a transferir con los precios del ERP. */
 export const transferTotal = (items: CartItem[], pricingOf: PricingOf): number =>
   items.reduce((sum, item) => {
@@ -69,9 +78,62 @@ export const transferTotal = (items: CartItem[], pricingOf: PricingOf): number =
     return sum + (transferPrice ?? price ?? 0) * item.quantity;
   }, 0);
 
-/** Total con Mercado Pago (precio del local + recargo) con los precios del ERP. */
+/** Total con Mercado Pago (precio de lista + recargo) con los precios del ERP. */
 export const mercadoPagoTotal = (items: CartItem[], pricingOf: PricingOf): number =>
   items.reduce((sum, item) => sum + (pricingOf(item.product).price ?? 0) * item.quantity, 0);
+
+/**
+ * Total de cada medio de pago con el envío: los productos con el precio de ese
+ * medio más el envío, que cuesta lo mismo con los dos (ADR-030 del ERP).
+ */
+export const checkoutTotals = (
+  items: CartItem[],
+  pricingOf: PricingOf,
+  shipping: number,
+): Record<PaymentMethod, number> => ({
+  transfer: transferTotal(items, pricingOf) + shipping,
+  mercado_pago: mercadoPagoTotal(items, pricingOf) + shipping,
+});
+
+/**
+ * Descuento real de la transferencia sobre el total con Mercado Pago, para el
+ * cartel "-N%" del medio de pago. `null` si no hay descuento que mostrar.
+ */
+export const totalsDiscountPercent = (totals: Record<PaymentMethod, number>): number | null =>
+  percentOff(totals.mercado_pago, totals.transfer);
+
+/** Una fila del "Resumen de tu pedido". */
+export interface CheckoutSummaryRow {
+  id: string;
+  name: string;
+  quantity: number;
+  /** Primera foto del producto; `null` si no tiene. */
+  image: string | null;
+  /** Precio de la línea con el medio elegido (cantidad × precio unitario). */
+  lineTotal: number;
+}
+
+/**
+ * Filas del resumen con el precio del medio elegido: el de transferencia (o el
+ * único, sin Mercado Pago) o el de Mercado Pago. Suman lo mismo que
+ * `transferTotal` / `mercadoPagoTotal`.
+ */
+export const checkoutSummaryRows = (
+  items: CartItem[],
+  pricingOf: PricingOf,
+  method: PaymentMethod,
+): CheckoutSummaryRow[] =>
+  items.map(({ product, quantity }) => {
+    const { price, transferPrice } = pricingOf(product);
+    const unit = method === 'transfer' ? (transferPrice ?? price ?? 0) : (price ?? 0);
+    return {
+      id: product.id,
+      name: product.name,
+      quantity,
+      image: product.images[0] ?? null,
+      lineTotal: unit * quantity,
+    };
+  });
 
 /**
  * Por qué no se puede comprar por transferencia todavía, o `null` si se puede.
@@ -86,6 +148,10 @@ export const checkoutBlocker = (items: CartItem[], pricingOf: PricingOf): string
   }
   return null;
 };
+
+/** Los errores sin el de un campo: se borra al volver a escribir en él. */
+export const withoutField = (errors: BuyerErrors, field: BuyerField): BuyerErrors =>
+  Object.fromEntries(Object.entries(errors).filter(([key]) => key !== field));
 
 const API_FIELDS: Record<string, BuyerField> = {
   buyer_name: 'name',

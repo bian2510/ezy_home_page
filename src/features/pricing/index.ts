@@ -4,11 +4,15 @@ export { PricingProvider } from './PricingProvider';
 export { usePricing } from './usePricing';
 export { default as ProductPrice } from './ProductPrice';
 export { default as ConsultLink } from './ConsultLink';
+export { default as TransferDiscountBadge } from './TransferDiscountBadge';
 export {
   STOCK_LIMIT_MESSAGE,
   clampToStock,
   isPurchasable,
+  percentOff,
   reachedStockLimit,
+  transferDiscountPercent,
+  transferSavings,
   unavailableLabel,
 } from './pricingUtils';
 export type { PricingContextValue } from './PricingContext';

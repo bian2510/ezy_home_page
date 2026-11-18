@@ -29,7 +29,7 @@ export default function SwitchToTransferButton({ token }: { token: string }) {
         type="button"
         onClick={() => void handleClick()}
         disabled={state.status === 'submitting'}
-        className="inline-flex min-h-11 items-center justify-center rounded-md border border-primary px-6 py-2 text-sm font-medium text-primary transition hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex min-h-11 items-center justify-center rounded-lg border border-primary bg-surface-container-lowest px-6 py-2 text-label-lg font-bold text-primary transition hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
       >
         {state.status === 'submitting' ? 'Creando el pedido…' : 'Pagar por transferencia'}
       </button>

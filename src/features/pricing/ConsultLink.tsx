@@ -9,9 +9,15 @@ import { buildConsultUrl } from './pricingUtils';
 interface ConsultLinkProps {
   product: Product;
   className?: string;
+  /** Texto del link; corto en la barra fija del celular. */
+  label?: string;
 }
 
-export default function ConsultLink({ product, className }: ConsultLinkProps) {
+export default function ConsultLink({
+  product,
+  className,
+  label = 'Consultar por WhatsApp',
+}: ConsultLinkProps) {
   // Dentro de la card el link no tiene que disparar la navegación al detalle.
   const stop = (event: MouseEvent<HTMLAnchorElement>) => event.stopPropagation();
 
@@ -28,7 +34,7 @@ export default function ConsultLink({ product, className }: ConsultLinkProps) {
         className,
       )}
     >
-      Consultar por WhatsApp
+      {label}
     </a>
   );
 }

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import OrderPage from '@/features/checkout/OrderPage';
 
@@ -63,11 +63,22 @@ describe('OrderPage', () => {
 
     expect(await screen.findByRole('heading', { name: /pedido n.º 7/i })).toBeInTheDocument();
     expect(fetchMock.mock.calls[0]?.[0]).toBe('https://erp.test/api/store/orders/tok-123');
+    // Último paso de la compra: carrito y datos ya completados.
+    const steps = screen
+      .getAllByRole('listitem')
+      .filter((item) => /\d\. /.test(item.textContent ?? ''));
+    expect(steps.at(-1)).toHaveAttribute('aria-current', 'step');
+    expect(steps.at(-1)).toHaveTextContent('3. Confirmación');
     expect(screen.getByTestId('order-total')).toHaveTextContent(/220\.000/);
     expect(screen.getByText('ezyhome.tienda')).toBeInTheDocument();
     expect(screen.getByText('0000003100012345678901')).toBeInTheDocument();
     expect(screen.getByText('EzyHome SRL')).toBeInTheDocument();
     expect(screen.getByText('Banco Galicia')).toBeInTheDocument();
+    // El aviso del pago acreditado llega por email; WhatsApp no es un canal de avisos.
+    expect(
+      screen.getByText(/te avisamos por email cuando acreditemos el pago/i),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/avisamos por whatsapp/i)).not.toBeInTheDocument();
     expect(screen.getByText(/en el concepto poné "pedido 7"/i)).toBeInTheDocument();
     expect(screen.getByText(/av\. siempreviva 742/i)).toBeInTheDocument();
     expect(screen.getByText(/lun a vie 10 a 18/i)).toBeInTheDocument();
@@ -111,7 +122,185 @@ describe('OrderPage', () => {
     );
     renderOrder();
 
-    expect(await screen.findByText(/recibimos tu pago/i)).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: '¡Gracias por tu compra!' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/pedido confirmado/i)).toBeInTheDocument();
+    expect(
+      screen.getByText('Tu pedido #7 está confirmado. Te mandamos el detalle por email.'),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Pago aprobado')).toBeInTheDocument();
+    expect(screen.queryByText('ezyhome.tienda')).not.toBeInTheDocument();
+  });
+
+  describe('rediseño', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('should receive a pending transfer order without calling it completed', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder() })));
+      renderOrder();
+
+      expect(
+        await screen.findByRole('heading', { level: 1, name: '¡Recibimos tu pedido!' }),
+      ).toBeInTheDocument();
+      expect(screen.getByText(/pedido recibido/i)).toBeInTheDocument();
+      // (La franja de pasos dice "completado" de los pasos 1 y 2: eso no cuenta.)
+      expect(
+        screen.queryAllByText(
+          /gracias por tu compra|orden completada|pedido confirmado|pago aprobado/i,
+        ),
+      ).toHaveLength(0);
+      expect(screen.getByText('Transferencia bancaria')).toBeInTheDocument();
+      expect(screen.getByText('Esperando la transferencia')).toBeInTheDocument();
+    });
+
+    it('should hide the pickup lines the ERP did not send, without inventing them', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue(
+          jsonResponse({
+            order: erpOrder({ pickup: { address: null, hours: 'Lun a vie 10 a 18' } }),
+          }),
+        ),
+      );
+      renderOrder();
+
+      const pickup = (
+        await screen.findByRole('heading', { name: 'Retiro en punto pick-up' })
+      ).closest('section')!;
+      expect(within(pickup).getByText('Lun a vie 10 a 18')).toBeInTheDocument();
+      expect(within(pickup).queryByText(/siempreviva/i)).toBeNull();
+    });
+
+    it('should list each product with its line total and the order total', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder() })));
+      renderOrder();
+
+      const items = (await screen.findByRole('heading', { name: /pedido n.º 7/i })).closest(
+        'section',
+      )!;
+      expect(within(items).getByText(/2 × válvula tv05/i)).toBeInTheDocument();
+      expect(within(items).getByTestId('order-total')).toHaveTextContent(/220\.000/);
+    });
+
+    it('should invite to prepare the smart home, with no guide button yet', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder() })));
+      renderOrder();
+
+      expect(
+        await screen.findByText(/querés ir preparando tu hogar inteligente/i),
+      ).toBeInTheDocument();
+      expect(screen.getByText(/smart life o tuya smart/i)).toBeInTheDocument();
+      expect(screen.queryByText(/guía rápida/i)).toBeNull();
+      expect(screen.queryByText(/tiempo estimado|despacho|webpay|transbank/i)).toBeNull();
+    });
+
+    it('should not invite to prepare the smart home on an expired order', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder({ status: 'expired' }) })),
+      );
+      renderOrder();
+
+      await screen.findByText(/este pedido venció/i);
+      expect(screen.queryByText(/hogar inteligente/i)).toBeNull();
+    });
+
+    it('should link to the catalog and offer WhatsApp only with a number', async () => {
+      // Una respuesta nueva por llamada: el cuerpo de un `Response` se lee una sola vez.
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockImplementation(() => Promise.resolve(jsonResponse({ order: erpOrder() }))),
+      );
+      const { unmount } = renderOrder();
+
+      expect(
+        await screen.findByRole('link', { name: /seguir explorando productos/i }),
+      ).toHaveAttribute('href', '/catalogo');
+      expect(screen.queryByText(/tenés preguntas sobre tu pedido/i)).toBeNull();
+      unmount();
+
+      vi.stubEnv('VITE_WHATSAPP_NUMBER', '5491122334455');
+      renderOrder();
+      expect(await screen.findByText(/tenés preguntas sobre tu pedido/i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /escribinos por whatsapp/i })).toHaveAttribute(
+        'href',
+        'https://wa.me/5491122334455',
+      );
+    });
+  });
+
+  describe('envío a domicilio', () => {
+    const shippedOrder = (shipping: Record<string, unknown> | null) =>
+      erpOrder({
+        delivery: 'carrier',
+        total: 228_500,
+        shipping,
+        pickup: { address: 'Av. Siempreviva 742', hours: 'Lun a vie 10 a 18' },
+      });
+
+    it('should show the home delivery with its time instead of the pickup', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue(
+          jsonResponse({
+            order: shippedOrder({ price: 8_500, delivery_time: '3 a 5 días hábiles' }),
+          }),
+        ),
+      );
+      renderOrder();
+
+      const card = (await screen.findByRole('heading', { name: /envío a domicilio/i })).closest(
+        'section',
+      )!;
+      expect(card).toHaveTextContent('3 a 5 días hábiles');
+      expect(card).toHaveTextContent(/dirección que cargaste/i);
+      expect(screen.queryByText('Av. Siempreviva 742')).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('heading', { name: /retiro en punto pick-up/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('should list the shipping before the total, which includes it', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi
+          .fn()
+          .mockResolvedValue(
+            jsonResponse({ order: shippedOrder({ price: 8_500, delivery_time: null }) }),
+          ),
+      );
+      renderOrder();
+
+      const items = (await screen.findByRole('heading', { name: /pedido n.º 7/i })).closest(
+        'section',
+      )!;
+      expect(within(items).getByTestId('order-shipping')).toHaveTextContent(/envío.*8\.500/i);
+      expect(within(items).getByTestId('order-total')).toHaveTextContent(/228\.500/);
+    });
+
+    it('should not list a shipping line when the ERP did not send its price', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue(jsonResponse({ order: shippedOrder(null) })),
+      );
+      renderOrder();
+
+      expect(
+        await screen.findByRole('heading', { name: /envío a domicilio/i }),
+      ).toBeInTheDocument();
+      expect(screen.queryByTestId('order-shipping')).not.toBeInTheDocument();
+    });
+
+    it('should not list a shipping line for pickup', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder() })));
+      renderOrder();
+
+      expect(await screen.findByRole('heading', { name: /pedido n.º 7/i })).toBeInTheDocument();
+      expect(screen.queryByTestId('order-shipping')).not.toBeInTheDocument();
+    });
   });
 
   it('should say the order does not exist on a 404', async () => {

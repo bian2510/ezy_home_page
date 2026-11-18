@@ -12,6 +12,12 @@ Instrucciones paso a paso para tareas operativas. Cada guía es autocontenida.
 | [`agregar-pdf-manual.md`](./agregar-pdf-manual.md) | Adjuntar el PDF de instrucciones a un producto existente.                |
 | [`actualizar-precios.md`](./actualizar-precios.md) | Precios y stock: vienen del ERP por SKU; qué ve el cliente en cada caso. |
 
+## Blog
+
+| Guía                                                     | Cuándo usarla                                                            |
+| -------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [`agregar-articulo-blog.md`](./agregar-articulo-blog.md) | Publicar un artículo: el Markdown, la portada y la entrada en el índice. |
+
 ## Código
 
 | Guía                                         | Cuándo usarla                                                                   |

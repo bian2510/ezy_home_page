@@ -15,8 +15,8 @@ de precios ni ofertas.
   vez al ERP el precio y el stock de todos los SKU activos:
   `GET https://ezyhome.app/api/store/products?skus=...` con la clave
   `VITE_STORE_API_KEY` (secret del repo, ver [`deploy-y-ci.md`](./deploy-y-ci.md)).
-- El ERP devuelve dos precios: **con Mercado Pago** (precio del local + recargo,
-  redondeado a $100) y **con transferencia** (precio del local − descuento). Los
+- El ERP devuelve dos precios: **con Mercado Pago** (precio de lista + recargo,
+  redondeado a $100) y **con transferencia** (precio de lista − descuento). Los
   dos se ajustan en Configuración del ERP, no acá.
 - La card y el detalle muestran el precio con Mercado Pago y, debajo, "$X con
   transferencia" cuando es menor. El carrito y el mensaje de WhatsApp usan esos

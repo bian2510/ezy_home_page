@@ -7,6 +7,7 @@ footer, and (later) global banners or skip links.
 
 - `SiteHeader.tsx` — brand link + primary nav, sticky-friendly border, max-content container
 - `SiteFooter.tsx` — copyright line, future legal/contact links
+- `ScrollToTop.tsx` — sube al principio al cambiar de ruta (solo `pathname`, no query ni hash; no en atrás/adelante)
 
 ## Dependencies
 
@@ -15,7 +16,7 @@ footer, and (later) global banners or skip links.
 
 ## Patterns
 
-- Centered max-width container (`max-w-content`) shared with `RootLayout`
+- Centered max-width container (`components/ui/Container`, `max-w-content`) shared with `RootLayout`
 - Semantic landmarks: `<header>`, `<nav aria-label="...">`, `<footer>`
 - Spanish copy by default
 

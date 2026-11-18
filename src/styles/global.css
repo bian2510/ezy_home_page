@@ -7,15 +7,20 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* Reserva el lugar de la barra de scroll: sin esto, al pasar de una página
+       corta (sin barra) a una larga, todo el sitio se corre unos píxeles. */
+    scrollbar-gutter: stable;
   }
 
   body {
     font-family: theme('fontFamily.sans');
+    background-color: theme('colors.background');
+    color: theme('colors.foreground');
     min-height: 100dvh;
   }
 
   :focus-visible {
-    outline: 2px solid theme('colors.brand.600');
+    outline: 2px solid theme('colors.primary.DEFAULT');
     outline-offset: 2px;
   }
 }

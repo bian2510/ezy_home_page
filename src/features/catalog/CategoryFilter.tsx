@@ -10,49 +10,77 @@ interface CategoryFilterProps {
   categories: string[];
   selectedCategory: string | null;
   onSelectCategory: (category: string | null) => void;
+  /** Productos por categoría (dentro de la búsqueda actual). */
+  counts: Record<string, number>;
+  /** Productos de todas las categorías: el número del chip "Todos". */
+  totalCount: number;
 }
 
+// Clases del mock: inactivo `bg-surface-container text-secondary`, activo
+// `bg-primary text-on-primary shadow-sm`.
 const chipBase =
-  'inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
-const chipActive = 'bg-primary text-primary-foreground';
-const chipInactive = 'bg-muted text-foreground hover:bg-border';
+  'inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full px-4 py-2 text-label-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
+const chipActive = 'bg-primary text-on-primary shadow-sm';
+const chipInactive =
+  'bg-surface-container text-secondary hover:bg-surface-container-high hover:text-on-surface';
+
+interface ChipProps {
+  label: string;
+  count: number;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+function Chip({ label, count, isActive, onClick }: ChipProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={isActive}
+      className={cn(chipBase, isActive ? chipActive : chipInactive)}
+    >
+      <span>{label}</span>{' '}
+      {/* Color pleno, sin transparencia: con `opacity-60` el contador no pasaba AA. */}
+      <span className={isActive ? 'text-on-primary' : 'text-on-surface-variant'}>({count})</span>
+    </button>
+  );
+}
 
 /**
  * Category filter chips. Renders a "Todos" chip (clears the filter) plus one
- * chip per category. The active chip uses the EzyHome primary token so the
- * current filter is unambiguous on mobile (BR-008, tap targets ≥ 44px).
+ * chip per category, each with how many products it has. The active chip uses
+ * the EzyHome primary token so the current filter is unambiguous on mobile
+ * (BR-008, tap targets ≥ 44px). En el celular los chips son un riel con scroll
+ * horizontal propio: la página nunca se corre de costado.
  */
 export default function CategoryFilter({
   categories,
   selectedCategory,
   onSelectCategory,
+  counts,
+  totalCount,
 }: CategoryFilterProps) {
-  const isAllActive = selectedCategory === null;
-
   return (
-    <div role="group" aria-label="Filtrar por categoría" className="flex flex-wrap gap-2">
-      <button
-        type="button"
+    <div
+      role="group"
+      aria-label="Filtrar por categoría"
+      className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0"
+    >
+      <Chip
+        label="Todos"
+        count={totalCount}
+        isActive={selectedCategory === null}
         onClick={() => onSelectCategory(null)}
-        aria-pressed={isAllActive}
-        className={cn(chipBase, isAllActive ? chipActive : chipInactive)}
-      >
-        Todos
-      </button>
-      {categories.map((category) => {
-        const isActive = selectedCategory === category;
-        return (
-          <button
-            key={category}
-            type="button"
-            onClick={() => onSelectCategory(category)}
-            aria-pressed={isActive}
-            className={cn(chipBase, isActive ? chipActive : chipInactive)}
-          >
-            {category}
-          </button>
-        );
-      })}
+      />
+      {categories.map((category) => (
+        <Chip
+          key={category}
+          label={category}
+          count={counts[category] ?? 0}
+          isActive={selectedCategory === category}
+          onClick={() => onSelectCategory(category)}
+        />
+      ))}
     </div>
   );
 }

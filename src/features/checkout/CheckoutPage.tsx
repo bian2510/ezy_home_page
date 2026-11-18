@@ -1,39 +1,47 @@
-// CheckoutPage — compra con retiro en el local (plan de la etapa 3 del ERP,
-// PR 3d y 3e). El comprador deja sus datos y elige transferencia o Mercado
-// Pago; el ERP crea el pedido con sus
+// CheckoutPage — compra con retiro en punto pick-up o envío a domicilio (plan de
+// la etapa 3 del ERP, PR 3d y 3e; envío en ADR-007). El comprador deja sus
+// datos, elige la entrega (el envío se cotiza con la provincia y el CP antes de
+// pagar) y elige transferencia o Mercado Pago; el ERP crea el pedido con sus
 // precios (el sitio no manda precios) y la página del pedido muestra a qué
-// cuenta transferir o abre Mercado Pago. Los envíos siguen por WhatsApp.
-import { useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+// cuenta transferir o abre Mercado Pago.
+import { useMemo, useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/features/cart';
 import { usePricing } from '@/features/pricing';
-import { getWhatsAppNumber } from '@/lib/env';
+import { PURCHASE_STEP, PURCHASE_STEPS, PURCHASE_STEPS_LABEL } from '@/data/purchaseSteps';
+import SectionBand from '@/components/ui/SectionBand';
+import Stepper from '@/components/ui/Stepper';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import {
   EMPTY_BUYER_FORM,
   checkoutBlocker,
+  checkoutTotals,
   fieldErrorsFromApi,
-  mercadoPagoTotal,
-  phoneDigits,
+  orderBuyer,
   stockAdjustments,
-  transferTotal,
   validateBuyerForm,
+  withoutField,
   type BuyerErrors,
   type BuyerField,
   type BuyerForm,
 } from './checkoutUtils';
 import BuyerFields from './BuyerFields';
+import CheckoutBlocked from './CheckoutBlocked';
+import CheckoutSection from './CheckoutSection';
+import CheckoutSubmitButton from './CheckoutSubmitButton';
+import DeliveryOptions from './DeliveryOptions';
 import CheckoutSummary from './CheckoutSummary';
 import OrderErrorAlert from './OrderErrorAlert';
 import PaymentMethodField from './PaymentMethodField';
 import { saveOrderDraft } from './orderDraftStorage';
 import { OrderApiError, type PaymentMethod } from './ordersApi';
+import { useCheckoutDelivery } from './useCheckoutDelivery';
 import { useCreateOrder, type OrderDraft } from './useCreateOrder';
 
 export default function CheckoutPage() {
   useDocumentMeta({
     title: 'Finalizar compra',
-    description: 'Comprá y retirá en el local.',
+    description: 'Comprá con retiro en el punto pick-up o envío a domicilio.',
     path: '/checkout',
     noIndex: true,
   });
@@ -45,10 +53,14 @@ export default function CheckoutPage() {
   const [form, setForm] = useState<BuyerForm>(EMPTY_BUYER_FORM);
   const [errors, setErrors] = useState<BuyerErrors>({});
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('transfer');
-  const totals: Record<PaymentMethod, number> = {
-    transfer: transferTotal(items, pricingOf),
-    mercado_pago: mercadoPagoTotal(items, pricingOf),
-  };
+  const orderItems = useMemo(
+    () => items.map((item) => ({ sku: item.product.sku, quantity: item.quantity })),
+    [items],
+  );
+  const delivery = useCheckoutDelivery(orderItems);
+  const subtotals = checkoutTotals(items, pricingOf, 0);
+  const totals = checkoutTotals(items, pricingOf, delivery.cost ?? 0);
+  const waitingForQuote = delivery.method === 'carrier' && delivery.cost === null;
 
   const blocker = checkoutBlocker(items, pricingOf);
   const failure = state.status === 'failed' ? state.error : null;
@@ -64,18 +76,16 @@ export default function CheckoutPage() {
     event.preventDefault();
     const found = validateBuyerForm(form);
     setErrors(found);
-    if (Object.keys(found).length > 0) return;
+    const deliveryReady = delivery.validate();
+    const orderDelivery = delivery.toOrderDelivery();
+    if (Object.keys(found).length > 0 || !deliveryReady || orderDelivery === null) return;
 
     const draft: OrderDraft = {
-      buyer: {
-        name: form.name.trim(),
-        phone: phoneDigits(form.phone),
-        email: form.email.trim(),
-        document: form.document.trim(),
-      },
-      items: items.map((item) => ({ sku: item.product.sku, quantity: item.quantity })),
+      buyer: orderBuyer(form),
+      items: orderItems,
       acceptedPrivacy: form.acceptedPrivacy,
       paymentMethod,
+      delivery: orderDelivery,
     };
     const result = await submit(draft);
     if ('order' in result) {
@@ -91,6 +101,9 @@ export default function CheckoutPage() {
     } else if (result.error instanceof OrderApiError) {
       // Los errores por campo del ERP (422) van al formulario, como los propios.
       setErrors(fieldErrorsFromApi(result.error.fieldErrors));
+      delivery.showApiErrors(result.error.fieldErrors);
+      // Cotización vencida o que ya no coincide: se pide una nueva.
+      if (orderDelivery.method === 'carrier') delivery.refreshQuote();
     }
   };
 
@@ -101,72 +114,78 @@ export default function CheckoutPage() {
   };
 
   return (
-    <section className="mx-auto w-full max-w-content px-4 py-8 sm:py-12">
-      <h1 className="mb-6 text-2xl font-semibold text-foreground sm:text-3xl">Finalizar compra</h1>
+    <div className="flex flex-col">
+      <SectionBand tone="low" className="py-6">
+        <Stepper
+          label={PURCHASE_STEPS_LABEL}
+          steps={PURCHASE_STEPS}
+          current={PURCHASE_STEP.checkout}
+        />
+      </SectionBand>
 
-      {blocker !== null ? (
-        <div className="flex flex-col items-start gap-4">
-          <p className="text-base text-muted-foreground">{blocker}</p>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              to="/carrito"
-              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+      <SectionBand labelledBy="checkout-heading" tone="surface" className="gap-6 py-8 md:py-12">
+        <h1
+          id="checkout-heading"
+          className="text-headline-xl-mobile font-extrabold text-on-surface"
+        >
+          Finalizar compra
+        </h1>
+
+        {blocker !== null ? (
+          <CheckoutBlocked message={blocker} />
+        ) : (
+          // En el celular el resumen va abajo, como el mock: el total de cada medio
+          // ya se ve en "Medio de pago", junto al botón.
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
+            <form
+              noValidate
+              onSubmit={(event) => void handleSubmit(event)}
+              className="flex flex-col gap-6 lg:col-span-8"
             >
-              Volver al carrito
-            </Link>
-            <a
-              href={`https://wa.me/${getWhatsAppNumber()}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-            >
-              Escribinos por WhatsApp
-            </a>
+              <CheckoutSection id="contacto-heading" step={1} title="Información de contacto">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <BuyerFields form={form} errors={errors} onChange={handleChange} />
+                </div>
+              </CheckoutSection>
+
+              <CheckoutSection id="entrega-heading" step={2} title="Entrega">
+                <DeliveryOptions delivery={delivery} />
+              </CheckoutSection>
+
+              <CheckoutSection id="pago-heading" step={3} title="Medio de pago">
+                <PaymentMethodField
+                  value={paymentMethod}
+                  totals={totals}
+                  subtotals={subtotals}
+                  onChange={setPaymentMethod}
+                />
+
+                {failure !== null && (
+                  <OrderErrorAlert
+                    error={failure}
+                    adjustments={adjustments}
+                    onAdjust={applyAdjustments}
+                  />
+                )}
+
+                <CheckoutSubmitButton
+                  paymentMethod={paymentMethod}
+                  submitting={state.status === 'submitting'}
+                  disabled={waitingForQuote}
+                />
+              </CheckoutSection>
+            </form>
+
+            <CheckoutSummary
+              items={items}
+              pricingOf={pricingOf}
+              subtotal={subtotals[paymentMethod]}
+              paymentMethod={paymentMethod}
+              delivery={{ method: delivery.method, cost: delivery.cost }}
+            />
           </div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_20rem]">
-          <form
-            noValidate
-            onSubmit={(event) => void handleSubmit(event)}
-            className="flex flex-col gap-4"
-          >
-            <BuyerFields form={form} errors={errors} onChange={handleChange} />
-
-            <PaymentMethodField value={paymentMethod} totals={totals} onChange={setPaymentMethod} />
-
-            {failure !== null && (
-              <OrderErrorAlert
-                error={failure}
-                adjustments={adjustments}
-                onAdjust={applyAdjustments}
-              />
-            )}
-
-            <button
-              type="submit"
-              disabled={state.status === 'submitting'}
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {state.status === 'submitting' ? 'Enviando…' : SUBMIT_LABEL[paymentMethod]}
-            </button>
-          </form>
-
-          <CheckoutSummary
-            items={items}
-            total={totals[paymentMethod]}
-            paymentMethod={paymentMethod}
-          />
-        </div>
-      )}
-    </section>
+        )}
+      </SectionBand>
+    </div>
   );
 }
-
-const SUBMIT_LABEL: Record<PaymentMethod, string> = {
-  transfer: 'Confirmar pedido',
-  mercado_pago: 'Confirmar y pagar con Mercado Pago',
-};
-
-const withoutField = (errors: BuyerErrors, field: BuyerField): BuyerErrors =>
-  Object.fromEntries(Object.entries(errors).filter(([key]) => key !== field));

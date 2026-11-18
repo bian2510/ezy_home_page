@@ -65,6 +65,8 @@ Después de leer `DOMAIN.md` y `PROJECT.md`, leer el doc específico a tu tarea:
 | Precios y stock (vienen del ERP por SKU)               | [`docs/guides/actualizar-precios.md`](docs/guides/actualizar-precios.md)                     |
 | Llamar al ERP o a cualquier API (`fetch`)              | [`docs/standards/llamadas-al-backend.md`](docs/standards/llamadas-al-backend.md)             |
 | Entender el CI, el deploy, o volver atrás un deploy    | [`docs/guides/deploy-y-ci.md`](docs/guides/deploy-y-ci.md)                                   |
+| Publicar un artículo en el blog                        | [`docs/guides/agregar-articulo-blog.md`](docs/guides/agregar-articulo-blog.md)               |
+| Crear o cambiar el encabezado/layout de una página     | [`docs/frontend-conventions.md`](docs/frontend-conventions.md) §6 (`PageHeader`)             |
 | Agregar el PDF de instrucciones de un producto         | [`docs/guides/agregar-pdf-manual.md`](docs/guides/agregar-pdf-manual.md)                     |
 | Crear una feature nueva desde cero                     | [`docs/guides/agregar-feature.md`](docs/guides/agregar-feature.md)                           |
 | Entender la arquitectura en capas general              | [`docs/standards/capas-arquitectura.md`](docs/standards/capas-arquitectura.md)               |

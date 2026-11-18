@@ -1,18 +1,15 @@
+// BlogListPage — `/blog`, calcado del mock "Blog" (Stitch, 2026-11-12): ruta
+// de navegación y título (`PageHeader`) y una tarjeta por artículo de
+// `src/data/blog/index.json`, en el orden del índice.
 import blogIndex from '@/data/blog/index.json';
 import type { BlogMeta } from '@/types';
-import BlogCard from './BlogCard';
+import Container from '@/components/ui/Container';
+import PageHeader from '@/components/ui/PageHeader';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
+import BlogCard from './BlogCard';
 
 const articles = blogIndex as BlogMeta[];
 
-/**
- * Blog list page (route `/blog`). Reads the static blog index from
- * `src/data/blog/index.json` and renders one `BlogCard` per article.
- *
- * Mobile-first grid (DOMAIN.md › Design Implications): 1 column at 360px,
- * 2 at `sm`, 3 at `md`. Articles are rendered in the order they appear in
- * `index.json` — date-based sorting is out of scope for Task 010.
- */
 export default function BlogListPage() {
   useDocumentMeta({
     title: 'Blog',
@@ -22,22 +19,37 @@ export default function BlogListPage() {
   });
 
   return (
-    <section className="mx-auto w-full max-w-content px-4 py-6">
-      <h1 className="mb-4 text-2xl font-semibold text-foreground sm:text-3xl">Blog</h1>
+    <>
+      <PageHeader
+        id="blog-heading"
+        breadcrumb={[{ label: 'Blog' }]}
+        title={
+          <>
+            Consejos e Ideas para tu <span className="text-primary">Smart Home</span>
+          </>
+        }
+      >
+        Guías prácticas, novedades sobre domótica y consejos para ahorrar energía y ganar confort en
+        cada rincón de tu hogar.
+      </PageHeader>
 
-      {articles.length === 0 ? (
-        <p className="text-muted-foreground" role="status">
-          No hay artículos publicados todavía
-        </p>
-      ) : (
-        <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 md:grid-cols-3">
-          {articles.map((article) => (
-            <li key={article.slug}>
-              <BlogCard article={article} />
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
+      <div className="w-full bg-surface">
+        <Container className="py-10 md:py-16">
+          {articles.length === 0 ? (
+            <p className="text-on-surface-variant" role="status">
+              No hay artículos publicados todavía
+            </p>
+          ) : (
+            <ul className="grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 md:gap-8 lg:grid-cols-3">
+              {articles.map((article) => (
+                <li key={article.slug}>
+                  <BlogCard article={article} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </Container>
+      </div>
+    </>
   );
 }

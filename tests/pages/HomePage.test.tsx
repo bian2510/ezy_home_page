@@ -1,84 +1,74 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import HomePage from '@/pages/HomePage';
 import type * as EnvModule from '@/lib/env';
 
-// Mock the static product dataset so tests are deterministic and isolated
-// from real catalog data. Includes products with various combinations of
-// `isBestseller` so we can assert section partitioning.
-// Las categorías replican la taxonomía real de `products.json`.
+// Catálogo de prueba: las categorías replican la taxonomía real de
+// `products.json`. `isBestseller` marca la selección curada que el Home muestra
+// como "Nuestros productos" (sin datos de ventas, no se rotula "más vendido").
 vi.mock('@/data/products.json', () => ({
   default: [
     {
-      id: 'best-1',
-      name: 'Foco Best Uno',
-      description: 'Bestseller-only product.',
-      images: ['/images/best-1.jpg'],
+      id: 'luz-1',
+      name: 'Foco Destacado Uno',
+      description: '',
+      images: ['/images/luz-1.jpg'],
       category: 'Iluminación Inteligente',
       isBestseller: true,
       active: true,
     },
     {
-      id: 'best-2',
-      name: 'Sensor Best Dos',
-      description: 'Bestseller-only product.',
-      images: ['/images/best-2.jpg'],
+      id: 'seg-1',
+      name: 'Sensor Destacado Dos',
+      description: '',
+      images: ['/images/seg-1.jpg'],
       category: 'Seguridad',
       isBestseller: true,
       active: true,
     },
     {
-      id: 'sale-1',
-      name: 'Tira Oferta Uno',
-      description: 'Sale-only product.',
-      images: ['/images/sale-1.jpg'],
+      id: 'luz-2',
+      name: 'Tira Común',
+      description: '',
+      images: ['/images/luz-2.jpg'],
       category: 'Iluminación Inteligente',
       isBestseller: false,
       active: true,
     },
     {
-      id: 'sale-2',
-      name: 'Camara Oferta Dos',
-      description: 'Sale-only product.',
-      images: ['/images/sale-2.jpg'],
+      id: 'seg-2',
+      name: 'Cámara Común',
+      description: '',
+      images: ['/images/seg-2.jpg'],
       category: 'Seguridad',
       isBestseller: false,
       active: true,
     },
     {
-      id: 'plain-1',
-      name: 'Hub Plano',
-      description: 'Neither bestseller nor on sale.',
-      images: ['/images/plain-1.jpg'],
+      id: 'confort-1',
+      name: 'Motor Destacado Tres',
+      description: '',
+      images: ['/images/confort-1.jpg'],
       category: 'Confort',
-      isBestseller: false,
+      isBestseller: true,
       active: true,
     },
     {
-      id: 'inactive-1',
+      id: 'inactivo-1',
       name: 'Termostato Inactivo',
-      description: 'Inactive product, must stay hidden everywhere.',
-      images: ['/images/inactive-1.jpg'],
+      description: '',
+      images: ['/images/inactivo-1.jpg'],
       category: 'Hubs',
       isBestseller: true,
       active: false,
     },
-    {
-      id: 'sin-categoria-1',
-      name: 'Lámpara Sin Categoría',
-      description: 'Active product with no category assigned.',
-      images: ['/images/sin-categoria.jpg'],
-      category: null,
-      isBestseller: false,
-      active: true,
-    },
   ],
 }));
 
-// Stub ProductCard so the HomePage test does not need to wire up CartProvider
-// (CartProvider lands at the layout level in Task 014). The stub renders just
-// enough information to assert that the right products were passed in.
+// ProductCard real necesita carrito, precios y toasts: acá alcanza con saber
+// qué productos recibió. Su comportamiento se prueba en su propio test.
 vi.mock('@/features/catalog/ProductCard', () => ({
   __esModule: true,
   default: ({ product }: { product: { id: string; name: string } }) => (
@@ -86,10 +76,16 @@ vi.mock('@/features/catalog/ProductCard', () => ({
   ),
 }));
 
-// El número de WhatsApp se lee por el accessor de entorno, nunca desde
-// `process.env` (inexistente en el browser bajo Vite).
-// Mock parcial: se reemplaza solo el número y el resto del módulo queda real,
-// para que agregar un accessor nuevo a `lib/env` no rompa este test.
+// Precio y stock del ERP: todos con stock. El orden por stock se prueba en
+// `homeUtils.test.ts` y en `tests/integration/home-featured-stock.test.tsx`.
+vi.mock('@/features/pricing/usePricing', () => ({
+  usePricing: () => ({
+    status: 'ready',
+    pricingOf: () => ({ price: 26300, transferPrice: 25000, availability: 'available', stock: 5 }),
+  }),
+}));
+
+// Mock parcial: solo el número de WhatsApp; el resto de `lib/env` queda real.
 vi.mock('@/lib/env', async (importOriginal) => ({
   ...(await importOriginal<typeof EnvModule>()),
   getWhatsAppNumber: () => '5491122334455',
@@ -102,85 +98,145 @@ const renderHome = () =>
     </MemoryRouter>,
   );
 
-const categoriesSection = () =>
-  screen.getByRole('heading', { name: /categorías/i }).closest('section')!;
+const sectionOf = (heading: RegExp) =>
+  screen.getByRole('heading', { name: heading }).closest('section')!;
 
 describe('HomePage', () => {
-  it('should render a hero CTA that links to /catalogo', () => {
-    renderHome();
+  describe('hero', () => {
+    it('should render the page H1', () => {
+      renderHome();
 
-    const cta = screen.getByRole('link', { name: /ver catálogo/i });
-    expect(cta).toHaveAttribute('href', '/catalogo');
-  });
-
-  it('should render a "Más vendidos" section containing only bestseller products', () => {
-    renderHome();
-
-    const heading = screen.getByRole('heading', { name: /más vendidos/i });
-    const section = heading.closest('section')!;
-    expect(section).not.toBeNull();
-
-    expect(within(section).getByText('Foco Best Uno')).toBeInTheDocument();
-    expect(within(section).getByText('Sensor Best Dos')).toBeInTheDocument();
-    expect(within(section).queryByText('Tira Oferta Uno')).toBeNull();
-    expect(within(section).queryByText('Hub Plano')).toBeNull();
-  });
-
-  it('should not render an "Ofertas" section: offers are gone, the price comes from the ERP', () => {
-    renderHome();
-
-    expect(screen.queryByRole('heading', { name: /^ofertas$/i })).toBeNull();
-  });
-
-  it('should exclude inactive products from "Más vendidos" even when flagged as bestseller', () => {
-    renderHome();
-
-    expect(screen.queryByText('Termostato Inactivo')).not.toBeInTheDocument();
-  });
-
-  it('should render one category card per category present in the active catalog', () => {
-    renderHome();
-
-    const links = within(categoriesSection()).getAllByRole('link');
-
-    expect(links.map((link) => link.textContent?.trim())).toEqual([
-      'Iluminación Inteligente',
-      'Seguridad',
-      'Confort',
-    ]);
-  });
-
-  it('should link each category card to the catalog filtered by that category', () => {
-    renderHome();
-
-    expect(within(categoriesSection()).getByRole('link', { name: 'Seguridad' })).toHaveAttribute(
-      'href',
-      '/catalogo?category=Seguridad',
-    );
-    expect(
-      within(categoriesSection()).getByRole('link', { name: 'Iluminación Inteligente' }),
-    ).toHaveAttribute(
-      'href',
-      `/catalogo?category=${encodeURIComponent('Iluminación Inteligente')}`,
-    );
-  });
-
-  it('should not render a category card for a category that only inactive products use', () => {
-    renderHome();
-
-    expect(
-      within(categoriesSection()).queryByRole('link', { name: 'Hubs' }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('should render a WhatsApp CTA using the configured number with safe link attributes', () => {
-    renderHome();
-
-    const whatsappLink = screen.getByRole('link', {
-      name: /comprar por whatsapp/i,
+      expect(
+        screen.getByRole('heading', {
+          level: 1,
+          name: /transformá tu hogar en un espacio inteligente y conectado/i,
+        }),
+      ).toBeInTheDocument();
     });
-    expect(whatsappLink).toHaveAttribute('href', 'https://wa.me/5491122334455');
-    expect(whatsappLink).toHaveAttribute('target', '_blank');
-    expect(whatsappLink).toHaveAttribute('rel', 'noopener noreferrer');
+
+    it('should link "Ver productos" to the catalog', () => {
+      renderHome();
+
+      expect(screen.getByRole('link', { name: /ver productos/i })).toHaveAttribute(
+        'href',
+        '/catalogo',
+      );
+    });
+
+    it('should open WhatsApp from "Contactanos" with safe link attributes', () => {
+      renderHome();
+
+      const contact = screen.getByRole('link', { name: /contactanos/i });
+      expect(contact).toHaveAttribute('href', 'https://wa.me/5491122334455');
+      expect(contact).toHaveAttribute('target', '_blank');
+      expect(contact).toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
+    it('should show only the highlights the owner confirmed', () => {
+      renderHome();
+
+      expect(screen.getByText(/alexa y google home/i)).toBeInTheDocument();
+      expect(screen.getByText(/hasta un 30%/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('Nuestros productos', () => {
+    it('should show the curated selection and not the rest of the catalog', () => {
+      renderHome();
+
+      const section = sectionOf(/nuestros productos/i);
+      expect(within(section).getByText('Foco Destacado Uno')).toBeInTheDocument();
+      expect(within(section).getByText('Sensor Destacado Dos')).toBeInTheDocument();
+      expect(within(section).getByText('Motor Destacado Tres')).toBeInTheDocument();
+      expect(within(section).queryByText('Tira Común')).toBeNull();
+    });
+
+    it('should never show an inactive product', () => {
+      renderHome();
+
+      expect(screen.queryByText('Termostato Inactivo')).not.toBeInTheDocument();
+    });
+
+    it('should not label the selection as best sellers: there is no sales data', () => {
+      renderHome();
+
+      expect(screen.queryByText(/más vendid|más elegid/i)).not.toBeInTheDocument();
+    });
+
+    it('should filter the selection with the category chips', async () => {
+      const user = userEvent.setup();
+      renderHome();
+      const section = sectionOf(/nuestros productos/i);
+
+      await user.click(within(section).getByRole('button', { name: /^seguridad/i }));
+
+      expect(within(section).getByText('Sensor Destacado Dos')).toBeInTheDocument();
+      expect(within(section).queryByText('Foco Destacado Uno')).toBeNull();
+      expect(within(section).getByRole('button', { name: /^seguridad/i })).toHaveAttribute(
+        'aria-pressed',
+        'true',
+      );
+
+      await user.click(within(section).getByRole('button', { name: /^todos/i }));
+
+      expect(within(section).getByText('Foco Destacado Uno')).toBeInTheDocument();
+    });
+
+    it('should link "Ver todos" to the full catalog', () => {
+      renderHome();
+
+      expect(
+        within(sectionOf(/nuestros productos/i)).getByRole('link', { name: /ver todos/i }),
+      ).toHaveAttribute('href', '/catalogo');
+    });
+  });
+
+  describe('categorías', () => {
+    const categoriesSection = () => sectionOf(/soluciones para cada rincón de tu casa/i);
+
+    it('should render one card per active category, with its real product count', () => {
+      renderHome();
+
+      const links = within(categoriesSection()).getAllByRole('link');
+      expect(links.map((link) => link.getAttribute('href'))).toEqual([
+        `/catalogo?category=${encodeURIComponent('Iluminación Inteligente')}`,
+        '/catalogo?category=Seguridad',
+        '/catalogo?category=Confort',
+      ]);
+      expect(within(links[0]!).getByText('Ver 2 productos')).toBeInTheDocument();
+      expect(within(links[2]!).getByText('Ver 1 producto')).toBeInTheDocument();
+    });
+
+    it('should not render a card for a category only inactive products use', () => {
+      renderHome();
+
+      expect(within(categoriesSection()).queryByText('Hubs')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('beneficios y cómo funciona', () => {
+    it('should name only the voice assistants the products work with', () => {
+      renderHome();
+
+      expect(screen.getByText(/google assistant y amazon alexa/i)).toBeInTheDocument();
+      expect(screen.queryByText(/siri/i)).not.toBeInTheDocument();
+    });
+
+    it('should describe the three steps and the connectivity supported', () => {
+      renderHome();
+
+      const section = sectionOf(/cómo funciona ezyhome en tu día a día/i);
+      // Los pasos son la lista; la rutina "Modo Cine" va aparte en la misma sección.
+      expect(within(section).getAllByRole('listitem')).toHaveLength(3);
+      expect(within(section).getByText(/smart life o tuya smart/i)).toBeInTheDocument();
+      expect(within(section).getByText(/wi-fi 2\.4 ghz, zigbee y bluetooth/i)).toBeInTheDocument();
+    });
+
+    it('should show the "Modo Cine" routine example', () => {
+      renderHome();
+
+      expect(screen.getByRole('heading', { name: /modo cine/i })).toBeInTheDocument();
+      expect(screen.getByText(/persianas con motor/i)).toBeInTheDocument();
+    });
   });
 });

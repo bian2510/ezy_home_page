@@ -73,4 +73,52 @@ describe('Drawer', () => {
 
     expect(onClose).not.toHaveBeenCalled();
   });
+
+  it('should name the dialog with a title that is not plain text', () => {
+    render(
+      <Drawer
+        isOpen={true}
+        onClose={vi.fn()}
+        title={
+          <>
+            Tu carrito <span>(3)</span>
+          </>
+        }
+      >
+        <p>Contenido</p>
+      </Drawer>,
+    );
+
+    expect(screen.getByRole('dialog', { name: 'Tu carrito (3)' })).toBeInTheDocument();
+  });
+
+  it('should keep the dialog, close button, Escape and backdrop in the floating variant', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(
+      <Drawer isOpen={true} onClose={onClose} title="Carrito" variant="floating">
+        <p>Contenido</p>
+      </Drawer>,
+    );
+
+    const dialog = screen.getByRole('dialog', { name: 'Carrito' });
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+    await user.click(screen.getByRole('button', { name: /cerrar/i }));
+    await user.keyboard('{Escape}');
+    await user.click(document.querySelector('[aria-hidden="true"]')!);
+
+    expect(onClose).toHaveBeenCalledTimes(3);
+  });
+
+  it('should lock the page scroll while open in the floating variant', () => {
+    const { unmount } = render(
+      <Drawer isOpen={true} onClose={vi.fn()} title="Carrito" variant="floating">
+        <p>Contenido</p>
+      </Drawer>,
+    );
+
+    expect(document.body.style.overflow).toBe('hidden');
+    unmount();
+    expect(document.body.style.overflow).toBe('');
+  });
 });

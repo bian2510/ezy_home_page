@@ -6,7 +6,7 @@ nested page.
 
 ## Key Components
 
-- `RootLayout.tsx` — header + centered main + footer; used by every route today
+- `RootLayout.tsx` — header + full-width main + footer; used by every route
 
 ## Dependencies
 
@@ -17,7 +17,8 @@ nested page.
 ## Patterns
 
 - Flex column with `min-h-dvh` so the footer sits at the viewport bottom on short pages
-- `mx-auto max-w-content` container shared with the header/footer
+- `components/ui/Container` (`max-w-content`, 1280 px, mock gutters) shared with the header/footer
+- `<main>` is full-width for every route: each page renders its own bands with a `Container` inside (`components/ui/SectionBand`), and content pages start with `components/ui/PageHeader` (see docs/frontend-conventions.md §6)
 
 ## Constraints
 

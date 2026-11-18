@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { buildWhatsAppMessage, computeCartTotals } from '@/features/cart/cartUtils';
+import {
+  buildWhatsAppMessage,
+  cartHeaderTotal,
+  cartLinePrice,
+  computeCartTotals,
+} from '@/features/cart/cartUtils';
 import { formatPrice } from '@/lib/formatPrice';
 import type { CartItem, Product, ProductPricing } from '@/types';
 import { buildProduct as buildBaseProduct } from '../../helpers/builders';
@@ -114,6 +119,31 @@ describe('buildWhatsAppMessage', () => {
   });
 });
 
+describe('buildWhatsAppMessage — con envío a domicilio', () => {
+  const ADDRESS = 'Av. Rivadavia 1234, Ramos Mejía, Buenos Aires (CP 1704)';
+
+  it('should ask to quote the shipping to the address instead of the disclaimer', () => {
+    const items: CartItem[] = [buildItem({ name: 'Smart Bulb RGBW', price: 15000 }, 2)];
+
+    const url = buildWhatsAppMessage(items, PHONE_NUMBER, pricedFromErp, ADDRESS);
+    const message = decodeURIComponent(url.split('?text=')[1] ?? '');
+
+    expect(message).toContain('- 2x Smart Bulb RGBW');
+    expect(message.split('\n').at(-1)).toBe(
+      `Quiero envío a domicilio a: ${ADDRESS}. ¿Me cotizan el envío?`,
+    );
+    expect(message).not.toContain('(Los precios no incluyen envío)');
+  });
+
+  it('should keep the disclaimer without an address', () => {
+    const url = buildWhatsAppMessage([buildItem()], PHONE_NUMBER, pricedFromErp);
+
+    expect(decodeURIComponent(url.split('?text=')[1] ?? '')).toContain(
+      '(Los precios no incluyen envío)',
+    );
+  });
+});
+
 describe('buildWhatsAppMessage — precios del ERP', () => {
   it('should add the transfer total when it is lower than the Mercado Pago total', () => {
     const items: CartItem[] = [buildItem({ price: 21000 }, 2)];
@@ -180,5 +210,70 @@ describe('computeCartTotals', () => {
       transferTotal: 0,
       hasUnpriced: true,
     });
+  });
+});
+
+describe('cartHeaderTotal', () => {
+  it('should show the transfer total, labeled, when it is lower than the Mercado Pago one', () => {
+    expect(cartHeaderTotal({ total: 21_000, transferTotal: 20_000, hasUnpriced: false })).toEqual({
+      amount: 20_000,
+      label: 'Con transferencia',
+    });
+  });
+
+  it('should show a plain total when there is a single price', () => {
+    expect(cartHeaderTotal({ total: 20_000, transferTotal: 20_000, hasUnpriced: false })).toEqual({
+      amount: 20_000,
+      label: 'Total',
+    });
+  });
+
+  it('should hide the total when some product has no ERP price', () => {
+    // Un total parcial engaña: el visitante cree que eso es lo que paga.
+    expect(cartHeaderTotal({ total: 20_000, transferTotal: 20_000, hasUnpriced: true })).toBeNull();
+  });
+
+  it('should hide the total when the cart is empty', () => {
+    expect(cartHeaderTotal({ total: 0, transferTotal: 0, hasUnpriced: false })).toBeNull();
+  });
+});
+
+describe('cartLinePrice', () => {
+  it('should price the row with the transfer price when it is cheaper, with the MP price aside', () => {
+    expect(
+      cartLinePrice({ price: 26_300, transferPrice: 25_000, availability: 'available' }, 2),
+    ).toEqual({ unit: 25_000, line: 50_000, byTransfer: true, mercadoPagoUnit: 26_300 });
+  });
+
+  it('should keep the single price as today without a transfer price (MP off)', () => {
+    expect(
+      cartLinePrice({ price: 25_000, transferPrice: null, availability: 'available' }, 3),
+    ).toEqual({ unit: 25_000, line: 75_000, byTransfer: false, mercadoPagoUnit: null });
+  });
+
+  it('should be null without an ERP price', () => {
+    expect(
+      cartLinePrice({ price: null, transferPrice: null, availability: 'no_price' }, 1),
+    ).toBeNull();
+  });
+
+  it('should add up to the cart transfer total, like the summary', () => {
+    const lamp = buildProduct({ id: 'a' });
+    const sensor = buildProduct({ id: 'b' });
+    const prices: Record<string, ProductPricing> = {
+      a: { price: 26_300, transferPrice: 25_000, availability: 'available' },
+      b: { price: 9_000, transferPrice: null, availability: 'available' },
+    };
+    const pricingOf = (product: Product) => prices[product.id]!;
+    const items: CartItem[] = [
+      { product: lamp, quantity: 2 },
+      { product: sensor, quantity: 1 },
+    ];
+
+    const sum = items.reduce(
+      (total, item) => total + (cartLinePrice(pricingOf(item.product), item.quantity)?.line ?? 0),
+      0,
+    );
+    expect(sum).toBe(computeCartTotals(items, pricingOf).transferTotal);
   });
 });

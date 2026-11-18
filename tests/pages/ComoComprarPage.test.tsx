@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import ComoComprarPage from '@/pages/ComoComprarPage';
 
@@ -13,40 +13,44 @@ const renderPage = () =>
 describe('ComoComprarPage', () => {
   it('should render the page heading', () => {
     renderPage();
-    expect(screen.getByRole('heading', { name: /cómo comprar/i, level: 1 })).toBeInTheDocument();
-  });
-
-  it('should render all 6 purchase steps', () => {
-    renderPage();
-    expect(screen.getByRole('heading', { name: /navegá el catálogo/i })).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: /agregá productos al carrito/i }),
+      screen.getByRole('heading', { name: /cómo comprar en ezyhome/i, level: 1 }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /enviá tu pedido/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /recibís la confirmación/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /realizás el pago/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /recibís en tu domicilio/i })).toBeInTheDocument();
   });
 
-  it('should render an ordered list of steps', () => {
+  it('should render the 3 purchase steps in order', () => {
     renderPage();
     const list = screen.getByRole('list', { name: /pasos para comprar/i });
-    expect(list).toBeInTheDocument();
+    const steps = within(list).getAllByRole('heading', { level: 2 });
+
     expect(list.tagName).toBe('OL');
+    expect(steps.map((step) => step.textContent)).toEqual([
+      'Seleccioná tus productos inteligentes',
+      'Completá tus datos de entrega y facturación',
+      'Aboná con transferencia o Mercado Pago',
+    ]);
   });
 
-  it('should render CTAs linking to /catalogo and /carrito', () => {
+  it('should link to the catalog from the first step', () => {
     renderPage();
-    expect(screen.getByRole('link', { name: /ir al catálogo/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /ver el catálogo/i })).toHaveAttribute(
       'href',
       '/catalogo',
     );
-    expect(screen.getByRole('link', { name: /ver carrito/i })).toHaveAttribute('href', '/carrito');
   });
 
-  it('should explain that pickup orders can be paid by transfer without WhatsApp', () => {
+  it('should promise the delivery the checkout offers: free pick-up or shipping quoted before paying', () => {
     renderPage();
+    const step = screen.getByText(/retiro sin cargo en nuestro punto pick-up/i);
+    expect(step).toHaveTextContent(/envío a domicilio/i);
+    expect(step).toHaveTextContent(/código postal/i);
+    expect(step).toHaveTextContent(/antes de pagar/i);
+    expect(screen.queryByText(/coordiná el envío/i)).not.toBeInTheDocument();
+  });
 
-    expect(screen.getByText(/comprar con transferencia y retiro en el local/i)).toBeInTheDocument();
+  it('should show the breadcrumb back to Inicio', () => {
+    renderPage();
+    const nav = screen.getByRole('navigation', { name: /ruta de navegación/i });
+    expect(within(nav).getByRole('link', { name: 'Inicio' })).toHaveAttribute('href', '/');
   });
 });

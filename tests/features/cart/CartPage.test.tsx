@@ -56,6 +56,17 @@ describe('CartPage', () => {
       ]),
     );
 
+  it('should show the purchase steps with the cart as the current one', () => {
+    renderCartPage();
+
+    const steps = within(screen.getByRole('list', { name: /pasos de la compra/i })).getAllByRole(
+      'listitem',
+    );
+    expect(steps).toHaveLength(3);
+    expect(steps[0]).toHaveAttribute('aria-current', 'step');
+    expect(steps[0]).toHaveTextContent('1. Carrito');
+  });
+
   it('should disable adding units at the ERP stock with a friendly notice', () => {
     erpStock = { 'p-1': 2 };
     seedCart(2);

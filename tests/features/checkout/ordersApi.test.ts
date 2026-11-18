@@ -43,6 +43,23 @@ const REQUEST: OrderRequest = {
   items: [{ sku: 'SKU-AUTO-43091', quantity: 2 }],
   acceptedPrivacy: true,
   paymentMethod: 'transfer',
+  delivery: { method: 'pickup' },
+};
+
+const CARRIER_REQUEST: OrderRequest = {
+  ...REQUEST,
+  delivery: {
+    method: 'carrier',
+    quoteToken: 'cotizacion-de-prueba',
+    address: {
+      street: 'Av. Rivadavia',
+      streetNumber: '1234',
+      floorApartment: '',
+      city: 'Ramos Mejía',
+      province: 'B',
+      postalCode: '1704',
+    },
+  },
 };
 
 describe('createOrder', () => {
@@ -92,6 +109,106 @@ describe('createOrder', () => {
       },
       items: [{ sku: 'SKU-AUTO-43091', quantity: 2 }],
     });
+  });
+
+  it('should send the quote token and the address with home delivery, without prices', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder() }, 201));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await createOrder(CARRIER_REQUEST, CONFIG);
+
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(JSON.parse(init.body as string)).toMatchObject({
+      delivery: 'carrier',
+      shipping_quote_token: 'cotizacion-de-prueba',
+      shipping: {
+        street: 'Av. Rivadavia',
+        street_number: '1234',
+        floor_apartment: null,
+        city: 'Ramos Mejía',
+        province: 'B',
+        postal_code: '1704',
+      },
+    });
+  });
+
+  it('should send the floor and apartment when the buyer wrote them', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder() }, 201));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await createOrder(
+      {
+        ...CARRIER_REQUEST,
+        delivery: {
+          method: 'carrier',
+          quoteToken: 'tok-quote',
+          address: {
+            street: 'Calle',
+            streetNumber: '1',
+            floorApartment: '3° B',
+            city: 'CABA',
+            province: 'C',
+            postalCode: '1406',
+          },
+        },
+      },
+      CONFIG,
+    );
+
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const sent = JSON.parse(init.body as string) as { shipping: { floor_apartment: unknown } };
+    expect(sent.shipping.floor_apartment).toBe('3° B');
+  });
+
+  it('should translate the home delivery of the order', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        jsonResponse({
+          order: erpOrder({
+            delivery: 'carrier',
+            total: 228_500,
+            shipping: {
+              carrier: 'own_rate',
+              service: 'home',
+              price: 8_500,
+              delivery_time: '3 a 5 días hábiles',
+            },
+          }),
+        }),
+      ),
+    );
+
+    const order = await fetchOrder('tok-123', CONFIG);
+
+    expect(order.delivery).toBe('carrier');
+    expect(order.shipping).toEqual({ price: 8_500, deliveryTime: '3 a 5 días hábiles' });
+    expect(order.total).toBe(228_500);
+  });
+
+  it('should read an order without delivery as pickup, with no shipping', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder() })));
+
+    const order = await fetchOrder('tok-123', CONFIG);
+
+    expect(order.delivery).toBe('pickup');
+    expect(order.shipping).toBeNull();
+  });
+
+  it('should drop a home delivery shipping without a price', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValue(
+          jsonResponse({ order: erpOrder({ delivery: 'carrier', shipping: { price: 'mucho' } }) }),
+        ),
+    );
+
+    const order = await fetchOrder('tok-123', CONFIG);
+
+    expect(order.delivery).toBe('carrier');
+    expect(order.shipping).toBeNull();
   });
 
   it('should always send the DNI, without surrounding spaces', async () => {

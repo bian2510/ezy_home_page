@@ -43,3 +43,10 @@ export const getStoreApiUrl = (): string => {
  * sitio muestra "Consultar precio".
  */
 export const getStoreApiKey = (): string => import.meta.env.VITE_STORE_API_KEY ?? '';
+
+/**
+ * `true` en `pnpm dev` y `false` en el build de producción. Sirve para ver en
+ * local contenido que todavía no se publica (por ejemplo la franja de proyectos
+ * de `/contacto`).
+ */
+export const isDevelopment = (): boolean => import.meta.env.DEV;

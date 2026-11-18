@@ -3,8 +3,10 @@ name: CI
 on:
   push:
     branches: [main]
+  # `rediseno-ui` es la rama de integración del rediseño: sus PRs pasan por
+  # lint, typecheck, tests y build. El deploy sigue siendo solo push a main.
   pull_request:
-    branches: [main]
+    branches: [main, rediseno-ui]
 
 concurrency:
   group: ci-${{ github.ref }}
