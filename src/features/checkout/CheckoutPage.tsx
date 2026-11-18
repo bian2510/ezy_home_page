@@ -1,14 +1,13 @@
 // CheckoutPage — compra con retiro en punto pick-up o envío a domicilio (plan de
 // la etapa 3 del ERP, PR 3d y 3e; envío en ADR-007). El comprador deja sus
 // datos, elige la entrega (el envío se cotiza con la provincia y el CP antes de
-// pagar) y elige transferencia o, con `VITE_MERCADOPAGO_ENABLED=true`, Mercado
-// Pago; el ERP crea el pedido con sus precios (el sitio no manda precios) y la
-// página del pedido muestra a qué cuenta transferir o abre Mercado Pago.
+// pagar) y elige transferencia o Mercado Pago; el ERP crea el pedido con sus
+// precios (el sitio no manda precios) y la página del pedido muestra a qué
+// cuenta transferir o abre Mercado Pago.
 import { useMemo, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/features/cart';
 import { usePricing } from '@/features/pricing';
-import { isMercadoPagoEnabled } from '@/lib/env';
 import { PURCHASE_STEP, PURCHASE_STEPS, PURCHASE_STEPS_LABEL } from '@/data/purchaseSteps';
 import SectionBand from '@/components/ui/SectionBand';
 import Stepper from '@/components/ui/Stepper';
@@ -53,9 +52,7 @@ export default function CheckoutPage() {
   const { state, submit } = useCreateOrder();
   const [form, setForm] = useState<BuyerForm>(EMPTY_BUYER_FORM);
   const [errors, setErrors] = useState<BuyerErrors>({});
-  const [chosenMethod, setChosenMethod] = useState<PaymentMethod>('transfer');
-  const mercadoPagoEnabled = isMercadoPagoEnabled();
-  const paymentMethod: PaymentMethod = mercadoPagoEnabled ? chosenMethod : 'transfer';
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('transfer');
   const orderItems = useMemo(
     () => items.map((item) => ({ sku: item.product.sku, quantity: item.quantity })),
     [items],
@@ -147,12 +144,7 @@ export default function CheckoutPage() {
             >
               <CheckoutSection id="contacto-heading" step={1} title="Información de contacto">
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <BuyerFields
-                    form={form}
-                    mercadoPagoEnabled={mercadoPagoEnabled}
-                    errors={errors}
-                    onChange={handleChange}
-                  />
+                  <BuyerFields form={form} errors={errors} onChange={handleChange} />
                 </div>
               </CheckoutSection>
 
@@ -162,11 +154,10 @@ export default function CheckoutPage() {
 
               <CheckoutSection id="pago-heading" step={3} title="Medio de pago">
                 <PaymentMethodField
-                  mercadoPagoEnabled={mercadoPagoEnabled}
-                  value={chosenMethod}
+                  value={paymentMethod}
                   totals={totals}
                   subtotals={subtotals}
-                  onChange={setChosenMethod}
+                  onChange={setPaymentMethod}
                 />
 
                 {failure !== null && (

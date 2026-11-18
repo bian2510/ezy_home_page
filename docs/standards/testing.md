@@ -219,6 +219,27 @@ screen.getByText(matchesPrice(12500));
 
 ---
 
+## Patrón 9 — Entorno propio de los tests
+
+Los tests no leen los `.env*` de la raíz: `vitest.config.ts` apunta `envDir` a
+`tests/` y fija en `test.env` las `VITE_*` que cambian el comportamiento (sin
+clave del ERP). Así el resultado es el mismo en tu máquina
+y en el CI, aunque tengas un `.env.local` con la clave real.
+
+- Un test que necesita otro valor lo pide y lo devuelve:
+
+```ts
+afterEach(() => vi.unstubAllEnvs());
+
+vi.stubEnv('VITE_STORE_API_KEY', 'clave-de-test');
+```
+
+- `tests/setup.ts` reemplaza `fetch` por uno que rechaza con "Request sin
+  mockear". Un test que hace una llamada sin `vi.stubGlobal('fetch', ...)` falla
+  en vez de pegarle al ERP real. `tests/unit/test-environment.test.ts` lo cuida.
+
+---
+
 ## Dónde van los tests
 
 | Qué se testea                     | Ruta del test                                       |

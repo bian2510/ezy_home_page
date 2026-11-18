@@ -74,7 +74,6 @@ describe('Checkout with Mercado Pago', () => {
     window.localStorage.setItem('ezyhome_cart', JSON.stringify([{ product: VALVE, quantity: 2 }]));
     vi.stubEnv('VITE_STORE_API_KEY', 'clave');
     vi.stubEnv('VITE_STORE_API_URL', 'https://erp.test');
-    vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
   });
 
   afterEach(() => {

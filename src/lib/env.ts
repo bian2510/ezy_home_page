@@ -45,14 +45,6 @@ export const getStoreApiUrl = (): string => {
 export const getStoreApiKey = (): string => import.meta.env.VITE_STORE_API_KEY ?? '';
 
 /**
- * `true` cuando el cobro con Mercado Pago está activo en la tienda
- * (`VITE_MERCADOPAGO_ENABLED=true`). Mientras no lo esté, el sitio muestra un
- * solo precio, el de transferencia (ADR-025 del ERP, etapa 3).
- */
-export const isMercadoPagoEnabled = (): boolean =>
-  import.meta.env.VITE_MERCADOPAGO_ENABLED === 'true';
-
-/**
  * `true` en `pnpm dev` y `false` en el build de producción. Sirve para ver en
  * local contenido que todavía no se publica (por ejemplo la franja de proyectos
  * de `/contacto`).

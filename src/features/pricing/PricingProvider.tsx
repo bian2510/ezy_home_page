@@ -6,7 +6,7 @@
 // 2026-10-28).
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { activeProducts } from '@/data/catalog';
-import { getStoreApiKey, getStoreApiUrl, isMercadoPagoEnabled } from '@/lib/env';
+import { getStoreApiKey, getStoreApiUrl } from '@/lib/env';
 import type { Product } from '@/types';
 import { PricingContext, type PricingContextValue } from './PricingContext';
 import { fetchStoreQuotes } from './storeApi';
@@ -36,9 +36,13 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     if (apiKey === '') return;
 
     let cancelled = false;
-    const skus = activeProducts.map((product) => product.sku);
-
-    fetchStoreQuotes(skus, { baseUrl: getStoreApiUrl(), apiKey })
+    // El catálogo se lee dentro de la promesa: el provider está por encima del
+    // ErrorBoundary del <main>, y si el catálogo no se puede leer el error cae
+    // en el `.catch` ("Consultar precio") en vez de tirar el sitio. La página
+    // que lo usa muestra el error dentro del layout.
+    Promise.resolve()
+      .then(() => activeProducts.map((product) => product.sku))
+      .then((skus) => fetchStoreQuotes(skus, { baseUrl: getStoreApiUrl(), apiKey }))
       .then((quotes) => {
         if (cancelled) return;
         const index = indexQuotes(quotes);
@@ -59,11 +63,9 @@ export const PricingProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const mercadoPagoEnabled = isMercadoPagoEnabled();
   const pricingOf = useCallback(
-    (product: Product) =>
-      resolvePricing(product, state.status, state.quotes, { mercadoPagoEnabled }),
-    [state, mercadoPagoEnabled],
+    (product: Product) => resolvePricing(product, state.status, state.quotes),
+    [state],
   );
 
   const value = useMemo<PricingContextValue>(

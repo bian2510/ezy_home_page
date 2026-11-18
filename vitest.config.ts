@@ -4,18 +4,22 @@ import path from 'node:path';
 
 export default defineConfig({
   plugins: [react()],
-  // Los tests no leen los `.env*` del proyecto: con un `.env.local` de
-  // desarrollo (clave del ERP, Mercado Pago encendido) los tests dependían de
-  // esa máquina, y los de precio podían pegarle al ERP local. `tests/` no
-  // tiene archivos `.env`, así que corren igual que en el CI; cada test que
-  // necesita una variable la fija con `vi.stubEnv`.
-  envDir: path.resolve(__dirname, './tests'),
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
+  // Los tests no leen los `.env*` de la raíz (por ejemplo el `.env.local` de
+  // quien los corre): el resultado no depende de la máquina y ningún test
+  // llama al ERP real. Cada test que necesita otro valor usa `vi.stubEnv`.
+  envDir: path.resolve(__dirname, './tests'),
   test: {
+    // Pisan también lo que venga exportado en la shell.
+    env: {
+      VITE_STORE_API_KEY: '',
+      VITE_STORE_API_URL: '',
+      VITE_WHATSAPP_NUMBER: '',
+    },
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
