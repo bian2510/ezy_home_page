@@ -63,6 +63,21 @@ describe('useShippingQuote', () => {
     await waitFor(() => expect(result.current.state).toEqual({ status: 'unavailable' }));
   });
 
+  it('should say the postal code is not from the province when the ERP rejects the pair', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValue(
+          jsonResponse({ errors: { postal_code: ['no es de esa provincia'] } }, 422),
+        ),
+    );
+
+    const { result } = renderHook(() => useShippingQuote(INPUT));
+
+    await waitFor(() => expect(result.current.state).toEqual({ status: 'wrong_postal_code' }));
+  });
+
   it('should be unavailable without the store key, without calling the ERP', () => {
     vi.stubEnv('VITE_STORE_API_KEY', '');
     const fetchMock = vi.fn();

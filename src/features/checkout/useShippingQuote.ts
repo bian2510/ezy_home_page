@@ -5,16 +5,24 @@
 //
 // Sin opción, con error del ERP (404 mientras no haya envíos, 422 productos sin
 // peso o medidas) o sin red, el estado es `unavailable` y el checkout ofrece
-// WhatsApp (ADR-007).
+// WhatsApp (ADR-007). Si el CP no es de la provincia elegida, el estado es
+// `wrong_postal_code`: se le pide al comprador que lo revise.
 import { useCallback, useEffect, useState } from 'react';
 import { getStoreApiKey, getStoreApiUrl } from '@/lib/env';
-import { quoteShipping, type ShippingOption, type ShippingQuoteRequest } from './shippingApi';
+import {
+  PostalCodeMismatchError,
+  quoteShipping,
+  type ShippingOption,
+  type ShippingQuoteRequest,
+} from './shippingApi';
 
 export type QuoteState =
   | { status: 'idle' }
   | { status: 'loading' }
   | { status: 'ready'; option: ShippingOption }
-  | { status: 'unavailable' };
+  | { status: 'unavailable' }
+  /** El ERP dice que el CP no es de la provincia: que lo revise (o WhatsApp). */
+  | { status: 'wrong_postal_code' };
 
 export interface ShippingQuote {
   state: QuoteState;
@@ -46,6 +54,10 @@ export function useShippingQuote(input: ShippingQuoteRequest | null): ShippingQu
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
+        if (error instanceof PostalCodeMismatchError) {
+          show({ status: 'wrong_postal_code' });
+          return;
+        }
         console.warn('[envío] no se pudo cotizar', error);
         show({ status: 'unavailable' });
       });

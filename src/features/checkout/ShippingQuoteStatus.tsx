@@ -1,7 +1,7 @@
 // Estado de la cotización del envío bajo la dirección: qué falta para cotizar,
 // "calculando", el precio con el plazo o, si no hay cotización (todavía no hay
 // envíos en el ERP, o la zona o los productos no entran), WhatsApp como
-// respaldo (ADR-007). El link abre el chat con el pedido y la dirección ya
+// respaldo (ADR-007); si el CP no es de la provincia, que lo revise. El link abre el chat con el pedido y la dirección ya
 // escritos, para no repetir nada. Se anuncia al lector de pantalla cuando cambia.
 import { buildWhatsAppMessage, useCart } from '@/features/cart';
 import { usePricing } from '@/features/pricing';
@@ -10,7 +10,7 @@ import { getWhatsAppNumber } from '@/lib/env';
 import { formatShippingAddress, type AddressForm } from './deliveryUtils';
 import type { QuoteState } from './useShippingQuote';
 
-function WhatsAppFallback({ address }: { address: AddressForm }) {
+function WhatsAppLink({ address }: { address: AddressForm }) {
   const { items } = useCart();
   const { pricingOf } = usePricing();
   const number = getWhatsAppNumber();
@@ -33,10 +33,23 @@ function WhatsAppFallback({ address }: { address: AddressForm }) {
         {text}
       </a>
     );
+  return link;
+}
+
+function WhatsAppFallback({ address }: { address: AddressForm }) {
   return (
     <p className="text-body-sm text-on-surface">
-      Todavía no podemos calcular el envío desde la web: {link} con tu pedido y te lo cotizamos
-      antes de que pagues. También podés elegir el retiro sin cargo.
+      Todavía no podemos calcular el envío desde la web: <WhatsAppLink address={address} /> con tu
+      pedido y te lo cotizamos antes de que pagues. También podés elegir el retiro sin cargo.
+    </p>
+  );
+}
+
+function WrongPostalCode({ address }: { address: AddressForm }) {
+  return (
+    <p className="text-body-sm text-on-surface">
+      Ese código postal no es de esa provincia. Revisá los dos; si están bien,{' '}
+      <WhatsAppLink address={address} /> con tu pedido y te cotizamos el envío.
     </p>
   );
 }
@@ -74,6 +87,7 @@ export default function ShippingQuoteStatus({ quote, address }: ShippingQuoteSta
         </div>
       )}
       {quote.status === 'unavailable' && <WhatsAppFallback address={address} />}
+      {quote.status === 'wrong_postal_code' && <WrongPostalCode address={address} />}
     </div>
   );
 }
