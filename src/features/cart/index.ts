@@ -7,3 +7,4 @@ export { default as CartHeaderButton } from './CartHeaderButton';
 export { default as CartPage } from './CartPage';
 export { useCart } from './useCart';
 export type { CartContextValue } from './CartContext';
+export { buildWhatsAppMessage } from './cartUtils';

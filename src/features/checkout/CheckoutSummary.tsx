@@ -1,19 +1,34 @@
 // "Resumen de tu pedido" en `/checkout`: cada producto con su foto, cantidad y
-// precio con el medio elegido, el subtotal, la entrega (retiro sin cargo) y el
-// total que se va a cobrar. Abajo, la ayuda por WhatsApp si hay número.
+// precio con el medio elegido, el subtotal, la entrega (retiro sin cargo o el
+// envío cotizado, "A calcular" mientras no hay cotización) y el total que se va
+// a cobrar. Abajo, la ayuda por WhatsApp si hay número.
 import type { CartItem, Product, ProductPricing } from '@/types';
 import Icon from '@/components/ui/Icon';
 import { formatPrice } from '@/lib/formatPrice';
 import { getWhatsAppNumber } from '@/lib/env';
 import { checkoutSummaryRows } from './checkoutUtils';
+import type { DeliveryMethod } from './deliveryUtils';
 import type { PaymentMethod } from './ordersApi';
 
 interface CheckoutSummaryProps {
   items: CartItem[];
   pricingOf: (product: Product) => ProductPricing;
-  total: number;
+  /** Total de los productos con el medio elegido. */
+  subtotal: number;
   paymentMethod: PaymentMethod;
+  /** Entrega elegida y su costo: 0 con retiro, `null` si falta cotizar. */
+  delivery: { method: DeliveryMethod; cost: number | null };
 }
+
+const DELIVERY_LABEL: Record<DeliveryMethod, string> = {
+  pickup: 'Retiro en punto pick-up',
+  carrier: 'Envío a domicilio',
+};
+
+const deliveryValue = (cost: number | null): string => {
+  if (cost === null) return 'A calcular';
+  return cost === 0 ? 'Sin cargo' : formatPrice(cost);
+};
 
 const HEADING_ID = 'resumen-heading';
 
@@ -39,10 +54,12 @@ function HelpCard() {
 export default function CheckoutSummary({
   items,
   pricingOf,
-  total,
+  subtotal,
   paymentMethod,
+  delivery,
 }: CheckoutSummaryProps) {
   const rows = checkoutSummaryRows(items, pricingOf, paymentMethod);
+  const total = subtotal + (delivery.cost ?? 0);
 
   return (
     <aside
@@ -87,11 +104,11 @@ export default function CheckoutSummary({
         <dl className="flex flex-col gap-2 text-body-md">
           <div className="flex justify-between gap-4">
             <dt className="text-secondary">Subtotal</dt>
-            <dd className="tabular-nums text-on-surface">{formatPrice(total)}</dd>
+            <dd className="tabular-nums text-on-surface">{formatPrice(subtotal)}</dd>
           </div>
           <div className="flex justify-between gap-4">
-            <dt className="text-secondary">Retiro en punto pick-up</dt>
-            <dd className="font-bold text-primary">Sin cargo</dd>
+            <dt className="text-secondary">{DELIVERY_LABEL[delivery.method]}</dt>
+            <dd className="font-bold tabular-nums text-primary">{deliveryValue(delivery.cost)}</dd>
           </div>
         </dl>
 

@@ -3,8 +3,9 @@
 // entre los dos; si no, el único medio es la transferencia y se muestra como
 // dato, sin opciones.
 //
-// La transferencia lleva el descuento real de los totales ("-5%"), que no
-// aparece si no hay descuento. Sin "Efectivo" ni promesas de aprobación
+// La transferencia lleva el descuento real de los productos ("-5%"), que no
+// aparece si no hay descuento. Se calcula sin el envío, que cuesta lo mismo con
+// los dos medios: si no, el cartel bajaría al elegir envío (usuario, 2026-11-17). Sin "Efectivo" ni promesas de aprobación
 // instantánea (usuario, 2026-11-03).
 import { formatPrice } from '@/lib/formatPrice';
 import { cn } from '@/lib/cn';
@@ -14,7 +15,10 @@ import type { PaymentMethod } from './ordersApi';
 interface PaymentMethodFieldProps {
   mercadoPagoEnabled: boolean;
   value: PaymentMethod;
+  /** Total de cada medio, con el envío. */
   totals: Record<PaymentMethod, number>;
+  /** Total de los productos de cada medio, sin el envío: de acá sale el cartel. */
+  subtotals: Record<PaymentMethod, number>;
   onChange: (method: PaymentMethod) => void;
 }
 
@@ -62,6 +66,7 @@ export default function PaymentMethodField({
   mercadoPagoEnabled,
   value,
   totals,
+  subtotals,
   onChange,
 }: PaymentMethodFieldProps) {
   if (!mercadoPagoEnabled) {
@@ -72,7 +77,7 @@ export default function PaymentMethodField({
     );
   }
 
-  const discount = totalsDiscountPercent(totals);
+  const discount = totalsDiscountPercent(subtotals);
 
   return (
     <fieldset className="flex flex-col gap-3">

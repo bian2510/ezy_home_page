@@ -20,6 +20,8 @@ const buildOrder = (overrides: Partial<StoreOrder> = {}): StoreOrder => ({
   items: [],
   transfer: { alias: 'ezyhome.tienda', cbu: null, holder: 'EzyHome SRL', bank: null },
   pickup: { address: null, hours: null },
+  delivery: 'pickup',
+  shipping: null,
   ...overrides,
 });
 

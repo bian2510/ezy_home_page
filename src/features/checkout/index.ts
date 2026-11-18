@@ -1,4 +1,4 @@
-// API pública de la feature `checkout`: compra por transferencia con retiro
+// API pública de la feature `checkout`: compra con retiro o envío a domicilio
 // (pedido en el ERP) y la página del pedido.
 // See docs/standards/modulos-feature.md.
 export { default as CheckoutPage } from './CheckoutPage';

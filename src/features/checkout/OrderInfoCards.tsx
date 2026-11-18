@@ -1,5 +1,7 @@
-// OrderInfoCards — "Retiro en punto pick-up" (dirección y horario del ERP, solo si
-// vienen) y "Medio de pago" (con el estado real del pago).
+// OrderInfoCards — la entrega: "Retiro en punto pick-up" (dirección y horario del
+// ERP, solo si vienen) o "Envío a domicilio" (el plazo, si el ERP lo manda; la
+// dirección no, el ERP no devuelve datos del comprador), y "Medio de pago" (con
+// el estado real del pago).
 import type { ReactNode } from 'react';
 import Icon, { type IconName } from '@/components/ui/Icon';
 import type { StoreOrder } from './ordersApi';
@@ -32,7 +34,7 @@ function InfoCard({ id, icon, title, children }: InfoCardProps) {
   );
 }
 
-export function PickupCard({ order }: { order: StoreOrder }) {
+function PickupCard({ order }: { order: StoreOrder }) {
   return (
     <InfoCard id="retiro-heading" icon="pin" title="Retiro en punto pick-up">
       {order.pickup.address !== null && (
@@ -45,6 +47,28 @@ export function PickupCard({ order }: { order: StoreOrder }) {
         Traé el número de pedido. Guardá esta página para volver a verla.
       </p>
     </InfoCard>
+  );
+}
+
+function ShippingCard({ order }: { order: StoreOrder }) {
+  return (
+    <InfoCard id="envio-heading" icon="truck" title="Envío a domicilio">
+      {order.shipping?.deliveryTime != null && (
+        <p className="text-label-lg font-bold text-on-surface">{order.shipping.deliveryTime}</p>
+      )}
+      <p className="text-body-sm text-secondary">
+        Lo mandamos a la dirección que cargaste. Guardá esta página para volver a verla.
+      </p>
+    </InfoCard>
+  );
+}
+
+/** La tarjeta de la entrega del pedido: retiro o envío a domicilio. */
+export function DeliveryCard({ order }: { order: StoreOrder }) {
+  return order.delivery === 'carrier' ? (
+    <ShippingCard order={order} />
+  ) : (
+    <PickupCard order={order} />
   );
 }
 

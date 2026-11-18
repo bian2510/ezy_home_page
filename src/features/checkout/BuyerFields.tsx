@@ -1,7 +1,6 @@
 // Datos del comprador en `/checkout`: nombre, WhatsApp, email, DNI y la
 // aceptación del aviso de privacidad (Ley 25.326, ADR-006).
-import type { ChangeEvent, HTMLAttributes } from 'react';
-import { cn } from '@/lib/cn';
+import CheckoutTextField from './CheckoutTextField';
 import {
   PHONE_HINT,
   phoneDigits,
@@ -10,73 +9,12 @@ import {
   type BuyerForm,
 } from './checkoutUtils';
 
-// Campos del mock: fondo `surface-container-low`, sin borde, blanco al enfocar.
-const INPUT_CLASS =
-  'h-11 w-full rounded-lg border-0 bg-surface-container-low px-4 text-body-lg text-on-surface transition-colors focus:bg-surface-container-lowest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
-
-interface TextFieldProps {
-  field: Exclude<BuyerField, 'acceptedPrivacy'>;
-  label: string;
-  type?: string;
-  inputMode?: HTMLAttributes<HTMLInputElement>['inputMode'];
-  autoComplete: string;
-  /** Ayuda fija bajo el campo; el error la reemplaza. */
-  hint?: string;
-  value: string;
-  error: string | undefined;
-  onChange: (field: BuyerField, value: string) => void;
-}
-
-function TextField({
-  field,
-  label,
-  type = 'text',
-  inputMode,
-  autoComplete,
-  hint,
-  value,
-  error,
-  onChange,
-}: TextFieldProps) {
-  const id = `checkout-${field}`;
-  const describedBy =
-    error !== undefined ? `${id}-error` : hint !== undefined ? `${id}-hint` : undefined;
-  return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-label-md text-on-surface">
-        {label}
-      </label>
-      <input
-        id={id}
-        type={type}
-        inputMode={inputMode}
-        autoComplete={autoComplete}
-        value={value}
-        aria-invalid={error !== undefined}
-        aria-describedby={describedBy}
-        onChange={(event: ChangeEvent<HTMLInputElement>) => onChange(field, event.target.value)}
-        className={cn(INPUT_CLASS, error !== undefined && 'ring-2 ring-destructive')}
-      />
-      {error !== undefined && (
-        <p id={`${id}-error`} className="text-body-sm text-destructive">
-          {error}
-        </p>
-      )}
-      {error === undefined && hint !== undefined && (
-        <p id={`${id}-hint`} className="text-body-sm text-secondary">
-          {hint}
-        </p>
-      )}
-    </div>
-  );
-}
-
 // Por qué la pestaña guarda el pedido de Mercado Pago (`orderDraftStorage.ts`).
 const DRAFT_NOTICE =
-  'Si pagás con Mercado Pago, guardamos tu nombre, WhatsApp, email, DNI y los productos del ' +
-  'pedido en esta pestaña del navegador, para que puedas pasar de Mercado Pago a transferencia ' +
-  'sin volver a cargarlos. Quedan ahí hasta que cerrás la pestaña o se cierra el pedido, y no ' +
-  'los mandamos a ningún otro lado.';
+  'Si pagás con Mercado Pago, guardamos tu nombre, WhatsApp, email, DNI, los productos del ' +
+  'pedido y, con envío a domicilio, tu dirección en esta pestaña del navegador, para que ' +
+  'puedas pasar de Mercado Pago a transferencia sin volver a cargarlos. Quedan ahí hasta que ' +
+  'cerrás la pestaña o se cierra el pedido, y no los mandamos a ningún otro lado.';
 
 interface BuyerFieldsProps {
   form: BuyerForm;
@@ -94,41 +32,38 @@ export default function BuyerFields({
 }: BuyerFieldsProps) {
   return (
     <>
-      <TextField
-        field="name"
+      <CheckoutTextField
+        id="checkout-name"
         label="Nombre y apellido"
-        autoComplete="name"
+        input={{ autoComplete: 'name' }}
         value={form.name}
         error={errors.name}
-        onChange={onChange}
+        onChange={(value) => onChange('name', value)}
       />
-      <TextField
-        field="phone"
+      <CheckoutTextField
+        id="checkout-phone"
         label="Teléfono (WhatsApp)"
-        type="tel"
-        inputMode="numeric"
-        autoComplete="tel-national"
+        input={{ type: 'tel', inputMode: 'numeric', autoComplete: 'tel-national' }}
         hint={PHONE_HINT}
         value={form.phone}
         error={errors.phone}
-        onChange={(field, value) => onChange(field, phoneDigits(value))}
+        onChange={(value) => onChange('phone', phoneDigits(value))}
       />
-      <TextField
-        field="email"
+      <CheckoutTextField
+        id="checkout-email"
         label="Email"
-        type="email"
-        autoComplete="email"
+        input={{ type: 'email', autoComplete: 'email' }}
         value={form.email}
         error={errors.email}
-        onChange={onChange}
+        onChange={(value) => onChange('email', value)}
       />
-      <TextField
-        field="document"
+      <CheckoutTextField
+        id="checkout-document"
         label="DNI"
-        autoComplete="off"
+        input={{ autoComplete: 'off' }}
         value={form.document}
         error={errors.document}
-        onChange={onChange}
+        onChange={(value) => onChange('document', value)}
       />
 
       {/* Ocupa las dos columnas de la tarjeta "Información de contacto". */}
@@ -143,10 +78,11 @@ export default function BuyerFields({
           <span>Acepto que EzyHome use mis datos para gestionar este pedido.</span>
         </label>
         <p className="text-body-sm text-secondary">
-          Usamos tu nombre, WhatsApp, email y DNI solo para este pedido: para avisarte de su estado,
-          hacer la factura si la pedís y saber quién retira. Podés pedir verlos, corregirlos o
-          borrarlos escribiéndonos por WhatsApp (Ley 25.326 de Protección de Datos Personales). La
-          Agencia de Acceso a la Información Pública es el órgano de control.
+          Usamos tu nombre, WhatsApp, email y DNI (y tu dirección, si pedís envío a domicilio) solo
+          para este pedido: para avisarte de su estado, hacer la factura si la pedís, saber quién
+          retira o mandarte el envío. Podés pedir verlos, corregirlos o borrarlos escribiéndonos por
+          WhatsApp (Ley 25.326 de Protección de Datos Personales). La Agencia de Acceso a la
+          Información Pública es el órgano de control.
           {mercadoPagoEnabled && ` ${DRAFT_NOTICE}`}
         </p>
         {errors.acceptedPrivacy !== undefined && (

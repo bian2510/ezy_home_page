@@ -232,6 +232,77 @@ describe('OrderPage', () => {
     });
   });
 
+  describe('envío a domicilio', () => {
+    const shippedOrder = (shipping: Record<string, unknown> | null) =>
+      erpOrder({
+        delivery: 'carrier',
+        total: 228_500,
+        shipping,
+        pickup: { address: 'Av. Siempreviva 742', hours: 'Lun a vie 10 a 18' },
+      });
+
+    it('should show the home delivery with its time instead of the pickup', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue(
+          jsonResponse({
+            order: shippedOrder({ price: 8_500, delivery_time: '3 a 5 días hábiles' }),
+          }),
+        ),
+      );
+      renderOrder();
+
+      const card = (await screen.findByRole('heading', { name: /envío a domicilio/i })).closest(
+        'section',
+      )!;
+      expect(card).toHaveTextContent('3 a 5 días hábiles');
+      expect(card).toHaveTextContent(/dirección que cargaste/i);
+      expect(screen.queryByText('Av. Siempreviva 742')).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('heading', { name: /retiro en punto pick-up/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('should list the shipping before the total, which includes it', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi
+          .fn()
+          .mockResolvedValue(
+            jsonResponse({ order: shippedOrder({ price: 8_500, delivery_time: null }) }),
+          ),
+      );
+      renderOrder();
+
+      const items = (await screen.findByRole('heading', { name: /pedido n.º 7/i })).closest(
+        'section',
+      )!;
+      expect(within(items).getByTestId('order-shipping')).toHaveTextContent(/envío.*8\.500/i);
+      expect(within(items).getByTestId('order-total')).toHaveTextContent(/228\.500/);
+    });
+
+    it('should not list a shipping line when the ERP did not send its price', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue(jsonResponse({ order: shippedOrder(null) })),
+      );
+      renderOrder();
+
+      expect(
+        await screen.findByRole('heading', { name: /envío a domicilio/i }),
+      ).toBeInTheDocument();
+      expect(screen.queryByTestId('order-shipping')).not.toBeInTheDocument();
+    });
+
+    it('should not list a shipping line for pickup', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({ order: erpOrder() })));
+      renderOrder();
+
+      expect(await screen.findByRole('heading', { name: /pedido n.º 7/i })).toBeInTheDocument();
+      expect(screen.queryByTestId('order-shipping')).not.toBeInTheDocument();
+    });
+  });
+
   it('should say the order does not exist on a 404', async () => {
     vi.stubGlobal(
       'fetch',

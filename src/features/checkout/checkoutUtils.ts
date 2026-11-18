@@ -2,7 +2,7 @@
 // los datos del carrito y del ERP llegan por parámetro.
 import type { CartItem, Product, ProductPricing } from '@/types';
 import { percentOff } from '@/features/pricing';
-import { OrderApiError, type PaymentMethod, type StockIssue } from './ordersApi';
+import { OrderApiError, type OrderBuyer, type PaymentMethod, type StockIssue } from './ordersApi';
 
 type PricingOf = (product: Product) => ProductPricing;
 
@@ -63,6 +63,14 @@ export const validateBuyerForm = (form: BuyerForm): BuyerErrors => {
   return errors;
 };
 
+/** El comprador como va al ERP: sin espacios alrededor y el WhatsApp solo con dígitos. */
+export const orderBuyer = (form: BuyerForm): OrderBuyer => ({
+  name: form.name.trim(),
+  phone: phoneDigits(form.phone),
+  email: form.email.trim(),
+  document: form.document.trim(),
+});
+
 /** Total a transferir con los precios del ERP. */
 export const transferTotal = (items: CartItem[], pricingOf: PricingOf): number =>
   items.reduce((sum, item) => {
@@ -73,6 +81,19 @@ export const transferTotal = (items: CartItem[], pricingOf: PricingOf): number =
 /** Total con Mercado Pago (precio de lista + recargo) con los precios del ERP. */
 export const mercadoPagoTotal = (items: CartItem[], pricingOf: PricingOf): number =>
   items.reduce((sum, item) => sum + (pricingOf(item.product).price ?? 0) * item.quantity, 0);
+
+/**
+ * Total de cada medio de pago con el envío: los productos con el precio de ese
+ * medio más el envío, que cuesta lo mismo con los dos (ADR-030 del ERP).
+ */
+export const checkoutTotals = (
+  items: CartItem[],
+  pricingOf: PricingOf,
+  shipping: number,
+): Record<PaymentMethod, number> => ({
+  transfer: transferTotal(items, pricingOf) + shipping,
+  mercado_pago: mercadoPagoTotal(items, pricingOf) + shipping,
+});
 
 /**
  * Descuento real de la transferencia sobre el total con Mercado Pago, para el

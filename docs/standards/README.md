@@ -44,3 +44,4 @@ Las decisiones tomadas y sus justificaciones viven en [`docs/adrs/`](../adrs/).
 | [`ADR-004`](../adrs/ADR-004-arquitectura-frontend-capas.md)         | Arquitectura en capas Feature-Sliced Lite                                            |
 | [`ADR-005`](../adrs/ADR-005-precio-y-stock-desde-el-erp.md)         | Precio y stock desde el ERP (contrato de la API)                                     |
 | [`ADR-006`](../adrs/ADR-006-pedido-por-transferencia-con-retiro.md) | Pedido por transferencia con retiro: contrato de pedidos, reintentos, tope por stock |
+| [`ADR-007`](../adrs/ADR-007-envio-a-domicilio-cotizado.md)          | Envío a domicilio cotizado por el ERP en el checkout, con WhatsApp de respaldo       |

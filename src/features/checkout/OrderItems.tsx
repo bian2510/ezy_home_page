@@ -1,5 +1,6 @@
 // OrderItems — los productos del pedido tal como los devuelve el ERP (nombre,
-// cantidad y total de la línea) y el total. La foto sale de `products.json` por
+// cantidad y total de la línea), el envío a domicilio si lo hay y el total (que
+// ya lo incluye). La foto sale de `products.json` por
 // SKU; si no está, la fila va sin foto.
 import { findProductBySku } from '@/data/catalog';
 import { formatPrice } from '@/lib/formatPrice';
@@ -37,6 +38,15 @@ export default function OrderItems({ order }: { order: StoreOrder }) {
           );
         })}
       </ul>
+      {order.shipping !== null && (
+        <p
+          data-testid="order-shipping"
+          className="flex justify-between gap-4 border-t border-surface-container pt-4 text-label-lg text-on-surface"
+        >
+          Envío a domicilio
+          <span className="font-bold tabular-nums">{formatPrice(order.shipping.price)}</span>
+        </p>
+      )}
       <p
         data-testid="order-total"
         className="flex items-end justify-between gap-4 border-t border-surface-container pt-4 text-label-lg font-bold text-on-surface"

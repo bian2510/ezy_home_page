@@ -9,7 +9,7 @@
 //   /catalogo          → CatalogPage        (grilla + filtro por categoría)
 //   /productos/:id     → ProductDetailPage  (galería + agregar al carrito)
 //   /carrito           → CartPage           (carrito + checkout WhatsApp)
-//   /checkout          → CheckoutPage       (compra por transferencia con retiro)
+//   /checkout          → CheckoutPage       (compra con retiro o envío a domicilio)
 //   /pedido/:token     → OrderPage          (pedido: a qué cuenta transferir)
 //   /blog              → BlogListPage       (listado de artículos)
 //   /blog/:slug        → BlogPostPage       (artículo individual)
