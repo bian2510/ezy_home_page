@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import Container from '@/components/ui/Container';
 import Icon, { type IconName } from '@/components/ui/Icon';
 import PageHeader from '@/components/ui/PageHeader';
+import { SITE_CONTACT } from '@/data/siteContact';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
 interface Step {
@@ -33,8 +34,7 @@ const STEPS: readonly Step[] = [
     icon: 'truck',
     image: 'paso-2',
     title: 'Completá tus datos de entrega y facturación',
-    detail:
-      'Elegí el retiro sin cargo en nuestro punto pick-up o el envío a domicilio: lo calculamos con tu código postal antes de pagar. Dejá tus datos para la factura, si la necesitás.',
+    detail: `Elegí el retiro sin cargo en nuestro punto pick-up de ${SITE_CONTACT.pickupArea.neighborhood} (${SITE_CONTACT.pickupArea.city}) o el envío a domicilio: lo calculamos con tu código postal antes de pagar. Dejá tus datos para la factura, si la necesitás.`,
   },
   {
     number: '03',

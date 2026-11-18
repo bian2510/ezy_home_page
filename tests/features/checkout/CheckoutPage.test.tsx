@@ -101,7 +101,7 @@ describe('CheckoutPage', () => {
     expect(screen.getByText(/2 × válvula tv05/i)).toBeInTheDocument();
     expect(screen.getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
     // En la tarjeta "Entrega" y en el resumen.
-    expect(screen.getAllByText(/retiro en punto pick-up/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/retiro en caballito, caba/i).length).toBeGreaterThan(0);
     expect(screen.getByRole('radio', { name: /transferencia/i })).toBeChecked();
     expect(screen.getByText(/ley 25\.326/i)).toBeInTheDocument();
   });
@@ -123,10 +123,11 @@ describe('CheckoutPage', () => {
 
       expect(screen.getByRole('heading', { name: /información de contacto/i })).toBeInTheDocument();
       const delivery = screen.getByRole('heading', { name: /^entrega$/i }).closest('section')!;
-      expect(within(delivery).getByText(/retiro en punto pick-up/i)).toBeInTheDocument();
+      expect(within(delivery).getByText(/retiro en caballito, caba/i)).toBeInTheDocument();
       expect(within(delivery).getByText(/sin cargo/i)).toBeInTheDocument();
-      // La dirección y el horario los manda el ERP con el pedido: se ven al confirmar.
-      expect(within(delivery).getByText(/dirección y el horario/i)).toBeInTheDocument();
+      // El barrio se ve antes de elegir; la dirección exacta y el horario los manda el ERP con el pedido.
+      expect(within(delivery).getByText(/punto pick-up de caballito/i)).toBeInTheDocument();
+      expect(within(delivery).getByText(/dirección exacta y el horario/i)).toBeInTheDocument();
       expect(screen.getByRole('heading', { name: /medio de pago/i })).toBeInTheDocument();
     });
 
@@ -143,7 +144,7 @@ describe('CheckoutPage', () => {
         .getByRole('heading', { name: /resumen de tu pedido/i })
         .closest('aside')!;
       expect(within(summary).getByText(/2 × válvula tv05/i)).toBeInTheDocument();
-      expect(within(summary).getByText(/retiro en punto pick-up/i)).toBeInTheDocument();
+      expect(within(summary).getByText(/retiro en caballito, caba/i)).toBeInTheDocument();
       expect(within(summary).getByText(/sin cargo/i)).toBeInTheDocument();
       expect(within(summary).getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
     });
@@ -523,7 +524,7 @@ describe('CheckoutPage', () => {
       vi.stubGlobal('fetch', fetchMock);
       renderCheckout();
 
-      expect(screen.getByRole('radio', { name: /retiro en punto pick-up/i })).toBeChecked();
+      expect(screen.getByRole('radio', { name: /retiro en caballito, caba/i })).toBeChecked();
       expect(screen.queryByLabelText('Calle')).not.toBeInTheDocument();
       expect(fetchMock).not.toHaveBeenCalled();
     });
@@ -708,7 +709,7 @@ describe('CheckoutPage', () => {
       await waitFor(() =>
         expect(screen.getByTestId('checkout-total')).toHaveTextContent(/228\.500/),
       );
-      await user.click(screen.getByRole('radio', { name: /retiro en punto pick-up/i }));
+      await user.click(screen.getByRole('radio', { name: /retiro en caballito, caba/i }));
 
       expect(screen.getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
       expect(screen.queryByLabelText('Calle')).not.toBeInTheDocument();

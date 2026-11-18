@@ -9,6 +9,14 @@ export const SITE_CONTACT = {
   phoneHref: '+5491124741036',
   location: 'CABA, Argentina',
   /**
+   * Barrio del punto pick-up, confirmado por el dueño (2026-11-17). Se muestra
+   * antes de elegir la entrega; la dirección exacta y el horario los manda el
+   * ERP con el pedido creado.
+   */
+  pickupArea: { neighborhood: 'Caballito', city: 'CABA' },
+  /** "Retiro en Caballito, CABA": así se nombra el retiro en todo el sitio. */
+  pickupLabel: 'Retiro en Caballito, CABA',
+  /**
    * Horario de atención, confirmado por el dueño (2026-11-06). Va fijo porque
    * el del ERP (`store_pickup_hours`) solo llega dentro de un pedido: si cambia
    * en el ERP, hay que cambiarlo también acá.

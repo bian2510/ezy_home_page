@@ -2,6 +2,7 @@
 // precio con el medio elegido, el subtotal, la entrega (retiro sin cargo o el
 // envío cotizado, "A calcular" mientras no hay cotización) y el total que se va
 // a cobrar. Abajo, la ayuda por WhatsApp si hay número.
+import { SITE_CONTACT } from '@/data/siteContact';
 import type { CartItem, Product, ProductPricing } from '@/types';
 import Icon from '@/components/ui/Icon';
 import { formatPrice } from '@/lib/formatPrice';
@@ -21,7 +22,7 @@ interface CheckoutSummaryProps {
 }
 
 const DELIVERY_LABEL: Record<DeliveryMethod, string> = {
-  pickup: 'Retiro en punto pick-up',
+  pickup: SITE_CONTACT.pickupLabel,
   carrier: 'Envío a domicilio',
 };
 

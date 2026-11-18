@@ -15,7 +15,7 @@ describe('TrustStrip', () => {
   it('should mention pickup at the store and WhatsApp advice', () => {
     render(<TrustStrip />);
 
-    expect(screen.getByText('Retiro en punto pick-up')).toBeInTheDocument();
+    expect(screen.getByText('Retiro en Caballito, CABA')).toBeInTheDocument();
     expect(screen.getByText('Asesoramiento por WhatsApp')).toBeInTheDocument();
   });
 });

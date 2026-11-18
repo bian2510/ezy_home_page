@@ -1,11 +1,13 @@
 // DeliveryOptions — formas de entrega del checkout (ADR-007): retiro en punto
-// pick-up sin cargo (usuario, 2026-11-03) o envío a domicilio, cotizado por el
+// pick-up de Caballito sin cargo (usuario, 2026-11-03) o envío a domicilio, cotizado por el
 // ERP con la provincia y el CP antes de pagar. Si no hay cotización para esa
 // zona o esos productos, `ShippingQuoteStatus` ofrece WhatsApp.
 //
-// La dirección y el horario del punto pick-up los manda el ERP con el pedido creado
-// (`pickup` en `ordersApi`): acá no se inventan, se muestran al confirmar.
+// El barrio va a la vista para decidir (`SITE_CONTACT.pickupArea`); la dirección
+// exacta y el horario los manda el ERP con el pedido creado (`pickup` en
+// `ordersApi`): acá no se inventan, se muestran al confirmar.
 import Icon, { type IconName } from '@/components/ui/Icon';
+import { SITE_CONTACT } from '@/data/siteContact';
 import { cn } from '@/lib/cn';
 import { formatPrice } from '@/lib/formatPrice';
 import AddressFields from './AddressFields';
@@ -53,8 +55,8 @@ function OptionCard({ option, price, checked, onSelect }: OptionCardProps) {
 const PICKUP = {
   method: 'pickup',
   icon: 'pin',
-  title: 'Retiro en punto pick-up',
-  detail: 'Te mostramos la dirección y el horario al confirmar el pedido.',
+  title: SITE_CONTACT.pickupLabel,
+  detail: `Retirás en nuestro punto pick-up de ${SITE_CONTACT.pickupArea.neighborhood}. Te pasamos la dirección exacta y el horario al confirmar el pedido.`,
 } as const;
 
 const CARRIER = {

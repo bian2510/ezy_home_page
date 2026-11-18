@@ -121,7 +121,7 @@ export default function SiteFooter() {
           )}
           <p className="flex items-center gap-2 text-body-sm text-surface-variant">
             <Icon name="cube" className="text-inverse-primary" />
-            Retiro en punto pick-up
+            {SITE_CONTACT.pickupLabel}
           </p>
           <p className="flex min-h-11 items-center gap-2 text-body-sm text-surface-variant sm:min-h-9">
             <Icon name="pin" className="text-inverse-primary" />

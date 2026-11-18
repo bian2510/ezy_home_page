@@ -41,7 +41,9 @@ describe('ComoComprarPage', () => {
 
   it('should promise the delivery the checkout offers: free pick-up or shipping quoted before paying', () => {
     renderPage();
-    const step = screen.getByText(/retiro sin cargo en nuestro punto pick-up/i);
+    const step = screen.getByText(
+      /retiro sin cargo en nuestro punto pick-up de caballito \(caba\)/i,
+    );
     expect(step).toHaveTextContent(/envío a domicilio/i);
     expect(step).toHaveTextContent(/código postal/i);
     expect(step).toHaveTextContent(/antes de pagar/i);

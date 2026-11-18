@@ -1,9 +1,10 @@
 // TrustStrip — franja con lo que la tienda ofrece hoy, debajo de la grilla.
 //
-// Solo afirmaciones verdaderas: el retiro en punto pick-up (checkout con retiro),
+// Solo afirmaciones verdaderas: el retiro en el punto pick-up de Caballito (checkout con retiro),
 // el asesoramiento por WhatsApp y los medios de pago: transferencia o Mercado
 // Pago, siempre activos (#42).
 import Icon, { type IconName } from '@/components/ui/Icon';
+import { SITE_CONTACT } from '@/data/siteContact';
 
 interface TrustItem {
   icon: IconName;
@@ -12,7 +13,7 @@ interface TrustItem {
 }
 
 const TRUST_ITEMS: readonly TrustItem[] = [
-  { icon: 'pin', title: 'Retiro en punto pick-up', detail: 'Comprá online y retirá tu pedido' },
+  { icon: 'pin', title: SITE_CONTACT.pickupLabel, detail: 'Comprá online y retirá tu pedido' },
   { icon: 'chat', title: 'Asesoramiento por WhatsApp', detail: 'Te ayudamos a elegir' },
   {
     icon: 'card',

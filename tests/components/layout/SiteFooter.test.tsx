@@ -108,5 +108,6 @@ describe('SiteFooter', () => {
       'tel:+5491124741036',
     );
     expect(screen.getByText('CABA, Argentina')).toBeInTheDocument();
+    expect(screen.getByText('Retiro en Caballito, CABA')).toBeInTheDocument();
   });
 });
