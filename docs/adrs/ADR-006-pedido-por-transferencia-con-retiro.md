@@ -23,8 +23,10 @@ había.
   WhatsApp (como antes). **Los envíos siguen por WhatsApp** hasta que haya
   cotizador (lo suma [ADR-007](./ADR-007-envio-a-domicilio-cotizado.md): envío a
   domicilio cotizado por el ERP en el checkout).
-- `/checkout` pide nombre y apellido, WhatsApp y email (obligatorios), DNI
-  (opcional) y la aceptación del aviso de privacidad (Ley 25.326). El navegador
+- `/checkout` pide nombre y apellido, WhatsApp, email y DNI (obligatorios) y la
+  aceptación del aviso de privacidad (Ley 25.326). El DNI es obligatorio desde
+  #26 (usuario): hace falta para facturar si la piden y para saber quién
+  retira; el aviso de privacidad dice para qué se usa. El navegador
   valida igual que el ERP para avisar antes; el ERP vuelve a validar y manda.
   El WhatsApp es más estricto en el sitio (usuario, 2026-10-30): exactamente 10
   números (código de área + número, sin 0 ni 15 ni +54); se limpian espacios y
@@ -34,15 +36,17 @@ había.
   transferir (alias, CBU/CVU, titular, banco: lo que la tienda cargó), que ponga
   "Pedido N" en el concepto, hasta cuándo (hora de Argentina) y dónde y cuándo
   retirar. El carrito se vacía.
-- Mercado Pago se suma en el PR 3e, detrás de `VITE_MERCADOPAGO_ENABLED` (ver
-  [Mercado Pago](#mercado-pago-pr-3e)).
+- Mercado Pago se suma en el PR 3e (ver [Mercado Pago](#mercado-pago-pr-3e)).
+  Entró detrás de `VITE_MERCADOPAGO_ENABLED`; con Mercado Pago cobrando en
+  producción la variable se sacó (usuario, 2026-11-06) y el interruptor pasa a
+  ser del ERP.
 
 ### Contrato (`checkout/ordersApi.ts`)
 
-| Pedido                                                                                                                                                                                               | Respuesta                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST /api/store/orders` con `x-api-key`; body `{idempotency_key, payment_method: "transfer" \| "mercado_pago", accepted_privacy, buyer: {name, phone, email, document?}, items: [{sku, quantity}]}` | **201** pedido nuevo, **200** mismo intento; `{order: {token, number, status, payment_method, total, expires_at, checkout_url, checkout_error, items[{sku, name, quantity, unit_price, line_total}], transfer{alias, cbu, holder, bank}, pickup{address, hours}}}`. **409** `{errors: {detail, items: [{sku, available}]}}`; **422** errores por campo (`buyer_name`, `buyer_phone`, `buyer_email`, `buyer_document`, `accepted_privacy`) o `detail` (SKU que no se vende, transferencia sin configurar, clave reusada); **429** `detail` (límite por IP o por comprador) |
-| `GET /api/store/orders/:token` con `x-api-key`                                                                                                                                                       | El mismo `order`, sin datos del comprador. **404** si no existe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Pedido                                                                                                                                                                                              | Respuesta                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /api/store/orders` con `x-api-key`; body `{idempotency_key, payment_method: "transfer" \| "mercado_pago", accepted_privacy, buyer: {name, phone, email, document}, items: [{sku, quantity}]}` | **201** pedido nuevo, **200** mismo intento; `{order: {token, number, status, payment_method, total, expires_at, checkout_url, checkout_error, items[{sku, name, quantity, unit_price, line_total}], transfer{alias, cbu, holder, bank}, pickup{address, hours}}}`. **409** `{errors: {detail, items: [{sku, available}]}}`; **422** errores por campo (`buyer_name`, `buyer_phone`, `buyer_email`, `buyer_document`, `accepted_privacy`) o `detail` (SKU que no se vende, transferencia sin configurar, clave reusada); **429** `detail` (límite por IP o por comprador) |
+| `GET /api/store/orders/:token` con `x-api-key`                                                                                                                                                      | El mismo `order`, sin datos del comprador. **404** si no existe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
 `status`: `pending_payment`, `paid`, `expired`, `canceled`. Importes en pesos
 enteros. `payment_method` (`transfer` o `mercado_pago`) es obligatorio en la
@@ -54,13 +58,12 @@ Mercado Pago (`null` mientras el ERP lo crea; el sitio solo acepta `https`) y
 
 ### Mercado Pago (PR 3e)
 
-Con `VITE_MERCADOPAGO_ENABLED=true` (plan de la etapa 3 del ERP §4 y §9, etapa
-4 §6):
+Plan de la etapa 3 del ERP §4 y §9, etapa 4 §6:
 
 - `/checkout` ofrece **Transferencia bancaria** (elegida al entrar) o **Mercado
   Pago**, cada una con su total: el de MP sale de `price` (precio del local +
   recargo) y el de transferencia de `transferPrice`, los dos del ERP. El resumen
-  muestra el total del medio elegido. Sin la variable, no hay elección.
+  muestra el total del medio elegido.
 - Con MP, el `POST` responde sin link (`checkout_url: null`; el ERP crea la
   orden por Oban). El sitio vacía el carrito y va a `/pedido/:token` con la marca
   `openMercadoPago`: "Abriendo Mercado Pago…" y `GET` cada **1 s hasta 15 s**.
@@ -75,8 +78,7 @@ Con `VITE_MERCADOPAGO_ENABLED=true` (plan de la etapa 3 del ERP §4 y §9, etapa
   `sessionStorage` de la pestaña (el ERP no devuelve el comprador y el carrito ya
   se vació). Se borra al cambiar a transferencia, cuando el pedido se cierra o al
   cerrar la pestaña. Sin storage no se ofrece el cambio: queda WhatsApp. El aviso
-  de privacidad del checkout lo cuenta cuando Mercado Pago está activo (usuario,
-  2026-10-30).
+  de privacidad del checkout lo cuenta (usuario, 2026-10-30).
 - **Vuelta de MP** (`/pedido/:token?resultado=…`). El ERP confirma el pago por
   el aviso de MP (etapa 4), no por la vuelta:
   - `ok`: "Recibimos tu pago" y `GET` cada **2 s hasta 30 s**. Si pasa a `paid`:

@@ -15,7 +15,7 @@ sola llamada al cargar el sitio; el resto de las features lee el resultado por
 
 ## Dependencies
 
-- `@/lib/env` — `getStoreApiUrl`, `getStoreApiKey`, `isMercadoPagoEnabled`
+- `@/lib/env` — `getStoreApiUrl`, `getStoreApiKey`
 - `@/data/catalog` — SKU del catálogo activo
 - `@/types` — `Product`, `ProductPricing`, `Availability`
 - ERP (`bian2510/ezy_home_app`, ADR-025) por HTTP
@@ -30,5 +30,4 @@ sola llamada al cargar el sitio; el resto de las features lee el resultado por
 
 - Nunca mostrar un precio que no venga del ERP: sin respuesta, "Consultar precio"
 - `VITE_STORE_API_KEY` es pública (va en el bundle): solo lectura
-- Sin `VITE_MERCADOPAGO_ENABLED=true`, un solo precio (transferencia)
 - No importa de otras features

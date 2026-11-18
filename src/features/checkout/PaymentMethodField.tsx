@@ -1,19 +1,17 @@
-// Medio de pago en `/checkout`, cada uno con su total (los precios del ERP: con
-// Mercado Pago lleva el recargo). Con `VITE_MERCADOPAGO_ENABLED=true` se elige
-// entre los dos; si no, el único medio es la transferencia y se muestra como
-// dato, sin opciones.
+// Medio de pago en `/checkout`: transferencia o Mercado Pago, cada uno con su
+// total (los precios del ERP: con Mercado Pago lleva el recargo).
 //
 // La transferencia lleva el descuento real de los productos ("-5%"), que no
 // aparece si no hay descuento. Se calcula sin el envío, que cuesta lo mismo con
-// los dos medios: si no, el cartel bajaría al elegir envío (usuario, 2026-11-17). Sin "Efectivo" ni promesas de aprobación
-// instantánea (usuario, 2026-11-03).
+// los dos medios: si no, el cartel bajaría al elegir envío (usuario,
+// 2026-11-17). Sin "Efectivo" ni promesas de aprobación instantánea (usuario,
+// 2026-11-03).
 import { formatPrice } from '@/lib/formatPrice';
 import { cn } from '@/lib/cn';
 import { totalsDiscountPercent } from './checkoutUtils';
 import type { PaymentMethod } from './ordersApi';
 
 interface PaymentMethodFieldProps {
-  mercadoPagoEnabled: boolean;
   value: PaymentMethod;
   /** Total de cada medio, con el envío. */
   totals: Record<PaymentMethod, number>;
@@ -63,20 +61,11 @@ function MethodText({ method, discount, ids }: MethodTextProps) {
 }
 
 export default function PaymentMethodField({
-  mercadoPagoEnabled,
   value,
   totals,
   subtotals,
   onChange,
 }: PaymentMethodFieldProps) {
-  if (!mercadoPagoEnabled) {
-    return (
-      <div className="flex items-start gap-3 rounded-xl bg-primary/10 p-4">
-        <MethodText method="transfer" discount={null} />
-      </div>
-    );
-  }
-
   const discount = totalsDiscountPercent(subtotals);
 
   return (

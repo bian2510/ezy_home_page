@@ -13,7 +13,7 @@ export interface OrderBuyer {
   document: string;
 }
 
-/** Medio de pago del pedido. Mercado Pago solo con `VITE_MERCADOPAGO_ENABLED`. */
+/** Medio de pago del pedido. */
 export type PaymentMethod = 'transfer' | 'mercado_pago';
 
 /** Dirección del envío a domicilio, como la cargó el comprador (sin espacios alrededor). */

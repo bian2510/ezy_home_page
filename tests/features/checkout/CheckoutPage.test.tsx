@@ -102,7 +102,7 @@ describe('CheckoutPage', () => {
     expect(screen.getByTestId('checkout-total')).toHaveTextContent(/220\.000/);
     // En la tarjeta "Entrega" y en el resumen.
     expect(screen.getAllByText(/retiro en punto pick-up/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/transferencia/i, { selector: 'p, li, span, strong' })).toBeTruthy();
+    expect(screen.getByRole('radio', { name: /transferencia/i })).toBeChecked();
     expect(screen.getByText(/ley 25\.326/i)).toBeInTheDocument();
   });
 
@@ -208,7 +208,6 @@ describe('CheckoutPage', () => {
   });
 
   it('should say the tab keeps the order data only to switch to transfer', () => {
-    vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
     renderCheckout();
 
     const notice = screen.getByText(/ley 25\.326/i);
@@ -387,18 +386,7 @@ describe('CheckoutPage', () => {
     await waitFor(() => expect(screen.getByText(/página del pedido/i)).toBeInTheDocument());
   });
 
-  it('should not offer Mercado Pago while VITE_MERCADOPAGO_ENABLED is off', () => {
-    renderCheckout();
-
-    expect(screen.queryByRole('radio', { name: /mercado pago/i })).not.toBeInTheDocument();
-    expect(screen.queryByText(/mercado pago/i)).not.toBeInTheDocument();
-  });
-
-  describe('with Mercado Pago enabled', () => {
-    beforeEach(() => {
-      vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
-    });
-
+  describe('Mercado Pago', () => {
     it('should badge the transfer with the real discount of the totals', () => {
       renderCheckout();
 
@@ -689,7 +677,6 @@ describe('CheckoutPage', () => {
     });
 
     it('should keep the transfer discount of the products when the shipping is added', async () => {
-      vi.stubEnv('VITE_MERCADOPAGO_ENABLED', 'true');
       vi.stubGlobal(
         'fetch',
         erpFetch(() => jsonResponse({ options: [{ ...QUOTE_OPTION, price: 30_000 }] })),
