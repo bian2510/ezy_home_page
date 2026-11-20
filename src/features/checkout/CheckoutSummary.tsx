@@ -8,7 +8,7 @@ import Icon from '@/components/ui/Icon';
 import { formatPrice } from '@/lib/formatPrice';
 import { getWhatsAppNumber } from '@/lib/env';
 import { checkoutSummaryRows } from './checkoutUtils';
-import type { DeliveryMethod } from './deliveryUtils';
+import { carrierLabel, type DeliveryMethod } from './deliveryUtils';
 import type { PaymentMethod } from './ordersApi';
 
 interface CheckoutSummaryProps {
@@ -17,14 +17,12 @@ interface CheckoutSummaryProps {
   /** Total de los productos con el medio elegido. */
   subtotal: number;
   paymentMethod: PaymentMethod;
-  /** Entrega elegida y su costo: 0 con retiro, `null` si falta cotizar. */
-  delivery: { method: DeliveryMethod; cost: number | null };
+  /** Entrega elegida, su costo (0 con retiro, `null` si falta cotizar) y la provincia del envío. */
+  delivery: { method: DeliveryMethod; cost: number | null; province: string };
 }
 
-const DELIVERY_LABEL: Record<DeliveryMethod, string> = {
-  pickup: SITE_CONTACT.pickupLabel,
-  carrier: 'Envío a domicilio',
-};
+const deliveryLabel = ({ method, province }: CheckoutSummaryProps['delivery']): string =>
+  method === 'pickup' ? SITE_CONTACT.pickupLabel : carrierLabel(province);
 
 const deliveryValue = (cost: number | null): string => {
   if (cost === null) return 'A calcular';
@@ -108,7 +106,7 @@ export default function CheckoutSummary({
             <dd className="tabular-nums text-on-surface">{formatPrice(subtotal)}</dd>
           </div>
           <div className="flex justify-between gap-4">
-            <dt className="text-secondary">{DELIVERY_LABEL[delivery.method]}</dt>
+            <dt className="text-secondary">{deliveryLabel(delivery)}</dt>
             <dd className="font-bold tabular-nums text-primary">{deliveryValue(delivery.cost)}</dd>
           </div>
         </dl>

@@ -7,7 +7,7 @@ import { buildWhatsAppMessage, useCart } from '@/features/cart';
 import { usePricing } from '@/features/pricing';
 import { formatPrice } from '@/lib/formatPrice';
 import { getWhatsAppNumber } from '@/lib/env';
-import { formatShippingAddress, type AddressForm } from './deliveryUtils';
+import { carrierLabel, formatShippingAddress, type AddressForm } from './deliveryUtils';
 import type { QuoteState } from './useShippingQuote';
 
 function WhatsAppLink({ address }: { address: AddressForm }) {
@@ -78,7 +78,7 @@ export default function ShippingQuoteStatus({ quote, address }: ShippingQuoteSta
       {quote.status === 'ready' && (
         <div className="flex flex-col gap-1">
           <p className="flex flex-wrap items-baseline justify-between gap-2 text-label-lg font-bold text-on-surface">
-            {quote.option.name}
+            {carrierLabel(address.province)}
             <span className="tabular-nums text-primary">{formatPrice(quote.option.price)}</span>
           </p>
           {quote.option.deliveryTime !== null && (

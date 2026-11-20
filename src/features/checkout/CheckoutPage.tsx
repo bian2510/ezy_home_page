@@ -181,7 +181,11 @@ export default function CheckoutPage() {
               pricingOf={pricingOf}
               subtotal={subtotals[paymentMethod]}
               paymentMethod={paymentMethod}
-              delivery={{ method: delivery.method, cost: delivery.cost }}
+              delivery={{
+                method: delivery.method,
+                cost: delivery.cost,
+                province: delivery.address.province,
+              }}
             />
           </div>
         )}

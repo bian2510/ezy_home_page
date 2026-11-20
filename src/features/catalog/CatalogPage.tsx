@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Container from '@/components/ui/Container';
 import PageHeader from '@/components/ui/PageHeader';
@@ -10,6 +10,8 @@ import CategoryFilter from './CategoryFilter';
 import SearchNotice from './SearchNotice';
 import TrustStrip from './TrustStrip';
 import { useCatalog } from './useCatalog';
+import { outOfStockLast } from './catalogUtils';
+import { usePricing } from '@/features/pricing';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
 const CATEGORY_PARAM = 'category';
@@ -44,6 +46,13 @@ export default function CatalogPage() {
     allProducts,
     searchParams.get(CATEGORY_PARAM),
     query,
+  );
+  // Los sin stock al final de toda la lista, antes de paginar: no se pueden
+  // comprar y no tienen que ocupar la primera página (usuario, 2026-11-20).
+  const { pricingOf } = usePricing();
+  const ordered = useMemo(
+    () => outOfStockLast(filtered, (product) => pricingOf(product).availability),
+    [filtered, pricingOf],
   );
   // Una página inválida o fuera de rango se muestra como la válida más
   // cercana: la grilla nunca queda vacía por un `?page=` viejo.
@@ -139,7 +148,7 @@ export default function CatalogPage() {
           // `scroll-mt-28`: al subir a la grilla, el header sticky no la tapa.
           <div ref={gridRef} className="flex scroll-mt-28 flex-col gap-8">
             <ul className="grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2 lg:grid-cols-3">
-              {filtered.slice(start, end).map((product) => (
+              {ordered.slice(start, end).map((product) => (
                 <li key={product.id}>
                   <ProductCard product={product} />
                 </li>

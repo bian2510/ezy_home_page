@@ -4,6 +4,7 @@
 import { Link } from 'react-router-dom';
 import { formatPrice } from '@/lib/formatPrice';
 import { cn } from '@/lib/cn';
+import { SITE_CONTACT } from '@/data/siteContact';
 import type { CartContentsState } from './useCartContents';
 
 interface CartSummaryProps {
@@ -70,7 +71,7 @@ export default function CartSummary({ cart, onClose }: CartSummaryProps) {
           Comprar por WhatsApp
         </button>
         <p className="text-center text-body-sm text-secondary">
-          Retirá sin cargo o calculá el envío a domicilio al finalizar la compra.
+          {`Retirá sin cargo o pedí envío a domicilio: ${SITE_CONTACT.shippingCarriers}. Lo calculás al finalizar la compra.`}
         </p>
       </div>
     </div>

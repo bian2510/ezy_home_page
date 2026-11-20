@@ -65,6 +65,18 @@ vi.mock('@/data/products.json', () => ({
   ],
 }));
 
+// Precio y stock del ERP: con stock salvo los ids de `soldOutIds`.
+const soldOutIds = vi.hoisted(() => new Set<string>());
+vi.mock('@/features/pricing/usePricing', () => ({
+  usePricing: () => ({
+    status: 'ready',
+    pricingOf: (product: { id: string }) =>
+      soldOutIds.has(product.id)
+        ? { price: 26300, transferPrice: 25000, availability: 'out_of_stock', stock: 0 }
+        : { price: 26300, transferPrice: 25000, availability: 'available', stock: 5 },
+  }),
+}));
+
 const buildProduct = (overrides: Partial<Product> = {}): Product =>
   buildBaseProduct({
     name: 'Producto',
@@ -94,6 +106,18 @@ describe('CatalogPage', () => {
     expect(screen.getByText('Bulbo RGBW')).toBeInTheDocument();
     expect(screen.getByText('Sensor Gas')).toBeInTheDocument();
     expect(screen.getByText('Enchufe WiFi')).toBeInTheDocument();
+  });
+
+  it('should show out-of-stock products last, keeping the order of the rest', () => {
+    soldOutIds.add('1');
+    try {
+      renderCatalog();
+
+      const names = screen.getAllByTestId('product-card').map((card) => card.textContent);
+      expect(names).toEqual(['Sensor Gas', 'Enchufe WiFi', 'Lámpara Sin Categoría', 'Bulbo RGBW']);
+    } finally {
+      soldOutIds.clear();
+    }
   });
 
   it('should not render inactive products in the catalog grid', () => {

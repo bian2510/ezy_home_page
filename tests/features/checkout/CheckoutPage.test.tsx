@@ -565,9 +565,36 @@ describe('CheckoutPage', () => {
       const summary = screen
         .getByRole('heading', { name: /resumen de tu pedido/i })
         .closest('aside')!;
-      expect(within(summary).getByText('Envío a domicilio')).toBeInTheDocument();
+      expect(quote).toHaveTextContent('Envío por Andreani');
+      expect(within(summary).getByText('Envío por Andreani')).toBeInTheDocument();
       expect(screen.getByTestId('checkout-total')).toHaveTextContent(/228\.500/);
       expect(screen.getByRole('button', { name: /confirmar pedido/i })).toBeEnabled();
+    });
+
+    it('should say that CABA goes with our own courier', async () => {
+      vi.stubGlobal('fetch', erpFetch());
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await chooseHomeDelivery(user);
+      await user.selectOptions(screen.getByLabelText('Provincia'), 'C');
+      await user.type(screen.getByLabelText('Código postal'), '1405');
+
+      const quote = screen.getByTestId('shipping-quote');
+      await waitFor(() => expect(quote).toHaveTextContent('Mensajería propia (CABA)'));
+      const summary = screen
+        .getByRole('heading', { name: /resumen de tu pedido/i })
+        .closest('aside')!;
+      expect(within(summary).getByText('Mensajería propia (CABA)')).toBeInTheDocument();
+    });
+
+    it('should tell who carries the order before choosing a province', () => {
+      vi.stubGlobal('fetch', erpFetch());
+      renderCheckout();
+
+      expect(
+        screen.getByRole('radio', { name: /envío a domicilio/i }).closest('label'),
+      ).toHaveTextContent(/en caba, con mensajería propia a costo fijo.*por andreani/i);
     });
 
     it('should create the order with the quote token and the address', async () => {

@@ -63,7 +63,7 @@ const CARRIER = {
   method: 'carrier',
   icon: 'truck',
   title: 'Envío a domicilio',
-  detail: 'Lo calculamos con tu código postal antes de que pagues.',
+  detail: `Lo calculamos con tu código postal antes de que pagues: ${SITE_CONTACT.shippingCarriers}.`,
 } as const;
 
 const carrierPrice = (delivery: CheckoutDelivery): string =>
