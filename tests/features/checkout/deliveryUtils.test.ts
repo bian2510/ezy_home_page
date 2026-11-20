@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   EMPTY_ADDRESS_FORM,
   addressErrorsFromApi,
+  carrierLabel,
   formatShippingAddress,
   orderDelivery,
   postalCodeDigits,
@@ -23,6 +24,21 @@ const ADDRESS: AddressForm = {
 
 const OPTION = { token: 'tok-quote', name: 'Envío a domicilio', price: 8_500, deliveryTime: null };
 const ITEMS = [{ sku: 'SKU-1', quantity: 2 }];
+
+describe('carrierLabel', () => {
+  it('should name our own courier for CABA', () => {
+    expect(carrierLabel('C')).toBe('Mensajería propia (CABA)');
+  });
+
+  it('should name Andreani for any other province, Buenos Aires included', () => {
+    expect(carrierLabel('B')).toBe('Envío por Andreani');
+    expect(carrierLabel('X')).toBe('Envío por Andreani');
+  });
+
+  it('should keep the generic name while no province is chosen', () => {
+    expect(carrierLabel('')).toBe('Envío a domicilio');
+  });
+});
 
 describe('SHIPPING_PROVINCES', () => {
   it('should list the 24 provinces with the one-letter code the ERP expects', () => {

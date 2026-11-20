@@ -4,6 +4,7 @@
 // el estado real del pago).
 import type { ReactNode } from 'react';
 import Icon, { type IconName } from '@/components/ui/Icon';
+import { SITE_CONTACT } from '@/data/siteContact';
 import type { StoreOrder } from './ordersApi';
 import { paymentMethodLabel } from './orderViewUtils';
 
@@ -57,7 +58,7 @@ function ShippingCard({ order }: { order: StoreOrder }) {
         <p className="text-label-lg font-bold text-on-surface">{order.shipping.deliveryTime}</p>
       )}
       <p className="text-body-sm text-secondary">
-        Lo mandamos a la dirección que cargaste. Guardá esta página para volver a verla.
+        {`Lo mandamos a la dirección que cargaste: ${SITE_CONTACT.shippingCarriers}. Guardá esta página para volver a verla.`}
       </p>
     </InfoCard>
   );

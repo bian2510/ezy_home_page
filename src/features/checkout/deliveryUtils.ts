@@ -30,6 +30,19 @@ export const EMPTY_ADDRESS_FORM: AddressForm = {
   city: '',
 };
 
+/** CABA en `shippingProvinces.ts`: ahí lleva el envío la mensajería propia. */
+const CABA = 'C';
+
+/**
+ * Nombre del envío según la provincia (dueño, 2026-11-20): en CABA, la
+ * mensajería propia; en el resto del país, Andreani. Sin provincia elegida,
+ * el nombre genérico.
+ */
+export const carrierLabel = (province: string): string => {
+  if (province === CABA) return 'Mensajería propia (CABA)';
+  return province === '' ? 'Envío a domicilio' : 'Envío por Andreani';
+};
+
 /** El CP de los envíos: 4 números ("1704"), sin las letras del CPA. */
 export const postalCodeDigits = (value: string): string => value.replace(/\D/g, '').slice(0, 4);
 

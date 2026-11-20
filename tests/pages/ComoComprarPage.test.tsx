@@ -47,6 +47,8 @@ describe('ComoComprarPage', () => {
     expect(step).toHaveTextContent(/envío a domicilio/i);
     expect(step).toHaveTextContent(/código postal/i);
     expect(step).toHaveTextContent(/antes de pagar/i);
+    expect(step).toHaveTextContent(/en caba, con mensajería propia a costo fijo/i);
+    expect(step).toHaveTextContent(/al resto del país, por andreani/i);
     expect(screen.queryByText(/coordiná el envío/i)).not.toBeInTheDocument();
   });
 

@@ -144,7 +144,9 @@ describe('Checkout por WhatsApp', () => {
       '/checkout',
     );
     expect(
-      screen.getByText('Retirá sin cargo o calculá el envío a domicilio al finalizar la compra.'),
+      screen.getByText(
+        /envío a domicilio: en caba, con mensajería propia a costo fijo; al resto del país, por andreani/i,
+      ),
     ).toBeInTheDocument();
     expect(screen.queryByText(/coordinamos por whatsapp/i)).not.toBeInTheDocument();
   });

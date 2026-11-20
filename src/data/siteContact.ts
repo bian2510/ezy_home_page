@@ -14,6 +14,12 @@ export const SITE_CONTACT = {
    * ERP con el pedido creado.
    */
   pickupArea: { neighborhood: 'Caballito', city: 'CABA' },
+  /**
+   * Quién lleva el envío a domicilio, confirmado por el dueño (2026-11-20). En
+   * minúscula porque va dentro de una frase. El precio lo pone el ERP: acá solo
+   * se dice quién lo lleva.
+   */
+  shippingCarriers: 'en CABA, con mensajería propia a costo fijo; al resto del país, por Andreani',
   /** "Retiro en Caballito, CABA": así se nombra el retiro en todo el sitio. */
   pickupLabel: 'Retiro en Caballito, CABA',
   /**
