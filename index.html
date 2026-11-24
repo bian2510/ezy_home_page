@@ -70,8 +70,50 @@
         document.head.appendChild(heroPreload);
       }
     </script>
+
+    <!--
+      Meta Pixel. Carga async: no frena el render ni compite con el hero.
+
+      Solo hace falta el PageView inicial: fbevents.js escucha `pushState` y
+      `popstate` y registra solo cada navegación de react-router. No agregar un
+      `fbq('track', 'PageView')` por cambio de ruta: duplicaría las visitas.
+
+      El fallback `<noscript>` va en el `<body>`: dentro del `<head>` un `<img>`
+      no es HTML válido.
+    -->
+    <!-- Meta Pixel Code -->
+    <script>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = '2.0';
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '4151136948525094');
+      fbq('track', 'PageView');
+    </script>
+    <!-- End Meta Pixel Code -->
   </head>
   <body class="bg-background text-foreground antialiased">
+    <noscript>
+      <img
+        height="1"
+        width="1"
+        style="display: none"
+        src="https://www.facebook.com/tr?id=4151136948525094&ev=PageView&noscript=1"
+        alt=""
+      />
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
