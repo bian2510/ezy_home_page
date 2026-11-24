@@ -2,7 +2,7 @@
 // categorías del catálogo y el contacto.
 //
 // Solo datos reales: las categorías salen de los productos visibles, el
-// email, teléfono y ubicación de `data/siteContact.ts`, y el WhatsApp del
+// teléfono y ubicación de `data/siteContact.ts`, y el WhatsApp del
 // número configurado (`VITE_WHATSAPP_NUMBER`). Sin número, no se muestra un
 // link que no lleva a ningún lado.
 import { Link } from 'react-router-dom';
@@ -100,10 +100,11 @@ export default function SiteFooter() {
 
         <div className="flex flex-col gap-2">
           <h2 className={headingClass}>Contacto</h2>
-          <a href={`mailto:${SITE_CONTACT.email}`} className={cn(linkClass, 'gap-2')}>
-            <Icon name="mail" className="text-inverse-primary" />
-            {SITE_CONTACT.email}
-          </a>
+          {/*
+            Sin email a propósito: la coincidencia avanzada automática del Meta
+            Pixel lo toma de la página y lo manda como el email de cada
+            visitante. Queda en /contacto.
+          */}
           <a href={`tel:${SITE_CONTACT.phoneHref}`} className={cn(linkClass, 'gap-2')}>
             <Icon name="phone" className="text-inverse-primary" />
             {SITE_CONTACT.phone}
