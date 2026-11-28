@@ -4,10 +4,11 @@
 // pagar) y elige transferencia o Mercado Pago; el ERP crea el pedido con sus
 // precios (el sitio no manda precios) y la página del pedido muestra a qué
 // cuenta transferir o abre Mercado Pago.
-import { useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/features/cart';
-import { usePricing } from '@/features/pricing';
+import { cartPixelParams, usePricing } from '@/features/pricing';
+import { trackPixel } from '@/lib/metaPixel';
 import { PURCHASE_STEP, PURCHASE_STEPS, PURCHASE_STEPS_LABEL } from '@/data/purchaseSteps';
 import SectionBand from '@/components/ui/SectionBand';
 import Stepper from '@/components/ui/Stepper';
@@ -18,6 +19,7 @@ import {
   checkoutTotals,
   fieldErrorsFromApi,
   orderBuyer,
+  purchasePixelParams,
   stockAdjustments,
   validateBuyerForm,
   withoutField,
@@ -63,6 +65,16 @@ export default function CheckoutPage() {
   const waitingForQuote = delivery.method === 'carrier' && delivery.cost === null;
 
   const blocker = checkoutBlocker(items, pricingOf);
+
+  // Inicio de compra para el Meta Pixel: una vez, cuando el checkout se puede
+  // usar (con los precios del ERP cargados y todo con stock).
+  const checkoutStarted = useRef(false);
+  const canStart = blocker === null;
+  useEffect(() => {
+    if (checkoutStarted.current || !canStart) return;
+    checkoutStarted.current = true;
+    trackPixel('InitiateCheckout', cartPixelParams(items, pricingOf));
+  }, [canStart, items, pricingOf]);
   const failure = state.status === 'failed' ? state.error : null;
   const adjustments =
     failure instanceof OrderApiError ? stockAdjustments(failure.stockIssues, items) : [];
@@ -89,6 +101,9 @@ export default function CheckoutPage() {
     };
     const result = await submit(draft);
     if ('order' in result) {
+      // Con el total del ERP (incluye el envío). El número de pedido como id
+      // hace que Meta lo cuente una sola vez.
+      trackPixel('Purchase', purchasePixelParams(result.order), `pedido-${result.order.number}`);
       clearCart();
       const path = `/pedido/${result.order.token}`;
       if (paymentMethod === 'mercado_pago') {

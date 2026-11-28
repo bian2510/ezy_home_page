@@ -265,6 +265,23 @@ describe('ProductCard', () => {
     expect(addToastMock).toHaveBeenCalledWith('Foco agregado al carrito');
   });
 
+  it('should tell the Meta Pixel about the add to cart with the shown price', async () => {
+    const fbq = vi.fn();
+    vi.stubGlobal('fbq', fbq);
+    currentPricing = { price: 21000, transferPrice: 20000, availability: 'available' };
+    const user = userEvent.setup();
+
+    renderWithProviders(<ProductCard product={buildProduct()} />);
+    await user.click(screen.getByRole('button', { name: /agregar al carrito/i }));
+
+    expect(fbq).toHaveBeenCalledWith(
+      'track',
+      'AddToCart',
+      expect.objectContaining({ content_ids: ['FOCO-001'], value: 20000, currency: 'ARS' }),
+    );
+    vi.unstubAllGlobals();
+  });
+
   it('should not navigate when the add-to-cart button is clicked', async () => {
     const user = userEvent.setup();
     const product = buildProduct({ id: 'abc-123' });

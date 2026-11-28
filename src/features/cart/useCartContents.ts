@@ -6,7 +6,14 @@ import { useEffect } from 'react';
 import { useCart } from './useCart';
 import { buildWhatsAppMessage, computeCartTotals } from './cartUtils';
 import { getWhatsAppNumber } from '@/lib/env';
-import { clampToStock, isPurchasable, reachedStockLimit, usePricing } from '@/features/pricing';
+import {
+  cartPixelParams,
+  clampToStock,
+  isPurchasable,
+  reachedStockLimit,
+  usePricing,
+} from '@/features/pricing';
+import { trackPixel } from '@/lib/metaPixel';
 import type { CartItem } from '@/types';
 
 export interface CartContentsState {
@@ -63,6 +70,8 @@ export function useCartContents(): CartContentsState {
   const checkoutByWhatsApp = () => {
     if (isEmpty) return;
     const url = buildWhatsAppMessage(items, getWhatsAppNumber(), pricingOf);
+    // Para Meta, pedir por WhatsApp es un contacto: la venta se cierra en el chat.
+    trackPixel('Contact', cartPixelParams(items, pricingOf));
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 

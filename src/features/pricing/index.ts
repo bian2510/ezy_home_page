@@ -15,4 +15,5 @@ export {
   transferSavings,
   unavailableLabel,
 } from './pricingUtils';
+export { cartPixelParams, productPixelParams } from './pixelParams';
 export type { PricingContextValue } from './PricingContext';

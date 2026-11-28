@@ -77,6 +77,8 @@
       Solo hace falta el PageView inicial: fbevents.js escucha `pushState` y
       `popstate` y registra solo cada navegación de react-router. No agregar un
       `fbq('track', 'PageView')` por cambio de ruta: duplicaría las visitas.
+      Los eventos de compra (ver producto, carrito, checkout, compra, contacto)
+      se mandan desde la app con `src/lib/metaPixel.ts`.
 
       El fallback `<noscript>` va en el `<body>`: dentro del `<head>` un `<img>`
       no es HTML válido.
