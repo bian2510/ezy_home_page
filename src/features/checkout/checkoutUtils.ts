@@ -2,7 +2,14 @@
 // los datos del carrito y del ERP llegan por parámetro.
 import type { CartItem, Product, ProductPricing } from '@/types';
 import { percentOff } from '@/features/pricing';
-import { OrderApiError, type OrderBuyer, type PaymentMethod, type StockIssue } from './ordersApi';
+import { pixelLine, pixelParams, type PixelParams } from '@/lib/metaPixel';
+import {
+  OrderApiError,
+  type OrderBuyer,
+  type PaymentMethod,
+  type StockIssue,
+  type StoreOrder,
+} from './ordersApi';
 
 type PricingOf = (product: Product) => ProductPricing;
 
@@ -214,3 +221,16 @@ export const formatDeadline = (expiresAt: string | null): string | null => {
   const date = new Date(expiresAt);
   return Number.isNaN(date.getTime()) ? null : DEADLINE_FORMAT.format(date);
 };
+
+/**
+ * Compra para el Meta Pixel con lo que cobró el ERP: el precio de cada línea y
+ * el total del pedido, que incluye el envío (por eso no se suma de las líneas).
+ */
+export const purchasePixelParams = (order: StoreOrder): PixelParams => ({
+  ...pixelParams(
+    order.items.map((item) =>
+      pixelLine({ id: item.sku, sku: item.sku }, item.quantity, item.unitPrice),
+    ),
+  ),
+  value: order.total,
+});

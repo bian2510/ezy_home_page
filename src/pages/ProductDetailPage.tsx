@@ -31,6 +31,7 @@ import {
   PurchasePanel,
   RelatedProducts,
   StickyPurchaseBar,
+  useProductViewPixel,
   usePurchase,
 } from '@/features/product';
 
@@ -100,6 +101,7 @@ interface ProductDetailProps {
 
 function ProductDetail({ product }: ProductDetailProps) {
   const purchase = usePurchase(product);
+  useProductViewPixel(product, purchase.pricing);
   // La barra fija del celular aparece cuando el botón principal sale de pantalla.
   const actionsRef = useRef<HTMLDivElement>(null);
   const actionsInView = useInView(actionsRef);

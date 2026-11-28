@@ -8,12 +8,14 @@ import {
   STOCK_LIMIT_MESSAGE,
   TransferDiscountBadge,
   isPurchasable,
+  productPixelParams,
   reachedStockLimit,
   usePricing,
 } from '@/features/pricing';
 import { useToast } from '@/features/toast';
 import Icon from '@/components/ui/Icon';
 import { cn } from '@/lib/cn';
+import { trackPixel } from '@/lib/metaPixel';
 
 /**
  * ProductCard — single product tile shown in the catalog grid.
@@ -61,6 +63,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     // Prevent the card-body button's onClick from firing and navigating away.
     event.stopPropagation();
     addItem(product, 1);
+    trackPixel('AddToCart', productPixelParams(product, pricing, 1));
     addToast(`${product.name} agregado al carrito`);
   };
 

@@ -525,4 +525,42 @@ describe('ProductDetailPage', () => {
       3,
     );
   });
+  describe('Meta Pixel', () => {
+    it('should tell Meta which product was viewed, once and with its ERP price', () => {
+      const fbq = vi.fn();
+      vi.stubGlobal('fbq', fbq);
+
+      renderAt('/productos/p-1');
+
+      const views = fbq.mock.calls.filter((call) => call[1] === 'ViewContent');
+      expect(views).toHaveLength(1);
+      expect(views[0]?.[2]).toMatchObject({ currency: 'ARS', value: 18900, num_items: 1 });
+    });
+
+    it('should wait for the ERP price before telling Meta about the view', () => {
+      const fbq = vi.fn();
+      vi.stubGlobal('fbq', fbq);
+      erpPricing = { price: null, transferPrice: null, availability: 'loading' };
+
+      renderAt('/productos/p-1');
+
+      expect(fbq).not.toHaveBeenCalledWith('track', 'ViewContent', expect.anything());
+    });
+
+    it('should tell Meta about the add to cart with the quantity and its value', async () => {
+      const fbq = vi.fn();
+      vi.stubGlobal('fbq', fbq);
+      const user = userEvent.setup();
+      renderAt('/productos/p-1');
+
+      await user.click(screen.getByRole('button', { name: /aumentar cantidad/i }));
+      await user.click(screen.getByRole('button', { name: /agregar al carrito/i }));
+
+      expect(fbq).toHaveBeenCalledWith(
+        'track',
+        'AddToCart',
+        expect.objectContaining({ value: 37800, num_items: 2, currency: 'ARS' }),
+      );
+    });
+  });
 });

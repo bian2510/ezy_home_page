@@ -4,7 +4,8 @@
 import { useState } from 'react';
 import type { Product, ProductPricing } from '@/types';
 import { useCart } from '@/features/cart';
-import { isPurchasable, usePricing } from '@/features/pricing';
+import { isPurchasable, productPixelParams, usePricing } from '@/features/pricing';
+import { trackPixel } from '@/lib/metaPixel';
 import { useToast } from '@/features/toast';
 import { resolvePurchase } from './productUtils';
 
@@ -40,6 +41,7 @@ export function usePurchase(product: Product): Purchase {
 
   const add = () => {
     addItem(product, quantity);
+    trackPixel('AddToCart', productPixelParams(product, pricing, quantity));
     addToast(`${quantity > 1 ? `${quantity}x ` : ''}${product.name} agregado al carrito`);
   };
 

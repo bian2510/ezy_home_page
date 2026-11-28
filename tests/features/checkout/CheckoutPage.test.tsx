@@ -255,6 +255,89 @@ describe('CheckoutPage', () => {
     expect(JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '[]')).toEqual([]);
   });
 
+  describe('Meta Pixel', () => {
+    it('should tell Meta the checkout started, once, with the cart value', () => {
+      const fbq = vi.fn();
+      vi.stubGlobal('fbq', fbq);
+
+      renderCheckout();
+
+      const starts = fbq.mock.calls.filter((call) => call[1] === 'InitiateCheckout');
+      expect(starts).toHaveLength(1);
+      expect(starts[0]?.[2]).toMatchObject({
+        content_ids: ['SKU-AUTO-43091'],
+        num_items: 2,
+        value: 220_000,
+        currency: 'ARS',
+      });
+    });
+
+    it('should not tell Meta the checkout started while it is blocked', () => {
+      const fbq = vi.fn();
+      vi.stubGlobal('fbq', fbq);
+      pricing = { ...AVAILABLE, availability: 'out_of_stock', stock: 0 };
+
+      renderCheckout();
+
+      expect(fbq).not.toHaveBeenCalledWith('track', 'InitiateCheckout', expect.anything());
+    });
+
+    it('should report the purchase with the ERP total and the order number as event id', async () => {
+      const fbq = vi.fn();
+      vi.stubGlobal('fbq', fbq);
+      const order = {
+        ...erpOrder,
+        items: [
+          {
+            sku: 'SKU-AUTO-43091',
+            name: 'Válvula TV05',
+            quantity: 2,
+            unit_price: 110_000,
+            line_total: 220_000,
+          },
+        ],
+      };
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({ order }, 201)));
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await fillForm(user);
+      await user.click(screen.getByRole('button', { name: /confirmar pedido/i }));
+      await screen.findByText(/página del pedido/i);
+
+      expect(fbq).toHaveBeenCalledWith(
+        'track',
+        'Purchase',
+        expect.objectContaining({
+          content_ids: ['SKU-AUTO-43091'],
+          num_items: 2,
+          value: 220_000,
+          currency: 'ARS',
+        }),
+        { eventID: 'pedido-7' },
+      );
+    });
+
+    it('should not report a purchase when the ERP rejects the order', async () => {
+      const fbq = vi.fn();
+      vi.stubGlobal('fbq', fbq);
+      vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('sin red')));
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await fillForm(user);
+      await user.click(screen.getByRole('button', { name: /confirmar pedido/i }));
+      await screen.findByRole('alert');
+
+      expect(fbq).not.toHaveBeenCalledWith(
+        'track',
+        'Purchase',
+        expect.anything(),
+        expect.anything(),
+      );
+    });
+  });
+
   it('should not call the ERP while the form has errors', async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);

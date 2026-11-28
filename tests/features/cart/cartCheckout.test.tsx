@@ -71,6 +71,23 @@ describe('Checkout por WhatsApp', () => {
     expect(url.startsWith('https://wa.me/5491122334455?text=')).toBe(true);
   });
 
+  it('should tell the Meta Pixel that the visitor contacted us with the cart', async () => {
+    vi.spyOn(window, 'open').mockImplementation(() => null);
+    const fbq = vi.fn();
+    vi.stubGlobal('fbq', fbq);
+    const user = userEvent.setup();
+    renderCart();
+
+    await user.click(screen.getByRole('button', { name: /comprar por whatsapp/i }));
+
+    expect(fbq).toHaveBeenCalledWith(
+      'track',
+      'Contact',
+      expect.objectContaining({ content_ids: ['FOCO-001'], num_items: 2, value: 25000 }),
+    );
+    vi.unstubAllGlobals();
+  });
+
   it('should include the cart contents in the pre-composed message', async () => {
     const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
     const user = userEvent.setup();
